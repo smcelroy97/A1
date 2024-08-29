@@ -1,7 +1,7 @@
 from netpyne.batchtools.search import search
 import numpy as np
 
-params = {'cochlearThalInput.weightECore' : 0.5}#np.linspace(0.3, 0.9, 4)}
+params = {'cochlearThalInput.weightECore' : np.linspace(0.3, 0.9, 4)}
 
 # use batch_shell_config if running directly on the machine
 shell_config = {'command': 'mpiexec -np 4 nrniv -python -mpi init.py',}
