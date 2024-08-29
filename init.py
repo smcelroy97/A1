@@ -47,15 +47,16 @@ if comm.is_host():
   inputs = specs.get_mappings()
   results = sim.analysis.popAvgRates(show=False)
 
-  results['TCRates'] = sim.analysis.popAvgRates(popName='TC', show=False)
+  results['loss'] = sim.analysis.popAvgRates(popName='TC', show=False)
+  out_json = json.dumps({**inputs, **results})
+
+  print(out_json)
 
 sim.saveData()
 sim.analysis.plotData()    # plot spike raster etc
 
 comm.send(out_json)
 comm.close()
-
-# checking branch stability
 
 # spikes_legacy.plotSpikeHist(include=['cochlea', 'TC'], timeRange=[0, 6000],
 #                             saveFig=True)
