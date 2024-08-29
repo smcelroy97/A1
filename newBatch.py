@@ -1,6 +1,8 @@
 from netpyne.batchtools.search import search
 import numpy as np
 
+label = 'TCTune0829A'
+
 params = {'cochlearThalInput.weightECore' : np.linspace(0.3, 1.5, 5)}
 
 # use batch_shell_config if running directly on the machine
@@ -18,9 +20,9 @@ run_config = sge_config
 
 search(job_type = 'sge',
        comm_type = 'socket',
-       label = 'grid',
+       label = label,
        params = params,
-       output_path = '../A1/simOutput/grid_batch',
+       output_path = str('../A1/simOutput/' + label),
        checkpoint_path = '../A1/simOutput/ray',
        run_config = run_config,
        num_samples = 1,
