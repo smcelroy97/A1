@@ -726,10 +726,8 @@ if cfg.addBkgConn:
     def connectCochleaToThal():
         # these next two parameters are derived, so should be set here in case used by batch/optimization; because cfg.py
         # gets copied as a .json file without re-interpreting the other variables
-        cfg.cochlearThalInput['weightEMatrix'] = cfg.cochlearThalInput['weightECore'] * cfg.cochlearThalInput[
-            'MatrixCoreFactor']
-        cfg.cochlearThalInput['weightIMatrix'] = cfg.cochlearThalInput['weightICore'] * cfg.cochlearThalInput[
-            'MatrixCoreFactor']
+        cfg.cochlearThalInput['weightEMatrix'] = cfg.cochlearThalInput['weightEMatrix']
+        cfg.cochlearThalInput['weightIMatrix'] = cfg.cochlearThalInput['weightIMatrix']
         # coch2coreIDX = []
         # for idx, cf in enumerate(cochlearCenterFreqs):
         #  if cf >= cfg.cochThalFreqRange[0] and cf <= cfg.cochThalFreqRange[1]:
