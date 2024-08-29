@@ -6,3 +6,5 @@ x86_64/
 *.pyc
 *.iml
 *.xml
+*DS_Store
+.idea
