@@ -55,6 +55,8 @@ sim.analysis.plotData()    # plot spike raster etc
 comm.send(out_json)
 comm.close()
 
+# checking branch stability
+
 # spikes_legacy.plotSpikeHist(include=['cochlea', 'TC'], timeRange=[0, 6000],
 #                             saveFig=True)
 
