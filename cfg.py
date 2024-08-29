@@ -70,7 +70,7 @@ cfg.recordDipole = False
 # ------------------------------------------------------------------------------
 
 cfg.simLabel = 'newBatchTCTune0829'
-cfg.saveFolder = 'data/' + cfg.simLabel  # Set file output name
+cfg.saveFolder = 'simOutput/' + cfg.simLabel  # Set file output name
 cfg.savePickle = True  # Save pkl file
 cfg.saveJson = False  # Save json file
 cfg.saveDataInclude = ['simData', 'simConfig', 'net']
@@ -143,7 +143,7 @@ for key, value in cfgLoad.items():
 
 
 # These values taken from M1 cfg (https://github.com/Neurosim-lab/netpyne/blob/development/examples/M1detailed/cfg.py)
-cfg.singleCellPops = True
+cfg.singleCellPops = False
 cfg.singlePop = ''
 cfg.removeWeightNorm = False
 cfg.scale = 1.0  # Is this what should be used?
@@ -281,14 +281,7 @@ cfg.addBkgConn = 1
 cfg.noiseBkg = 1.0  # firing rate random noise
 cfg.delayBkg = 5.0  # (ms)
 cfg.startBkg = 0  # start at 0 ms
-
-# cfg.weightBkg = {'IT': 12.0, 'ITS4': 0.7, 'PT': 14.0, 'CT': 14.0,
-#                 'PV': 28.0, 'SOM': 5.0, 'NGF': 80.0, 'VIP': 9.0,
-#                 'TC': 1.8, 'HTC': 1.55, 'RE': 9.0, 'TI': 3.6}
 cfg.rateBkg = {'exc': 40, 'inh': 40}
-
-# options to provide external sensory input
-# cfg.randomThalInput = True  # provide random bkg inputs spikes (NetStim) to thalamic populations
 
 cfg.EbkgThalamicGain = 0.392
 cfg.IbkgThalamicGain = 1.96
@@ -301,7 +294,7 @@ cfg.cochlearThalInput = True
 
 if cfg.cochlearThalInput:
     cfg.cochlearThalInput = {"lonset" : [0], "numCenterFreqs": 100, "freqRange":[125, 20000], "loudnessScale": 1,
-                             "lfnwave": ["wav/silence6s.wav"]}
+                             "lfnwave": ["wav/silence6.5s.wav"]}
     cfg.cochlearThalInput['probECore'] = cfg.cochThalprobECore
     cfg.cochlearThalInput['weightECore'] = cfg.cochThalweightECore
     cfg.cochlearThalInput['probICore'] = cfg.cochThalprobICore

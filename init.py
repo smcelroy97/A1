@@ -32,7 +32,7 @@ sim.net.createPops()               			# instantiate network populations
 sim.net.createCells()              			# instantiate network cells based on defined populations
 
 editNet.setdminID(sim, cfg.allpops)
-if cfg.cochlearThalInput: editNet.setCochCellLocationsX(sim, 'cochlea', netParams.popParams['cochlea']['numCells'], cfg.sizeX)
+if cfg.cochlearThalInput: editNet.setCochCellLocationsX(sim, cfg.cochThalFreqRange[0], cfg.cochThalFreqRange[0], 'cochlea', netParams.popParams['cochlea']['numCells'], cfg.sizeX)
 
 sim.net.connectCells()            			# create connections between cells based on params
 sim.net.addStims() 							# add network stimulation
@@ -40,6 +40,8 @@ sim.setupRecording()              			# setup variables to record for each cell (
 sim.runSim()                                    # run parallel Neuron simulation
 sim.saveDataInNodes()
 sim.gatherDataFromFiles()
+sim.saveData()
+sim.analysis.plotData()    # plot spike raster etc
 
 if comm.is_host():
   netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
@@ -52,11 +54,10 @@ if comm.is_host():
 
   print(out_json)
 
-sim.saveData()
-sim.analysis.plotData()    # plot spike raster etc
+  comm.send(out_json)
+  comm.close()
 
-comm.send(out_json)
-comm.close()
+
 
 # spikes_legacy.plotSpikeHist(include=['cochlea', 'TC'], timeRange=[0, 6000],
 #                             saveFig=True)

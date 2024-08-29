@@ -16,12 +16,12 @@ sge_config = {
 
 run_config = shell_config
 
-search(job_type = 'sh',
+search(job_type = 'sge',
        comm_type = 'socket',
        label = 'grid',
        params = params,
-       output_path = '../A1m/data/grid_batch',
-       checkpoint_path = '../A1/data/ray',
+       output_path = '../A1/simOutput/grid_batch',
+       checkpoint_path = '../A1/simOutput/ray',
        run_config = run_config,
        num_samples = 1,
        metric = 'loss',
