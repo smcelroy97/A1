@@ -77,7 +77,7 @@ cfg.saveDataInclude = ['simData', 'simConfig', 'net']
 cfg.backupCfgFile = None
 cfg.gatherOnlySimData = False
 cfg.saveCellSecs = False
-cfg.saveCellConns = False
+cfg.saveCellConns = True
 
 # ------------------------------------------------------------------------------
 # Analysis and plotting
@@ -86,6 +86,9 @@ cfg.saveCellConns = False
 cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig': False, 'orderInverse': True,
                               'timeRange': [0, cfg.duration], 'figSize': (25, 25), 'plotRates': False,
                               'markerSize': 1}   # Plot a raster
+
+cfg.analysis['plotTraces'] = {'include': [('TC', i) for i in range(40)], 'timeRange': [0, cfg.duration],
+'oneFigPer': 'trace', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
 
 layer_bounds = {'L1': 100, 'L2': 160, 'L3': 950, 'L4': 1250, 'L5A': 1334, 'L5B': 1550, 'L6': 2000}
 
@@ -209,17 +212,6 @@ cfg.intraThalamicEIGain = 1.0
 cfg.intraThalamicIEGain = 1.0
 cfg.intraThalamicIIGain = 1.0
 
-# these params control IC -> Thalamic Core
-cfg.ICThalweightECore = 0.8350476447841453
-cfg.ICThalweightICore = 0.2114492149101151
-cfg.ICThalprobECore = 0.163484173596043
-cfg.ICThalprobICore = 0.0936669688856933
-
-# these params control IC -> Thalamic Matrix
-cfg.ICThalMatrixCoreFactor = 0.1
-cfg.ICThalprobEMatrix = cfg.ICThalprobECore
-cfg.ICThalprobIMatrix = cfg.ICThalprobICore
-
 # these params control cochlea -> Thalamus
 cfg.cochThalweightECore = 0.225  #1.0  # 0.1125
 cfg.cochThalprobECore = 0.3
@@ -294,7 +286,7 @@ cfg.cochlearThalInput = True
 
 if cfg.cochlearThalInput:
     cfg.cochlearThalInput = {"lonset" : [0], "numCenterFreqs": 100, "freqRange":[125, 20000], "loudnessScale": 1,
-                             "lfnwave": ["wav/silence6.5s.wav"]}
+                             "lfnwave": ["wav/1043HzClick_624ISI_2sDelay_6.5s.wav"]}
     cfg.cochlearThalInput['probECore'] = cfg.cochThalprobECore
     cfg.cochlearThalInput['weightECore'] = cfg.cochThalweightECore
     cfg.cochlearThalInput['probICore'] = cfg.cochThalprobICore

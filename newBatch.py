@@ -1,7 +1,7 @@
 from netpyne.batchtools.search import search
 import numpy as np
 
-label = 'TCTune0829A'
+label = 'TCTune0830Traces'
 
 params = {'cochlearThalInput.weightECore' : np.linspace(0.3, 1.5, 5)}
 
@@ -13,7 +13,7 @@ sge_config = {
     'queue': 'cpu.q',
     'cores': 64,
     'vmem': '256G',
-    'realtime': '00:20:00',
+    'realtime': '00:30:00',
     'command': 'mpiexec -n $NSLOTS -hosts $(hostname) nrniv -python -mpi init.py'}
 
 run_config = sge_config
