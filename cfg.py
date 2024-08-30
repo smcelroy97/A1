@@ -78,15 +78,15 @@ cfg.recordDipole = False
 # Saving
 # ------------------------------------------------------------------------------
 
-cfg.simLabel = 'newBatchTest0815'
-cfg.saveFolder = 'data/' + cfg.simLabel  # Set file output name
+cfg.simLabel = 'TCTune0829A'
+cfg.saveFolder = 'simOutput/' + cfg.simLabel  # Set file output name
 cfg.savePickle = True  # Save pkl file
 cfg.saveJson = False  # Save json file
 cfg.saveDataInclude = ['simData', 'simConfig', 'net']
 cfg.backupCfgFile = None
 cfg.gatherOnlySimData = False
 cfg.saveCellSecs = False
-cfg.saveCellConns = False
+cfg.saveCellConns = True
 
 # ------------------------------------------------------------------------------
 # Analysis and plotting
@@ -104,11 +104,8 @@ cfg.analysis['plotConn'] = {'includePre': [cfg.allThalPops, cfg.allCorticalPops]
                             'includePost': [cfg.allThalPops, cfg.allCorticalPops], 'saveFig': True}
 # cfg.analysis['plotSpikeStats'] = {'stats': ['isicv', 'rate'], 'figSize': (6, 12), 'dpi': 300, 'saveFig': True}
 
-# cfg.analysis['plotLFP'] = {'plots': ['timeSeries'], 'electrodes': [10], 'maxFreq': 80, 'figSize': (8,4),
-# 'saveData': False, 'saveFig': True, 'showFig': False} # 'PSD', 'spectrogram'
-# cfg.analysis['plotDipole'] = {'saveFig': True}
-# cfg.analysis['plotEEG'] = {'saveFig': True}
-
+cfg.analysis['plotTraces'] = {'include': [('TC', i) for i in range(40)], 'timeRange': [0, cfg.duration],
+'oneFigPer': 'trace', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
 
 layer_bounds = {'L1': 100, 'L2': 160, 'L3': 950, 'L4': 1250, 'L5A': 1334, 'L5B': 1550, 'L6': 2000}
 # cfg.analysis['plotCSD'] = {'spacing_um': 100, 'LFP_overlay': 1, 'layer_lines': 1, 'layer_bounds': layer_bounds,
@@ -210,9 +207,9 @@ cfg.EICellTypeGain = {'PV': 1.0, 'SOM': 1.0, 'VIP': 1.0,
 cfg.IECellTypeGain = {'PV': 1.0, 'SOM': 1.0, 'VIP': 1.0, 'NGF': 1.0}
 
 # Thalamic
-cfg.addIntraThalamicConn = 1.0
-cfg.addCorticoThalamicConn = 1.0
-cfg.addThalamoCorticalConn = 1.0
+cfg.addIntraThalamicConn = 0
+cfg.addCorticoThalamicConn = 0
+cfg.addThalamoCorticalConn = 0
 
 cfg.thalamoCorticalGain = 1.0
 cfg.intraThalamicGain = 1.0
@@ -223,17 +220,6 @@ cfg.intraThalamicEEGain = 1.0
 cfg.intraThalamicEIGain = 1.0
 cfg.intraThalamicIEGain = 1.0
 cfg.intraThalamicIIGain = 1.0
-
-# these params control IC -> Thalamic Core
-cfg.ICThalweightECore = 0.8350476447841453
-cfg.ICThalweightICore = 0.2114492149101151
-cfg.ICThalprobECore = 0.163484173596043
-cfg.ICThalprobICore = 0.0936669688856933
-
-# these params control IC -> Thalamic Matrix
-cfg.ICThalMatrixCoreFactor = 0.1
-cfg.ICThalprobEMatrix = cfg.ICThalprobECore
-cfg.ICThalprobIMatrix = cfg.ICThalprobICore
 
 # these params control cochlea -> Thalamus
 cfg.cochThalweightECore = 0.225  #1.0  # 0.1125
@@ -302,14 +288,7 @@ cfg.addBkgConn = 1
 cfg.noiseBkg = 1.0  # firing rate random noise
 cfg.delayBkg = 5.0  # (ms)
 cfg.startBkg = 0  # start at 0 ms
-
-# cfg.weightBkg = {'IT': 12.0, 'ITS4': 0.7, 'PT': 14.0, 'CT': 14.0,
-#                 'PV': 28.0, 'SOM': 5.0, 'NGF': 80.0, 'VIP': 9.0,
-#                 'TC': 1.8, 'HTC': 1.55, 'RE': 9.0, 'TI': 3.6}
 cfg.rateBkg = {'exc': 40, 'inh': 40}
-
-# options to provide external sensory input
-# cfg.randomThalInput = True  # provide random bkg inputs spikes (NetStim) to thalamic populations
 
 cfg.EbkgThalamicGain = 0.392
 cfg.IbkgThalamicGain = 1.96
@@ -322,7 +301,7 @@ cfg.cochlearThalInput = True
 
 if cfg.cochlearThalInput:
     cfg.cochlearThalInput = {"lonset" : [0], "numCenterFreqs": 100, "freqRange":[125, 20000], "loudnessScale": 1,
-                             "lfnwave": ["wav/silence6s.wav"]}
+                             "lfnwave": ["wav/1043HzClick_624ISI_2sDelay_6.5s.wav"]}
     cfg.cochlearThalInput['probECore'] = cfg.cochThalprobECore
     cfg.cochlearThalInput['weightECore'] = cfg.cochThalweightECore
     cfg.cochlearThalInput['probICore'] = cfg.cochThalprobICore

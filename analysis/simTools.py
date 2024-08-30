@@ -326,6 +326,30 @@ class editNet:
                 cell.conns.remove(conn)
 
 
+    def setCochCellLocationsX(sim, freqL, freqU, pop, sz, scale):
+        # set the cell positions on a line
+        if pop not in sim.net.pops: return
+        offset = sim.simData['dminID'][pop]
+        ncellinrange = 0  # number of cochlear cells with center frequency in frequency range represented by this model
+        sidx = -1
+        for idx, cf in enumerate(sim.net.params.cf):
+            if cf >= freqL and cf <= freqU:
+                if sidx == -1: sidx = idx  # start index
+                ncellinrange += 1
+        if sidx > -1: offset += sidx
+        # print('setCochCellLocations: sidx, offset, ncellinrange = ', sidx, offset, ncellinrange)
+        for c in sim.net.cells:
+            if c.gid in sim.net.pops[pop].cellGids:
+                cf = sim.net.params.cf[c.gid - sim.simData['dminID'][pop]]
+                if cf >= freqL and cf <= freqU:
+                    c.tags['x'] = cellx = scale * (cf - freqL) / (
+                                freqU - freqL)
+                    c.tags['xnorm'] = cellx / sim.net.params.sizeX  # make sure these values consistent
+                    # print('gid,cellx,xnorm,cf=',c.gid,cellx,cellx/netParams.sizeX,cf)
+                else:
+                    c.tags['x'] = cellx = 100000000  # put it outside range for core
+                    c.tags['xnorm'] = cellx / sim.net.params.sizeX  # make sure these values consistent
+                c.updateShape()
 
 
 
