@@ -68,11 +68,6 @@ layerGroups = {
     '5': [layer['5A'][0], layer['5B'][1]],  # L5A-5B
     '6': layer['6']}                                  # L6
 
-# add layer border correction ??
-#netParams.correctBorder = {'threshold': [cfg.correctBorderThreshold, cfg.correctBorderThreshold, cfg.correctBorderThreshold],
-#                        'yborders': [layer['2'][0], layer['5A'][0], layer['6'][0], layer['6'][1]]}  # correct conn border effect
-
-
 #------------------------------------------------------------------------------
 ## Load cell rules previously saved using netpyne format (DOES NOT INCLUDE VIP, NGF and spiny stellate)
 ## include conditions ('conds') for each cellRule
@@ -84,96 +79,6 @@ cellParamLabels = ['IT2_reduced', 'IT3_reduced', 'ITP4_reduced', 'ITS4_reduced',
 
 for ruleLabel in cellParamLabels:
     netParams.loadCellParamsRule(label=ruleLabel, fileName='cells/' + ruleLabel + '_cellParams.json')  # Load cellParams for each of the above cell subtype
-
-
-
-# ## Reduce T-type calcium channel conductances (cfg.tTypeCorticalFactor ; cfg.tTypeThalamicFactor)
-# for cellLabel in ['TC_reduced', 'HTC_reduced', 'RE_reduced']:
-#     cellParam = netParams.cellParams[cellLabel]
-#     for secName in cellParam['secs']:
-#         #print('cellType: ' + cellLabel + ', section: ' + secName)
-#         for mechName,mech in cellParam['secs'][secName]['mechs'].items():
-#             if mechName in ['itre', 'ittc']:
-#                 #print('gmax of ' + mechName + ' ' + str(cellParam['secs'][secName]['mechs'][mechName]['gmax']))  # ADD A TEST PRINT STATEMENT PRE-CHANGE
-#                 cellParam['secs'][secName]['mechs'][mechName]['gmax'] *= cfg.tTypeThalamicFactor
-#                 print('new gmax of ' + mechName + ' ' + str(cellParam['secs'][secName]['mechs'][mechName]['gmax']))  # ADD A TEST PRINT STATEMENT POST-CHANGE
-
-# for cellLabel in ['TI_reduced']:
-#     cellParam = netParams.cellParams[cellLabel]
-#     for secName in cellParam['secs']:
-#         #print('cellType: ' + cellLabel + ', section: ' + secName)
-#         for mechName,mech in cellParam['secs'][secName]['mechs'].items():
-#             if mechName == 'it2INT':
-#                 #print('gcabar of ' + mechName + ' ' + str(cellParam['secs'][secName]['mechs'][mechName]['gcabar'])) # ADD A TEST PRINT STATEMENT PRE-CHANGE
-#                 cellParam['secs'][secName]['mechs'][mechName]['gcabar'] *= cfg.tTypeThalamicFactor
-#                 print('new gcabar of ' + mechName + ' ' + str(cellParam['secs'][secName]['mechs'][mechName]['gcabar'])) # ADD A TEST PRINT STATEMENT POST-CHANGE
-
-# for cellLabel in ['IT2_reduced', 'IT3_reduced', 'ITP4_reduced', 'ITS4_reduced',
-#                     'IT5A_reduced', 'CT5A_reduced', 'IT5B_reduced', 'CT5B_reduced',
-#                     'IT6_reduced', 'CT6_reduced']:
-#     cellParam = netParams.cellParams[cellLabel]
-#     for secName in cellParam['secs']:
-#         #print('cellType: ' + cellLabel + ', section: ' + secName)
-#         for mechName,mech in cellParam['secs'][secName]['mechs'].items():
-#             if mechName == 'cat':
-#                 #print('gcatbar of ' + mechName + ' ' + str(cellParam['secs'][secName]['mechs'][mechName]['gcatbar']))# ADD A TEST PRINT STATEMENT PRE-CHANGE
-#                 cellParam['secs'][secName]['mechs'][mechName]['gcatbar'] *= cfg.tTypeCorticalFactor
-#                 print('new gcatbar of ' + mechName + ' ' + str(cellParam['secs'][secName]['mechs'][mechName]['gcatbar'])) # ADD A TEST PRINT STATEMENT POST-CHANGE
-
-
-
-## Manipulate NMDAR weights to Inhibitory Populations
-
-
-
-# # Thalamic Interneuron Version:
-# TI_version = 'default' # IAHP # IL # default
-
-# if TI_version == 'IAHP':
-#     netParams.loadCellParamsRule(label='TI_reduced', fileName='cells/TI_reduced_cellParams_IAHP.json')
-#     print('IAHP reduced conductance version loaded')
-# elif TI_version == 'IL':
-#     netParams.loadCellParamsRule(label='TI_reduced', fileName='cells/TI_reduced_cellParams_IL.json')
-#     print('IL reduced conductance version loaded')
-# else:
-#     netParams.loadCellParamsRule(label='TI_reduced', fileName='cells/TI_reduced_cellParams.json')
-#     print('Default thal int model loaded')
-
-
-
-# # change weightNorm
-# for k in cfg.weightNormScaling:
-#     for sec in netParams.cellParams[k]['secs'].values():
-#         for i in range(len(sec['weightNorm'])):
-#             sec['weightNorm'][i] *= cfg.weightNormScaling[k]
-
-
-# # Parametrize PT ih_gbar and exc cells K_gmax to simulate NA/ACh neuromodulation
-# for cellLabel in ['PT5B_reduced']:
-#     cellParam = netParams.cellParams[cellLabel]
-
-#     for secName in cellParam['secs']:
-#         # Adapt ih params based on cfg param
-#         for mechName,mech in cellParam['secs'][secName]['mechs'].items():
-#             if mechName in ['ih','h','h15', 'hd']:
-#                 mech['gbar'] = [g*cfg.ihGbar for g in mech['gbar']] if isinstance(mech['gbar'],list) else mech['gbar']*cfg.ihGbar
-
-
-# # Adapt Kgbar
-# for cellLabel in ['IT2_reduced', 'IT3_reduced', 'ITP4_reduced', 'ITS4_reduced',
-#                     'IT5A_reduced', 'CT5A_reduced', 'IT5B_reduced',
-#                     'PT5B_reduced', 'CT5B_reduced', 'IT6_reduced', 'CT6_reduced']:
-#     cellParam = netParams.cellParams[cellLabel]
-
-#     for secName in cellParam['secs']:
-#         for kmech in [k for k in cellParam['secs'][secName]['mechs'].keys() if k in ['kap','kdr']]:
-#             cellParam['secs'][secName]['mechs'][kmech]['gbar'] *= cfg.KgbarFactor
-
-
-
-
-
-
 
 #------------------------------------------------------------------------------
 # Population parameters
@@ -764,76 +669,10 @@ if cfg.addBkgConn:
         # netParams.popParams['cochlea']['sizeX'] = numCochlearCells + 1
         # netParams.popParams['cochlea']['sizeY'] = netParams.popParams['cochlea']['sizeZ'] = 1
 
-    if cfg.ICThalInput:
-        # load file with IC output rates
-        from scipy.io import loadmat
-        import numpy as np
-
-        data = loadmat(cfg.ICThalInput['file'])
-        fs = data['RsFs'][0][0]
-        ICrates = data['BE_sout_population'].tolist()
-        ICrates = [x + [0] for x in ICrates] # add trailing zero to avoid long output from inh_poisson_generator()
-        ICtimes = list(np.arange(0, cfg.duration, 1000./fs))  # list with times to set each time-dep rate
-
-        ICrates = ICrates * 4 # 200 cells
-
-        numCells = len(ICrates)
-
-        # these next two parameters are derived, so should be set here in case used by batch/optimization; because cfg.py
-        # gets copied as a .json file without re-interpreting the other variables
-        cfg.ICThalInput['weightEMatrix'] = cfg.ICThalInput['weightECore'] * cfg.ICThalInput['MatrixCoreFactor']
-        cfg.ICThalInput['weightIMatrix'] = cfg.ICThalInput['weightICore'] * cfg.ICThalInput['MatrixCoreFactor']
-
-        # Option 1: create population of DynamicNetStims with time-varying rates
-        #netParams.popParams['IC'] = {'cellModel': 'DynamicNetStim', 'numCells': numCells, 'ynormRange': layer['cochlear'],
-        #    'dynamicRates': {'rates': ICrates, 'times': ICtimes}}
-
-        # Option 2:
-        from input import inh_poisson_generator
-
-        maxLen = min(len(ICrates[0]), len(ICtimes))
-
-        ### ADDED BY EYG 9/23/2022 TO ALLOW FOR MULTIPLE START TIMES (TEST)
-        if type(cfg.ICThalInput['startTime']) == list:
-
-            from collections import OrderedDict
-            spkTimesDict = OrderedDict()
-            startTimes = cfg.ICThalInput['startTime']
-            for startTime in startTimes:
-                keyName = 'startTime_' + str(startTime)
-                print('KEY NAME: ' + keyName)
-                spkTimesDict[keyName] = [[x+startTime for x in inh_poisson_generator(ICrates[i][:maxLen], ICtimes[:maxLen], cfg.duration, cfg.ICThalInput['seed']+i)] for i in range(len(ICrates))]
-
-            spkTimes = [None] * len(ICrates) #[]
-
-            for i in range(len(ICrates)):
-                for key in spkTimesDict.keys():
-                    if spkTimes[i] is None:
-                        spkTimes[i] = spkTimesDict[key][i]
-                    else:
-                        spkTimes[i] = spkTimes[i] + spkTimesDict[key][i]
-
-        else:
-            ## Can change the t_stop arg in the inh_poisson_generator fx from cfg.duration to the length of the BBN stimulus (>100 ms)
-            spkTimes = [[x+cfg.ICThalInput['startTime'] for x in inh_poisson_generator(ICrates[i][:maxLen], ICtimes[:maxLen], cfg.duration, cfg.ICThalInput['seed']+i)] for i in range(len(ICrates))]
-
-        netParams.popParams['IC'] = {'cellModel': 'VecStim', 'numCells': numCells, 'ynormRange': layer['cochlear'],
-            'spkTimes': spkTimes}
-
-    if cfg.artFB:
-        # load file with FB input rates
-        print('Add artificial feedback')
-        import pickle
-        with open(cfg.artFB['file'], "rb") as fp:   # Unpickling
-            spkTimes= pickle.load(fp)
-        numCells = len(spkTimes)
-        netParams.popParams['FB'] = {'cellModel': 'VecStim', 'numCells': numCells, 'ynormRange': layer['cochlear'],'spkTimes': spkTimes}
-
     # excBkg/I -> thalamus + cortex
     with open('cells/bkgWeightPops.json', 'r') as f:
         weightBkg = json.load(f)
     pops = list(cfg.allpops)
-    pops.remove('IC')
     pops.remove('cochlea')
 
     for pop in ['TC', 'TCM', 'HTC']:
@@ -929,64 +768,6 @@ if cfg.addBkgConn:
     if cfg.cochlearThalInput:
         connectCochleaToThal()
 
-    # cochlea/IC -> thal
-    if cfg.ICThalInput:
-        # IC -> thalamic core
-        netParams.connParams['IC->ThalECore'] = {
-            'preConds': {'pop': 'IC'},
-            'postConds': {'pop': ['TC', 'HTC']},
-            'sec': 'soma',
-            'loc': 0.5,
-            'synMech': ESynMech,
-            'probability': cfg.ICThalInput['probECore'],
-            'weight': cfg.ICThalInput['weightECore'],
-            'synMechWeightFactor': cfg.synWeightFractionEE,
-            'delay': cfg.delayBkg}
-
-        netParams.connParams['IC->ThalICore'] = {
-            'preConds': {'pop': 'IC'},
-            'postConds': {'pop': ['RE', 'TI']},
-            'sec': 'soma',
-            'loc': 0.5,
-            'synMech': 'GABAA',
-            'probability': cfg.ICThalInput['probICore'],
-            'weight': cfg.ICThalInput['weightICore'],
-            'delay': cfg.delayBkg}
-
-        # IC -> thalamic matrix
-        netParams.connParams['IC->ThalEMatrix'] = {
-            'preConds': {'pop': 'IC'},
-            'postConds': {'pop': ['TCM']},
-            'sec': 'soma',
-            'loc': 0.5,
-            'synMech': ESynMech,
-            'probability': cfg.ICThalInput['probEMatrix'],
-            'weight': cfg.ICThalInput['weightEMatrix'],
-            'synMechWeightFactor': cfg.synWeightFractionEE,
-            'delay': cfg.delayBkg}
-
-        netParams.connParams['IC->ThalIMatrix'] = {
-            'preConds': {'pop': 'IC'},
-            'postConds': {'pop': ['IREM', 'TIM']},
-            'sec': 'soma',
-            'loc': 0.5,
-            'synMech': 'GABAA',
-            'probability': cfg.ICThalInput['probIMatrix'],
-            'weight': cfg.ICThalInput['weightIMatrix'],
-            'delay': cfg.delayBkg}
-
-    if cfg.artFB:
-        # FB -> L5 apical dendrites in L2
-        netParams.connParams['FB->L5'] = {
-            'preConds': {'pop': 'FB'},
-            'postConds': {'pop': ['IT5A', 'IT5B','PT5B']},
-            'sec': 'apic_uppertrunk',
-            'loc': 0.5,
-            'synMech': ESynMech,
-            'probability': cfg.artFB['prob'],
-            'weight': cfg.artFB['weight'],
-            'synMechWeightFactor': cfg.synWeightFractionEE,
-            'delay': cfg.delayBkg}
 
 #------------------------------------------------------------------------------
 # Current inputs (IClamp)
