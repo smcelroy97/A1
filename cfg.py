@@ -77,7 +77,7 @@ cfg.saveDataInclude = ['simData', 'simConfig', 'net']
 cfg.backupCfgFile = None
 cfg.gatherOnlySimData = False
 cfg.saveCellSecs = False
-cfg.saveCellConns = True
+cfg.saveCellConns = False
 
 # ------------------------------------------------------------------------------
 # Analysis and plotting
@@ -86,8 +86,9 @@ cfg.saveCellConns = True
 cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig': False, 'orderInverse': True,
                               'timeRange': [0, cfg.duration], 'figSize': (25, 25), 'plotRates': False,
                               'markerSize': 1}   # Plot a raster
-cfg.analysis['plotConn'] = {'includePre': cfg.allpops, 'includePost': ['TC'], 'feature': 'strength',
-                            'saveFig': True, 'showFig': False, 'figSize': (25, 25)}  # Plot conn matrix
+
+# cfg.analysis['plotConn'] = {'includePre': cfg.allpops, 'includePost': ['TC'], 'feature': 'strength',
+#                             'saveFig': True, 'showFig': False, 'figSize': (25, 25)}  # Plot conn matrix
 
 cfg.analysis['plotTraces'] = {'include': [('TC', i) for i in range(40)], 'timeRange': [0, cfg.duration],
 'oneFigPer': 'trace', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
