@@ -91,9 +91,9 @@ if comm.is_host():
   netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
   print('transmitting data...')
   inputs = specs.get_mappings()
-  results = sim.analysis.popAvgRates(show=False)
+  results = sim.analysis.popAvgRates()
 
-  results['loss'] = sim.analysis.popAvgRates(popName='TC', show=False)
+  results['loss'] = sim.analysis.popAvgRates()
   out_json = json.dumps({**inputs, **results})
 
   print(out_json)

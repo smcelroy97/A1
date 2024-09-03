@@ -6,7 +6,7 @@ This file has sim configs as well as specification for parameterized values in n
 
 Contributors: ericaygriffith@gmail.com, salvadordura@gmail.com, samnemo@gmail.com
 """
-
+from netpyne.analysis import plotConn
 from netpyne.batchtools import specs
 import pickle
 import json
@@ -21,7 +21,7 @@ cfg = specs.SimConfig()
 # ------------------------------------------------------------------------------
 # Run parameters
 # ------------------------------------------------------------------------------
-cfg.duration = 6500  # Duration of the sim, in ms
+cfg.duration = 0.1  # Duration of the sim, in ms
 cfg.dt = 0.05  # Internal Integration Time Step
 cfg.verbose = 0  # Show detailed messages
 cfg.progressBar = 0  # even more detailed message
@@ -77,7 +77,7 @@ cfg.saveDataInclude = ['simData', 'simConfig', 'net']
 cfg.backupCfgFile = None
 cfg.gatherOnlySimData = False
 cfg.saveCellSecs = False
-cfg.saveCellConns = False
+cfg.saveCellConns = True
 
 # ------------------------------------------------------------------------------
 # Analysis and plotting
@@ -86,14 +86,15 @@ cfg.saveCellConns = False
 cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig': False, 'orderInverse': True,
                               'timeRange': [0, cfg.duration], 'figSize': (25, 25), 'plotRates': False,
                               'markerSize': 1}   # Plot a raster
+cfg.analysis['plotConn'] = {'includePre': cfg.allpops, 'includePost': ['TC'], 'feature': 'strength',
+                            'saveFig': True, 'showFig': False, 'figSize': (25, 25)}  # Plot conn matrix
 
 cfg.analysis['plotTraces'] = {'include': [('TC', i) for i in range(40)], 'timeRange': [0, cfg.duration],
 'oneFigPer': 'trace', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
 
 layer_bounds = {'L1': 100, 'L2': 160, 'L3': 950, 'L4': 1250, 'L5A': 1334, 'L5B': 1550, 'L6': 2000}
 
-# ------------------------------------------------------------------------------
-# Cells
+
 # ------------------------------------------------------------------------------
 
 cfg.weightNormThreshold = 5.0  # maximum weight normalization factor with respect to the soma
@@ -198,9 +199,9 @@ cfg.EICellTypeGain = {'PV': 1.0, 'SOM': 1.0, 'VIP': 1.0,
 cfg.IECellTypeGain = {'PV': 1.0, 'SOM': 1.0, 'VIP': 1.0, 'NGF': 1.0}
 
 # Thalamic
-cfg.addIntraThalamicConn = 0
-cfg.addCorticoThalamicConn = 0
-cfg.addThalamoCorticalConn = 0
+cfg.addIntraThalamicConn = 1.0
+cfg.addCorticoThalamicConn = 1.0
+cfg.addThalamoCorticalConn = 1.0
 
 cfg.thalamoCorticalGain = 1.0
 cfg.intraThalamicGain = 1.0
