@@ -87,6 +87,9 @@ cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig'
                               'timeRange': [0, cfg.duration], 'figSize': (25, 25), 'plotRates': False,
                               'markerSize': 1}   # Plot a raster
 
+cfg.analysis['plotTraces'] = {'include': [('TC', i) for i in range(40)], 'timeRange': [0, cfg.duration],
+'oneFigPer': 'trace', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
+
 layer_bounds = {'L1': 100, 'L2': 160, 'L3': 950, 'L4': 1250, 'L5A': 1334, 'L5B': 1550, 'L6': 2000}
 
 # ------------------------------------------------------------------------------
