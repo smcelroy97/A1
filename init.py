@@ -33,7 +33,10 @@ sim.net.createPops()               			# instantiate network populations
 sim.net.createCells()              			# instantiate network cells based on defined populations
 
 editNet.setdminID(sim, cfg.allpops)
-if cfg.cochlearThalInput: editNet.setCochCellLocationsX(sim, cfg.cochThalFreqRange[0], cfg.cochThalFreqRange[0], 'cochlea', netParams.popParams['cochlea']['numCells'], cfg.sizeX)
+if cfg.cochlearThalInput:
+  editNet.setCochCellLocationsX(sim, cfg.cochThalFreqRange[0], cfg.cochThalFreqRange[0],
+                                'cochlea', netParams.popParams['cochlea']['numCells'], cfg.sizeX)
+
 
 sim.net.connectCells()            			# create connections between cells based on params
 sim.net.addStims() 							# add network stimulation
