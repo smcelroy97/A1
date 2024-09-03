@@ -352,8 +352,10 @@ class editNet:
             if c.gid in sim.net.pops[pop].cellGids:
                 cf = sim.net.params.cf[c.gid - sim.simData['dminID'][pop]]
                 if cf >= freqL and cf <= freqU:
+                    print(c.tags['x'] + 'BEFORE')
                     c.tags['x'] = cellx = scale * (cf - freqL) / (
                                 freqU - freqL)
+                    print(c.tags['x'] + 'AFTER')
                     c.tags['xnorm'] = cellx / sim.net.params.sizeX  # make sure these values consistent
                     # print('gid,cellx,xnorm,cf=',c.gid,cellx,cellx/netParams.sizeX,cf)
                 else:
@@ -361,7 +363,7 @@ class editNet:
                     c.tags['xnorm'] = cellx / sim.net.params.sizeX  # make sure these values consistent
                 c.updateShape()
 
-    def checkCochConns(sim):
+    def checkCochConns(sim, pop):
         cochGids = []
         cochConns = []
 
@@ -371,20 +373,20 @@ class editNet:
         print('Number of Cochlea Cells is ' + str(len(cochGids)))
 
         for cell in sim.net.cells:
-            if cell.tags['pop']:
+            if cell.tags['pop'] == pop:
                 for conn in cell.conns:
                     if conn['preGid'] in cochGids:
                         cochConns.append(conn)
-                        print(len(cochConns))
+
         print('Number of Cochlea Conns is ' + str(len(cochConns)))
 
-    def checkTCconnRatio():
+    def checkTCconnRatio(sim, pop):
         TCConns = []
         L6TCConns = []
         IRETCConns = []
         CochTCConns = []
         for cell in sim.net.cells:
-            if cell.tags['pop'] == 'TC':
+            if cell.tags['pop'] == pop:
                 for conn in cell.conns:
                     TCConns.append(conn['preGid'])
         for conn in TCConns:

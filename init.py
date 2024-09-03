@@ -32,10 +32,45 @@ sim.initialize(simConfig = cfg,
 sim.net.createPops()               			# instantiate network populations
 sim.net.createCells()              			# instantiate network cells based on defined populations
 
-editNet.setdminID(sim, cfg.allpops)
-if cfg.cochlearThalInput:
-  editNet.setCochCellLocationsX(sim, cfg.cochThalFreqRange[0], cfg.cochThalFreqRange[0],
-                                'cochlea', netParams.popParams['cochlea']['numCells'], cfg.sizeX)
+
+def setdminID (sim, lpop):
+  # setup min,max ID and dnumc for each population in lpop
+  alltags = sim._gatherAllCellTags() #gather cell tags; see https://github.com/Neurosim-lab/netpyne/blob/development/netpyne/sim/gather.py
+  dGIDs = {pop:[] for pop in lpop}
+  for tinds in range(len(alltags)):
+    if alltags[tinds]['pop'] in lpop:
+      dGIDs[alltags[tinds]['pop']].append(tinds)
+  sim.simData['dminID'] = {pop:np.amin(dGIDs[pop]) for pop in lpop if len(dGIDs[pop])>0}
+  sim.simData['dmaxID'] = {pop:np.amax(dGIDs[pop]) for pop in lpop if len(dGIDs[pop])>0}
+  sim.simData['dnumc'] = {pop:np.amax(dGIDs[pop])-np.amin(dGIDs[pop]) for pop in lpop if len(dGIDs[pop])>0}
+
+setdminID(sim, cfg.allpops)
+
+def setCochCellLocationsX (pop, sz, scale):
+  # set the cell positions on a line
+  if pop not in sim.net.pops: return
+  offset = sim.simData['dminID'][pop]
+  ncellinrange = 0 # number of cochlear cells with center frequency in frequency range represented by this model
+  sidx = -1
+  for idx,cf in enumerate(netParams.cf):
+    if cf >= cfg.cochThalFreqRange[0] and cf <= cfg.cochThalFreqRange[1]:
+      if sidx == -1: sidx = idx # start index
+      ncellinrange += 1
+  if sidx > -1: offset += sidx
+  # print('setCochCellLocations: sidx, offset, ncellinrange = ', sidx, offset, ncellinrange)
+  for c in sim.net.cells:
+    if c.gid in sim.net.pops[pop].cellGids:
+      cf = netParams.cf[c.gid-sim.simData['dminID'][pop]]
+      if cf >= cfg.cochThalFreqRange[0] and cf <= cfg.cochThalFreqRange[1]:
+        c.tags['x'] = cellx = scale * (cf - cfg.cochThalFreqRange[0])/(cfg.cochThalFreqRange[1]-cfg.cochThalFreqRange[0])
+        c.tags['xnorm'] = cellx / netParams.sizeX # make sure these values consistent
+        # print('gid,cellx,xnorm,cf=',c.gid,cellx,cellx/netParams.sizeX,cf)
+      else:
+        c.tags['x'] = cellx = 100000000  # put it outside range for core
+        c.tags['xnorm'] = cellx / netParams.sizeX # make sure these values consistent
+      c.updateShape()
+
+if cfg.cochlearThalInput: setCochCellLocationsX('cochlea', netParams.popParams['cochlea']['numCells'], cfg.sizeX)
 
 
 sim.net.connectCells()            			# create connections between cells based on params
