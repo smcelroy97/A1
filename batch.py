@@ -1,9 +1,9 @@
 from netpyne.batchtools.search import search
 import numpy as np
 
-label = 'BkgThalTune0903'
+label = 'BkgThalTune0903A'
 
-params = {'EbkgThalamicGain' : np.linspace(0.392, 3.0, 6)}
+params = {'EbkgThalamicGain' : np.linspace(0.392, 0.9136, 5)}
 
 # use batch_shell_config if running directly on the machine
 shell_config = {'command': 'mpiexec -np 4 nrniv -python -mpi init.py',}
@@ -13,7 +13,7 @@ sge_config = {
     'queue': 'cpu.q',
     'cores': 64,
     'vmem': '256G',
-    'realtime': '01:40:00',
+    'realtime': '00:40:00',
     'command': 'mpiexec -n $NSLOTS -hosts $(hostname) nrniv -python -mpi init.py'}
 
 run_config = sge_config

@@ -200,7 +200,7 @@ cfg.EICellTypeGain = {'PV': 1.0, 'SOM': 1.0, 'VIP': 1.0,
 cfg.IECellTypeGain = {'PV': 1.0, 'SOM': 1.0, 'VIP': 1.0, 'NGF': 1.0}
 
 # Thalamic
-cfg.addIntraThalamicConn = 0
+cfg.addIntraThalamicConn = 1.0
 cfg.addCorticoThalamicConn = 0
 cfg.addThalamoCorticalConn = 0
 
