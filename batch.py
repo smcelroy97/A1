@@ -1,9 +1,10 @@
 from netpyne.batchtools.search import search
 import numpy as np
 
-label = 'weightECore0904'
+label = 'IBkgThalTune0904'
 
-params = {'cochlearThalInput.weightECore' : np.linspace(0.225, 1, 10)}
+# params = {'cochlearThalInput.weightECore' : np.linspace(0.225, 1, 10)}
+params = {'IbkgThalamicGain' : np.linspace(0.1, 1.0, 8)}
 
 # use batch_shell_config if running directly on the machine
 shell_config = {'command': 'mpiexec -np 4 nrniv -python -mpi init.py',}
@@ -13,7 +14,7 @@ sge_config = {
     'queue': 'cpu.q',
     'cores': 64,
     'vmem': '256G',
-    'realtime': '00:40:00',
+    'realtime': '00:30:00',
     'command': 'mpiexec -n $NSLOTS -hosts $(hostname) nrniv -python -mpi init.py'}
 
 run_config = sge_config
