@@ -6,7 +6,6 @@ This file has sim configs as well as specification for parameterized values in n
 
 Contributors: ericaygriffith@gmail.com, salvadordura@gmail.com, samnemo@gmail.com
 """
-from netpyne.analysis import plotConn
 from netpyne.batchtools import specs
 import pickle
 import json
