@@ -162,6 +162,7 @@ cfg.scaleDensity = 1.0  # Should be 1.0 unless need lower cell density for test 
 
 # Cortical
 cfg.addConn = 1.0
+cfg.addSubConn = 1
 cfg.wireCortex = 0
 
 # cfg.EEGain = 0.75
@@ -250,16 +251,6 @@ cfg.L4L4E = 1.0
 cfg.L3L4PV = 1.0
 cfg.L3L4SOM = 1.0
 
-# Artificial Feedback Params
-cfg.artFB = False
-cfg.artFBweight = 20.0
-cfg.artFBprob = 0.5
-
-cfg.addSubConn = 1
-
-cfg.alterSyn = 0
-cfg.alterSyn2 = 0
-cfg.alterSyn3 = 0
 
 # full weight conn matrix
 with open('conn/conn.pkl', 'rb') as fileObj:
@@ -276,7 +267,7 @@ cfg.delayBkg = 5.0  # (ms)
 cfg.startBkg = 0  # start at 0 ms
 cfg.rateBkg = {'exc': 40, 'inh': 40}
 
-cfg.EbkgThalamicGain = 0.392
+cfg.EbkgThalamicGain = 0.9316
 cfg.IbkgThalamicGain = 1.96
 
 cfg.NGF6bkgGain = 1.0

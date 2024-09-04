@@ -82,46 +82,11 @@ sim.gatherDataFromFiles()
 sim.saveData()
 sim.analysis.plotData()    # plot spike raster etc
 
-# plotPops = ['TC']
-# try:
-#   record_pops = [(pop, list(np.arange(0, netParams.popParams[pop]['numCells']))) for pop in plotPops]
-# except:
-#   record_pops = [(pop, list(np.arange(0, 40))) for pop in plotPops]
-#
-# for pop_ind, pop in enumerate(plotPops):
-#   print('\n\n', pop)
-#   # sim.analysis.plotTraces(
-#   figs, traces_dict = sim.analysis.plotTraces(
-#     include=[pop],
-#     overlay=True, oneFigPer='trace',
-#     ylim=[-110, 50],
-#     axis=True,
-#     figSize=(70, 15),
-#     fontSize=15,
-#     saveFig=sim.cfg.saveFolder + '/' + sim.cfg.simLabel + '_traces__' + pop + '.png',
-#   )
-#
-#   tracesData = traces_dict['tracesData']
-#   store_v = []
-#   store_voltages = {}
-#   for rec_ind in range(len(tracesData)):
-#     for trace in tracesData[rec_ind].keys():
-#       if '_V_soma' in trace:
-#         cell_gid_str = trace.split('_V_soma')[0].split('cell_')[1]
-#         store_v.append(list(tracesData[rec_ind][trace]))
-#         store_voltages.update({cell_gid_str: list(tracesData[rec_ind][trace])})
-#
-#   t_vector = list(tracesData[0]['t'])
-#   mean_v = np.mean(store_v, axis=0)
-#   t_vector_ = [t_vector[i] for i in range(len(mean_v))]
-#   plt.figure(figsize=(70, 15))
-#   for trace in store_v: plt.plot(t_vector_, trace, 'gray', alpha=0.2)
-#   plt.plot(t_vector_, mean_v, 'r')
-#   plt.ylim([-110, 50])
-#   plt.xlim([min(t_vector_), max(t_vector_)])
-#   plt.savefig(sim.cfg.saveFolder + '/' + sim.cfg.simLabel + '_mean_traces__' + pop + '.png')
 
+spikes_legacy.plotSpikeHist(include=['cochlea', 'TC'], timeRange=[0, 6500],
+                            saveFig=True)
 
+# Terminate batch process
 if comm.is_host():
   netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
   print('transmitting data...')
@@ -135,10 +100,3 @@ if comm.is_host():
 
   comm.send(out_json)
   comm.close()
-
-
-
-# spikes_legacy.plotSpikeHist(include=['cochlea', 'TC'], timeRange=[0, 6000],
-#                             saveFig=True)
-
-

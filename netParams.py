@@ -594,36 +594,6 @@ def addSubConn ():
 
 if cfg.addSubConn: addSubConn()
 
-if cfg.alterSyn:
-
-    #------------------------------------------------------------------------------
-    #  TCM -> E: apical
-    netParams.subConnParams['TCM->E'] = {
-        'preConds': {'cellType': ['TCM']},
-        'postConds': {'cellType': ['IT2','IT3','IT6', 'ITS4', 'CT']},
-        'sec': 'apic',
-        'groupSynMechs': ESynMech,
-        'density': 'uniform'}
-
-    #------------------------------------------------------------------------------
-    #  TCM -> 5: apical
-    netParams.subConnParams['TCM->5'] = {
-        'preConds': {'cellType': ['TCM']},
-        'postConds': {'cellType': ['IT5A','IT5B','PT5B']},
-        'sec': 'apic_trunk',
-        'groupSynMechs': ESynMech,
-        'density': 'uniform'}
-
-else:
-    #------------------------------------------------------------------------------
-    #  TCM -> E: apical
-    netParams.subConnParams['TCM->E'] = {
-        'preConds': {'cellType': ['TCM']},
-        'postConds': {'cellType': ['IT', 'ITS4', 'PT', 'CT']},
-        'sec': 'apic',#'apic',
-        'groupSynMechs': ESynMech,
-        'density': 'uniform'}
-
 #------------------------------------------------------------------------------
 # Background inputs
 #------------------------------------------------------------------------------
@@ -659,9 +629,6 @@ if cfg.addBkgConn:
             'numCells': numCochlearCells,
             'spkTimes': cochlearSpkTimes,
             'ynormRange': layer['cochlear']}
-        # netParams.popParams['cochlea']['gridSpacing'] = 1
-        # netParams.popParams['cochlea']['sizeX'] = numCochlearCells + 1
-        # netParams.popParams['cochlea']['sizeY'] = netParams.popParams['cochlea']['sizeZ'] = 1
 
     # excBkg/I -> thalamus + cortex
     with open('cells/bkgWeightPops.json', 'r') as f:
@@ -705,15 +672,6 @@ if cfg.addBkgConn:
 
     # cochlea -> thal
     def connectCochleaToThal():
-        # these next two parameters are derived, so should be set here in case used by batch/optimization; because cfg.py
-        # gets copied as a .json file without re-interpreting the other variables
-        cfg.cochlearThalInput['weightEMatrix'] = cfg.cochlearThalInput['weightEMatrix']
-        cfg.cochlearThalInput['weightIMatrix'] = cfg.cochlearThalInput['weightIMatrix']
-        # coch2coreIDX = []
-        # for idx, cf in enumerate(cochlearCenterFreqs):
-        #  if cf >= cfg.cochThalFreqRange[0] and cf <= cfg.cochThalFreqRange[1]:
-        #    coch2coreIDX.append(idx) # this cochlear cell can project to core
-        # cochlea to thalamic core uses topographic wiring, cochlea to matrix uses random wiring
         prob = '%f * exp(-dist_x/%f)' % (cfg.cochlearThalInput['probECore'], ThalamicCoreLambda)
         print(prob)
         netParams.connParams['cochlea->ThalECore'] = {
@@ -768,6 +726,7 @@ if cfg.addBkgConn:
 #------------------------------------------------------------------------------
 # Current inputs (IClamp)
 #------------------------------------------------------------------------------
+
 # if cfg.addIClamp:
 #  	for key in [k for k in dir(cfg) if k.startswith('IClamp')]:
 # 		params = getattr(cfg, key, None)

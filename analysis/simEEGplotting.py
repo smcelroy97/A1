@@ -6,8 +6,6 @@ from simTools import simTools
 import os
 import numpy as np
 from scipy import signal
-import matplotlib
-matplotlib.use("MacOSX")
 from matplotlib import pyplot as plt
 from lfpykit.eegmegcalc import NYHeadModel
 
@@ -31,7 +29,7 @@ PSDSpect = False
 plotMUA = False
 
 
-batch = 'SamWavTest0815A'  # Name of batch for fig saving
+batch = 'weightECore0904'  # Name of batch for fig saving
 
 # Load sim EEG data
 base_dir = '/Users/scoot/A1ProjData/A1_sim_data/' + batch + '/'  # Define dir from saved data dir
