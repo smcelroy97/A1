@@ -1,10 +1,9 @@
 from netpyne.batchtools.search import search
 import numpy as np
 
-label = 'IBkgThalTune0904'
+label = 'weightECoreTune0905'
 
-# params = {'cochlearThalInput.weightECore' : np.linspace(0.225, 1, 10)}
-params = {'IbkgThalamicGain' : np.linspace(0.1, 1.0, 8)}
+params = {'cochlearThalInput.weightECore' : np.linspace(0.225, 1, 8)}
 
 # use batch_shell_config if running directly on the machine
 shell_config = {'command': 'mpiexec -np 4 nrniv -python -mpi init.py',}
