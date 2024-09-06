@@ -15,21 +15,21 @@ stim_on = 2000  # Define onset of stimulus if necessary
 # plotERP = {'useFilter': True}
 # plotSpectrogram = {'useFilter': False}
 # plotPSD = {'useFilter': True}
-# plotRaster = {'timeRange': [0, 6000]}
+plotRaster = {'timeRange': [1000, 6500]}
 # PSDSpect = {'timeRange': [3000, 4000], 'useLFP': False, 'useCSD': True}
-# plotMUA = {'populations': ['TC', 'IRE', 'ITP4', 'ITS4'], 'stimDur': 100}
+# plotMUA = {'populations': ['TC', 'TCM'], 'stimDur': 100}
 
 calcEEG = False
 filter = False
 plotERP = False
 plotSpectrogram = False
 plotPSD = False
-plotRaster = False
+# plotRaster = False
 PSDSpect = False
 plotMUA = False
 
 
-batch = 'weightECore0904'  # Name of batch for fig saving
+batch = 'intraThal0906'  # Name of batch for fig saving
 
 # Load sim EEG data
 base_dir = '/Users/scoot/A1ProjData/A1_sim_data/' + batch + '/'  # Define dir from saved data dir
@@ -117,7 +117,7 @@ for file in os.listdir(base_dir):
         # Plot Raster
         if plotRaster:
                 sim.analysis.plotRaster(
-                    include      = [sim.cfg.allThalPops + sim.cfg.allCorticalPops + ['cochlea']],
+                    include      = [sim.cfg.allThalPops],      #plotRaster['include'],
                     orderInverse = True,
                     timeRange    = plotRaster['timeRange'],
                     markerSize   = 50,
