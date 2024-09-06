@@ -27,6 +27,10 @@ import json
 
 comm.initialize()
 
+subset = cfg.allThalPops + ['cochlea']
+
+netParams.popParams = {pop: netParams.popParams[pop] for pop in subset}
+
 sim.initialize(simConfig = cfg,
                netParams = netParams)  		# create network object and set cfg and net params
 sim.net.createPops()               			# instantiate network populations
@@ -140,9 +144,8 @@ if comm.is_host():
   netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
   print('transmitting data...')
   inputs = specs.get_mappings()
-  results = sim.analysis.popAvgRates()
-
-  results['loss'] = sim.analysis.popAvgRates()
+  results = sim.analysis.popAvgRates(show=False)
+  results['loss'] = results['TC']
   out_json = json.dumps({**inputs, **results})
 
   print(out_json)

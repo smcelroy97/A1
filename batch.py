@@ -1,9 +1,10 @@
 from netpyne.batchtools.search import search
 import numpy as np
 
-label = 'IEThal0906'
+label = 'IEThal0906A'
 
-params = {'intraThalamicIEGain' : np.linspace(0.1, 0.7, 8)
+params = {'intraThalamicIEGain' : np.linspace(0.1, 0.7, 4),
+          'intraThalamicEIGain' : np.linspace(0.1, 0.7, 4)
           }
 
 # use batch_shell_config if running directly on the machine
