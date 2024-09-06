@@ -3,8 +3,8 @@ import numpy as np
 
 label = 'IEThal0906A'
 
-params = {'intraThalamicIEGain' : np.linspace(0.1, 0.7, 4),
-          'intraThalamicEIGain' : np.linspace(0.1, 0.7, 4)
+params = {'intraThalamicIEGain' : np.linspace(0.3, 0.75, 4),
+          'intraThalamicEIGain' : np.linspace(0.3, 0.75, 4)
           }
 
 # use batch_shell_config if running directly on the machine
@@ -15,7 +15,7 @@ sge_config = {
     'queue': 'cpu.q',
     'cores': 64,
     'vmem': '256G',
-    'realtime': '00:30:00',
+    'walltime': '00:20:00',
     'command': 'mpiexec -n $NSLOTS -hosts $(hostname) nrniv -python -mpi init.py'}
 
 run_config = sge_config
