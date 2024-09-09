@@ -28,8 +28,8 @@ def assr_batch_grid(filename):
 
     #### SET weights####
 
-    params['intraThalamicIEGain'] = [np.linspace(0.1, 0.7, 4)]
-    params['intraThalamicEIGain'] = [np.linspace(0.1, 0.7, 4)]
+    params['intraThalamicIEGain'] = np.linspace(0.1, 0.7, 4)
+    params['intraThalamicEIGain'] = np.linspace(0.1, 0.7, 4)
 
     # --------------------------------------------------------
 

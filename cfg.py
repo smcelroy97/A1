@@ -9,6 +9,7 @@ Contributors: ericaygriffith@gmail.com, salvadordura@gmail.com, samnemo@gmail.co
 from netpyne import specs
 import pickle
 from netpyne.specs import SimConfig
+import json
 
 cfg: SimConfig = specs.SimConfig()
 
@@ -305,6 +306,3 @@ cfg.addIClamp = 0
 # NetStim inputs
 # ------------------------------------------------------------------------------
 cfg.addNetStim = 0
-
-cfg.tune = {}
-cfg.update_cfg()

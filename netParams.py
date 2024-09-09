@@ -5,7 +5,7 @@ High-level specifications for A1 network model using NetPyNE
 
 Contributors: ericaygriffith@gmail.com, salvadordura@gmail.com, samnemo@gmail.com , & Christoph Metzner
 """
-from netpyne.batchtools import specs
+from netpyne import specs
 import pickle, json
 netParams = specs.NetParams()   # object of class NetParams to store the network parameters
 from cfg import cfg
