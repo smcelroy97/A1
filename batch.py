@@ -39,35 +39,6 @@ def assr_batch_grid(filename):
     # initial config
     initCfg = {}
 
-    # from prev - best of 50% cell density
-    updateParams = ['IEGain', 'IIGain',
-                    ('EICellTypeGain', 'PV'), ('EICellTypeGain', 'SOM'), ('EICellTypeGain', 'VIP'),
-                    ('EICellTypeGain', 'NGF'), ('IECellTypeGain', 'PV'), ('IECellTypeGain', 'SOM'),
-                    ('IECellTypeGain', 'VIP'), ('IECellTypeGain', 'NGF'),
-                    ('EILayerGain', '1'), ('IILayerGain', '1'),
-                    ('EELayerGain', '2'), ('EILayerGain', '2'), ('IELayerGain', '2'), ('IILayerGain', '2'),
-                    ('EELayerGain', '3'), ('EILayerGain', '3'), ('IELayerGain', '3'), ('IILayerGain', '3'),
-                    ('EELayerGain', '4'), ('IELayerGain', '4'),
-                    ('EELayerGain', '5A'), ('EILayerGain', '5A'), ('IELayerGain', '5A'), ('IILayerGain', '5A'),
-                    ('EELayerGain', '5B'), ('EILayerGain', '5B'), ('IELayerGain', '5B'), ('IILayerGain', '5B'),
-                    ('EILayerGain', '6'), ('IILayerGain', '6')]
-    # Things removed for tuning, put back when finished, or update value:
-    # 'EIGain', 'IEGain', 'IIGain', 'EEGain', ('IELayerGain', '6') ('EILayerGain', '4') ('IILayerGain', '4')
-
-    for p in updateParams:
-        if isinstance(p, tuple):
-            initCfg.update({p: cfgLoad[p[0]][p[1]]})
-        else:
-            initCfg.update({p: cfgLoad[p]})
-
-    # good thal params for 100% cell density
-    updateParams2 = ['wmat']  # thalamoCorticalGain', 'intraThalamicGain', 'EbkgThalamicGain', 'IbkgThalamicGain',
-
-    for p in updateParams2:
-        if isinstance(p, tuple):
-            initCfg.update({p: cfgLoad2[p[0]][p[1]]})
-        else:
-            initCfg.update({p: cfgLoad2[p]})
 
     b = Batch(params=params, netParamsFile='netParams.py', cfgFile='cfg.py', initCfg=initCfg,
               groupedParams=groupedParams)
@@ -95,7 +66,7 @@ def setRunCfg(b, type='hpc_sge'):
                     'walltime': '0:10:00',
                     'nodes': 1,
                     'coresPerNode': 64,
-                    'folder': '/home/smcelroy/A1model_sm/',
+                    'folder': '/home/smcelroy/A1/',
                     'script': 'init.py',
                     'mpiCommand': 'mpirun',
                     'custom': '#SBATCH --constraint="lustre"\n#SBATCH --export=ALL\n#SBATCH --partition=shared',
@@ -104,17 +75,14 @@ def setRunCfg(b, type='hpc_sge'):
 
     elif type == 'hpc_slurm_JUSUF':
         b.runCfg = {'type': 'hpc_slurm',
-                    'allocation': 'TG-IBN140002',
-                    'partition': 'compute',
-                    'walltime': '1:40:00',
+                    'account': 'icei-hbp-00000000006',
+                    'partition': 'batch',
+                    'walltime': '0:40:00',
                     'nodes': 1,
                     'coresPerNode': 128,
-                    'email': 'scott.mcelroy@downstate.edu',
-                    'folder': '/home/smcelroy/A1model_sm/',
+                    'folder': '/p/home/jusers/mcelroy1/jusuf/A1',
                     'script': 'init.py',
                     'mpiCommand': 'mpirun',
-                    'custom': '\n#SBATCH --export=ALL\n#SBATCH --partition=compute',
-                    # 'custom': '#SBATCH --constraint="lustre"\n#SBATCH --export=ALL\n#SBATCH --partition=compute',
                     'skip': True,
                     'skipCustom': '_data.pkl'}
 
@@ -137,5 +105,5 @@ if __name__ == '__main__':
     b.batchLabel = 'IEThal0906A'
     b.saveFolder = 'data/' + b.batchLabel
 
-    setRunCfg(b, 'hpc_slurm_Expanse')
+    setRunCfg(b, 'hpc_slurm_JUSUF')
     b.run()  # run batch

@@ -677,7 +677,6 @@ if cfg.addBkgConn:
     # cochlea -> thal
     def connectCochleaToThal():
         prob = '%f * exp(-dist_x/%f)' % (cfg.cochlearThalInput['probECore'], ThalamicCoreLambda)
-        print(prob)
         netParams.connParams['cochlea->ThalECore'] = {
             'preConds': {'pop': 'cochlea'},
             'postConds': {'pop': ['TC','HTC']},
@@ -688,7 +687,6 @@ if cfg.addBkgConn:
             'weight': cfg.cochlearThalInput['weightECore'],
             'synMechWeightFactor': cfg.synWeightFractionEE,
             'delay': cfg.delayBkg}
-        print(netParams.connParams['cochlea->ThalECore']['weight'])
         prob = '%f * exp(-dist_x/%f)' % (cfg.cochlearThalInput['probICore'], ThalamicCoreLambda)
         netParams.connParams['cochlea->ThalICore'] = {
             'preConds': {'pop': 'cochlea'},
