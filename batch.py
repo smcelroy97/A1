@@ -3,8 +3,8 @@ import numpy as np
 
 label = 'IEThal0906A'
 
-params = {'intraThalamicIEGain' : np.linspace(0.3, 0.75, 4),
-          'intraThalamicEIGain' : np.linspace(0.3, 0.75, 4)
+params = {'intraThalamicIEGain' : np.linspace(0.2, 0.75, 4),
+          'intraThalamicEIGain' : np.linspace(0.2, 0.75, 4)
           }
 
 # use batch_shell_config if running directly on the machine
