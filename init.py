@@ -14,28 +14,20 @@ MPI usage:
 
 Contributors: ericaygriffith@gmail.com, salvadordura@gmail.com
 """
-from netpyne.batchtools import specs, comm
 import matplotlib; matplotlib.use('Agg')  # to avoid graphics error in servers
 from input import cochlearInputSpikes
 from netpyne import sim
-from netParams import netParams, cfg
 import numpy as np
 import matplotlib.pyplot as plt
 from netpyne.analysis import spikes_legacy
-from analysis.simTools import editNet
-import json
 
-comm.initialize()
 
-subset = cfg.allThalPops + ['cochlea']
-
-netParams.popParams = {pop: netParams.popParams[pop] for pop in subset}
+cfg, netParams = sim.readCmdLineArgs(simConfigDefault='cfg.py', netParamsDefault='netParams.py')
 
 sim.initialize(simConfig = cfg,
                netParams = netParams)  		# create network object and set cfg and net params
 sim.net.createPops()               			# instantiate network populations
 sim.net.createCells()              			# instantiate network cells based on defined populations
-
 
 def setdminID (sim, lpop):
   # setup min,max ID and dnumc for each population in lpop
@@ -83,12 +75,6 @@ sim.setupRecording()              			# setup variables to record for each cell (
 sim.runSim()                                    # run parallel Neuron simulation
 sim.saveDataInNodes()
 sim.gatherDataFromFiles()
-sim.saveData()
-sim.analysis.plotData()    # plot spike raster etc
-
-
-spikes_legacy.plotSpikeHist(include=['cochlea', 'TC'], timeRange=[0, 6500],
-                            saveFig=True)
 
 plotPops = ['TC', 'IRE']
 try:
@@ -98,20 +84,13 @@ except:
 
 for pop_ind, pop in enumerate(plotPops):
   print('\n\n', pop)
-  # sim.analysis.plotTraces(
   figs, traces_dict = sim.analysis.plotTraces(
     include=[pop],
-    # include=[record_pops[pop_ind]],
-    # timeRange=[490,550],
     overlay=True, oneFigPer='trace',
     ylim=[-110, 50],
     axis=True,
     figSize=(70, 15),
-    # figSize=(40, 15),
-    # figSize=(60, 18),
     fontSize=15,
-    # saveFig=True,
-    # saveFig=sim.cfg.saveFigPath+'/'+sim.cfg.filename+'_traces_'+pop+ '.png',
     saveFig=sim.cfg.saveFolder + '/' + sim.cfg.simLabel + '_traces__' + pop + '.png',
   )
 
@@ -123,7 +102,6 @@ for pop_ind, pop in enumerate(plotPops):
     for trace in tracesData[rec_ind].keys():
       if '_V_soma' in trace:
         cell_gid_str = trace.split('_V_soma')[0].split('cell_')[1]
-        # store_v.update({cell_gid_str:list(tracesData[rec_ind][trace])})
         store_v.append(list(tracesData[rec_ind][trace]))
         store_voltages.update({cell_gid_str: list(tracesData[rec_ind][trace])})
 
@@ -135,20 +113,10 @@ for pop_ind, pop in enumerate(plotPops):
   plt.plot(t_vector_, mean_v, 'r')
   plt.ylim([-110, 50])
   plt.xlim([min(t_vector_), max(t_vector_)])
-  # plt.plot(mean_v,'k')
-  plt.savefig(sim.cfg.saveFolder + '/' + sim.cfg.simLabel + '_mean_traces_' + pop + '.png')
+  plt.savefig(sim.cfg.saveFolder + '/' + sim.cfg.simLabel + '_mean_traces__' + pop + '.png')
 
+sim.saveData()
+sim.analysis.plotData()    # plot spike raster etc
 
-# Terminate batch process
-if comm.is_host():
-  netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
-  print('transmitting data...')
-  inputs = specs.get_mappings()
-  results = sim.analysis.popAvgRates(show=False)
-  results['loss'] = results['TC']
-  out_json = json.dumps({**inputs, **results})
-
-  print(out_json)
-
-  comm.send(out_json)
-  comm.close()
+# spikes_legacy.plotSpikeHist(include=['cochlea', 'TC'], timeRange=[0, 6000],
+#                             saveFig=True)

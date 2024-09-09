@@ -6,10 +6,11 @@ This file has sim configs as well as specification for parameterized values in n
 
 Contributors: ericaygriffith@gmail.com, salvadordura@gmail.com, samnemo@gmail.com
 """
-from netpyne.batchtools import specs
+from netpyne import specs
 import pickle
-import json
-cfg = specs.SimConfig()
+from netpyne.specs import SimConfig
+
+cfg: SimConfig = specs.SimConfig()
 
 # ------------------------------------------------------------------------------
 #
