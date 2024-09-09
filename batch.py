@@ -82,7 +82,7 @@ def setRunCfg(b, type='hpc_sge'):
                     'coresPerNode': 128,
                     'folder': '/p/home/jusers/mcelroy1/jusuf/A1',
                     'script': 'init.py',
-                    'mpiCommand': 'mpirun',
+                    'mpiCommand': 'srun',
                     'skip': True,
                     'skipCustom': '_data.pkl'}
 
