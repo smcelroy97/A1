@@ -138,5 +138,5 @@ if __name__ == '__main__':
     b.batchLabel = 'IEThal0906A'
     b.saveFolder = 'data/' + b.batchLabel
 
-    setRunCfg(b, 'hpc_sge')
+    setRunCfg(b, 'hpc_slurm_Expanse')
     b.run()  # run batch
