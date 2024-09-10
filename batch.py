@@ -17,19 +17,9 @@ import numpy as np
 def assr_batch_grid(filename):
     params = specs.ODict()
 
-    if not filename:
-        filename = 'data/v34_batch25/trial_2142/trial_2142_cfg.json'
-
-    # from prev
-    import json
-    with open(filename, 'rb') as f:
-        cfgLoad = json.load(f)['simConfig']
-    cfgLoad2 = cfgLoad
-
     #### SET weights####
-
-    params['intraThalamicIEGain'] = np.linspace(0.1, 0.7, 4)
-    params['intraThalamicEIGain'] = np.linspace(0.1, 0.7, 4)
+    params['intraThalamicIEGain'] = [0.1]
+    params['intraThalamicEIGain'] = [0.3]
 
     # --------------------------------------------------------
 
@@ -75,8 +65,7 @@ def setRunCfg(b, type='hpc_sge'):
 
     elif type == 'hpc_slurm_JUSUF':
         b.runCfg = {'type': 'hpc_slurm',
-                    'account': 'icei-hbp-00000000006',
-                    'partition': 'batch',
+                    'allocation': 'icei-hbp-00000000006',
                     'walltime': '0:40:00',
                     'nodes': 1,
                     'coresPerNode': 128,
@@ -102,7 +91,7 @@ def setRunCfg(b, type='hpc_sge'):
 if __name__ == '__main__':
     b = assr_batch_grid('data/v34_batch25/trial_2142/trial_2142_cfg.json')
 
-    b.batchLabel = 'IEThal0906A'
+    b.batchLabel = 'netTest0910'
     b.saveFolder = 'data/' + b.batchLabel
 
     setRunCfg(b, 'hpc_slurm_JUSUF')

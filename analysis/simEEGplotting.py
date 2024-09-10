@@ -10,26 +10,26 @@ from matplotlib import pyplot as plt
 from lfpykit.eegmegcalc import NYHeadModel
 
 stim_on = 2000  # Define onset of stimulus if necessary
-# calcEEG = {'start': 1000, 'stop': 6000}
-# filter = {'lowCut':2, 'hiCut': 12}
-# plotERP = {'useFilter': True}
+calcEEG = {'start': 1800, 'stop': 6500}
+filter = {'lowCut':2, 'hiCut': 12}
+plotERP = {'useFilter': True}
 # plotSpectrogram = {'useFilter': False}
 # plotPSD = {'useFilter': True}
-plotRaster = {'timeRange': [1000, 6500]}
+# plotRaster = {'timeRange': [1000, 6500]}
 # PSDSpect = {'timeRange': [3000, 4000], 'useLFP': False, 'useCSD': True}
 # plotMUA = {'populations': ['TC', 'TCM'], 'stimDur': 100}
 
-calcEEG = False
-filter = False
-plotERP = False
+# calcEEG = False
+# filter = False
+# plotERP = False
 plotSpectrogram = False
 plotPSD = False
-# plotRaster = False
+plotRaster = False
 PSDSpect = False
 plotMUA = False
 
 
-batch = 'intraThal0906'  # Name of batch for fig saving
+batch = 'IEThal0906AComp'
 
 # Load sim EEG data
 base_dir = '/Users/scoot/A1ProjData/A1_sim_data/' + batch + '/'  # Define dir from saved data dir
@@ -117,7 +117,7 @@ for file in os.listdir(base_dir):
         # Plot Raster
         if plotRaster:
                 sim.analysis.plotRaster(
-                    include      = [sim.cfg.allThalPops],      #plotRaster['include'],
+                    include      = [sim.cfg.allThalPops] + ['cochlea'],      #plotRaster['include'],
                     orderInverse = True,
                     timeRange    = plotRaster['timeRange'],
                     markerSize   = 50,
@@ -140,12 +140,13 @@ for file in os.listdir(base_dir):
             simTools.plotMUApops(
                     sim             = sim,
                     populations     = plotMUA['populations'],
-                    bin_start_times = [2000.0, 2624.5, 3249.0, 3873.5, 4498.0, 5122.5, 5747.0],
+                    bin_start_times = [2000, 2724, 3448, 4172, 4896, 5620, 6344],
                     bin_duration    = plotMUA['stimDur'],
                     save_dir        = save_dir
                 )
 
-
+            # spikes_legacy.plotSpikeHist(include=['cochlea', 'TC'], timeRange=[1800, 6500], measure='count',
+            #                             saveFig=save_dir+'_HistCt.png')
 
             # sim.plotting.plotCSD(overlay = 'LFP', timeRange =[3000, 3600], saveFig='/Users/scottmcelroy/A1_scz/A1_figs/SIMfigs/'
             #                 + batch + '/' + fname + '_CSD.png')
