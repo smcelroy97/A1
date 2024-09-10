@@ -52,14 +52,14 @@ def setRunCfg(b, type='hpc_sge'):
     elif type == 'hpc_slurm_Expanse':
         b.runCfg = {'type': 'hpc_slurm',
                     'allocation': 'TG-IBN140002',
-                    'partition': 'shared',
-                    'walltime': '0:10:00',
+                    'partition': 'compute',
+                    'walltime': '1:40:00',
                     'nodes': 1,
                     'coresPerNode': 64,
                     'folder': '/home/smcelroy/A1/',
                     'script': 'init.py',
                     'mpiCommand': 'mpirun',
-                    'custom': '#SBATCH --constraint="lustre"\n#SBATCH --export=ALL\n#SBATCH --partition=shared',
+                    'custom': '#SBATCH --constraint="lustre"\n#SBATCH --export=ALL\n#SBATCH --partition=compute',
                     'skip': True,
                     'skipCustom': '_data.pkl'}
 
