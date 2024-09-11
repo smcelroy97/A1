@@ -94,5 +94,5 @@ if __name__ == '__main__':
     b.batchLabel = 'netTest0910'
     b.saveFolder = 'data/' + b.batchLabel
 
-    setRunCfg(b, 'hpc_slurm_JUSUF')
+    setRunCfg(b, 'hpc_slurm_Expanse')
     b.run()  # run batch
