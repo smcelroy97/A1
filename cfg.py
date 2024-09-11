@@ -58,7 +58,10 @@ cfg.thalInhib = ['IRE', 'IREM', 'TI', 'TIM']
 alltypes = ['NGF1', 'IT2', 'PV2', 'SOM2', 'VIP2', 'ITS4', 'PT5B', 'TC', 'HTC', 'IRE', 'TI']
 
 # Dict with traces to record -- taken from M1 cfg.py
-cfg.recordTraces = {'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'}}
+cfg.recordTraces = {
+    'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'},
+    'i_GABAB_TC': {'sec': 'soma', 'loc': 0.5, 'var': 'i_GABAB', 'conds': {'pop': 'TC'}}
+}
 cfg.recordStim = False  # Seen in M1 cfg.py
 cfg.recordTime = True  # SEen in M1 cfg.py
 cfg.recordStep = 0.05  # Step size (in ms) to save data -- value from M1 cfg.py
@@ -94,7 +97,7 @@ cfg.analysis['plotRaster'] = {'include': cfg.allThalPops, 'saveFig': True, 'show
 # cfg.analysis['plotTraces'] = {'include': [[('TC', i) for i in range(40)], [('IRE', i) for i in range(40)]], 'timeRange': [0, cfg.duration],
 # 'oneFigPer': 'trace', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
 
-cfg.analysis['plotTraces'] = {'include': ['TC', 'IRE'],  'timeRange': [2000, cfg.duration], 'oneFigPer': 'trace',
+cfg.analysis['plotTraces'] = {'include': ['TC'],  'timeRange': [2000, cfg.duration], 'oneFigPer': 'trace',
                             'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)} #[(pop,0) for pop in alltypes]
 
 layer_bounds = {'L1': 100, 'L2': 160, 'L3': 950, 'L4': 1250, 'L5A': 1334, 'L5B': 1550, 'L6': 2000}

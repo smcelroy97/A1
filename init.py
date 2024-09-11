@@ -76,7 +76,7 @@ sim.runSim()                                    # run parallel Neuron simulation
 sim.saveDataInNodes()
 sim.gatherDataFromFiles()
 
-plotPops = ['TC', 'IRE']
+plotPops = ['TC']
 try:
   record_pops = [(pop, list(np.arange(0, netParams.popParams[pop]['numCells']))) for pop in plotPops]
 except:
