@@ -92,7 +92,7 @@ cfg.analysis['plotRaster'] = {'include': cfg.allThalPops, 'saveFig': True, 'show
 # cfg.analysis['plotTraces'] = {'include': [[('TC', i) for i in range(40)], [('IRE', i) for i in range(40)]], 'timeRange': [0, cfg.duration],
 # 'oneFigPer': 'trace', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
 
-cfg.analysis['plotTraces'] = {'include': ['TC', 'IRE'],  'timeRange': [2000, cfg.duration], 'oneFigPer': 'trace',
+cfg.analysis['plotTraces'] = {'include': ['TC'],  'timeRange': [2000, cfg.duration], 'oneFigPer': 'trace',
                             'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)} #[(pop,0) for pop in alltypes]
 
 layer_bounds = {'L1': 100, 'L2': 160, 'L3': 950, 'L4': 1250, 'L5A': 1334, 'L5B': 1550, 'L6': 2000}
@@ -204,8 +204,8 @@ cfg.IECellTypeGain = {'PV': 1.0, 'SOM': 1.0, 'VIP': 1.0, 'NGF': 1.0}
 
 # Thalamic
 cfg.addIntraThalamicConn = 1.0
-cfg.addCorticoThalamicConn = 0
-cfg.addThalamoCorticalConn = 0
+cfg.addCorticoThalamicConn = 1.0
+cfg.addThalamoCorticalConn = 1.0
 
 cfg.thalamoCorticalGain = 1.0
 cfg.intraThalamicGain = 1.0
@@ -213,8 +213,8 @@ cfg.corticoThalamicGain = 1.0
 cfg.CTGainThalI = 1.0
 
 cfg.intraThalamicEEGain = 1.0
-cfg.intraThalamicEIGain = 1.0
-cfg.intraThalamicIEGain = 1.0
+cfg.intraThalamicEIGain = 0.3
+cfg.intraThalamicIEGain = 0.1
 cfg.intraThalamicIIGain = 1.0
 
 # these params control cochlea -> Thalamus

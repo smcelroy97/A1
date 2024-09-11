@@ -27,9 +27,8 @@ import json
 
 comm.initialize()
 
-subset = cfg.allThalPops + ['cochlea']
-
-netParams.popParams = {pop: netParams.popParams[pop] for pop in subset}
+# subset = cfg.allThalPops + ['cochlea']
+# netParams.popParams = {pop: netParams.popParams[pop] for pop in subset}
 
 sim.initialize(simConfig = cfg,
                netParams = netParams)  		# create network object and set cfg and net params
@@ -90,7 +89,7 @@ sim.analysis.plotData()    # plot spike raster etc
 spikes_legacy.plotSpikeHist(include=['cochlea', 'TC'], timeRange=[0, 6500],
                             saveFig=True)
 
-plotPops = ['TC', 'IRE']
+plotPops = ['TC']
 try:
   record_pops = [(pop, list(np.arange(0, netParams.popParams[pop]['numCells']))) for pop in plotPops]
 except:
@@ -152,3 +151,5 @@ if comm.is_host():
 
   comm.send(out_json)
   comm.close()
+
+sim.close()
