@@ -35,6 +35,8 @@ sim.initialize(simConfig = cfg,
 sim.net.createPops()               			# instantiate network populations
 sim.net.createCells()              			# instantiate network cells based on defined populations
 
+sim.net.allCells = [cell.__getstate__() for cell in sim.net.cells]
+sim.net.allPops = {label: pop.__getstate__() for label, pop in sim.net.pops.items()}
 
 def setdminID (sim, lpop):
   # setup min,max ID and dnumc for each population in lpop
@@ -86,8 +88,8 @@ sim.saveData()
 sim.analysis.plotData()    # plot spike raster etc
 
 
-spikes_legacy.plotSpikeHist(include=['cochlea', 'TC'], timeRange=[0, 6500],
-                            saveFig=True)
+# spikes_legacy.plotSpikeHist(include=['cochlea', 'TC'], timeRange=[0, 6500],
+#                             saveFig=True)
 
 # plotPops = ['TC', 'ITP4']
 # try:
