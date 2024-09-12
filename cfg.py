@@ -92,8 +92,8 @@ cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig'
 # cfg.analysis['plotTraces'] = {'include': [[('TC', i) for i in range(40)], [('IRE', i) for i in range(40)]], 'timeRange': [0, cfg.duration],
 # 'oneFigPer': 'trace', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
 
-cfg.analysis['plotTraces'] = {'include': ['TC'],  'timeRange': [2000, cfg.duration], 'oneFigPer': 'trace',
-                            'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)} #[(pop,0) for pop in alltypes]
+# cfg.analysis['plotTraces'] = {'include': ['TC', 'ITP4'],  'timeRange': [2000, cfg.duration], 'oneFigPer': 'trace',
+#                             'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)} #[(pop,0) for pop in alltypes]
 
 layer_bounds = {'L1': 100, 'L2': 160, 'L3': 950, 'L4': 1250, 'L5A': 1334, 'L5B': 1550, 'L6': 2000}
 
@@ -165,8 +165,8 @@ cfg.scaleDensity = 1.0  # Should be 1.0 unless need lower cell density for test 
 
 # Cortical
 cfg.addConn = 1.0
-cfg.addSubConn = 1
-cfg.wireCortex = 0
+cfg.addSubConn = 1.0
+cfg.wireCortex = 1.0
 
 # cfg.EEGain = 0.75
 # cfg.EIGain = 1.5
