@@ -1,9 +1,9 @@
 from netpyne.batchtools.search import search
 import numpy as np
 
-label = 'TCGainTune0911'
+label = 'TCGainTune0912'
 
-params = {'thalamoCorticalGain' : np.linspace(1.0, 2.0, 10)
+params = {'thalamoCorticalGain' : np.linspace(0.1, 0.9, 10)
           }
 
 # use batch_shell_config if running directly on the machine
@@ -24,12 +24,12 @@ slurm_config = {
     'nodes' : 1,
     'coresPerNode' : 128,
     'email' : 'scott.mcelroy@downstate.edu',
-    'command' : 'mpirun'
+    'command' : 'mpiexec -n 128 nrniv -python -mpi init.py'
 }
 
 
 
-run_config = slurm_config
+run_config = sge_config
 search(job_type = 'sge',
        comm_type = 'socket',
        label = label,
