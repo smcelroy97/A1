@@ -93,11 +93,9 @@ cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig'
 # cfg.analysis['plotConn'] = {'includePre': cfg.allpops, 'includePost': ['TC'], 'feature': 'strength',
 #                             'saveFig': True, 'showFig': False, 'figSize': (25, 25)}  # Plot conn matrix
 
-cfg.analysis['plotTraces'] = {'include': [[('ITP4', i) for i in range(40)]], 'timeRange': [1500, cfg.duration],
-'oneFigPer': 'trace', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
 
-# cfg.analysis['plotTraces'] = {'include': ['ITP4'],  'timeRange': [1500, cfg.duration], 'oneFigPer': 'trace',
-#                             'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)} #[(pop,0) for pop in alltypes]
+cfg.analysis['plotTraces'] = {'include': [('ITP4', i) for i in range(40)], 'timeRange': [0, cfg.duration],
+'oneFigPer': 'trace', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
 
 layer_bounds = {'L1': 100, 'L2': 160, 'L3': 950, 'L4': 1250, 'L5A': 1334, 'L5B': 1550, 'L6': 2000}
 
@@ -208,7 +206,7 @@ cfg.IECellTypeGain = {'PV': 1.0, 'SOM': 1.0, 'VIP': 1.0, 'NGF': 1.0}
 
 # Thalamic
 cfg.addIntraThalamicConn = 1.0
-cfg.addCorticoThalamicConn = 0
+cfg.addCorticoThalamicConn = 1.0
 cfg.addThalamoCorticalConn = 1.0
 
 cfg.thalamoCorticalGain = 1.0
