@@ -645,7 +645,7 @@ if cfg.addBkgConn:
     for pop in ['NGF6']:
         weightBkg[pop] *= cfg.NGF6bkgGain
 
-    for pop in [cfg.ctxEPops]:
+    for pop in ['IT2', 'IT3' 'ITP4', 'ITS4',  'IT5A', 'CT5A', 'IT5B', 'PT5B', 'CT5B', 'IT6', 'CT6']:
         weightBkg[pop] *= cfg.BkgCtxEGain
 
     for pop in pops:
