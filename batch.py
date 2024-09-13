@@ -1,9 +1,10 @@
 from netpyne.batchtools.search import search
 import numpy as np
 
-label = 'IEGainTune0913'
+label = 'GainTune0913'
 
-params = {'IEGain' : np.linspace(1, 1.9, 10)
+params = {'IEGain' : [1.0],
+                'EEGain' : np.linspace(1.1, 1.75, 10)
           }
 
 # use batch_shell_config if running directly on the machine
