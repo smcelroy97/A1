@@ -1,10 +1,10 @@
 from netpyne.batchtools.search import search
 import numpy as np
 
-label = 'GainTune0913'
+label = 'BkgPyr0913'
 
 params = {'IEGain' : [1.0],
-                'EEGain' : np.linspace(1.1, 1.75, 10)
+                'BkgCtxEGain' : np.linspace(1.1, 2.2, 12)
           }
 
 # use batch_shell_config if running directly on the machine
@@ -15,7 +15,7 @@ sge_config = {
     'queue': 'cpu.q',
     'cores': 64,
     'vmem': '256G',
-    'realtime': '01:40:00',
+    'realtime': '01:20:00',
     'command': 'mpiexec -n $NSLOTS -hosts $(hostname) nrniv -python -mpi init.py'
 }
 

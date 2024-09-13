@@ -645,6 +645,9 @@ if cfg.addBkgConn:
     for pop in ['NGF6']:
         weightBkg[pop] *= cfg.NGF6bkgGain
 
+    for pop in [cfg.ctxEPops]:
+        weightBkg[pop] *= cfg.BkgCtxEGain
+
     for pop in pops:
         netParams.stimTargetParams['excBkg->'+pop] =  {
             'source': 'excBkg',

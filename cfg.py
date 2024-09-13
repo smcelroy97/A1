@@ -46,10 +46,14 @@ cfg.allpops = ['NGF1', 'IT2', 'SOM2', 'PV2', 'VIP2', 'NGF2', 'IT3', 'SOM3', 'PV3
                'SOM4', 'PV4', 'VIP4', 'NGF4', 'IT5A', 'CT5A', 'SOM5A', 'PV5A', 'VIP5A', 'NGF5A', 'IT5B', 'PT5B', 'CT5B',
                'SOM5B', 'PV5B', 'VIP5B', 'NGF5B', 'IT6', 'CT6', 'SOM6', 'PV6', 'VIP6', 'NGF6', 'TC', 'TCM', 'HTC',
                'IRE', 'IREM', 'TI', 'TIM','cochlea']
+
 cfg.allCorticalPops = ['NGF1', 'IT2', 'SOM2', 'PV2', 'VIP2', 'NGF2', 'IT3', 'SOM3', 'PV3', 'VIP3', 'NGF3', 'ITP4',
                        'ITS4', 'SOM4', 'PV4', 'VIP4', 'NGF4', 'IT5A', 'CT5A', 'SOM5A', 'PV5A', 'VIP5A', 'NGF5A', 'IT5B',
                        'PT5B', 'CT5B', 'SOM5B', 'PV5B', 'VIP5B', 'NGF5B', 'IT6', 'CT6', 'SOM6', 'PV6', 'VIP6', 'NGF6']
+
 cfg.allThalPops = ['TC', 'TCM', 'HTC', 'IRE', 'IREM', 'TI', 'TIM']
+
+cfg.ctxEPops = ['IT2', 'IT3' 'ITP4', 'ITS4',  'IT5A', 'CT5A', 'IT5B', 'PT5B', 'CT5B', 'IT6', 'CT6']
 
 cfg.thalInhib = ['IRE', 'IREM', 'TI', 'TIM']
 
@@ -89,11 +93,11 @@ cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig'
 # cfg.analysis['plotConn'] = {'includePre': cfg.allpops, 'includePost': ['TC'], 'feature': 'strength',
 #                             'saveFig': True, 'showFig': False, 'figSize': (25, 25)}  # Plot conn matrix
 
-# cfg.analysis['plotTraces'] = {'include': [[('TC', i) for i in range(40)], [('IRE', i) for i in range(40)]], 'timeRange': [0, cfg.duration],
-# 'oneFigPer': 'trace', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
+cfg.analysis['plotTraces'] = {'include': [[('ITP4', i) for i in range(40)]], 'timeRange': [1500, cfg.duration],
+'oneFigPer': 'trace', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
 
-cfg.analysis['plotTraces'] = {'include': ['ITP4'],  'timeRange': [1500, cfg.duration], 'oneFigPer': 'trace',
-                            'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)} #[(pop,0) for pop in alltypes]
+# cfg.analysis['plotTraces'] = {'include': ['ITP4'],  'timeRange': [1500, cfg.duration], 'oneFigPer': 'trace',
+#                             'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)} #[(pop,0) for pop in alltypes]
 
 layer_bounds = {'L1': 100, 'L2': 160, 'L3': 950, 'L4': 1250, 'L5A': 1334, 'L5B': 1550, 'L6': 2000}
 
@@ -272,6 +276,7 @@ cfg.rateBkg = {'exc': 40, 'inh': 40}
 
 cfg.EbkgThalamicGain = 0.9316
 cfg.IbkgThalamicGain = 0.485714
+cfg.BkgCtxEGain = 1.0
 
 cfg.NGF6bkgGain = 1.0
 
