@@ -53,7 +53,7 @@ cfg.allCorticalPops = ['NGF1', 'IT2', 'SOM2', 'PV2', 'VIP2', 'NGF2', 'IT3', 'SOM
 
 cfg.allThalPops = ['TC', 'TCM', 'HTC', 'IRE', 'IREM', 'TI', 'TIM']
 
-cfg.ctxEPops = ['IT2', 'IT3' 'ITP4', 'ITS4',  'IT5A', 'CT5A', 'IT5B', 'PT5B', 'CT5B', 'IT6', 'CT6']
+cfg.ctxEPops = ['IT2', 'IT3', 'ITP4', 'ITS4', 'IT5A', 'CT5A', 'IT5B', 'PT5B', 'CT5B', 'IT6', 'CT6']
 
 cfg.thalInhib = ['IRE', 'IREM', 'TI', 'TIM']
 
