@@ -3,8 +3,8 @@ import numpy as np
 
 label = 'GainTune0916'
 
-params = {'IEGain' : np.linspace(0.1, 1.0, 4),
-          'EEGain' : no.linspace(1.1, 2, 4)
+params = {'IEGain' : np.linspace(0.4, 0.7, 4),
+          'EEGain' : np.linspace(1.1, 1.75, 4)
           }
 
 # use batch_shell_config if running directly on the machine
