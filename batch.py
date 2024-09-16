@@ -1,11 +1,9 @@
 from netpyne.batchtools.search import search
 import numpy as np
 
-label = 'GainTune0916'
+label = 'EIGainTune0916'
 
-params = {'IEGain' : np.linspace(0.4, 0.7, 4),
-          'EEGain' : np.linspace(1.1, 1.75, 4)
-          }
+params = {'EIGain' : np.linspace(0.1, 1.6313576020869256, 16)}
 
 # use batch_shell_config if running directly on the machine
 shell_config = {'command': 'mpiexec -np 4 nrniv -python -mpi init.py'}

@@ -175,9 +175,9 @@ cfg.wireCortex = 1.0
 # cfg.IEGain = 1.5
 # cfg.IIGain = 1.0
 
-cfg.EEGain = 1.1
+cfg.EEGain = 1.31667
 cfg.EIGain = 1.6313576020869256
-cfg.IEGain = 2.06
+cfg.IEGain = 0.6
 cfg.IIGain = 1.4102431748127964
 
 ## E/I->E/I layer weights (L1-3, L4, L5, L6)
@@ -206,7 +206,7 @@ cfg.IECellTypeGain = {'PV': 1.0, 'SOM': 1.0, 'VIP': 1.0, 'NGF': 1.0}
 
 # Thalamic
 cfg.addIntraThalamicConn = 1.0
-cfg.addCorticoThalamicConn = 1.0
+cfg.addCorticoThalamicConn = 0
 cfg.addThalamoCorticalConn = 1.0
 
 cfg.thalamoCorticalGain = 1.0
