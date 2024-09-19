@@ -648,6 +648,10 @@ if cfg.addBkgConn:
     for pop in ['IT2', 'IT3', 'ITP4', 'ITS4',  'IT5A', 'CT5A', 'IT5B', 'PT5B', 'CT5B', 'IT6', 'CT6']:
         weightBkg[pop] *= cfg.BkgCtxEGain
 
+    for pop in  ['NGF1', 'SOM2', 'PV2', 'VIP2', 'NGF2', 'SOM3', 'PV3', 'VIP3', 'NGF3','SOM4', 'PV4', 'VIP4', 'NGF4', 'SOM5A',
+                 'PV5A', 'VIP5A', 'NGF5A', 'SOM5B', 'PV5B', 'VIP5B', 'NGF5B', 'SOM6', 'PV6', 'VIP6', 'NGF6']:
+        weightBkg[pop] *= cfg.BkgCtxIGain
+
     for pop in pops:
         netParams.stimTargetParams['excBkg->'+pop] =  {
             'source': 'excBkg',

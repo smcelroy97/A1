@@ -275,6 +275,7 @@ cfg.rateBkg = {'exc': 40, 'inh': 40}
 cfg.EbkgThalamicGain = 0.9316
 cfg.IbkgThalamicGain = 0.485714
 cfg.BkgCtxEGain = 1.0
+cfg.BkgCtxIGain = 1.0
 
 cfg.NGF6bkgGain = 1.0
 
