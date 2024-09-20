@@ -152,7 +152,7 @@ for key, value in cfgLoad.items():
 
 
 # These values taken from M1 cfg (https://github.com/Neurosim-lab/netpyne/blob/development/examples/M1detailed/cfg.py)
-cfg.singleCellPops = False
+cfg.singleCellPops = True
 cfg.singlePop = ''
 cfg.removeWeightNorm = False
 cfg.scale = 1.0  # Is this what should be used?
@@ -168,7 +168,7 @@ cfg.scaleDensity = 1.0  # Should be 1.0 unless need lower cell density for test 
 # Cortical
 cfg.addConn = 1.0
 cfg.addSubConn = 1.0
-cfg.wireCortex = 1.0
+cfg.wireCortex = 0
 
 # cfg.EEGain = 0.75
 # cfg.EIGain = 1.5
@@ -206,8 +206,8 @@ cfg.IECellTypeGain = {'PV': 1.0, 'SOM': 1.0, 'VIP': 1.0, 'NGF': 1.0}
 
 # Thalamic
 cfg.addIntraThalamicConn = 1.0
-cfg.addCorticoThalamicConn = 1.0
-cfg.addThalamoCorticalConn = 1.0
+cfg.addCorticoThalamicConn = 0
+cfg.addThalamoCorticalConn = 0
 
 cfg.thalamoCorticalGain = 1.0
 cfg.intraThalamicGain = 1.0
@@ -274,7 +274,7 @@ cfg.rateBkg = {'exc': 40, 'inh': 40}
 
 cfg.EbkgThalamicGain = 0.9316
 cfg.IbkgThalamicGain = 0.485714
-cfg.BkgCtxEGain = 1.0
+cfg.BkgCtxEGain = 1000.0
 cfg.BkgCtxIGain = 1.0
 
 cfg.NGF6bkgGain = 1.0
