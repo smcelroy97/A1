@@ -1,10 +1,10 @@
 from netpyne.batchtools.search import search
 import numpy as np
 
-label = 'BkgthalTest0920'
+label = 'ISITestThal0924'
 
-params = {'BkgCtxIGain' : np.linspace(0.1, 100, 2),
-          'BkgCtxEGain' : np.linspace(0.1, 100, 2)}
+params = {'cochlearThalInput.lfnwave': [['1043HzClick_1ISI_2sDelay_6.5s.wav'], ['1043HzClick_300ISI_2sDelay_6.5s.wav'], ['1043HzClick_500ISI_2sDelay_6.5s.wav']]
+          }
 
 # use batch_shell_config if running directly on the machine
 shell_config = {'command': 'mpiexec -np 4 nrniv -python -mpi init.py'}

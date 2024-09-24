@@ -60,7 +60,9 @@ cfg.thalInhib = ['IRE', 'IREM', 'TI', 'TIM']
 alltypes = ['NGF1', 'IT2', 'PV2', 'SOM2', 'VIP2', 'ITS4', 'PT5B', 'TC', 'HTC', 'IRE', 'TI']
 
 # Dict with traces to record -- taken from M1 cfg.py
-cfg.recordTraces = {'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'}}
+cfg.recordTraces = {'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'},
+                    'GABAB': {'sec': 'soma', 'loc': 0.5, 'synMech': 'GABAB'}
+}
 cfg.recordStim = False  # Seen in M1 cfg.py
 cfg.recordTime = True  # SEen in M1 cfg.py
 cfg.recordStep = 0.05  # Step size (in ms) to save data -- value from M1 cfg.py
@@ -94,7 +96,7 @@ cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig'
 #                             'saveFig': True, 'showFig': False, 'figSize': (25, 25)}  # Plot conn matrix
 
 
-cfg.analysis['plotTraces'] = {'include': [('ITP4', i) for i in range(40)], 'timeRange': [0, cfg.duration],
+cfg.analysis['plotTraces'] = {'include': [('TC', i) for i in range(40)], 'timeRange': [0, cfg.duration],
 'oneFigPer': 'trace', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
 
 layer_bounds = {'L1': 100, 'L2': 160, 'L3': 950, 'L4': 1250, 'L5A': 1334, 'L5B': 1550, 'L6': 2000}
@@ -255,7 +257,6 @@ cfg.L4L4E = 1.0
 # L3 -> L4 Inhib pops
 cfg.L3L4PV = 1.0
 cfg.L3L4SOM = 1.0
-
 
 # full weight conn matrix
 with open('conn/conn.pkl', 'rb') as fileObj:

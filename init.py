@@ -27,8 +27,8 @@ import json
 
 comm.initialize()
 
-# subset = cfg.allThalPops + ['cochlea']
-# netParams.popParams = {pop: netParams.popParams[pop] for pop in subset}
+subset = cfg.allThalPops + ['cochlea']
+netParams.popParams = {pop: netParams.popParams[pop] for pop in subset}
 
 sim.initialize(simConfig = cfg,
                netParams = netParams)  		# create network object and set cfg and net params
