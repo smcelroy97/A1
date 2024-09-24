@@ -27,9 +27,6 @@ import json
 
 comm.initialize()
 
-subset = cfg.allThalPops + ['cochlea']
-netParams.popParams = {pop: netParams.popParams[pop] for pop in subset}
-
 sim.initialize(simConfig = cfg,
                netParams = netParams)  		# create network object and set cfg and net params
 sim.net.createPops()               			# instantiate network populations
@@ -79,13 +76,13 @@ if cfg.cochlearThalInput: setCochCellLocationsX('cochlea', netParams.popParams['
 
 
 sim.net.connectCells()            			# create connections between cells based on params
-# sim.net.addStims() 							# add network stimulation
-# sim.setupRecording()              			# setup variables to record for each cell (spikes, V traces, etc)
-# sim.runSim()                                    # run parallel Neuron simulation
-# sim.saveDataInNodes()
-# sim.gatherDataFromFiles()
-# sim.saveData()
-# sim.analysis.plotData()    # plot spike raster etc
+sim.net.addStims() 							# add network stimulation
+sim.setupRecording()              			# setup variables to record for each cell (spikes, V traces, etc)
+sim.runSim()                                    # run parallel Neuron simulation
+sim.saveDataInNodes()
+sim.gatherDataFromFiles()
+sim.saveData()
+sim.analysis.plotData()    # plot spike raster etc
 
 
 # spikes_legacy.plotSpikeHist(include=['cochlea', 'TC'], timeRange=[0, 6500],
@@ -141,17 +138,17 @@ sim.net.connectCells()            			# create connections between cells based on
 
 
 # Terminate batch process
-# if comm.is_host():
-#   netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
-#   print('transmitting data...')
-#   inputs = specs.get_mappings()
-#   results = sim.analysis.popAvgRates(show=False)
-#   results['loss'] = results['TC']
-#   out_json = json.dumps({**inputs, **results})
-#
-#   print(out_json)
-#
-#   comm.send(out_json)
-#   comm.close()
-#
-# sim.close()
+if comm.is_host():
+  netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
+  print('transmitting data...')
+  inputs = specs.get_mappings()
+  results = sim.analysis.popAvgRates(show=False)
+  results['loss'] = results['TC']
+  out_json = json.dumps({**inputs, **results})
+
+  print(out_json)
+
+  comm.send(out_json)
+  comm.close()
+
+sim.close()
