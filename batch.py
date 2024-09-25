@@ -3,7 +3,7 @@ import numpy as np
 
 label = 'TCGainTune0924'
 
-params = {'corticoThalamicGain' : np.linspace(1.1, 2.0, 12)}
+params = {'thalamoCorticalGain' : np.linspace(1.1, 2.0, 12)}
 
 # params = {'EEGain' : np.linspace(0.1, 2, 4),
 #           'EIGain' : np.linspace(0.1, 2, 4),

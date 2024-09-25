@@ -22,3 +22,13 @@ sources[mask_sources] = np.abs(simCSD[mask_sources])
 
 sinks_trial_avg = sinks/sinks.sum()
 sources_trial_avg = sources/sources.sum()
+
+simCSDavg = simCSD/np.abs(simCSD).max()
+
+flattened_simCSDavg = simCSDavg.reshape(1, simCSDavg.shape[0] * simCSDavg.shape[1])
+
+n_components = flattened_simCSDavg.shape[0]
+pca = PCA(n_components=n_components)
+
+pca.fit(flattened_simCSDavg.T)
+print(pca.explained_variance_ratio_)
