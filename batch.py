@@ -1,13 +1,13 @@
 from netpyne.batchtools.search import search
 import numpy as np
 
-label = 'TCGainTune0924'
+label = 'GainTune0926'
 
-params = {'thalamoCorticalGain' : np.linspace(1.1, 2.0, 12)}
-
-# params = {'EEGain' : np.linspace(0.1, 2, 4),
-#           'EIGain' : np.linspace(0.1, 2, 4),
-#           'IEGain' : np.linspace(0.1, 2, 4)}
+params = {'EEGain' :  np.linspace(0.1, 2, 3),
+          'EIGain' :  np.linspace(0.1, 2, 3),
+          'IEGain' : np.linspace(0.1, 2, 3),
+          'IIGain' :  np.linspace(0.1, 2, 3)
+          }
 
 # use batch_shell_config if running directly on the machine
 shell_config = {'command': 'mpiexec -np 4 nrniv -python -mpi init.py'}
