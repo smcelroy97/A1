@@ -1,12 +1,9 @@
 from netpyne.batchtools.search import search
 import numpy as np
 
-label = 'GainTune0926'
+label = 'ThalEIGainTune0926'
 
-params = {'EEGain' :  np.linspace(0.1, 2, 3),
-          'EIGain' :  np.linspace(0.1, 2, 3),
-          'IEGain' : np.linspace(0.1, 2, 3),
-          'IIGain' :  np.linspace(0.1, 2, 3)
+params = {'intraThalamicEIGain' : np.linstpace(0.3, 0.5, 5)
           }
 
 # use batch_shell_config if running directly on the machine
