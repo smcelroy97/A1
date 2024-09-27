@@ -61,7 +61,8 @@ alltypes = ['NGF1', 'IT2', 'PV2', 'SOM2', 'VIP2', 'ITS4', 'PT5B', 'TC', 'HTC', '
 
 # Dict with traces to record -- taken from M1 cfg.py
 cfg.recordTraces = {'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'},
-                    'GABAB': {'sec': 'soma', 'loc': 0.5, 'synMech': 'GABAB'}
+                    'g_NMDA': {'sec':'soma', 'loc':0.5, 'synMech':'NMDA', 'var':'g'},
+                    'g_GABAB': {'sec':'soma', 'loc':0.5, 'synMech':'GABAB', 'var':'g'}
 }
 cfg.recordStim = False  # Seen in M1 cfg.py
 cfg.recordTime = True  # SEen in M1 cfg.py
@@ -98,13 +99,13 @@ cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig'
 
 # cfg.analysis['plotTraces'] = {'include': ['TC'], 'timeRange': [0, cfg.duration],
 # 'oneFigPer': 'trace', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
-# def setplotTraces (ncell=1, linclude=[]):
-#   for pop in cfg.allpops:
-#     for i in range(ncell):
-#       linclude.append( (pop,i) )
-#   cfg.analysis['plotTraces'] = {'include': linclude, 'oneFigPer': 'trace', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
-#
-# setplotTraces(ncell=20, linclude=['TC'])
+def setplotTraces (ncell=1, linclude=[]):
+  for pop in cfg.allpops:
+    for i in range(ncell):
+      linclude.append( (pop,i) )
+  cfg.analysis['plotTraces'] = {'include': linclude, 'oneFigPer': 'trace', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
+
+setplotTraces(ncell=20, linclude=['TC'])
 
 layer_bounds = {'L1': 100, 'L2': 160, 'L3': 950, 'L4': 1250, 'L5A': 1334, 'L5B': 1550, 'L6': 2000}
 
