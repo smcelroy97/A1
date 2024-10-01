@@ -281,7 +281,7 @@ cfg.delayBkg = 5.0  # (ms)
 cfg.startBkg = 0  # start at 0 ms
 cfg.rateBkg = {'exc': 40, 'inh': 40}
 
-cfg.EbkgThalamicGain = 0.9316
+cfg.EbkgThalamicGain = 1.04528
 cfg.IbkgThalamicGain = 0.485714
 cfg.BkgCtxEGain = 1.4285714285714286
 cfg.BkgCtxIGain = 0.8285714285714285

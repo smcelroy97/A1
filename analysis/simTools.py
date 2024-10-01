@@ -278,11 +278,11 @@ class simTools:
                 count = np.sum((pop_spike_times >= start) & (pop_spike_times < end))
 
                 # Calculate the firing rate and append it to the list
-                rate = count / bin_duration  # * 1000  # Convert to Hz
+                rate = count / (bin_duration / 1000)  # Convert to Hz
                 pop_firing_rates.append(rate)
 
             # Store the firing rates for the current population
-            firing_rates[pop] = pop_firing_rates
+            firing_rates[pop] = pop_firing_rates/pop_firing_rates[0]
         # Plot the firing rates
         plt.figure()
         for pop, rates in firing_rates.items():
