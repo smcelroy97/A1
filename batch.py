@@ -1,13 +1,9 @@
 from netpyne.batchtools.search import search
 import numpy as np
 
-label = 'EEIITune1001'
+label = 'GABAB_KO1003'
 
-params = {'EIGain' : 1.62,
-          'IEGain' : np.linspace(0.5, 0.86, 2),
-          'IIGain' : np.linspace(0.25, 2, 6),
-          'EEGain' : np.linspace(0.25, 2, 6)
-          }
+params = {'ThalIESynMech' : [['GABAASlow','GABAB'], ['GABAASlow']]}
 
 # use batch_shell_config if running directly on the machine
 shell_config = {'command': 'mpiexec -np 4 nrniv -python -mpi init.py'}
@@ -23,7 +19,7 @@ sge_config = {
 
 slurm_config = {
     'allocation' : 'TG-IBN140002',
-    'walltime' : '1:40:00',
+    'walltime' : '0:40:00',
     'nodes' : 1,
     'coresPerNode' : 128,
     'email' : 'scott.mcelroy@downstate.edu',

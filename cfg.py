@@ -97,15 +97,16 @@ cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig'
 #                             'saveFig': True, 'showFig': False, 'figSize': (25, 25)}  # Plot conn matrix
 # 'include': [('TC', i) for i in range(40)],
 
-# cfg.analysis['plotTraces'] = {'include': ['TC'], 'timeRange': [0, cfg.duration],
-# 'oneFigPer': 'trace', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
+cfg.analysis['plotTraces'] = {'include': ['TC'], 'timeRange': [0, cfg.duration],
+'oneFigPer': 'trace', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
+
 def setplotTraces (ncell=1, linclude=[]):
   for pop in cfg.allpops:
     for i in range(ncell):
       linclude.append( (pop,i) )
   cfg.analysis['plotTraces'] = {'include': linclude, 'oneFigPer': 'trace', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
 
-setplotTraces(ncell=20, linclude=['TC'])
+# setplotTraces(ncell=20, linclude=['TC'])
 
 layer_bounds = {'L1': 100, 'L2': 160, 'L3': 950, 'L4': 1250, 'L5A': 1334, 'L5B': 1550, 'L6': 2000}
 
@@ -121,6 +122,7 @@ cfg.KgbarFactor = 1.0
 # Synapses
 # ------------------------------------------------------------------------------
 
+cfg.ThalIESynMech = ['GABAASlow','GABAB']
 cfg.AMPATau2Factor = 1.0
 
 # General Synaptic Parameters

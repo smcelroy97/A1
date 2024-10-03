@@ -182,7 +182,7 @@ PVSynMech = ['GABAA']
 VIPSynMech = ['GABAA_VIP']
 NGFESynMech = ['GABAA', 'GABAB']
 NGFISynMech = ['GABAA']
-ThalIESynMech = ['GABAASlow','GABAB']
+ThalIESynMech = cfg.ThalIESynMech
 ThalIISynMech = ['GABAASlow']
 
 
