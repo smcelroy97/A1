@@ -119,7 +119,7 @@ for pop_ind, pop in enumerate(plotPops):
   store_GABAB = []
   store_NMDA = []
   store_voltages = {}
-  store_GABAt = {}
+  store_GABABt = {}
   store_NMDAt = {}
   for rec_ind in range(len(tracesData)):
     for trace in tracesData[rec_ind].keys():

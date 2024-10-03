@@ -287,15 +287,12 @@ class simTools:
         plt.figure()
         for pop, rates in firing_rates.items():
             plt.plot(rates, label=pop)
-        plt.xlabel('Bin Index')
-        plt.ylabel('Firing rate')
+        plt.xlabel('Stimulus Index', fontsize = 12)
+        plt.ylabel('Firing rate', fontsize = 12)
+        plt.ylim(0.5, 1.0)
         plt.xticks(range(0, (len(bin_start_times))))
-        plt.legend(fontsize=12, fontweight='bold')
-        plt.legend(fontsize=12, fontweight='bold')
-        plt.title(title, fontsize=16, fontweight='bold')  # Add title to the plot
-        plt.title(title, fontsize=16, fontweight='bold')  # Add title to the plot
+        plt.title('Multi-Unit Activity', fontsize=16)  # Add title to the plot
         plt.legend()
-        plt.title('Multi-Unit Activity')
         plt.savefig(save_dir + '_MUA.png')
 
 
