@@ -58,9 +58,9 @@ cfg.thalInhib = ['IRE', 'IREM', 'TI', 'TIM']
 alltypes = ['NGF1', 'IT2', 'PV2', 'SOM2', 'VIP2', 'ITS4', 'PT5B', 'TC', 'HTC', 'IRE', 'TI']
 
 # Dict with traces to record -- taken from M1 cfg.py
-cfg.recordTraces = {
-    'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'},
-    'i_GABAB_TC': {'sec': 'soma', 'loc': 0.5, 'var': 'i_GABAB', 'conds': {'pop': 'TC'}}
+cfg.recordTraces = {'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'},
+                    'g_NMDA': {'sec':'soma', 'loc':0.5, 'synMech':'NMDA', 'var':'g'},
+                    'g_GABAB': {'sec':'soma', 'loc':0.5, 'synMech':'GABAB', 'var':'g'}
 }
 cfg.recordStim = False  # Seen in M1 cfg.py
 cfg.recordTime = True  # SEen in M1 cfg.py
@@ -77,7 +77,7 @@ cfg.simLabel = 'TCTune0829A'
 cfg.saveFolder = 'simOutput/' + cfg.simLabel  # Set file output name
 cfg.savePickle = True  # Save pkl file
 cfg.saveJson = False  # Save json file
-cfg.saveDataInclude = ['simData', 'simConfig', 'net']
+cfg.saveDataInclude = ['simData', 'simConfig', 'net', 'netParams',  'netCells', 'netPops']
 cfg.backupCfgFile = None
 cfg.gatherOnlySimData = False
 cfg.saveCellSecs = False
@@ -113,6 +113,8 @@ cfg.KgbarFactor = 1.0
 # ------------------------------------------------------------------------------
 # Synapses
 # ------------------------------------------------------------------------------
+
+cfg.ThalIESynMech= ['GABAASlow','GABAB']
 
 cfg.AMPATau2Factor = 1.0
 
@@ -171,16 +173,16 @@ cfg.scaleDensity = 1.0  # Should be 1.0 unless need lower cell density for test 
 # Cortical
 cfg.addConn = 1.0
 cfg.addSubConn = 1
-cfg.wireCortex = 1.0
+cfg.wireCortex = 0
 
 # cfg.EEGain = 0.75
 # cfg.EIGain = 1.5
 # cfg.IEGain = 1.5
 # cfg.IIGain = 1.0
 
-cfg.EEGain = 1.1
+cfg.EEGain = 1.31667
 cfg.EIGain = 1.6313576020869256
-cfg.IEGain = 2.06
+cfg.IEGain = 0.6
 cfg.IIGain = 1.4102431748127964
 
 ## E/I->E/I layer weights (L1-3, L4, L5, L6)
@@ -209,8 +211,8 @@ cfg.IECellTypeGain = {'PV': 1.0, 'SOM': 1.0, 'VIP': 1.0, 'NGF': 1.0}
 
 # Thalamic
 cfg.addIntraThalamicConn = 1.0
-cfg.addCorticoThalamicConn = 1.0
-cfg.addThalamoCorticalConn = 1.0
+cfg.addCorticoThalamicConn = 0
+cfg.addThalamoCorticalConn = 0
 
 cfg.thalamoCorticalGain = 1.0
 cfg.intraThalamicGain = 1.0
@@ -275,7 +277,7 @@ cfg.delayBkg = 5.0  # (ms)
 cfg.startBkg = 0  # start at 0 ms
 cfg.rateBkg = {'exc': 40, 'inh': 40}
 
-cfg.EbkgThalamicGain = 0.9316
+cfg.EbkgThalamicGain = 1.04528
 cfg.IbkgThalamicGain = 0.485714
 
 cfg.NGF6bkgGain = 1.0

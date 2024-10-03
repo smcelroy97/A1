@@ -18,8 +18,8 @@ def assr_batch_grid(filename):
     params = specs.ODict()
 
     #### SET weights####
-    params['intraThalamicIEGain'] = [0.1]
-    params['intraThalamicEIGain'] = [0.3]
+    params['ThalIESynMech'] = [['GABAASlow','GABAB'], ['GABAASlow']]
+
 
     # --------------------------------------------------------
 
@@ -53,7 +53,7 @@ def setRunCfg(b, type='hpc_sge'):
         b.runCfg = {'type': 'hpc_slurm',
                     'allocation': 'TG-IBN140002',
                     'partition': 'compute',
-                    'walltime': '1:40:00',
+                    'walltime': '0:40:00',
                     'nodes': 1,
                     'coresPerNode': 64,
                     'folder': '/home/smcelroy/A1/',
@@ -91,7 +91,7 @@ def setRunCfg(b, type='hpc_sge'):
 if __name__ == '__main__':
     b = assr_batch_grid('data/v34_batch25/trial_2142/trial_2142_cfg.json')
 
-    b.batchLabel = 'netTest0910'
+    b.batchLabel = 'GABAB_KO1003'
     b.saveFolder = 'data/' + b.batchLabel
 
     setRunCfg(b, 'hpc_slurm_Expanse')

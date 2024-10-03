@@ -86,12 +86,14 @@ for pop_ind, pop in enumerate(plotPops):
   print('\n\n', pop)
   figs, traces_dict = sim.analysis.plotTraces(
     include=[pop],
-    overlay=True, oneFigPer='trace',
+    timeRange = [1800, 6500],
+    overlay=True,
+    oneFigPer='trace',
     ylim=[-110, 50],
     axis=True,
     figSize=(70, 15),
     fontSize=15,
-    saveFig=sim.cfg.saveFolder + '/' + sim.cfg.simLabel + '_traces__' + pop + '.png',
+    saveFig=False
   )
 
   tracesData = traces_dict['tracesData']
@@ -113,7 +115,7 @@ for pop_ind, pop in enumerate(plotPops):
   plt.plot(t_vector_, mean_v, 'r')
   plt.ylim([-110, 50])
   plt.xlim([min(t_vector_), max(t_vector_)])
-  plt.savefig(sim.cfg.saveFolder + '/' + sim.cfg.simLabel + '_mean_traces__' + pop + '.png')
+  plt.savefig(sim.cfg.saveFolder + '/' + sim.cfg.simLabel + '_mean_traces_' + pop + '.png')
 
 sim.saveData()
 sim.analysis.plotData()    # plot spike raster etc
