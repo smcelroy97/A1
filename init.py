@@ -100,7 +100,7 @@ for pop_ind, pop in enumerate(plotPops):
   figs, traces_dict = sim.analysis.plotTraces(
     include=[pop],
     # include=[record_pops[pop_ind]],
-    timeRange=[2000,6500],
+    timeRange=[1800,6500],
     overlay=True, oneFigPer='trace',
     ylim=[-110, 50],
     axis=True,
@@ -116,7 +116,11 @@ for pop_ind, pop in enumerate(plotPops):
   tracesData = traces_dict['tracesData']
   # store_v={}
   store_v = []
+  store_GABAB = []
+  store_NMDA = []
   store_voltages = {}
+  store_GABAt = {}
+  store_NMDAt = {}
   for rec_ind in range(len(tracesData)):
     for trace in tracesData[rec_ind].keys():
       if '_V_soma' in trace:
@@ -124,9 +128,21 @@ for pop_ind, pop in enumerate(plotPops):
         # store_v.update({cell_gid_str:list(tracesData[rec_ind][trace])})
         store_v.append(list(tracesData[rec_ind][trace]))
         store_voltages.update({cell_gid_str: list(tracesData[rec_ind][trace])})
+      if '_g_GABAB' in trace:
+        cell_gid_str = trace.split('_g_GABAB')[0].split('cell_')[1]
+        # store_v.update({cell_gid_str:list(tracesData[rec_ind][trace])})
+        store_GABAB.append(list(tracesData[rec_ind][trace]))
+        store_GABABt.update({cell_gid_str: list(tracesData[rec_ind][trace])})
+      if '_g_NMDA' in trace:
+        cell_gid_str = trace.split('_g_NMDA')[0].split('cell_')[1]
+        # store_v.update({cell_gid_str:list(tracesData[rec_ind][trace])})
+        store_NMDA.append(list(tracesData[rec_ind][trace]))
+        store_NMDAt.update({cell_gid_str: list(tracesData[rec_ind][trace])})
 
   t_vector = list(tracesData[0]['t'])
   mean_v = np.mean(store_v, axis=0)
+  mean_GABAB = np.mean(store_GABAB, axis = 0)
+  mean_NMDA = nm.mean(store_NMDA, axis = 0)
   t_vector_ = [t_vector[i] for i in range(len(mean_v))]
   plt.figure(figsize=(70, 15))
   for trace in store_v: plt.plot(t_vector_, trace, 'gray', alpha=0.2)
@@ -134,7 +150,23 @@ for pop_ind, pop in enumerate(plotPops):
   plt.ylim([-110, 50])
   plt.xlim([min(t_vector_), max(t_vector_)])
   # plt.plot(mean_v,'k')
-  plt.savefig(sim.cfg.saveFolder + '/' + sim.cfg.simLabel + '_mean_traces_' + pop + '.png')
+  plt.savefig(sim.cfg.saveFolder + '/' + sim.cfg.simLabel + '_mean_Vmtraces_' + pop + '.png')
+
+  plt.figure(figsize=(70, 15))
+  for trace in store_GABAB: plt.plot(t_vector_, trace, 'gray', alpha=0.2)
+  plt.plot(t_vector_, mean_GABAB, 'r')
+  plt.ylim([-110, 50])
+  plt.xlim([min(t_vector_), max(t_vector_)])
+  # plt.plot(mean_v,'k')
+  plt.savefig(sim.cfg.saveFolder + '/' + sim.cfg.simLabel + '_mean_GABABtraces_' + pop + '.png')
+
+  plt.figure(figsize=(70, 15))
+  for trace in store_NMDA: plt.plot(t_vector_, trace, 'gray', alpha=0.2)
+  plt.plot(t_vector_, mean_NMDA, 'r')
+  plt.ylim([-110, 50])
+  plt.xlim([min(t_vector_), max(t_vector_)])
+  # plt.plot(mean_v,'k')
+  plt.savefig(sim.cfg.saveFolder + '/' + sim.cfg.simLabel + '_mean_NMDAtraces_' + pop + '.png')
 
 
 # Terminate batch process

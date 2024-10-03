@@ -290,7 +290,12 @@ class simTools:
         plt.xlabel('Bin Index')
         plt.ylabel('Firing rate')
         plt.xticks(range(0, (len(bin_start_times))))
+        plt.legend(fontsize=12, fontweight='bold')
+        plt.legend(fontsize=12, fontweight='bold')
+        plt.title(title, fontsize=16, fontweight='bold')  # Add title to the plot
+        plt.title(title, fontsize=16, fontweight='bold')  # Add title to the plot
         plt.legend()
+        plt.title('Multi-Unit Activity')
         plt.savefig(save_dir + '_MUA.png')
 
 
