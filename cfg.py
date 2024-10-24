@@ -9,6 +9,7 @@ Contributors: ericaygriffith@gmail.com, salvadordura@gmail.com, samnemo@gmail.co
 from netpyne.batchtools import specs
 import pickle
 import json
+import numpy as np
 cfg = specs.SimConfig()
 
 # ------------------------------------------------------------------------------
@@ -20,7 +21,7 @@ cfg = specs.SimConfig()
 # ------------------------------------------------------------------------------
 # Run parameters
 # ------------------------------------------------------------------------------
-cfg.duration = 6500  # Duration of the sim, in ms
+cfg.duration = 52000  # Duration of the sim, in ms
 cfg.dt = 0.05  # Internal Integration Time Step
 cfg.verbose = 0  # Show detailed messages
 cfg.progressBar = 0  # even more detailed message
@@ -60,9 +61,9 @@ cfg.thalInhib = ['IRE', 'IREM', 'TI', 'TIM']
 alltypes = ['NGF1', 'IT2', 'PV2', 'SOM2', 'VIP2', 'ITS4', 'PT5B', 'TC', 'HTC', 'IRE', 'TI']
 
 # Dict with traces to record -- taken from M1 cfg.py
-cfg.recordTraces = {'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'},
-                    'g_NMDA': {'sec':'soma', 'loc':0.5, 'synMech':'NMDA', 'var':'g'},
-                    'g_GABAB': {'sec':'soma', 'loc':0.5, 'synMech':'GABAB', 'var':'g'}
+cfg.recordTraces = {'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'}
+                    # 'g_NMDA': {'sec':'soma', 'loc':0.5, 'synMech':'NMDA', 'var':'g'},
+                    # 'g_GABAB': {'sec':'soma', 'loc':0.5, 'synMech':'GABAB', 'var':'g'}
 }
 cfg.recordStim = False  # Seen in M1 cfg.py
 cfg.recordTime = True  # SEen in M1 cfg.py
@@ -75,7 +76,7 @@ cfg.recordDipole = False
 # Saving
 # ------------------------------------------------------------------------------
 
-cfg.simLabel = 'TCTune0829A'
+cfg.simLabel = 'IClampFI'
 cfg.saveFolder = 'simOutput/' + cfg.simLabel  # Set file output name
 cfg.savePickle = True  # Save pkl file
 cfg.saveJson = False  # Save json file
@@ -97,8 +98,8 @@ cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig'
 #                             'saveFig': True, 'showFig': False, 'figSize': (25, 25)}  # Plot conn matrix
 # 'include': [('TC', i) for i in range(40)],
 
-cfg.analysis['plotTraces'] = {'include': ['TC'], 'timeRange': [0, cfg.duration],
-'oneFigPer': 'trace', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
+# cfg.analysis['plotTraces'] = {'include': cfg.allpops, 'timeRange': [0, cfg.duration],
+# 'oneFigPer': 'cell', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
 
 def setplotTraces (ncell=1, linclude=[]):
   for pop in cfg.allpops:
@@ -164,7 +165,7 @@ for key, value in cfgLoad.items():
 
 
 # These values taken from M1 cfg (https://github.com/Neurosim-lab/netpyne/blob/development/examples/M1detailed/cfg.py)
-cfg.singleCellPops = False
+cfg.singleCellPops = True
 cfg.singlePop = ''
 cfg.removeWeightNorm = False
 cfg.scale = 1.0  # Is this what should be used?
@@ -178,8 +179,8 @@ cfg.scaleDensity = 1.0  # Should be 1.0 unless need lower cell density for test 
 # ------------------------------------------------------------------------------
 
 # Cortical
-cfg.addConn = 1.0
-cfg.addSubConn = 1.0
+cfg.addConn = 0
+cfg.addSubConn = 0
 cfg.wireCortex = 0
 
 # cfg.EEGain = 0.75
@@ -217,7 +218,7 @@ cfg.EICellTypeGain = {'PV': 1.0, 'SOM': 1.0, 'VIP': 1.0,
 cfg.IECellTypeGain = {'PV': 1.0, 'SOM': 1.0, 'VIP': 1.0, 'NGF': 1.0}
 
 # Thalamic
-cfg.addIntraThalamicConn = 1.0
+cfg.addIntraThalamicConn = 0
 cfg.addCorticoThalamicConn = 0
 cfg.addThalamoCorticalConn = 0
 
@@ -277,7 +278,7 @@ cfg.seeds = {'conn': 23451, 'stim': 1, 'loc': 1}
 # ------------------------------------------------------------------------------
 # Background inputs
 # ------------------------------------------------------------------------------
-cfg.addBkgConn = 1
+cfg.addBkgConn = 0
 cfg.noiseBkg = 1.0  # firing rate random noise
 cfg.delayBkg = 5.0  # (ms)
 cfg.startBkg = 0  # start at 0 ms
@@ -290,7 +291,7 @@ cfg.BkgCtxIGain = 0.8285714285714285
 
 cfg.NGF6bkgGain = 1.0
 
-cfg.cochlearThalInput = True
+cfg.cochlearThalInput = False
 # parameters to generate realistic  auditory thalamic inputs using Brian Hears
 
 
@@ -313,8 +314,11 @@ else:
 # ------------------------------------------------------------------------------
 # Current inputs
 # ------------------------------------------------------------------------------
-cfg.addIClamp = 0
-
+cfg.addIClamp = 1.0
+cfg.numInjections = 13
+cfg.injectionInterval = 3000  # 1 second in ms
+cfg.injectionDuration = 1000  # 1 second in ms
+cfg.injectionAmplitudes =  np.linspace(0.0, 0.6, 13)
 # ------------------------------------------------------------------------------
 # NetStim inputs
 # ------------------------------------------------------------------------------

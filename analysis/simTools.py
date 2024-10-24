@@ -124,7 +124,11 @@ class simTools:
         plt.savefig(save_dir + '_EEGspect.png')
 
 
-    def plot_PSD(data, save_dir, figsize = (20,20)):
+    def plot_PSD(
+            data,
+            save_dir,
+            figsize = (20,20)
+    ):
         # sampling frequency
         fs = int(1000.0 / 0.05)
 
@@ -282,17 +286,24 @@ class simTools:
                 pop_firing_rates.append(rate)
 
             # Store the firing rates for the current population
-            firing_rates[pop] = pop_firing_rates/pop_firing_rates[0]
+            firing_rates[pop] = pop_firing_rates
         # Plot the firing rates
-        plt.figure()
+        plt.rcParams['font.weight'] = 'bold'
+        # plt.figure(figsize = (27.5, 12.5))
+        plt.figure(figsize=(15.5, 12.5))
+        current = np.linspace(0, 0.6, 13)
         for pop, rates in firing_rates.items():
-            plt.plot(rates, label=pop)
-        plt.xlabel('Stimulus Index', fontsize = 12)
-        plt.ylabel('Firing rate', fontsize = 12)
-        plt.ylim(0.5, 1.0)
-        plt.xticks(range(0, (len(bin_start_times))))
-        plt.title('Multi-Unit Activity', fontsize=16)  # Add title to the plot
-        plt.legend()
+            plt.plot(current, rates, label=pop, linewidth = 6)
+        # plt.xlabel('Stimulus Index', fontsize = 30, fontweight = 'bold')
+        plt.xlabel('Current (pA)', fontsize=30, fontweight='bold')
+        plt.ylabel('Firing Rate (Hz)', fontsize = 30, fontweight = 'bold')
+        # plt.xticks(range(0, (len(bin_start_times))), fontsize = 25)
+        plt.xticks(fontsize=25)
+        plt.ylim(0,150)
+        plt.yticks(fontsize = 25)
+        # plt.title('MUA w/ GABA B', fontsize=50, fontweight = 'bold')  # Add title to the plot
+        plt.title(populations[0], fontsize=50, fontweight='bold')
+        plt.legend(fontsize = 30)
         plt.savefig(save_dir + '_MUA.png')
 
 
