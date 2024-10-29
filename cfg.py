@@ -179,9 +179,9 @@ cfg.scaleDensity = 1.0  # Should be 1.0 unless need lower cell density for test 
 # ------------------------------------------------------------------------------
 
 # Cortical
-cfg.addConn = 0
-cfg.addSubConn = 0
-cfg.wireCortex = 0
+cfg.addConn = 1.0
+cfg.addSubConn = 1.0
+cfg.wireCortex = 1.0
 
 # cfg.EEGain = 0.75
 # cfg.EIGain = 1.5
@@ -218,9 +218,9 @@ cfg.EICellTypeGain = {'PV': 1.0, 'SOM': 1.0, 'VIP': 1.0,
 cfg.IECellTypeGain = {'PV': 1.0, 'SOM': 1.0, 'VIP': 1.0, 'NGF': 1.0}
 
 # Thalamic
-cfg.addIntraThalamicConn = 0
-cfg.addCorticoThalamicConn = 0
-cfg.addThalamoCorticalConn = 0
+cfg.addIntraThalamicConn = 1.0
+cfg.addCorticoThalamicConn = 1.0
+cfg.addThalamoCorticalConn = 1.0
 
 cfg.thalamoCorticalGain = 1.0
 cfg.intraThalamicGain = 1.0
@@ -253,6 +253,8 @@ cfg.thalL4VIP = 1.0
 cfg.thalL4NGF = 1.0
 cfg.L3L3scaleFactor = 1.0
 cfg.CT6ScaleFactor = 1.0
+
+cfg.ITS4Type = 'IT'
 
 cfg.thalL1NGF = 1.0
 cfg.ENGF1 = 1.0
@@ -314,7 +316,7 @@ else:
 # ------------------------------------------------------------------------------
 # Current inputs
 # ------------------------------------------------------------------------------
-cfg.addIClamp = 1.0
+cfg.addIClamp = 0
 cfg.numInjections = 13
 cfg.injectionInterval = 3000  # 1 second in ms
 cfg.injectionDuration = 1000  # 1 second in ms

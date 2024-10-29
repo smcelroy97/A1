@@ -1,9 +1,9 @@
 from netpyne.batchtools.search import search
 import numpy as np
 
-label = 'GABAB_KO1003'
+label = 'v45_batch1'
 
-params = {'ThalIESynMech' : [['GABAASlow','GABAB'], ['GABAASlow']]}
+params = {'ITS4Type' : ['IT', 'ITS4']}
 
 # use batch_shell_config if running directly on the machine
 shell_config = {'command': 'mpiexec -np 4 nrniv -python -mpi init.py'}
@@ -21,7 +21,7 @@ slurm_config = {
     'allocation' : 'TG-IBN140002',
     'walltime' : '0:40:00',
     'nodes' : 1,
-    'coresPerNode' : 128,
+    'coresPerNode' : 64,
     'email' : 'scott.mcelroy@downstate.edu',
     'command' : 'mpiexec -n 128 nrniv -python -mpi init.py'
 }
