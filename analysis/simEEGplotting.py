@@ -16,21 +16,21 @@ stim_on = 2000  # Define onset of stimulus if necessary
 # plotERP = {'useFilter': True}
 # plotSpectrogram = {'useFilter': False}
 # plotPSD = {'useFilter': True}
-# plotRaster = {'timeRange': [0, 52000]}
+plotRaster = {'timeRange': [0, 12000]}
 # PSDSpect = {'timeRange': [3000, 4000], 'useLFP': False, 'useCSD': True}
-plotMUA = {'stimDur': 1000}
+# plotMUA = {'stimDur': 1000}
 
 calcEEG = False
 filter = False
 plotERP = False
 plotSpectrogram = False
 plotPSD = False
-plotRaster = False
+# plotRaster = False
 PSDSpect = False
-# plotMUA = False
+plotMUA = False
 
 
-batch = 'ITS4_FI'  # Name of batch for fig saving
+batch = 'v34_batch56_ITS4'  # Name of batch for fig saving
 
 # Load sim EEG data
 base_dir = '/Users/scoot/A1ProjData/A1_sim_data/' + batch + '/'  # Define dir from saved data dir
