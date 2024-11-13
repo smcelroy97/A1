@@ -21,7 +21,7 @@ cfg = specs.SimConfig()
 # ------------------------------------------------------------------------------
 # Run parameters
 # ------------------------------------------------------------------------------
-cfg.duration = 6500  # Duration of the sim, in ms
+cfg.duration = 1000  # Duration of the sim, in ms
 cfg.dt = 0.05  # Internal Integration Time Step
 cfg.verbose = 0  # Show detailed messages
 cfg.progressBar = 0  # even more detailed message
@@ -98,8 +98,8 @@ cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig'
 #                             'saveFig': True, 'showFig': False, 'figSize': (25, 25)}  # Plot conn matrix
 # 'include': [('TC', i) for i in range(40)],
 
-# cfg.analysis['plotTraces'] = {'include': cfg.allpops, 'timeRange': [0, cfg.duration],
-# 'oneFigPer': 'cell', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
+cfg.analysis['plotTraces'] = {'include': ['IT2'], 'timeRange': [0, cfg.duration],
+'oneFigPer': 'cell', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
 
 def setplotTraces (ncell=1, linclude=[]):
   for pop in cfg.allpops:
@@ -107,7 +107,7 @@ def setplotTraces (ncell=1, linclude=[]):
       linclude.append( (pop,i) )
   cfg.analysis['plotTraces'] = {'include': linclude, 'oneFigPer': 'trace', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
 
-# setplotTraces(ncell=20, linclude=['TC'])
+# setplotTraces(ncell=20, linclude=['IT2'])
 
 layer_bounds = {'L1': 100, 'L2': 160, 'L3': 950, 'L4': 1250, 'L5A': 1334, 'L5B': 1550, 'L6': 2000}
 
@@ -170,7 +170,7 @@ cfg.singlePop = ''
 cfg.removeWeightNorm = False
 cfg.scale = 1.0  # Is this what should be used?
 cfg.sizeY = 2000.0  # 1350.0 in M1_detailed # should this be set to 2000 since that is the full height of the column?
-cfg.sizeX = 200.0  # 400 - This may change depending on electrode radius
+cfg.sizeX = 100.0  # 400 - This may change depending on electrode radius
 cfg.sizeZ = 200.0
 cfg.scaleDensity = 1.0  # Should be 1.0 unless need lower cell density for test simulation or visualization
 
@@ -179,7 +179,7 @@ cfg.scaleDensity = 1.0  # Should be 1.0 unless need lower cell density for test 
 # ------------------------------------------------------------------------------
 
 # Cortical
-cfg.addConn = 1.0
+cfg.addConn = 0
 cfg.addSubConn = 1.0
 cfg.wireCortex = 1.0
 
@@ -293,7 +293,7 @@ cfg.BkgCtxIGain = 0.8285714285714285
 
 cfg.NGF6bkgGain = 1.0
 
-cfg.cochlearThalInput = True
+cfg.cochlearThalInput = False
 # parameters to generate realistic  auditory thalamic inputs using Brian Hears
 
 
@@ -321,6 +321,13 @@ cfg.numInjections = 13
 cfg.injectionInterval = 3000  # 1 second in ms
 cfg.injectionDuration = 1000  # 1 second in ms
 cfg.injectionAmplitudes =  np.linspace(0.0, 0.6, 13)
+
+cfg.addNoiseIClamp = 1
+
+if cfg.addNoiseIClamp:
+    cfg.NoiseIClampParams = {
+        'IT2': {'amp': 0}
+    }
 # ------------------------------------------------------------------------------
 # NetStim inputs
 # ------------------------------------------------------------------------------
