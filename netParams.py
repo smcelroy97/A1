@@ -168,7 +168,7 @@ Ipops = ['NGF1',                            # L1
 
 ### From M1 detailed netParams.py
 netParams.synMechParams['NMDA'] = {'mod': 'MyExp2SynNMDABB', 'tau1NMDA': 15, 'tau2NMDA': 150, 'e': 0}
-netParams.synMechParams['AMPA'] = {'mod':'MyExp2SynBB', 'tau1': 0.05, 'tau2': 5.3*cfg.AMPATau2Factor, 'e': 0}
+netParams.synMechParams['AMPA'] = {'mod':'MyExp2SynBB', 'tau1': 0.05, 'tau2': 5.3, 'e': 0}
 netParams.synMechParams['GABAB'] = {"mod": "MyExp2SynBB", "tau1": 41, "tau2": 642, "e": -105}
 netParams.synMechParams['GABAA'] = {'mod':'MyExp2SynBB', 'tau1': 0.07, 'tau2': 18.2, 'e': -80}
 netParams.synMechParams['GABAA_VIP'] = {'mod':'MyExp2SynBB', 'tau1': 0.3, 'tau2': 6.4, 'e': -80}  # Pi et al 2013
@@ -182,7 +182,7 @@ PVSynMech = ['GABAA']
 VIPSynMech = ['GABAA_VIP']
 NGFESynMech = ['GABAA', 'GABAB']
 NGFISynMech = ['GABAA']
-ThalIESynMech = cfg.ThalIESynMech
+ThalIESynMech = ['GABAASlow','GABAB']
 ThalIISynMech = ['GABAASlow']
 
 

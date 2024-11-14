@@ -46,7 +46,7 @@ cfg.validateNetParams = False
 cfg.allpops = ['NGF1', 'IT2', 'SOM2', 'PV2', 'VIP2', 'NGF2', 'IT3', 'SOM3', 'PV3', 'VIP3', 'NGF3', 'ITP4', 'ITS4',
                'SOM4', 'PV4', 'VIP4', 'NGF4', 'IT5A', 'CT5A', 'SOM5A', 'PV5A', 'VIP5A', 'NGF5A', 'IT5B', 'PT5B', 'CT5B',
                'SOM5B', 'PV5B', 'VIP5B', 'NGF5B', 'IT6', 'CT6', 'SOM6', 'PV6', 'VIP6', 'NGF6', 'TC', 'TCM', 'HTC',
-               'IRE', 'IREM', 'TI', 'TIM', 'cochlea']
+               'IRE', 'IREM', 'TI', 'TIM']
 
 cfg.allCorticalPops = ['NGF1', 'IT2', 'SOM2', 'PV2', 'VIP2', 'NGF2', 'IT3', 'SOM3', 'PV3', 'VIP3', 'NGF3', 'ITP4',
                        'ITS4', 'SOM4', 'PV4', 'VIP4', 'NGF4', 'IT5A', 'CT5A', 'SOM5A', 'PV5A', 'VIP5A', 'NGF5A', 'IT5B',
@@ -90,8 +90,7 @@ cfg.saveCellConns = False
 # Analysis and plotting
 # ------------------------------------------------------------------------------
 
-cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig': False, 'orderInverse': True,
-                              'timeRange': [0, cfg.duration], 'figSize': (25, 25), 'plotRates': False,
+cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig': False, 'orderInverse': True, # 'figSize': (25, 25),
                               'markerSize': 50}   # Plot a raster
 
 # cfg.analysis['plotConn'] = {'includePre': cfg.allpops, 'includePost': ['TC'], 'feature': 'strength',
@@ -123,8 +122,6 @@ cfg.KgbarFactor = 1.0
 # Synapses
 # ------------------------------------------------------------------------------
 
-cfg.ThalIESynMech = ['GABAASlow','GABAB']
-cfg.AMPATau2Factor = 1.0
 
 # General Synaptic Parameters
 cfg.synWeightFractionEE = [0.5, 0.5]  # E->E AMPA to NMDA ratio
@@ -165,12 +162,12 @@ for key, value in cfgLoad.items():
 
 
 # These values taken from M1 cfg (https://github.com/Neurosim-lab/netpyne/blob/development/examples/M1detailed/cfg.py)
-cfg.singleCellPops = True
+cfg.singleCellPops = False
 cfg.singlePop = ''
 cfg.removeWeightNorm = False
 cfg.scale = 1.0  # Is this what should be used?
 cfg.sizeY = 2000.0  # 1350.0 in M1_detailed # should this be set to 2000 since that is the full height of the column?
-cfg.sizeX = 100.0  # 400 - This may change depending on electrode radius
+cfg.sizeX = 5.0  # 400 - This may change depending on electrode radius
 cfg.sizeZ = 200.0
 cfg.scaleDensity = 1.0  # Should be 1.0 unless need lower cell density for test simulation or visualization
 
@@ -254,7 +251,7 @@ cfg.thalL4NGF = 1.0
 cfg.L3L3scaleFactor = 1.0
 cfg.CT6ScaleFactor = 1.0
 
-cfg.ITS4Type = 'IT'
+cfg.ITS4Type = 'ITS4'
 
 cfg.thalL1NGF = 1.0
 cfg.ENGF1 = 1.0
@@ -280,8 +277,8 @@ cfg.seeds = {'conn': 23451, 'stim': 1, 'loc': 1}
 # ------------------------------------------------------------------------------
 # Background inputs
 # ------------------------------------------------------------------------------
-cfg.addBkgConn = 1.0
-cfg.noiseBkg = 1.0  # firing rate random noise
+cfg.addBkgConn = 0
+cfg.noiseBkg = 0  # firing rate random noise
 cfg.delayBkg = 5.0  # (ms)
 cfg.startBkg = 0  # start at 0 ms
 cfg.rateBkg = {'exc': 40, 'inh': 40}
