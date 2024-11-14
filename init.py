@@ -22,6 +22,7 @@ from netParams import netParams, cfg
 import numpy as np
 import matplotlib.pyplot as plt
 from netpyne.analysis import spikes_legacy
+from CurrentStim import CurrentStim as CS
 from analysis.simTools import editNet
 import json
 
@@ -77,6 +78,14 @@ if cfg.cochlearThalInput: setCochCellLocationsX('cochlea', netParams.popParams['
 
 sim.net.connectCells()            			# create connections between cells based on params
 sim.net.addStims() 							# add network stimulation
+
+#########################################################################################
+# - Adding OU Nose Stims for each Cell
+#########################################################################################
+
+if sim.cfg.addNoiseIClamp:
+  sim, vecs_dict = CS.addNoiseIClamp(sim)
+
 sim.setupRecording()              			# setup variables to record for each cell (spikes, V traces, etc)
 sim.runSim()                                    # run parallel Neuron simulation
 sim.saveDataInNodes()
@@ -98,4 +107,4 @@ if comm.is_host():
   comm.send(out_json)
   comm.close()
 
-sim.close()
+# sim.close()

@@ -21,7 +21,7 @@ cfg = specs.SimConfig()
 # ------------------------------------------------------------------------------
 # Run parameters
 # ------------------------------------------------------------------------------
-cfg.duration = 6500  # Duration of the sim, in ms
+cfg.duration = 1000  # Duration of the sim, in ms
 cfg.dt = 0.05  # Internal Integration Time Step
 cfg.verbose = 0  # Show detailed messages
 cfg.progressBar = 0  # even more detailed message
@@ -46,7 +46,7 @@ cfg.validateNetParams = False
 cfg.allpops = ['NGF1', 'IT2', 'SOM2', 'PV2', 'VIP2', 'NGF2', 'IT3', 'SOM3', 'PV3', 'VIP3', 'NGF3', 'ITP4', 'ITS4',
                'SOM4', 'PV4', 'VIP4', 'NGF4', 'IT5A', 'CT5A', 'SOM5A', 'PV5A', 'VIP5A', 'NGF5A', 'IT5B', 'PT5B', 'CT5B',
                'SOM5B', 'PV5B', 'VIP5B', 'NGF5B', 'IT6', 'CT6', 'SOM6', 'PV6', 'VIP6', 'NGF6', 'TC', 'TCM', 'HTC',
-               'IRE', 'IREM', 'TI', 'TIM', 'cochlea']
+               'IRE', 'IREM', 'TI', 'TIM']
 
 cfg.allCorticalPops = ['NGF1', 'IT2', 'SOM2', 'PV2', 'VIP2', 'NGF2', 'IT3', 'SOM3', 'PV3', 'VIP3', 'NGF3', 'ITP4',
                        'ITS4', 'SOM4', 'PV4', 'VIP4', 'NGF4', 'IT5A', 'CT5A', 'SOM5A', 'PV5A', 'VIP5A', 'NGF5A', 'IT5B',
@@ -90,16 +90,15 @@ cfg.saveCellConns = False
 # Analysis and plotting
 # ------------------------------------------------------------------------------
 
-cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig': False, 'orderInverse': True,
-                              'timeRange': [0, cfg.duration], 'figSize': (25, 25), 'plotRates': False,
+cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig': False, 'orderInverse': True, # 'figSize': (25, 25),
                               'markerSize': 50}   # Plot a raster
 
 # cfg.analysis['plotConn'] = {'includePre': cfg.allpops, 'includePost': ['TC'], 'feature': 'strength',
 #                             'saveFig': True, 'showFig': False, 'figSize': (25, 25)}  # Plot conn matrix
 # 'include': [('TC', i) for i in range(40)],
 
-# cfg.analysis['plotTraces'] = {'include': cfg.allpops, 'timeRange': [0, cfg.duration],
-# 'oneFigPer': 'cell', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
+cfg.analysis['plotTraces'] = {'include': ['IT2'], 'timeRange': [0, cfg.duration],
+'oneFigPer': 'cell', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
 
 def setplotTraces (ncell=1, linclude=[]):
   for pop in cfg.allpops:
@@ -107,7 +106,7 @@ def setplotTraces (ncell=1, linclude=[]):
       linclude.append( (pop,i) )
   cfg.analysis['plotTraces'] = {'include': linclude, 'oneFigPer': 'trace', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
 
-# setplotTraces(ncell=20, linclude=['TC'])
+# setplotTraces(ncell=20, linclude=['IT2'])
 
 layer_bounds = {'L1': 100, 'L2': 160, 'L3': 950, 'L4': 1250, 'L5A': 1334, 'L5B': 1550, 'L6': 2000}
 
@@ -123,8 +122,6 @@ cfg.KgbarFactor = 1.0
 # Synapses
 # ------------------------------------------------------------------------------
 
-cfg.ThalIESynMech = ['GABAASlow','GABAB']
-cfg.AMPATau2Factor = 1.0
 
 # General Synaptic Parameters
 cfg.synWeightFractionEE = [0.5, 0.5]  # E->E AMPA to NMDA ratio
@@ -165,12 +162,12 @@ for key, value in cfgLoad.items():
 
 
 # These values taken from M1 cfg (https://github.com/Neurosim-lab/netpyne/blob/development/examples/M1detailed/cfg.py)
-cfg.singleCellPops = True
+cfg.singleCellPops = False
 cfg.singlePop = ''
 cfg.removeWeightNorm = False
 cfg.scale = 1.0  # Is this what should be used?
 cfg.sizeY = 2000.0  # 1350.0 in M1_detailed # should this be set to 2000 since that is the full height of the column?
-cfg.sizeX = 200.0  # 400 - This may change depending on electrode radius
+cfg.sizeX = 5.0  # 400 - This may change depending on electrode radius
 cfg.sizeZ = 200.0
 cfg.scaleDensity = 1.0  # Should be 1.0 unless need lower cell density for test simulation or visualization
 
@@ -179,7 +176,7 @@ cfg.scaleDensity = 1.0  # Should be 1.0 unless need lower cell density for test 
 # ------------------------------------------------------------------------------
 
 # Cortical
-cfg.addConn = 1.0
+cfg.addConn = 0
 cfg.addSubConn = 1.0
 cfg.wireCortex = 1.0
 
@@ -254,7 +251,7 @@ cfg.thalL4NGF = 1.0
 cfg.L3L3scaleFactor = 1.0
 cfg.CT6ScaleFactor = 1.0
 
-cfg.ITS4Type = 'IT'
+cfg.ITS4Type = 'ITS4'
 
 cfg.thalL1NGF = 1.0
 cfg.ENGF1 = 1.0
@@ -280,8 +277,8 @@ cfg.seeds = {'conn': 23451, 'stim': 1, 'loc': 1}
 # ------------------------------------------------------------------------------
 # Background inputs
 # ------------------------------------------------------------------------------
-cfg.addBkgConn = 1.0
-cfg.noiseBkg = 1.0  # firing rate random noise
+cfg.addBkgConn = 0
+cfg.noiseBkg = 0  # firing rate random noise
 cfg.delayBkg = 5.0  # (ms)
 cfg.startBkg = 0  # start at 0 ms
 cfg.rateBkg = {'exc': 40, 'inh': 40}
@@ -293,7 +290,7 @@ cfg.BkgCtxIGain = 0.8285714285714285
 
 cfg.NGF6bkgGain = 1.0
 
-cfg.cochlearThalInput = True
+cfg.cochlearThalInput = False
 # parameters to generate realistic  auditory thalamic inputs using Brian Hears
 
 
@@ -321,6 +318,13 @@ cfg.numInjections = 13
 cfg.injectionInterval = 3000  # 1 second in ms
 cfg.injectionDuration = 1000  # 1 second in ms
 cfg.injectionAmplitudes =  np.linspace(0.0, 0.6, 13)
+
+cfg.addNoiseIClamp = 1
+
+if cfg.addNoiseIClamp:
+    cfg.NoiseIClampParams = {
+        'IT2': {'amp': 0}
+    }
 # ------------------------------------------------------------------------------
 # NetStim inputs
 # ------------------------------------------------------------------------------

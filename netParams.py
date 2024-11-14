@@ -14,7 +14,7 @@ from cfg import cfg
 #------------------------------------------------------------------------------
 # VERSION
 #------------------------------------------------------------------------------
-netParams.version = 41
+netParams.version = 45
 
 #------------------------------------------------------------------------------
 #
@@ -83,67 +83,67 @@ with open('cells/cellDensity.pkl', 'rb') as fileObj: density = pickle.load(fileO
 density = {k: [x * cfg.scaleDensity for x in v] for k,v in density.items()} # Scale densities
 
 # ### LAYER 1:
-netParams.popParams['NGF1'] = {'cellType': 'NGF', 'cellModel': 'HH_reduced','ynormRange': layer['1'],   'density': density[('A1','nonVIP')][0]}
+# netParams.popParams['NGF1'] = {'cellType': 'NGF', 'cellModel': 'HH_reduced','ynormRange': layer['1'],   'density': density[('A1','nonVIP')][0]}
 
 ### LAYER 2:
 netParams.popParams['IT2'] =     {'cellType': 'IT',  'cellModel': 'HH_reduced',  'ynormRange': layer['2'],   'density': density[('A1','E')][1]}     # cfg.cellmod for 'cellModel' in M1 netParams.py
-netParams.popParams['SOM2'] =    {'cellType': 'SOM', 'cellModel': 'HH_reduced',   'ynormRange': layer['2'],   'density': density[('A1','SOM')][1]}
-netParams.popParams['PV2'] =     {'cellType': 'PV',  'cellModel': 'HH_reduced',   'ynormRange': layer['2'],   'density': density[('A1','PV')][1]}
-netParams.popParams['VIP2'] =    {'cellType': 'VIP', 'cellModel': 'HH_reduced',   'ynormRange': layer['2'],   'density': density[('A1','VIP')][1]}
-netParams.popParams['NGF2'] =    {'cellType': 'NGF', 'cellModel': 'HH_reduced',   'ynormRange': layer['2'],   'density': density[('A1','nonVIP')][1]}
+# netParams.popParams['SOM2'] =    {'cellType': 'SOM', 'cellModel': 'HH_reduced',   'ynormRange': layer['2'],   'density': density[('A1','SOM')][1]}
+# netParams.popParams['PV2'] =     {'cellType': 'PV',  'cellModel': 'HH_reduced',   'ynormRange': layer['2'],   'density': density[('A1','PV')][1]}
+# netParams.popParams['VIP2'] =    {'cellType': 'VIP', 'cellModel': 'HH_reduced',   'ynormRange': layer['2'],   'density': density[('A1','VIP')][1]}
+# netParams.popParams['NGF2'] =    {'cellType': 'NGF', 'cellModel': 'HH_reduced',   'ynormRange': layer['2'],   'density': density[('A1','nonVIP')][1]}
 
 ### LAYER 3:
-netParams.popParams['IT3'] =     {'cellType': 'IT',  'cellModel': 'HH_reduced',  'ynormRange': layer['3'],   'density': density[('A1','E')][1]} ## CHANGE DENSITY
-netParams.popParams['SOM3'] =    {'cellType': 'SOM', 'cellModel': 'HH_reduced',   'ynormRange': layer['3'],   'density': density[('A1','SOM')][1]} ## CHANGE DENSITY
-netParams.popParams['PV3'] =     {'cellType': 'PV',  'cellModel': 'HH_reduced',   'ynormRange': layer['3'],   'density': density[('A1','PV')][1]} ## CHANGE DENSITY
-netParams.popParams['VIP3'] =    {'cellType': 'VIP', 'cellModel': 'HH_reduced',   'ynormRange': layer['3'],   'density': density[('A1','VIP')][1]} ## CHANGE DENSITY
-netParams.popParams['NGF3'] =    {'cellType': 'NGF', 'cellModel': 'HH_reduced',   'ynormRange': layer['3'],   'density': density[('A1','nonVIP')][1]}
-
-
-## LAYER 4:
-netParams.popParams['ITP4'] =	 {'cellType': 'IT', 'cellModel': 'HH_reduced',  'ynormRange': layer['4'],   'density': 0.5*density[('A1','E')][2]}      ## CHANGE DENSITY #
-netParams.popParams['ITS4'] =	 {'cellType': cfg.ITS4Type, 'cellModel': 'HH_reduced', 'ynormRange': layer['4'],  'density': 0.5*density[('A1','E')][2]}      ## CHANGE DENSITY
-netParams.popParams['SOM4'] = 	 {'cellType': 'SOM', 'cellModel': 'HH_reduced',   'ynormRange': layer['4'],  'density': density[('A1','SOM')][2]}
-netParams.popParams['PV4'] = 	 {'cellType': 'PV', 'cellModel': 'HH_reduced',   'ynormRange': layer['4'],   'density': density[('A1','PV')][2]}
-netParams.popParams['VIP4'] =	 {'cellType': 'VIP', 'cellModel': 'HH_reduced',   'ynormRange': layer['4'],  'density': density[('A1','VIP')][2]}
-netParams.popParams['NGF4'] =    {'cellType': 'NGF', 'cellModel': 'HH_reduced',   'ynormRange': layer['4'],  'density': density[('A1','nonVIP')][2]}
-
-# ### LAYER 5A:
-netParams.popParams['IT5A'] =     {'cellType': 'IT',  'cellModel': 'HH_reduced',   'ynormRange': layer['5A'], 	'density': 0.5*density[('A1','E')][3]}
-netParams.popParams['CT5A'] =     {'cellType': 'CT',  'cellModel': 'HH_reduced',   'ynormRange': layer['5A'],   'density': 0.5*density[('A1','E')][3]}  # density is [5] because we are using same numbers for L5A and L6 for CT cells?
-netParams.popParams['SOM5A'] =    {'cellType': 'SOM', 'cellModel': 'HH_reduced',    'ynormRange': layer['5A'],	'density': density[('A1','SOM')][3]}
-netParams.popParams['PV5A'] =     {'cellType': 'PV',  'cellModel': 'HH_reduced',    'ynormRange': layer['5A'],	'density': density[('A1','PV')][3]}
-netParams.popParams['VIP5A'] =    {'cellType': 'VIP', 'cellModel': 'HH_reduced',    'ynormRange': layer['5A'],   'density': density[('A1','VIP')][3]}
-netParams.popParams['NGF5A'] =    {'cellType': 'NGF', 'cellModel': 'HH_reduced',    'ynormRange': layer['5A'],   'density': density[('A1','nonVIP')][3]}
-
-### LAYER 5B:
-netParams.popParams['IT5B'] =     {'cellType': 'IT',  'cellModel': 'HH_reduced',   'ynormRange': layer['5B'], 	'density': (1/3)*density[('A1','E')][4]}
-netParams.popParams['CT5B'] =     {'cellType': 'CT',  'cellModel': 'HH_reduced',   'ynormRange': layer['5B'],   'density': (1/3)*density[('A1','E')][4]}  # density is [5] because we are using same numbers for L5B and L6 for CT cells?
-netParams.popParams['PT5B'] =     {'cellType': 'PT',  'cellModel': 'HH_reduced',   'ynormRange': layer['5B'], 	'density': (1/3)*density[('A1','E')][4]}
-netParams.popParams['SOM5B'] =    {'cellType': 'SOM', 'cellModel': 'HH_reduced',    'ynormRange': layer['5B'],   'density': density[('A1', 'SOM')][4]}
-netParams.popParams['PV5B'] =     {'cellType': 'PV',  'cellModel': 'HH_reduced',    'ynormRange': layer['5B'],	'density': density[('A1','PV')][4]}
-netParams.popParams['VIP5B'] =    {'cellType': 'VIP', 'cellModel': 'HH_reduced',    'ynormRange': layer['5B'],   'density': density[('A1','VIP')][4]}
-netParams.popParams['NGF5B'] =    {'cellType': 'NGF', 'cellModel': 'HH_reduced',    'ynormRange': layer['5B'],   'density': density[('A1','nonVIP')][4]}
-
-# # ### LAYER 6:
-netParams.popParams['IT6'] =     {'cellType': 'IT',  'cellModel': 'HH_reduced',  'ynormRange': layer['6'],   'density': 0.5*density[('A1','E')][5]}
-netParams.popParams['CT6'] =     {'cellType': 'CT',  'cellModel': 'HH_reduced',  'ynormRange': layer['6'],   'density': 0.5*density[('A1','E')][5]}
-netParams.popParams['SOM6'] =    {'cellType': 'SOM', 'cellModel': 'HH_reduced',   'ynormRange': layer['6'],   'density': density[('A1','SOM')][5]}
-netParams.popParams['PV6'] =     {'cellType': 'PV',  'cellModel': 'HH_reduced',   'ynormRange': layer['6'],   'density': density[('A1','PV')][5]}
-netParams.popParams['VIP6'] =    {'cellType': 'VIP', 'cellModel': 'HH_reduced',   'ynormRange': layer['6'],   'density': density[('A1','VIP')][5]}
-netParams.popParams['NGF6'] =    {'cellType': 'NGF', 'cellModel': 'HH_reduced',   'ynormRange': layer['6'],   'density': density[('A1','nonVIP')][5]}
-
-
-### THALAMIC POPULATIONS (from prev model)
-thalDensity = density[('A1','PV')][2] * 1.25  # temporary estimate (from prev model)
-
-netParams.popParams['TC'] =     {'cellType': 'TC',  'cellModel': 'HH_reduced',  'ynormRange': layer['thal'],   'density': 0.75*thalDensity}
-netParams.popParams['TCM'] =    {'cellType': 'TC',  'cellModel': 'HH_reduced',  'ynormRange': layer['thal'],   'density': thalDensity}
-netParams.popParams['HTC'] =    {'cellType': 'HTC', 'cellModel': 'HH_reduced',  'ynormRange': layer['thal'],   'density': 0.25*thalDensity}
-netParams.popParams['IRE'] =    {'cellType': 'RE',  'cellModel': 'HH_reduced',  'ynormRange': layer['thal'],   'density': thalDensity}
-netParams.popParams['IREM'] =   {'cellType': 'RE', 'cellModel': 'HH_reduced',   'ynormRange': layer['thal'],   'density': thalDensity}
-netParams.popParams['TI'] =     {'cellType': 'TI',  'cellModel': 'HH_reduced',  'ynormRange': layer['thal'],   'density': 0.33 * thalDensity} ## Winer & Larue 1996; Huang et al 1999
-netParams.popParams['TIM'] =    {'cellType': 'TI',  'cellModel': 'HH_reduced',  'ynormRange': layer['thal'],   'density': 0.33 * thalDensity} ## Winer & Larue 1996; Huang et al 1999
+# netParams.popParams['IT3'] =     {'cellType': 'IT',  'cellModel': 'HH_reduced',  'ynormRange': layer['3'],   'density': density[('A1','E')][1]} ## CHANGE DENSITY
+# netParams.popParams['SOM3'] =    {'cellType': 'SOM', 'cellModel': 'HH_reduced',   'ynormRange': layer['3'],   'density': density[('A1','SOM')][1]} ## CHANGE DENSITY
+# netParams.popParams['PV3'] =     {'cellType': 'PV',  'cellModel': 'HH_reduced',   'ynormRange': layer['3'],   'density': density[('A1','PV')][1]} ## CHANGE DENSITY
+# netParams.popParams['VIP3'] =    {'cellType': 'VIP', 'cellModel': 'HH_reduced',   'ynormRange': layer['3'],   'density': density[('A1','VIP')][1]} ## CHANGE DENSITY
+# netParams.popParams['NGF3'] =    {'cellType': 'NGF', 'cellModel': 'HH_reduced',   'ynormRange': layer['3'],   'density': density[('A1','nonVIP')][1]}
+#
+#
+# ## LAYER 4:
+# netParams.popParams['ITP4'] =	 {'cellType': 'IT', 'cellModel': 'HH_reduced',  'ynormRange': layer['4'],   'density': 0.5*density[('A1','E')][2]}      ## CHANGE DENSITY #
+# netParams.popParams['ITS4'] =	 {'cellType': cfg.ITS4Type, 'cellModel': 'HH_reduced', 'ynormRange': layer['4'],  'density': 0.5*density[('A1','E')][2]}      ## CHANGE DENSITY
+# netParams.popParams['SOM4'] = 	 {'cellType': 'SOM', 'cellModel': 'HH_reduced',   'ynormRange': layer['4'],  'density': density[('A1','SOM')][2]}
+# netParams.popParams['PV4'] = 	 {'cellType': 'PV', 'cellModel': 'HH_reduced',   'ynormRange': layer['4'],   'density': density[('A1','PV')][2]}
+# netParams.popParams['VIP4'] =	 {'cellType': 'VIP', 'cellModel': 'HH_reduced',   'ynormRange': layer['4'],  'density': density[('A1','VIP')][2]}
+# netParams.popParams['NGF4'] =    {'cellType': 'NGF', 'cellModel': 'HH_reduced',   'ynormRange': layer['4'],  'density': density[('A1','nonVIP')][2]}
+#
+# # ### LAYER 5A:
+# netParams.popParams['IT5A'] =     {'cellType': 'IT',  'cellModel': 'HH_reduced',   'ynormRange': layer['5A'], 	'density': 0.5*density[('A1','E')][3]}
+# netParams.popParams['CT5A'] =     {'cellType': 'CT',  'cellModel': 'HH_reduced',   'ynormRange': layer['5A'],   'density': 0.5*density[('A1','E')][3]}  # density is [5] because we are using same numbers for L5A and L6 for CT cells?
+# netParams.popParams['SOM5A'] =    {'cellType': 'SOM', 'cellModel': 'HH_reduced',    'ynormRange': layer['5A'],	'density': density[('A1','SOM')][3]}
+# netParams.popParams['PV5A'] =     {'cellType': 'PV',  'cellModel': 'HH_reduced',    'ynormRange': layer['5A'],	'density': density[('A1','PV')][3]}
+# netParams.popParams['VIP5A'] =    {'cellType': 'VIP', 'cellModel': 'HH_reduced',    'ynormRange': layer['5A'],   'density': density[('A1','VIP')][3]}
+# netParams.popParams['NGF5A'] =    {'cellType': 'NGF', 'cellModel': 'HH_reduced',    'ynormRange': layer['5A'],   'density': density[('A1','nonVIP')][3]}
+#
+# ### LAYER 5B:
+# netParams.popParams['IT5B'] =     {'cellType': 'IT',  'cellModel': 'HH_reduced',   'ynormRange': layer['5B'], 	'density': (1/3)*density[('A1','E')][4]}
+# netParams.popParams['CT5B'] =     {'cellType': 'CT',  'cellModel': 'HH_reduced',   'ynormRange': layer['5B'],   'density': (1/3)*density[('A1','E')][4]}  # density is [5] because we are using same numbers for L5B and L6 for CT cells?
+# netParams.popParams['PT5B'] =     {'cellType': 'PT',  'cellModel': 'HH_reduced',   'ynormRange': layer['5B'], 	'density': (1/3)*density[('A1','E')][4]}
+# netParams.popParams['SOM5B'] =    {'cellType': 'SOM', 'cellModel': 'HH_reduced',    'ynormRange': layer['5B'],   'density': density[('A1', 'SOM')][4]}
+# netParams.popParams['PV5B'] =     {'cellType': 'PV',  'cellModel': 'HH_reduced',    'ynormRange': layer['5B'],	'density': density[('A1','PV')][4]}
+# netParams.popParams['VIP5B'] =    {'cellType': 'VIP', 'cellModel': 'HH_reduced',    'ynormRange': layer['5B'],   'density': density[('A1','VIP')][4]}
+# netParams.popParams['NGF5B'] =    {'cellType': 'NGF', 'cellModel': 'HH_reduced',    'ynormRange': layer['5B'],   'density': density[('A1','nonVIP')][4]}
+#
+# # # ### LAYER 6:
+# netParams.popParams['IT6'] =     {'cellType': 'IT',  'cellModel': 'HH_reduced',  'ynormRange': layer['6'],   'density': 0.5*density[('A1','E')][5]}
+# netParams.popParams['CT6'] =     {'cellType': 'CT',  'cellModel': 'HH_reduced',  'ynormRange': layer['6'],   'density': 0.5*density[('A1','E')][5]}
+# netParams.popParams['SOM6'] =    {'cellType': 'SOM', 'cellModel': 'HH_reduced',   'ynormRange': layer['6'],   'density': density[('A1','SOM')][5]}
+# netParams.popParams['PV6'] =     {'cellType': 'PV',  'cellModel': 'HH_reduced',   'ynormRange': layer['6'],   'density': density[('A1','PV')][5]}
+# netParams.popParams['VIP6'] =    {'cellType': 'VIP', 'cellModel': 'HH_reduced',   'ynormRange': layer['6'],   'density': density[('A1','VIP')][5]}
+# netParams.popParams['NGF6'] =    {'cellType': 'NGF', 'cellModel': 'HH_reduced',   'ynormRange': layer['6'],   'density': density[('A1','nonVIP')][5]}
+#
+#
+# ### THALAMIC POPULATIONS (from prev model)
+# thalDensity = density[('A1','PV')][2] * 1.25  # temporary estimate (from prev model)
+#
+# netParams.popParams['TC'] =     {'cellType': 'TC',  'cellModel': 'HH_reduced',  'ynormRange': layer['thal'],   'density': 0.75*thalDensity}
+# netParams.popParams['TCM'] =    {'cellType': 'TC',  'cellModel': 'HH_reduced',  'ynormRange': layer['thal'],   'density': thalDensity}
+# netParams.popParams['HTC'] =    {'cellType': 'HTC', 'cellModel': 'HH_reduced',  'ynormRange': layer['thal'],   'density': 0.25*thalDensity}
+# netParams.popParams['IRE'] =    {'cellType': 'RE',  'cellModel': 'HH_reduced',  'ynormRange': layer['thal'],   'density': thalDensity}
+# netParams.popParams['IREM'] =   {'cellType': 'RE', 'cellModel': 'HH_reduced',   'ynormRange': layer['thal'],   'density': thalDensity}
+# netParams.popParams['TI'] =     {'cellType': 'TI',  'cellModel': 'HH_reduced',  'ynormRange': layer['thal'],   'density': 0.33 * thalDensity} ## Winer & Larue 1996; Huang et al 1999
+# netParams.popParams['TIM'] =    {'cellType': 'TI',  'cellModel': 'HH_reduced',  'ynormRange': layer['thal'],   'density': 0.33 * thalDensity} ## Winer & Larue 1996; Huang et al 1999
 
 
 if cfg.singleCellPops:
@@ -168,7 +168,7 @@ Ipops = ['NGF1',                            # L1
 
 ### From M1 detailed netParams.py
 netParams.synMechParams['NMDA'] = {'mod': 'MyExp2SynNMDABB', 'tau1NMDA': 15, 'tau2NMDA': 150, 'e': 0}
-netParams.synMechParams['AMPA'] = {'mod':'MyExp2SynBB', 'tau1': 0.05, 'tau2': 5.3*cfg.AMPATau2Factor, 'e': 0}
+netParams.synMechParams['AMPA'] = {'mod':'MyExp2SynBB', 'tau1': 0.05, 'tau2': 5.3, 'e': 0}
 netParams.synMechParams['GABAB'] = {"mod": "MyExp2SynBB", "tau1": 41, "tau2": 642, "e": -105}
 netParams.synMechParams['GABAA'] = {'mod':'MyExp2SynBB', 'tau1': 0.07, 'tau2': 18.2, 'e': -80}
 netParams.synMechParams['GABAA_VIP'] = {'mod':'MyExp2SynBB', 'tau1': 0.3, 'tau2': 6.4, 'e': -80}  # Pi et al 2013
@@ -182,7 +182,7 @@ PVSynMech = ['GABAA']
 VIPSynMech = ['GABAA_VIP']
 NGFESynMech = ['GABAA', 'GABAB']
 NGFISynMech = ['GABAA']
-ThalIESynMech = cfg.ThalIESynMech
+ThalIESynMech = ['GABAASlow','GABAB']
 ThalIISynMech = ['GABAASlow']
 
 
@@ -612,24 +612,6 @@ if cfg.addBkgConn:
         'noise': cfg.noiseBkg,
         'number': 1e9}
 
-
-    if cfg.cochlearThalInput:
-        from input import cochlearSpikes
-        dcoch = cochlearSpikes(freqRange = cfg.cochlearThalInput['freqRange'],
-                                    numCenterFreqs=cfg.cochlearThalInput['numCenterFreqs'],
-                                    loudnessScale=cfg.cochlearThalInput['loudnessScale'],
-                                    lfnwave=cfg.cochlearThalInput['lfnwave'],
-                                    lonset=cfg.cochlearThalInput['lonset'])
-        cochlearSpkTimes = dcoch['spkT']
-        cochlearCenterFreqs = dcoch['cf']
-        netParams.cf = dcoch['cf']
-        numCochlearCells = len(cochlearCenterFreqs)
-        netParams.popParams['cochlea'] = {
-            'cellModel': 'VecStim',
-            'numCells': numCochlearCells,
-            'spkTimes': cochlearSpkTimes,
-            'ynormRange': layer['cochlear']}
-
     # excBkg/I -> thalamus + cortex
     with open('cells/bkgWeightPops.json', 'r') as f:
         weightBkg = json.load(f)
@@ -673,60 +655,76 @@ if cfg.addBkgConn:
             'weight': weightBkg[pop],
             'delay': cfg.delayBkg}
 
-    def prob2conv(prob, npre):
-        # probability to convergence; prob is connection probability, npre is number of presynaptic neurons
-        return int(0.5 + prob * npre)
+def prob2conv(prob, npre):
+    # probability to convergence; prob is connection probability, npre is number of presynaptic neurons
+    return int(0.5 + prob * npre)
 
 
-    # cochlea -> thal
-    def connectCochleaToThal():
-        prob = '%f * exp(-dist_x/%f)' % (cfg.cochlearThalInput['probECore'], ThalamicCoreLambda)
-        netParams.connParams['cochlea->ThalECore'] = {
-            'preConds': {'pop': 'cochlea'},
-            'postConds': {'pop': ['TC','HTC']},
-            'sec': 'soma',
-            'loc': 0.5,
-            'synMech': ESynMech,
-            'probability': prob,
-            'weight': cfg.cochlearThalInput['weightECore'],
-            'synMechWeightFactor': cfg.synWeightFractionEE,
-            'delay': cfg.delayBkg}
-        prob = '%f * exp(-dist_x/%f)' % (cfg.cochlearThalInput['probICore'], ThalamicCoreLambda)
-        netParams.connParams['cochlea->ThalICore'] = {
-            'preConds': {'pop': 'cochlea'},
-            'postConds': {'pop': ['TI']},    #'IRE',
-            'sec': 'soma',
-            'loc': 0.5,
-            'synMech': ESynMech,
-            'probability': prob,
-            'weight': cfg.cochlearThalInput['weightICore'],
-            'synMechWeightFactor': cfg.synWeightFractionEI,
-            'delay': cfg.delayBkg}
-        # cochlea -> Thal Matrix
-        netParams.connParams['cochlea->ThalEMatrix'] = {
-            'preConds': {'pop': 'cochlea'},
-            'postConds': {'pop': 'TCM'},
-            'sec': 'soma',
-            'loc': 0.5,
-            'synMech': ESynMech,
-            'convergence': prob2conv(cfg.cochlearThalInput['probEMatrix'], numCochlearCells),
-            'weight': cfg.cochlearThalInput['weightEMatrix'],
-            'synMechWeightFactor': cfg.synWeightFractionEE,
-            'delay': cfg.delayBkg}
-        netParams.connParams['cochlea->ThalIMatrix'] = {
-            'preConds': {'pop': 'cochlea'},
-            'postConds': {'pop': ['TIM']}, #'IREM',
-            'sec': 'soma',
-            'loc': 0.5,
-            'synMech': ESynMech,
-            'convergence': prob2conv(cfg.cochlearThalInput['probIMatrix'], numCochlearCells),
-            'weight': cfg.cochlearThalInput['weightIMatrix'],
-            'synMechWeightFactor': cfg.synWeightFractionEI,
-            'delay': cfg.delayBkg}
+# cochlea -> thal
+def connectCochleaToThal():
+    prob = '%f * exp(-dist_x/%f)' % (cfg.cochlearThalInput['probECore'], ThalamicCoreLambda)
+    netParams.connParams['cochlea->ThalECore'] = {
+        'preConds': {'pop': 'cochlea'},
+        'postConds': {'pop': ['TC','HTC']},
+        'sec': 'soma',
+        'loc': 0.5,
+        'synMech': ESynMech,
+        'probability': prob,
+        'weight': cfg.cochlearThalInput['weightECore'],
+        'synMechWeightFactor': cfg.synWeightFractionEE,
+        'delay': cfg.delayBkg}
+    prob = '%f * exp(-dist_x/%f)' % (cfg.cochlearThalInput['probICore'], ThalamicCoreLambda)
+    netParams.connParams['cochlea->ThalICore'] = {
+        'preConds': {'pop': 'cochlea'},
+        'postConds': {'pop': ['TI']},    #'IRE',
+        'sec': 'soma',
+        'loc': 0.5,
+        'synMech': ESynMech,
+        'probability': prob,
+        'weight': cfg.cochlearThalInput['weightICore'],
+        'synMechWeightFactor': cfg.synWeightFractionEI,
+        'delay': cfg.delayBkg}
+    # cochlea -> Thal Matrix
+    netParams.connParams['cochlea->ThalEMatrix'] = {
+        'preConds': {'pop': 'cochlea'},
+        'postConds': {'pop': 'TCM'},
+        'sec': 'soma',
+        'loc': 0.5,
+        'synMech': ESynMech,
+        'convergence': prob2conv(cfg.cochlearThalInput['probEMatrix'], numCochlearCells),
+        'weight': cfg.cochlearThalInput['weightEMatrix'],
+        'synMechWeightFactor': cfg.synWeightFractionEE,
+        'delay': cfg.delayBkg}
+    netParams.connParams['cochlea->ThalIMatrix'] = {
+        'preConds': {'pop': 'cochlea'},
+        'postConds': {'pop': ['TIM']}, #'IREM',
+        'sec': 'soma',
+        'loc': 0.5,
+        'synMech': ESynMech,
+        'convergence': prob2conv(cfg.cochlearThalInput['probIMatrix'], numCochlearCells),
+        'weight': cfg.cochlearThalInput['weightIMatrix'],
+        'synMechWeightFactor': cfg.synWeightFractionEI,
+        'delay': cfg.delayBkg}
 
 
-    if cfg.cochlearThalInput:
-        connectCochleaToThal()
+if cfg.cochlearThalInput:
+    from input import cochlearSpikes
+    dcoch = cochlearSpikes(freqRange = cfg.cochlearThalInput['freqRange'],
+                                numCenterFreqs=cfg.cochlearThalInput['numCenterFreqs'],
+                                loudnessScale=cfg.cochlearThalInput['loudnessScale'],
+                                lfnwave=cfg.cochlearThalInput['lfnwave'],
+                                lonset=cfg.cochlearThalInput['lonset'])
+    cochlearSpkTimes = dcoch['spkT']
+    cochlearCenterFreqs = dcoch['cf']
+    netParams.cf = dcoch['cf']
+    numCochlearCells = len(cochlearCenterFreqs)
+    netParams.popParams['cochlea'] = {
+        'cellModel': 'VecStim',
+        'numCells': numCochlearCells,
+        'spkTimes': cochlearSpkTimes,
+        'ynormRange': layer['cochlear']}
+
+    connectCochleaToThal()
 
 
 #------------------------------------------------------------------------------
@@ -755,6 +753,15 @@ if cfg.addIClamp:
                 'sec': 'soma',  # Assuming you want to inject current into the soma
                 'loc': 0.5
             }
+
+if cfg.addNoiseIClamp:
+    for pop in netParams.popParams.keys():
+        print(pop)
+        if pop in cfg.NoiseIClampParams.keys():
+            netParams.stimSourceParams['NoiseIClamp_source__'+pop] = {'type': 'IClamp', 'del': 0, 'dur': 1e9, 'amp': cfg.NoiseIClampParams[pop]['amp']}
+            netParams.stimTargetParams['NoiseIClamp_target__'+pop] = {'source': 'NoiseIClamp_source__'+pop, 'sec':'soma_0', 'loc': 0.5, 'conds': {'pop':pop}}
+        else:
+            print(pop)
 #------------------------------------------------------------------------------
 # NetStim inputs (to simulate short external stimuli; not bkg)
 #------------------------------------------------------------------------------
