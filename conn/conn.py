@@ -886,7 +886,7 @@ for post in wmat['TCM'].keys():
 
 # --------------------------------------------------
 # Save data to pkl file
-savePickle = 1
+savePickle = 0
 
 if savePickle:
     import pickle
