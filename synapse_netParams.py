@@ -1,12 +1,11 @@
 from netpyne.batchtools import specs
 import pickle, json
-
-from netParams import TEpops
-
 netParams = specs.NetParams()   # object of class NetParams to store the network parameters
 from synapse_cfg import cfg
 
 pops = cfg.allpops
+TEpops = ['TC', 'TCM', 'HTC']
+TIpops = ['IRE', 'IREM', 'TI', 'TIM']
 prePop = cfg.prePop
 stimName = prePop+'_stim'
 
@@ -176,15 +175,14 @@ bins = connData['bins']
 connDataSource = connData['connDataSource']
 
 wmat = cfg.wmat
+preWeights = wmat[prePop]
 
 for post in preWeights.keys():
     if prePop in Epops:
         synMech = ESynMech
         if post in Epops:
             synMechWeightFactor = cfg.synWeightFractionEE
-            sec = 'dend_all'
         elif post in Ipops:
-            sec = 'proximal'
             if 'NGF' in post:
                 synMechWeightFactor = cfg.synWeightFractionENGF
             elif 'PV' in post:
@@ -195,8 +193,16 @@ for post in preWeights.keys():
             synMech = ESynMech
             synWeightFactor = cfg.synWeightFractionEE
             sec = 'soma'
-    if prePop in Ipops:
-        sec = 'proximal'
+        netParams.connParams[stimName + post] = {
+            'preConds': {'pop': stimName},
+            'postConds': {'pop': post},
+            'sec': 'soma',
+            'synMech': synMech,
+            'weight': wmat[prePop][post],
+            'synsPerConn': 1,
+            'delay': 0.5
+    }
+    elif prePop in Ipops:
         synMechWeightFactor = cfg.synWeightFractionIE
         if post in Epops:
             if 'SOM' in prePop:
@@ -207,22 +213,32 @@ for post in preWeights.keys():
             elif 'NGF' in prePop:
                 synMech = NGFESynMech
                 synWeightFactor = cfg.synWeightFractionNGFE
-    if prePop in TEpops:
-        synMech = ESynMech
-        synWeightFactor = cfg.synWeightFractionEE
-    elif post in TEpops:
-        synMech = ThalIESynMech
-        synWeightFactor = cfg.synWeightFractionThalIE
+        netParams.connParams[stimName + post] = {
+            'preConds': {'pop': stimName},
+            'postConds': {'pop': post},
+            'sec': 'soma',
+            'synMech': synMech,
+            'weight': wmat[prePop][post],
+            'synsPerConn': 1,
+            'delay': 0.5
+        }
     else:
-        synMech = ThalIISynMech
-        synWeightFactor = cfg.synWeightFractionThalII
+        if prePop in TEpops:
+            synMech = ESynMech
+            synWeightFactor = cfg.synWeightFractionEE
+        elif post in TEpops:
+            synMech = ThalIESynMech
+            synWeightFactor = cfg.synWeightFractionThalIE
+        else:
+            synMech = ThalIISynMech
+            synWeightFactor = cfg.synWeightFractionThalII
 
-    netParams.connParams[stimName+post] = {
-        'preConds': {'pop': stimName},
-        'postConds': {'pop': post},
-        'sec': sec,
-        'synMech': synMech,
-        'weight': wmat[prePop][post],
-        'synsPerConn': 1,
-        'delay': 0.5
-    }
+        netParams.connParams[stimName+post] = {
+            'preConds': {'pop': stimName},
+            'postConds': {'pop': post},
+            'sec': 'soma',
+            'synMech': synMech,
+                'weight': wmat[prePop][post],
+                'synsPerConn': 1,
+                'delay': 0.5
+            }
