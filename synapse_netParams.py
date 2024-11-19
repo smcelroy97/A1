@@ -203,16 +203,28 @@ for post in preWeights.keys():
             'delay': 0.5
     }
     elif prePop in Ipops:
-        synMechWeightFactor = cfg.synWeightFractionIE
+        if 'PV' in prePop:
+            synMech = PVSynMech
+        if 'VIP' in prePop:
+            synMech = VIPSynMech
+        if post in Ipops:
+            synMechWeightFactor = cfg.synWeightFractionII
+            if 'SOM' in prePop:
+                synMech = SOMISynMech
+                synWeightFactor = cfg.synWeightFractionSOMI
+            elif 'NGF' in prePop:
+                synMech = NGFISynMech
+                synWeightFactor = cfg.synWeightFractionNGFI
         if post in Epops:
+            synMechWeightFactor = cfg.synWeightFractionIE
             if 'SOM' in prePop:
                 synMech = SOMESynMech
                 synWeightFactor = cfg.synWeightFractionSOME
-            elif 'PV' in prePop:
-                synMech = PVSynMech
             elif 'NGF' in prePop:
                 synMech = NGFESynMech
                 synWeightFactor = cfg.synWeightFractionNGFE
+
+
         netParams.connParams[stimName + post] = {
             'preConds': {'pop': stimName},
             'postConds': {'pop': post},
