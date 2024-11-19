@@ -18,7 +18,7 @@ cfg.scaleDensity = 1.0  # Should be 1.0 unless need lower cell density for test 
 
 
 
-cfg.duration = 6000  # Duration of the sim, in ms
+cfg.duration = 200  # Duration of the sim, in ms
 cfg.dt = 0.05  # Internal Integration Time Step
 cfg.verbose = 0  # Show detailed messages
 cfg.progressBar = 0  # even more detailed message
@@ -96,7 +96,7 @@ cfg.addNoiseIClamp = False
 # 'include': [('TC', i) for i in range(40)],
 
 cfg.analysis['plotTraces'] = {'include': cfg.allpops, 'timeRange': [0, cfg.duration],
-'oneFigPer': 'trace', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
+'oneFigPer': 'trace', 'overlay': True, 'saveFig': False, 'showFig': False, 'figSize':(12,8)}
 
 def setplotTraces (ncell=1, linclude=[]):
   for pop in cfg.allpops:
@@ -153,3 +153,5 @@ cfg.synWeightFractionThalII = [1.0, 0.0]
 cfg.synWeightFractionThalCtxII = [1.0]
 cfg.synWeightFractionThalCtxIE = [1.0, 0.0]
 
+cfg.tune = {}
+cfg.update_cfg()

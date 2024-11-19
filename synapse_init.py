@@ -73,7 +73,7 @@ for pop_ind, pop in enumerate(plotPops):
   figs, traces_dict = sim.analysis.plotTraces(
     include=[pop],
     # include=[record_pops[pop_ind]],
-    timeRange=[3399,6000],
+    timeRange=[100, 200],
     overlay=True, oneFigPer='trace',
     ylim=[-90, -40],
     axis=True,
@@ -92,16 +92,16 @@ for pop_ind, pop in enumerate(plotPops):
 basemV = {}
 amp = {}
 peak = {}
-dummy = [567, 22, 325]
+
 for pop in trace_analysis:
     basemV[pop] = trace_analysis[pop][0]
     abs_trace = [abs(i) for i in trace_analysis[pop]]
     peak_idx = np.array(abs_trace).argmax()
     peak[pop] = trace_analysis[pop][peak_idx]
-    amp[pop]  = peak - basemV[pop]
+    amp[pop]  = peak[pop] - basemV[pop]
 
 
-
+dummy = [1,2,3]
 # Terminate batch process
 if comm.is_host():
   netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
@@ -110,10 +110,10 @@ if comm.is_host():
   # results = sim.analysis.popAvgRates(show=False)
   # results['loss'] = results[cfg.prePop + '_stim']
   results = amp
-  for pop in trace_analysis:
-    results[pop]['basemV'] = basemV[pop]
-    results[pop]['peak'] = peak[pop]
-    results[pop]['amp'] = amp[pop]
+  # for pop in trace_analysis:
+  #   results[pop]['basemV'] = basemV[pop]
+  #   results[pop]['peak'] = peak[pop]
+  #   results[pop]['amp'] = amp[pop]
   results['loss'] = dummy[0]/3
   out_json = json.dumps({**inputs, **results})
 
