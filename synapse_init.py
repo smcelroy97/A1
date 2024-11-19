@@ -73,7 +73,7 @@ for pop_ind, pop in enumerate(plotPops):
   figs, traces_dict = sim.analysis.plotTraces(
     include=[pop],
     # include=[record_pops[pop_ind]],
-    timeRange=[100, 200],
+    timeRange=[3399, 6000],
     overlay=True, oneFigPer='trace',
     ylim=[-90, -40],
     axis=True,
