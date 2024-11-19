@@ -114,7 +114,7 @@ if comm.is_host():
   #   results[pop]['basemV'] = basemV[pop]
   #   results[pop]['peak'] = peak[pop]
   #   results[pop]['amp'] = amp[pop]
-  results['loss'] = dummy[0]/3
+  results['loss'] = 700
   out_json = json.dumps({**inputs, **results})
 
   print(out_json)

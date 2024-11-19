@@ -31,12 +31,12 @@ slurm_config = {
 
 
 
-run_config = sge_config
-search(job_type = 'sge',
+run_config = shell_config
+search(job_type = 'sh',
        comm_type = 'socket',
        label = label,
        params = params,
-       output_path = '../A1/simOutput/' + label + '/',
+       output_path = str('../A1/simOutput/' + label + '/'),
        checkpoint_path = '../A1/simOutput/ray',
        run_config = run_config,
        num_samples = 1,
