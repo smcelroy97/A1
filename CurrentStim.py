@@ -92,7 +92,7 @@ class CurrentStim():
                         mean = 0
                         # print('except mean noise: ', mean, ' nA')
                     variance = variance  # from BlueConfig file
-                    tvec, svec = CurrentStim.add_ornstein_uhlenbeck(tau=1e-9, sigma=math.sqrt(variance), mean=mean, duration=sim.cfg.duration, dt=0.25, seed=cell_seed, plotFig=True)
+                    tvec, svec = CurrentStim.add_ornstein_uhlenbeck(tau=1e-9, sigma=math.sqrt(variance), mean=mean, duration=sim.cfg.duration, dt=0.25, seed=cell_seed, plotFig=False)
                     vecs_dict[cell_ind]['tvecs'].update({stim_ind: tvec})
                     vecs_dict[cell_ind]['svecs'].update({stim_ind: svec})
 

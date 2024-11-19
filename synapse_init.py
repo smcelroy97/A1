@@ -91,11 +91,13 @@ for pop_ind, pop in enumerate(plotPops):
 
 basemV = {}
 amp = {}
+peak = {}
+dummy = [567, 22, 325]
 for pop in trace_analysis:
     basemV[pop] = trace_analysis[pop][0]
     abs_trace = [abs(i) for i in trace_analysis[pop]]
     peak_idx = np.array(abs_trace).argmax()
-    peak = trace_analysis[pop][peak_idx]
+    peak[pop] = trace_analysis[pop][peak_idx]
     amp[pop]  = peak - basemV[pop]
 
 
@@ -105,8 +107,14 @@ if comm.is_host():
   netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
   print('transmitting data...')
   inputs = specs.get_mappings()
-  results = basemV
-  results['loss'] = amp
+  # results = sim.analysis.popAvgRates(show=False)
+  # results['loss'] = results[cfg.prePop + '_stim']
+  results = amp
+  for pop in trace_analysis:
+    results[pop]['basemV'] = basemV[pop]
+    results[pop]['peak'] = peak[pop]
+    results[pop]['amp'] = amp[pop]
+  results['loss'] = dummy[0]/3
   out_json = json.dumps({**inputs, **results})
 
   print(out_json)
@@ -114,4 +122,4 @@ if comm.is_host():
   comm.send(out_json)
   comm.close()
 
-# sim.close()
+sim.close()

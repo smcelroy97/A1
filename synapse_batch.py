@@ -9,7 +9,7 @@ params = {'prePop' : ['NGF1', 'IT2', 'SOM2', 'PV2', 'VIP2', 'NGF2', 'IT3', 'SOM3
                'IRE', 'IREM', 'TI', 'TIM']}
 
 # use batch_shell_config if running directly on the machine
-shell_config = {'command': 'mpiexec -np 4 nrniv -python -mpi init.py'}
+shell_config = {'command': 'mpiexec -np 4 nrniv -python -mpi synapse_init.py'}
 
 # use batch_sge_config if running on Downstate HPC or other SGE systems
 sge_config = {
