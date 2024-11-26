@@ -758,8 +758,19 @@ if cfg.addIClamp:
             }
 
 if cfg.addNoiseIClamp:
-    for pop in netParams.popParams.keys():
-        print(pop)
+    with open('data/inputResistances.json', 'rb') as f:
+        inpRes = json.load(f)
+    cfg.NoiseIClampParams = {}
+    for pop in cfg.allpops:
+        Gin = 1 / inpRes[pop]
+        g0 = (cfg.OUamp / 100) * Gin
+        print(g0)
+        sigma = (cfg.OUvar / 100) * Gin
+        cfg.NoiseIClampParams[pop] = {
+            'g0': g0,
+            'sigma': sigma
+        }
+
         if pop in cfg.NoiseIClampParams.keys():
             netParams.stimSourceParams['NoiseIClamp_source__'+pop] = {
                 'type': 'IClamp',

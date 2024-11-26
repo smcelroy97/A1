@@ -4,8 +4,8 @@ import numpy as np
 label = 'v45_batch3'
 
 params = {
-    'OUamp': np.linspace(1, 25, 25),
-    'OUvar': np.linspace(1, 25, 25)}
+    'OUamp': np.linspace(1, 25, 1)}
+    # 'OUvar': np.linspace(1, 25, 25)}
 
 # use batch_shell_config if running directly on the machine
 shell_config = {'command': 'mpiexec -np 4 nrniv -python -mpi init.py'}
@@ -30,8 +30,8 @@ slurm_config = {
 
 
 
-run_config = sge_config
-search(job_type = 'sge',
+run_config = shell_config
+search(job_type = 'sh',
        comm_type = 'socket',
        label = label,
        params = params,
@@ -42,4 +42,5 @@ search(job_type = 'sge',
        metric = 'loss',
        mode = 'min',
        algorithm = "variant_generator",
-       max_concurrent = 9)
+       max_concurrent = 9,
+       ray_config = {'excludes' : ["/.git/"]})

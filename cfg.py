@@ -171,7 +171,7 @@ for key, value in cfgLoad.items():
 
 # These values taken from M1 cfg (https://github.com/Neurosim-lab/netpyne/blob/development/examples/M1detailed/cfg.py)
 cfg.singleCellPops = True
-cfg.reducedPop = 25 # insert number to declare specific number of populations, if going for full model set to False
+cfg.reducedPop = False # insert number to declare specific number of populations, if going for full model set to False
 cfg.singlePop = ''
 cfg.removeWeightNorm = False
 cfg.scale = 1.0  # Is this what should be used?
@@ -333,19 +333,10 @@ cfg.injectionAmplitudes =  np.linspace(0.0, 0.6, 13)
 cfg.addNoiseIClamp = 1
 
 if cfg.addNoiseIClamp:
-    with open('data/inputResistances.json', 'rb') as f:
-        inpRes = json.load(f)
+
     cfg.OUamp = 25
     cfg.OUvar = 5
     cfg.NoiseIClampParams = {}
-    for pop in cfg.allpops:
-        Gin = 1/inpRes[pop]
-        g0 = (cfg.OUamp/100) * Gin
-        sigma = (cfg.OUvar/100) * Gin
-        cfg.NoiseIClampParams[pop] = {
-            'g0' : g0,
-            'sigma' : sigma
-        }
 
 # ------------------------------------------------------------------------------
 # NetStim inputs
