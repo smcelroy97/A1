@@ -18,7 +18,7 @@ cfg.scaleDensity = 1.0  # Should be 1.0 unless need lower cell density for test 
 
 
 
-cfg.duration = 6000  # Duration of the sim, in ms
+cfg.duration = 150  # Duration of the sim, in ms
 cfg.dt = 0.05  # Internal Integration Time Step
 cfg.verbose = 0  # Show detailed messages
 cfg.progressBar = 0  # even more detailed message
@@ -49,13 +49,20 @@ cfg.allCorticalPops = ['NGF1', 'IT2', 'SOM2', 'PV2', 'VIP2', 'NGF2', 'IT3', 'SOM
                        'ITS4', 'SOM4', 'PV4', 'VIP4', 'NGF4', 'IT5A', 'CT5A', 'SOM5A', 'PV5A', 'VIP5A', 'NGF5A', 'IT5B',
                        'PT5B', 'CT5B', 'SOM5B', 'PV5B', 'VIP5B', 'NGF5B', 'IT6', 'CT6', 'SOM6', 'PV6', 'VIP6', 'NGF6']
 
-cfg.allThalPops = ['TC', 'TCM', 'HTC', 'IRE', 'IREM', 'TI', 'TIM']
+cfg.Epops = ['IT2', 'IT3', 'ITP4', 'ITS4', 'IT5A', 'CT5A', 'IT5B', 'CT5B' , 'PT5B', 'IT6', 'CT6']  # all layers
 
-cfg.ctxEPops = ['IT2', 'IT3', 'ITP4', 'ITS4', 'IT5A', 'CT5A', 'IT5B', 'PT5B', 'CT5B', 'IT6', 'CT6']
+cfg.Ipops = ['NGF1',                            # L1
+        'PV2', 'SOM2', 'VIP2', 'NGF2',      # L2
+        'PV3', 'SOM3', 'VIP3', 'NGF3',      # L3
+        'PV4', 'SOM4', 'VIP4', 'NGF4',      # L4
+        'PV5A', 'SOM5A', 'VIP5A', 'NGF5A',  # L5A
+        'PV5B', 'SOM5B', 'VIP5B', 'NGF5B',  # L5B
+        'PV6', 'SOM6', 'VIP6', 'NGF6']      # L6
 
-cfg.thalInhib = ['IRE', 'IREM', 'TI', 'TIM']
+cfg.TEpops = ['TC', 'TCM', 'HTC']
 
-alltypes = ['NGF1', 'IT2', 'PV2', 'SOM2', 'VIP2', 'ITS4', 'PT5B', 'TC', 'HTC', 'IRE', 'TI']
+cfg.TIpops = ['IRE', 'IREM', 'TI', 'TIM']
+
 
 # Dict with traces to record -- taken from M1 cfg.py
 cfg.recordTraces = {'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'}
@@ -115,7 +122,7 @@ cfg.wmat = connData['wmat']
 
 cfg.seeds = {'conn': 23451, 'stim': 1, 'loc': 1}
 
-cfg.prePop = 'TI'
+cfg.prePop = 'IT2' # population to be be used for PSP testing, the prePop is taken and the synMechs, weights, and conns are based on this pop but will be a vecStim
 
 # ------------------------------------------------------------------------------
 

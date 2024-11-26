@@ -21,7 +21,7 @@ cfg = specs.SimConfig()
 # ------------------------------------------------------------------------------
 # Run parameters
 # ------------------------------------------------------------------------------
-cfg.duration = 1000  # Duration of the sim, in ms
+cfg.duration = 10  # Duration of the sim, in ms
 cfg.dt = 0.05  # Internal Integration Time Step
 cfg.verbose = 0  # Show detailed messages
 cfg.progressBar = 0  # even more detailed message
@@ -54,11 +54,19 @@ cfg.allCorticalPops = ['NGF1', 'IT2', 'SOM2', 'PV2', 'VIP2', 'NGF2', 'IT3', 'SOM
 
 cfg.allThalPops = ['TC', 'TCM', 'HTC', 'IRE', 'IREM', 'TI', 'TIM']
 
-cfg.ctxEPops = ['IT2', 'IT3', 'ITP4', 'ITS4', 'IT5A', 'CT5A', 'IT5B', 'PT5B', 'CT5B', 'IT6', 'CT6']
+cfg.Epops = ['IT2', 'IT3', 'ITP4', 'ITS4', 'IT5A', 'CT5A', 'IT5B', 'CT5B' , 'PT5B', 'IT6', 'CT6']  # all layers
 
-cfg.thalInhib = ['IRE', 'IREM', 'TI', 'TIM']
+cfg.Ipops = ['NGF1',                            # L1
+        'PV2', 'SOM2', 'VIP2', 'NGF2',      # L2
+        'PV3', 'SOM3', 'VIP3', 'NGF3',      # L3
+        'PV4', 'SOM4', 'VIP4', 'NGF4',      # L4
+        'PV5A', 'SOM5A', 'VIP5A', 'NGF5A',  # L5A
+        'PV5B', 'SOM5B', 'VIP5B', 'NGF5B',  # L5B
+        'PV6', 'SOM6', 'VIP6', 'NGF6']      # L6
 
-alltypes = ['NGF1', 'IT2', 'PV2', 'SOM2', 'VIP2', 'ITS4', 'PT5B', 'TC', 'HTC', 'IRE', 'TI']
+cfg.TEpops = ['TC', 'TCM', 'HTC']
+
+cfg.TIpops = ['IRE', 'IREM', 'TI', 'TIM']
 
 # Dict with traces to record -- taken from M1 cfg.py
 cfg.recordTraces = {'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'}
@@ -69,7 +77,7 @@ cfg.recordStim = False  # Seen in M1 cfg.py
 cfg.recordTime = True  # SEen in M1 cfg.py
 cfg.recordStep = 0.05  # Step size (in ms) to save data -- value from M1 cfg.py
 
-cfg.recordLFP = [[100, y, 100] for y in range(0, 2000, 100)]
+cfg.recordLFP = False # [[100, y, 100] for y in range(0, 2000, 100)]
 cfg.recordDipole = False
 
 # ------------------------------------------------------------------------------
@@ -83,22 +91,22 @@ cfg.saveJson = False  # Save json file
 cfg.saveDataInclude = ['simData', 'simConfig', 'net', 'netParams',  'netCells', 'netPops']
 cfg.backupCfgFile = None
 cfg.gatherOnlySimData = False
-cfg.saveCellSecs = False
+cfg.saveCellSecs = True
 cfg.saveCellConns = False
 
 # ------------------------------------------------------------------------------
 # Analysis and plotting
 # ------------------------------------------------------------------------------
 
-cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig': False, 'orderInverse': True, # 'figSize': (25, 25),
-                              'markerSize': 50}   # Plot a raster
+# cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig': False, 'orderInverse': True, # 'figSize': (25, 25),
+#                               'markerSize': 50}   # Plot a raster
 
 # cfg.analysis['plotConn'] = {'includePre': cfg.allpops, 'includePost': ['TC'], 'feature': 'strength',
 #                             'saveFig': True, 'showFig': False, 'figSize': (25, 25)}  # Plot conn matrix
 # 'include': [('TC', i) for i in range(40)],
 
-cfg.analysis['plotTraces'] = {'include': ['IT2'], 'timeRange': [0, cfg.duration],
-'oneFigPer': 'cell', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
+# cfg.analysis['plotTraces'] = {'include': ['IT2'], 'timeRange': [0, cfg.duration],
+# 'oneFigPer': 'cell', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
 
 def setplotTraces (ncell=1, linclude=[]):
   for pop in cfg.allpops:
@@ -162,12 +170,13 @@ for key, value in cfgLoad.items():
 
 
 # These values taken from M1 cfg (https://github.com/Neurosim-lab/netpyne/blob/development/examples/M1detailed/cfg.py)
-cfg.singleCellPops = False
+cfg.singleCellPops = True
+cfg.reducedPop = 25 # insert number to declare specific number of populations, if going for full model set to False
 cfg.singlePop = ''
 cfg.removeWeightNorm = False
 cfg.scale = 1.0  # Is this what should be used?
 cfg.sizeY = 2000.0  # 1350.0 in M1_detailed # should this be set to 2000 since that is the full height of the column?
-cfg.sizeX = 5.0  # 400 - This may change depending on electrode radius
+cfg.sizeX = 200.0  # 400 - This may change depending on electrode radius
 cfg.sizeZ = 200.0
 cfg.scaleDensity = 1.0  # Should be 1.0 unless need lower cell density for test simulation or visualization
 
@@ -313,6 +322,8 @@ else:
 # ------------------------------------------------------------------------------
 # Current inputs
 # ------------------------------------------------------------------------------
+# The way this is set up now is to make F-I curves for each population but can be used for other purposes
+# Just needs to be modified for the specific use
 cfg.addIClamp = 0
 cfg.numInjections = 13
 cfg.injectionInterval = 3000  # 1 second in ms
@@ -322,9 +333,20 @@ cfg.injectionAmplitudes =  np.linspace(0.0, 0.6, 13)
 cfg.addNoiseIClamp = 1
 
 if cfg.addNoiseIClamp:
-    cfg.NoiseIClampParams = {
-        'IT2': {'amp': 0}
-    }
+    with open('data/inputResistances.json', 'rb') as f:
+        inpRes = json.load(f)
+    cfg.OUamp = 25
+    cfg.OUvar = 5
+    cfg.NoiseIClampParams = {}
+    for pop in cfg.allpops:
+        Gin = 1/inpRes[pop]
+        g0 = (cfg.OUamp/100) * Gin
+        sigma = (cfg.OUvar/100) * Gin
+        cfg.NoiseIClampParams[pop] = {
+            'g0' : g0,
+            'sigma' : sigma
+        }
+
 # ------------------------------------------------------------------------------
 # NetStim inputs
 # ------------------------------------------------------------------------------

@@ -48,10 +48,6 @@ if sim.cfg.addNoiseIClamp:
 
 sim.setupRecording()              			# setup variables to record for each cell (spikes, V traces, etc)
 sim.runSim()                                    # run parallel Neuron simulation
-sim.saveDataInNodes()
-sim.gatherDataFromFiles()
-sim.saveData()
-sim.analysis.plotData()    # plot spike raster etc
 
 trace_analysis = {}
 
@@ -62,10 +58,10 @@ for cell in sim.net.cells:
             if cell.tags['pop'] not in plotPops:
                 plotPops.append(cell.tags['pop'])
 
-try:
-  record_pops = [(pop, list(np.arange(0, netParams.popParams[pop]['numCells']))) for pop in plotPops]
-except:
-  record_pops = [(pop, list(np.arange(0, 40))) for pop in plotPops]
+sim.saveDataInNodes()
+sim.gatherDataFromFiles()
+sim.saveData()
+sim.analysis.plotData()    # plot spike raster etc
 
 for pop_ind, pop in enumerate(plotPops):
   print('\n\n', pop)
@@ -73,21 +69,22 @@ for pop_ind, pop in enumerate(plotPops):
   figs, traces_dict = sim.analysis.plotTraces(
     include=[pop],
     # include=[record_pops[pop_ind]],
-    timeRange=[3399, 6000],
-    overlay=True, oneFigPer='trace',
+    timeRange=[50, 100],
+    # overlay=True, oneFigPer='trace',
     ylim=[-90, -40],
     axis=True,
     # figSize=(70, 15),
     figSize=(25, 15),
     # figSize=(60, 18),
     fontSize=15,
-    # saveFig=True,
-    # saveFig=sim.cfg.saveFigPath+'/'+sim.cfg.filename+'_traces_'+pop+ '.png',
-    saveFig=sim.cfg.saveFolder + '/' + sim.cfg.simLabel + '_traces__' + pop + '.png',
+    saveFig=False,
+    # saveFig=sim.cfg.saveFigPath+'/'+sim.cfg.filename+'_traces_'+pop+ '.png'
+    # saveFig=sim.cfg.saveFolder + '/' + sim.cfg.simLabel + '_traces__' + pop + '.png',
   )
   for item in traces_dict['tracesData'][0]:
     if 'soma' in item:
       trace_analysis[pop] = traces_dict['tracesData'][0][item]
+
 
 basemV = {}
 amp = {}
@@ -95,8 +92,10 @@ peak = {}
 
 for pop in trace_analysis:
     basemV[pop] = trace_analysis[pop][0]
-    abs_trace = [abs(i) for i in trace_analysis[pop]]
-    peak_idx = np.array(abs_trace).argmax()
+    if cfg.prePop in cfg.Epops + cfg.TEpops:
+        peak_idx = np.array(trace_analysis[pop]).argmax()
+    else:
+        peak_idx = np.array(trace_analysis[pop]).argmin()
     peak[pop] = trace_analysis[pop][peak_idx]
     amp[pop]  = peak[pop] - basemV[pop]
 

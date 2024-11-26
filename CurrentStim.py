@@ -73,7 +73,7 @@ class CurrentStim():
 
         return tvec, svec
 
-    def addNoiseIClamp(sim, variance=0.001):
+    def addNoiseIClamp(sim):
         import numpy as np
         print('\t>> Using Ornstein Uhlenbeck to add noise to the IClamp')
         import math
@@ -85,14 +85,15 @@ class CurrentStim():
             for stim_ind, stim in enumerate(sim.net.cells[cell_ind].stims):
                 if 'NoiseIClamp' in stim['label']:
 
-                    try:
-                        mean = sim.cfg.NoiseIClampParams[sim.net.cells[cell_ind].tags['pop']]['amp']
+                    # try:
+                    mean = stim['amp']
+                    variance = sim.cfg.NoiseIClampParams[cell.tags['pop']]['sigma']
                         # print('mean noise: ', mean, ' nA')
-                    except:
-                        mean = 0
+                    # except:
+                    #     mean = 0
                         # print('except mean noise: ', mean, ' nA')
-                    variance = variance  # from BlueConfig file
-                    tvec, svec = CurrentStim.add_ornstein_uhlenbeck(tau=1e-9, sigma=math.sqrt(variance), mean=mean, duration=sim.cfg.duration, dt=0.25, seed=cell_seed, plotFig=False)
+
+                    tvec, svec = CurrentStim.add_ornstein_uhlenbeck(tau=1e-9, sigma=variance, mean=mean, duration=stim['dur'], dt=sim.cfg.dt, seed=cell_seed, plotFig=False)
                     vecs_dict[cell_ind]['tvecs'].update({stim_ind: tvec})
                     vecs_dict[cell_ind]['svecs'].update({stim_ind: svec})
 

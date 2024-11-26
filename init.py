@@ -87,24 +87,24 @@ if sim.cfg.addNoiseIClamp:
   sim, vecs_dict = CS.addNoiseIClamp(sim)
 
 sim.setupRecording()              			# setup variables to record for each cell (spikes, V traces, etc)
-sim.runSim()                                    # run parallel Neuron simulation
-sim.saveDataInNodes()
-sim.gatherDataFromFiles()
-sim.saveData()
-sim.analysis.plotData()    # plot spike raster etc
+# sim.runSim()                                    # run parallel Neuron simulation
+# sim.saveDataInNodes()
+# sim.gatherDataFromFiles()
+# sim.saveData()
+# sim.analysis.plotData()    # plot spike raster etc
+#
+# # Terminate batch process
+# if comm.is_host():
+#   netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
+#   print('transmitting data...')
+#   inputs = specs.get_mappings()
+#   results = sim.analysis.popAvgRates(show=False)
+#   results['loss'] = results['TC']
+#   out_json = json.dumps({**inputs, **results})
+#
+#   print(out_json)
+#
+#   comm.send(out_json)
+#   comm.close()
 
-# Terminate batch process
-if comm.is_host():
-  netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
-  print('transmitting data...')
-  inputs = specs.get_mappings()
-  results = sim.analysis.popAvgRates(show=False)
-  results['loss'] = results['TC']
-  out_json = json.dumps({**inputs, **results})
-
-  print(out_json)
-
-  comm.send(out_json)
-  comm.close()
-
-sim.close()
+# sim.close()
