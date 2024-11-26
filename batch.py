@@ -4,8 +4,8 @@ import numpy as np
 label = 'v45_batch3'
 
 params = {
-    'OUamp': np.linspace(1, 25, 1)}
-    # 'OUvar': np.linspace(1, 25, 25)}
+    'OUamp': np.linspace(1, 25, 25),
+    'OUvar': np.linspace(1, 25, 25)}
 
 # use batch_shell_config if running directly on the machine
 shell_config = {'command': 'mpiexec -np 4 nrniv -python -mpi init.py'}
@@ -14,7 +14,7 @@ shell_config = {'command': 'mpiexec -np 4 nrniv -python -mpi init.py'}
 sge_config = {
     'queue': 'cpu.q',
     'cores': 64,
-    'vmem': '8G',
+    'vmem': '18G',
     'realtime': '01:40:00',
     'command': 'mpiexec -n $NSLOTS -hosts $(hostname) nrniv -python -mpi init.py'
 }
@@ -30,8 +30,8 @@ slurm_config = {
 
 
 
-run_config = shell_config
-search(job_type = 'sh',
+run_config = sge_config
+search(job_type = 'sge',
        comm_type = 'socket',
        label = label,
        params = params,

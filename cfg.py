@@ -21,7 +21,7 @@ cfg = specs.SimConfig()
 # ------------------------------------------------------------------------------
 # Run parameters
 # ------------------------------------------------------------------------------
-cfg.duration = 10  # Duration of the sim, in ms
+cfg.duration = 2000  # Duration of the sim, in ms
 cfg.dt = 0.05  # Internal Integration Time Step
 cfg.verbose = 0  # Show detailed messages
 cfg.progressBar = 0  # even more detailed message
@@ -333,7 +333,6 @@ cfg.injectionAmplitudes =  np.linspace(0.0, 0.6, 13)
 cfg.addNoiseIClamp = 1
 
 if cfg.addNoiseIClamp:
-
     cfg.OUamp = 25
     cfg.OUvar = 5
     cfg.NoiseIClampParams = {}

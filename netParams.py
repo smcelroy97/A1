@@ -774,8 +774,8 @@ if cfg.addNoiseIClamp:
         if pop in cfg.NoiseIClampParams.keys():
             netParams.stimSourceParams['NoiseIClamp_source__'+pop] = {
                 'type': 'IClamp',
-                'del': 0,
-                'dur': cfg.duration,
+                'del': 1000,
+                'dur': 1000,
                 'amp': cfg.NoiseIClampParams[pop]['g0']
                 # 'noise' : cfg.NoiseIClampParams[pop]['sigma']
             }
