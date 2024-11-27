@@ -42,5 +42,4 @@ search(job_type = 'sge',
        metric = 'loss',
        mode = 'min',
        algorithm = "variant_generator",
-       max_concurrent = 9,
-       ray_config = {'excludes' : ["/.git/"]})
+       max_concurrent = 9)

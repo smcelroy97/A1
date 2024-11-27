@@ -764,7 +764,6 @@ if cfg.addNoiseIClamp:
     for pop in cfg.allpops:
         Gin = 1 / inpRes[pop]
         g0 = (cfg.OUamp / 100) * Gin
-        print(g0)
         sigma = (cfg.OUvar / 100) * Gin
         cfg.NoiseIClampParams[pop] = {
             'g0': g0,

@@ -33,8 +33,8 @@ sim.initialize(simConfig = cfg,
 sim.net.createPops()               			# instantiate network populations
 sim.net.createCells()              			# instantiate network cells based on defined populations
 
-sim.net.allCells = [cell.__getstate__() for cell in sim.net.cells]
-sim.net.allPops = {label: pop.__getstate__() for label, pop in sim.net.pops.items()}
+# sim.net.allCells = [cell.__getstate__() for cell in sim.net.cells]
+# sim.net.allPops = {label: pop.__getstate__() for label, pop in sim.net.pops.items()}
 
 def setdminID (sim, lpop):
   # setup min,max ID and dnumc for each population in lpop
@@ -73,7 +73,11 @@ def setCochCellLocationsX (pop, sz, scale):
         c.tags['xnorm'] = cellx / netParams.sizeX # make sure these values consistent
       c.updateShape()
 
-if cfg.cochlearThalInput: setCochCellLocationsX('cochlea', netParams.popParams['cochlea']['numCells'], cfg.sizeX)
+if cfg.cochlearThalInput: setCochCellLocationsX(
+  'cochlea',
+  netParams.popParams['cochlea']['numCells'],
+  cfg.sizeX
+)
 
 
 sim.net.connectCells()            			# create connections between cells based on params
@@ -86,10 +90,10 @@ sim.net.addStims() 							# add network stimulation
 if sim.cfg.addNoiseIClamp:
   sim, vecs_dict = CS.addNoiseIClamp(sim)
 
-sim.setupRecording()              			# setup variables to record for each cell (spikes, V traces, etc)
+sim.setupRecording()              	 		# setup variables to record for each cell (spikes, V traces, etc)
 sim.runSim()                                    # run parallel Neuron simulation
-sim.saveDataInNodes()
-sim.gatherDataFromFiles()
+# sim.saveDataInNodes()
+sim.gatherData()
 sim.saveData()
 sim.analysis.plotData()    # plot spike raster etc
 
@@ -98,7 +102,7 @@ if comm.is_host():
   netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
   print('transmitting data...')
   inputs = specs.get_mappings()
-  results = sim.analysis.popAvgRates(show=False)
+  results = sim.analysis.popAvgRates(timeRange = [1000, 2000], show=False)
   results['loss'] = results['TC']
   out_json = json.dumps({**inputs, **results})
 

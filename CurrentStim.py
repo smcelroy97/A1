@@ -93,11 +93,22 @@ class CurrentStim():
                     #     mean = 0
                         # print('except mean noise: ', mean, ' nA')
 
-                    tvec, svec = CurrentStim.add_ornstein_uhlenbeck(tau=1e-9, sigma=variance, mean=mean, duration=stim['dur'], dt=sim.cfg.dt, seed=cell_seed, plotFig=False)
+                    tvec, svec = CurrentStim.add_ornstein_uhlenbeck(
+                        tau= 0, #1e-9,
+                        sigma=variance,
+                        mean=mean,
+                        duration=stim['dur'],
+                        dt=0.025,
+                        seed=cell_seed,
+                        plotFig=False)
+
                     vecs_dict[cell_ind]['tvecs'].update({stim_ind: tvec})
                     vecs_dict[cell_ind]['svecs'].update({stim_ind: svec})
 
-                    vecs_dict[cell_ind]['svecs'][stim_ind].play(sim.net.cells[cell_ind].stims[stim_ind]['hObj']._ref_amp, vecs_dict[cell_ind]['tvecs'][stim_ind], True)
+                    vecs_dict[cell_ind]['svecs'][stim_ind].play(
+                        sim.net.cells[cell_ind].stims[stim_ind]['hObj']._ref_amp, vecs_dict[cell_ind]['tvecs'][stim_ind],
+                        True
+                    )
         return sim, vecs_dict
 
     def addHoldingCurrent(sim):
@@ -109,11 +120,13 @@ class CurrentStim():
                     try:
                         threshold_percent_multiplier = (sim.cfg.addHoldingCurrentPercent[cell_pop]) / 100
                         # --- Changing hObj value, which is the real value used during the simulation
-                        sim.net.cells[cell_ind].stims[stim_ind]['hObj'].amp = threshold_percent_multiplier * sim.net.params.store_cell_properties[sim.net.cells[cell_ind].tags['label'][0]][
-                            '@dynamics:holding_current']
+                        sim.net.cells[cell_ind].stims[stim_ind]['hObj'].amp = (
+                                threshold_percent_multiplier * sim.net.params.store_cell_properties[sim.net.cells[cell_ind].tags['label'][0]][
+                            '@dynamics:holding_current'])
                         # --- Changing label too, so that it is stored with the new value for inspection
-                        sim.net.cells[cell_ind].stims[stim_ind]['amp'] = threshold_percent_multiplier * sim.net.params.store_cell_properties[sim.net.cells[cell_ind].tags['label'][0]][
-                            '@dynamics:holding_current']
+                        sim.net.cells[cell_ind].stims[stim_ind]['amp'] = (
+                                threshold_percent_multiplier * sim.net.params.store_cell_properties[sim.net.cells[cell_ind].tags['label'][0]][
+                            '@dynamics:holding_current'])
                     except:
                         print('Modifying HoldingCurrent failed for cell ', cell_ind, ' | stim ', stim_ind)
         return sim
