@@ -83,9 +83,9 @@ if cfg.cochlearThalInput: setCochCellLocationsX(
 sim.net.connectCells()            			# create connections between cells based on params
 sim.net.addStims() 							# add network stimulation
 
-#########################################################################################
-# - Adding OU Nose Stims for each Cell
-#########################################################################################
+################################
+# - Adding OU Nose Stims for each Cell - #
+################################
 
 if sim.cfg.addNoiseIClamp:
   sim, vecs_dict = CS.addNoiseIClamp(sim)
@@ -102,7 +102,7 @@ if comm.is_host():
   netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
   print('transmitting data...')
   inputs = specs.get_mappings()
-  results = sim.analysis.popAvgRates(timeRange = [1000, 2000], show=False)
+  results = sim.analysis.popAvgRates(tranges= [1000, 2000], show=False)
   results['loss'] = results['TC']
   out_json = json.dumps({**inputs, **results})
 

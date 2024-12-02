@@ -765,6 +765,7 @@ if cfg.addNoiseIClamp:
         Gin = 1 / inpRes[pop]
         g0 = (cfg.OUamp / 100) * Gin
         sigma = (cfg.OUvar / 100) * Gin
+        # print('pop is: '  + pop + ' Input resistance is: ' + str(inpRes[pop]) + ' input conductance is: ' + str(Gin) + '   g0 is:  ' + str(g0))
         cfg.NoiseIClampParams[pop] = {
             'g0': g0,
             'sigma': sigma
