@@ -41,4 +41,5 @@ search(job_type = 'sge',
        num_samples = 1,
        # metric = 'loss',
        # mode = 'min',
-       algorithm = "variant_generator")
+       algorithm = "variant_generator",
+       max_concurrent= 50)

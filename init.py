@@ -115,8 +115,10 @@ newOUmap = {
     'OUvar': sim.cfg.OUvar
   }
 }
-for pop in sim.analysis.popAvgRates:
-  newOUmap[sim.cfg.simLabel][pop] = sim.analysis.popAvgRates[pop]
+avgRates = sim.analysis.popAvgRates
+
+for pop in avgRates:
+  newOUmap[sim.cfg.simLabel][pop] = avgRates[pop]
 
 append_to_json('../A1/simOutput/OUmapping.json', new_simulation_data)
 
