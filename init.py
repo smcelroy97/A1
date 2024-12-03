@@ -90,6 +90,36 @@ sim.net.addStims() 							# add network stimulation
 if sim.cfg.addNoiseIClamp:
   sim, vecs_dict = CS.addNoiseIClamp(sim)
 
+
+# updating a json with result values because the current batchtools format generates a big string of results
+def append_to_json(file_path, new_data):
+  # Check if the file exists
+  if os.path.exists(file_path):
+    # Read the existing data
+    with open(file_path, 'r') as file:
+      data = json.load(file)
+  else:
+    # Initialize an empty list if the file does not exist
+    data = []
+
+  # Append the new data
+  data.append(new_data)
+
+  # Write the updated data back to the file
+  with open(file_path, 'w') as file:
+    json.dump(data, file, indent=4)
+
+newOUmap = {
+  sim.cfg.simLabel: {
+    'OUamp': sim.cfg.OUamp,
+    'OUvar': sim.cfg.OUvar
+  }
+}
+for pop in sim.analysis.popAvgRates:
+  newOUmap[sim.cfg.simLabel][pop] = sim.analysis.popAvgRates[pop]
+
+append_to_json('../A1/simOutput/OUmapping.json', new_simulation_data)
+
 sim.setupRecording()              	 		# setup variables to record for each cell (spikes, V traces, etc)
 sim.runSim()                                    # run parallel Neuron simulation
 # sim.saveDataInNodes()
@@ -103,7 +133,7 @@ if comm.is_host():
   print('transmitting data...')
   inputs = specs.get_mappings()
   results = sim.analysis.popAvgRates(tranges= [1000, 2000], show=False)
-  results['loss'] = results['TC']
+  # results['loss'] = results['TC']
   out_json = json.dumps({**inputs, **results})
 
   print(out_json)
