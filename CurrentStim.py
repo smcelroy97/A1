@@ -87,7 +87,7 @@ class CurrentStim():
 
                     # try:
                     mean = stim['amp']
-                    variance = sim.cfg.NoiseIClampParams[cell.tags['pop']]['sigma']
+                    variance = sim.net.params.NoiseIClampParams[cell.tags['pop']]['sigma']
                     # print(cell.tags['pop'] + '      '  + str(variance) + '     ' + str(mean))
                         # print('mean noise: ', mean, ' nA')
                     # except:

@@ -162,6 +162,7 @@ cfg.synWeightFractionThalCtxIE = [1.0, 0.0]
 # ------------------------------------------------------------------------------
 
 # Insert params from previous tuning
+# Insert params from previous tuning
 with open('data/initCfg.json', 'rb') as f:
     cfgLoad = json.load(f)
 
@@ -332,13 +333,11 @@ cfg.injectionAmplitudes =  np.linspace(0.0, 0.6, 13)
 
 cfg.addNoiseIClamp = 1
 
-if cfg.addNoiseIClamp:
-    cfg.OUamp = 30
-    cfg.OUvar = 1
-    cfg.NoiseIClampParams = {
-        'start' : 500,
-        'duration' : 2500
-    }
+
+cfg.OUamp = 30
+cfg.OUvar = 1
+cfg.NoiseIClampStart = 500
+cfg.NoiseIClampDur = 2500
 
 # ------------------------------------------------------------------------------
 # NetStim inputs

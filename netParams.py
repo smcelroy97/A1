@@ -760,31 +760,33 @@ if cfg.addIClamp:
 if cfg.addNoiseIClamp:
     with open('data/inputResistances.json', 'rb') as f:
         inpRes = json.load(f)
-    cfg.NoiseIClampParams = {}
+    netParams.NoiseIClampParams = {}
     for pop in cfg.allpops:
         Gin = 1 / inpRes[pop]
         g0 = (cfg.OUamp / 100) * Gin
         sigma = (cfg.OUvar / 100) * Gin
         # print('pop is: '  + pop + ' Input resistance is: ' + str(inpRes[pop]) + ' input conductance is: ' + str(Gin) + '   g0 is:  ' + str(g0))
-        cfg.NoiseIClampParams[pop]['g0']= g0
-        cfg.NoiseIClampParams[pop]['sigma']
+        netParams.NoiseIClampParams[pop] = {
+            'g0': g0,
+            'sigma': sigma
+        }
 
-        if pop in cfg.NoiseIClampParams.keys():
-            netParams.stimSourceParams['NoiseIClamp_source__'+pop] = {
-                'type': 'IClamp',
-                'del': cfg.NoiseIClampParams['start'],
-                'dur': cfg.NoiseIclampParams['duration'],
-                'amp': cfg.NoiseIClampParams[pop]['g0']
-                # 'noise' : cfg.NoiseIClampParams[pop]['sigma']
-            }
-            netParams.stimTargetParams['NoiseIClamp_target__'+pop] = {
-                'source': 'NoiseIClamp_source__'+pop,
-                'sec':'soma_0',
-                'loc': 0.5,
-                'conds': {'pop':pop}
-            }
-        else:
-            print(pop)
+    if pop in netParams.NoiseIClampParams.keys():
+        netParams.stimSourceParams['NoiseIClamp_source__'+pop] = {
+            'type': 'IClamp',
+            'del': cfg.NoiseIClampStart,
+            'dur': cfg.NoiseIClampDur,
+            'amp': netParams.NoiseIClampParams[pop]['g0']
+            # 'noise' : cfg.NoiseIClampParams[pop]['sigma']
+        }
+        netParams.stimTargetParams['NoiseIClamp_target__'+pop] = {
+            'source': 'NoiseIClamp_source__'+pop,
+            'sec':'soma_0',
+            'loc': 0.5,
+            'conds': {'pop':pop}
+        }
+    else:
+        print(pop)
 #------------------------------------------------------------------------------
 # NetStim inputs (to simulate short external stimuli; not bkg)
 #------------------------------------------------------------------------------
