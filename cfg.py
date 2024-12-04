@@ -21,7 +21,7 @@ cfg = specs.SimConfig()
 # ------------------------------------------------------------------------------
 # Run parameters
 # ------------------------------------------------------------------------------
-cfg.duration = 2000  # Duration of the sim, in ms
+cfg.duration = 3000  # Duration of the sim, in ms
 cfg.dt = 0.05  # Internal Integration Time Step
 cfg.verbose = 0  # Show detailed messages
 cfg.progressBar = 0  # even more detailed message
@@ -98,8 +98,8 @@ cfg.saveCellConns = False
 # Analysis and plotting
 # ------------------------------------------------------------------------------
 
-# cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig': False, 'orderInverse': True, # 'figSize': (25, 25),
-#                               'markerSize': 50}   # Plot a raster
+cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig': False, 'orderInverse': True, # 'figSize': (25, 25),
+                              'markerSize': 50}   # Plot a raster
 
 # cfg.analysis['plotConn'] = {'includePre': cfg.allpops, 'includePost': ['TC'], 'feature': 'strength',
 #                             'saveFig': True, 'showFig': False, 'figSize': (25, 25)}  # Plot conn matrix
@@ -335,7 +335,10 @@ cfg.addNoiseIClamp = 1
 if cfg.addNoiseIClamp:
     cfg.OUamp = 30
     cfg.OUvar = 1
-    cfg.NoiseIClampParams = {}
+    cfg.NoiseIClampParams = {
+        'start' : 500,
+        'duration' : 2500
+    }
 
 # ------------------------------------------------------------------------------
 # NetStim inputs

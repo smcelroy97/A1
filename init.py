@@ -25,6 +25,7 @@ from netpyne.analysis import spikes_legacy
 from CurrentStim import CurrentStim as CS
 from analysis.simTools import editNet
 import json
+import os
 
 comm.initialize()
 
@@ -91,6 +92,13 @@ if sim.cfg.addNoiseIClamp:
   sim, vecs_dict = CS.addNoiseIClamp(sim)
 
 
+sim.setupRecording()              	 		# setup variables to record for each cell (spikes, V traces, etc)
+sim.runSim()                                    # run parallel Neuron simulation
+# sim.saveDataInNodes()
+sim.gatherData()
+sim.saveData()
+sim.analysis.plotData()    # plot spike raster etc
+
 # updating a json with result values because the current batchtools format generates a big string of results
 def append_to_json(file_path, new_data):
   # Check if the file exists
@@ -100,34 +108,25 @@ def append_to_json(file_path, new_data):
       data = json.load(file)
   else:
     # Initialize an empty list if the file does not exist
-    data = []
+    data = {}
 
   # Append the new data
-  data.append(new_data)
+  data[sim.cfg.simLabel] = new_data
 
   # Write the updated data back to the file
   with open(file_path, 'w') as file:
-    json.dump(data, file, indent=4)
+    json.dump(data, file)
 
 newOUmap = {
-  sim.cfg.simLabel: {
     'OUamp': sim.cfg.OUamp,
     'OUvar': sim.cfg.OUvar
-  }
 }
-avgRates = sim.analysis.popAvgRates
+avgRates = sim.analysis.popAvgRates(tranges=[2000, 3000], show=False)
 
 for pop in avgRates:
-  newOUmap[sim.cfg.simLabel][pop] = avgRates[pop]
+  newOUmap[pop]= avgRates[pop]
 
-append_to_json('../A1/simOutput/OUmapping.json', new_simulation_data)
-
-sim.setupRecording()              	 		# setup variables to record for each cell (spikes, V traces, etc)
-sim.runSim()                                    # run parallel Neuron simulation
-# sim.saveDataInNodes()
-sim.gatherData()
-sim.saveData()
-sim.analysis.plotData()    # plot spike raster etc
+append_to_json('../A1/simOutput/OUmapping.json', newOUmap)
 
 # Terminate batch process
 if comm.is_host():
