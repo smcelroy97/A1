@@ -771,22 +771,22 @@ if cfg.addNoiseIClamp:
             'sigma': sigma
         }
 
-    if pop in netParams.NoiseIClampParams.keys():
-        netParams.stimSourceParams['NoiseIClamp_source__'+pop] = {
-            'type': 'IClamp',
-            'del': cfg.NoiseIClampStart,
-            'dur': cfg.NoiseIClampDur,
-            'amp': netParams.NoiseIClampParams[pop]['g0']
-            # 'noise' : cfg.NoiseIClampParams[pop]['sigma']
+        if pop in netParams.NoiseIClampParams.keys():
+            netParams.stimSourceParams['NoiseIClamp_source__'+pop] = {
+                'type': 'IClamp',
+                'del': cfg.NoiseIClampStart,
+                'dur': cfg.NoiseIClampDur,
+                'amp': netParams.NoiseIClampParams[pop]['g0']
+                # 'noise' : cfg.NoiseIClampParams[pop]['sigma']
+            }
+            netParams.stimTargetParams['NoiseIClamp_target__'+pop] = {
+                'source': 'NoiseIClamp_source__'+pop,
+                'sec':'soma_0',
+                'loc': 0.5,
+                'conds': {'pop':pop}
         }
-        netParams.stimTargetParams['NoiseIClamp_target__'+pop] = {
-            'source': 'NoiseIClamp_source__'+pop,
-            'sec':'soma_0',
-            'loc': 0.5,
-            'conds': {'pop':pop}
-        }
-    else:
-        print(pop)
+        else:
+            print(pop)
 #------------------------------------------------------------------------------
 # NetStim inputs (to simulate short external stimuli; not bkg)
 #------------------------------------------------------------------------------

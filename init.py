@@ -129,17 +129,17 @@ for pop in avgRates:
 append_to_json('../A1/simOutput/OUmapping.json', newOUmap)
 
 # Terminate batch process
-# if comm.is_host():
-#   netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
-#   print('transmitting data...')
-#   inputs = specs.get_mappings()
-#   results = sim.analysis.popAvgRates(tranges= [1000, 2000], show=False)
-#   # results['loss'] = results['TC']
-#   out_json = json.dumps({**inputs, **results})
-#
-#   print(out_json)
-#
-#   comm.send(out_json)
-#   comm.close()
-#
-# sim.close()
+if comm.is_host():
+  netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
+  print('transmitting data...')
+  inputs = specs.get_mappings()
+  results = sim.analysis.popAvgRates(tranges= [1000, 2000], show=False)
+  # results['loss'] = results['TC']
+  out_json = json.dumps({**inputs, **results})
+
+  print(out_json)
+
+  comm.send(out_json)
+  comm.close()
+
+sim.close()
