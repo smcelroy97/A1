@@ -98,14 +98,14 @@ cfg.saveCellConns = False
 # Analysis and plotting
 # ------------------------------------------------------------------------------
 
-cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig': False, 'orderInverse': True, # 'figSize': (25, 25),
-                              'markerSize': 50}   # Plot a raster
+cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig': False, 'orderInverse': True, 'figSize': (25, 25),
+                              'markerSize': 1}   # Plot a raster
 
 # cfg.analysis['plotConn'] = {'includePre': cfg.allpops, 'includePost': ['TC'], 'feature': 'strength',
 #                             'saveFig': True, 'showFig': False, 'figSize': (25, 25)}  # Plot conn matrix
 # 'include': [('TC', i) for i in range(40)],
 
-# cfg.analysis['plotTraces'] = {'include': ['IT2'], 'timeRange': [0, cfg.duration],
+# cfg.analysis['plotTraces'] = {'include': cfg.allpops, 'timeRange': [0, cfg.duration],
 # 'oneFigPer': 'cell', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
 
 def setplotTraces (ncell=1, linclude=[]):
@@ -334,10 +334,10 @@ cfg.injectionAmplitudes =  np.linspace(0.0, 0.6, 13)
 cfg.addNoiseIClamp = 1
 
 
-cfg.OUamp = 30
-cfg.OUvar = 1
+cfg.OUamp = 0.12
+cfg.OUvar = 0.048
 cfg.NoiseIClampStart = 500
-cfg.NoiseIClampDur = 2500
+cfg.NoiseIClampDur = cfg.duration
 
 # ------------------------------------------------------------------------------
 # NetStim inputs

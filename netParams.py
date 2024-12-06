@@ -776,7 +776,7 @@ if cfg.addNoiseIClamp:
                 'type': 'IClamp',
                 'del': cfg.NoiseIClampStart,
                 'dur': cfg.NoiseIClampDur,
-                'amp': netParams.NoiseIClampParams[pop]['g0']
+                'amp': 0 # netParams.NoiseIClampParams[pop]['g0']
                 # 'noise' : cfg.NoiseIClampParams[pop]['sigma']
             }
             netParams.stimTargetParams['NoiseIClamp_target__'+pop] = {

@@ -4,8 +4,8 @@ import numpy as np
 label = 'v45_batch3'
 
 params = {
-    'OUamp': np.linspace(1, 25, 25),
-    'OUvar': np.linspace(1, 25, 25)}
+    'OUamp': np.linspace(0.01, 2, 10),
+    'OUvar': np.linspace(0.01, 2, 10)}
 
 # use batch_shell_config if running directly on the machine
 shell_config = {'command': 'mpiexec -np 4 nrniv -python -mpi init.py'}

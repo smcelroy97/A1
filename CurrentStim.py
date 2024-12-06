@@ -51,11 +51,7 @@ class CurrentStim():
 
         svec.add(mean)  # shift signal by mean value [uS]
 
-        # self._add_point(self._base_amp)
-        # self.time_vec.append(tvec)
-        # self.stim_vec.append(svec)
-        # self._cur_t += duration
-        # self._add_point(self._base_amp)
+
 
         if plotFig:
             import matplotlib.pyplot as plt
@@ -86,7 +82,7 @@ class CurrentStim():
                 if 'NoiseIClamp' in stim['label']:
 
                     # try:
-                    mean = stim['amp']
+                    mean = sim.net.params.NoiseIClampParams[cell.tags['pop']]['g0']
                     variance = sim.net.params.NoiseIClampParams[cell.tags['pop']]['sigma']
                     # print(cell.tags['pop'] + '      '  + str(variance) + '     ' + str(mean))
                         # print('mean noise: ', mean, ' nA')
@@ -95,7 +91,7 @@ class CurrentStim():
                         # print('except mean noise: ', mean, ' nA')
 
                     tvec, svec = CurrentStim.add_ornstein_uhlenbeck(
-                        tau= 0, #1e-9,
+                        tau= 10,
                         sigma=variance,
                         mean=mean,
                         duration=stim['dur'],
