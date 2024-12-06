@@ -14,7 +14,7 @@ shell_config = {'command': 'mpiexec -np 4 nrniv -python -mpi init.py'}
 sge_config = {
     'queue': 'cpu.q',
     'cores': 32,
-    'vmem': '18G',
+    'vmem': '128G',
     'realtime': '01:40:00',
     'command': 'mpiexec -n $NSLOTS -hosts $(hostname) nrniv -python -mpi init.py'
 }

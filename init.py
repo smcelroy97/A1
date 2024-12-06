@@ -123,7 +123,7 @@ newOUmap = {
 }
 avgRates = sim.analysis.popAvgRates(tranges=[2000, 3000], show=False)
 
-for pop in avgRates:
+for pop in cfg.allpops:
   newOUmap[pop]= avgRates[pop]
 
 append_to_json('../A1/simOutput/OUmapping.json', newOUmap)

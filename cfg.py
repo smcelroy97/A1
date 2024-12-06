@@ -114,7 +114,7 @@ def setplotTraces (ncell=1, linclude=[]):
       linclude.append( (pop,i) )
   cfg.analysis['plotTraces'] = {'include': linclude, 'oneFigPer': 'trace', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
 
-# setplotTraces(ncell=20, linclude=['IT2'])
+setplotTraces(ncell=5, linclude=cfg.allpops)
 
 layer_bounds = {'L1': 100, 'L2': 160, 'L3': 950, 'L4': 1250, 'L5A': 1334, 'L5B': 1550, 'L6': 2000}
 
