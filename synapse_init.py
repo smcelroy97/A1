@@ -22,7 +22,7 @@ from synapse_netParams import netParams, cfg
 import numpy as np
 import matplotlib.pyplot as plt
 from netpyne.analysis import spikes_legacy
-from CurrentStim import CurrentStim as CS
+import BackgroundStim as BS
 from analysis.simTools import editNet
 import json
 
@@ -44,7 +44,7 @@ sim.net.addStims() 							# add network stimulation
 #########################################################################################
 
 if sim.cfg.addNoiseIClamp:
-  sim, vecs_dict = CS.addNoiseIClamp(sim)
+  sim, vecs_dict = BS.addStim.addNoiseIClamp(sim)
 
 sim.setupRecording()              			# setup variables to record for each cell (spikes, V traces, etc)
 sim.runSim()                                    # run parallel Neuron simulation

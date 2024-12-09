@@ -15,15 +15,13 @@ MPI usage:
 Contributors: ericaygriffith@gmail.com, salvadordura@gmail.com
 """
 from netpyne.batchtools import specs, comm
-import matplotlib; matplotlib.use('Agg')  # to avoid graphics error in servers
-from input import cochlearInputSpikes
+import matplotlib;
+
+matplotlib.use('Agg')  # to avoid graphics error in servers
 from netpyne import sim
 from netParams import netParams, cfg
 import numpy as np
-import matplotlib.pyplot as plt
-from netpyne.analysis import spikes_legacy
-from CurrentStim import CurrentStim as CS
-from analysis.simTools import editNet
+import BackgroundStim as BS
 import json
 import os
 
@@ -85,11 +83,12 @@ sim.net.connectCells()            			# create connections between cells based on
 sim.net.addStims() 							# add network stimulation
 
 ################################
-# - Adding OU Nose Stims for each Cell - #
-################################
+# - Adding OU Noise Stims for each Cell -#
+# ###############################
 
-if sim.cfg.addNoiseIClamp:
-  sim, vecs_dict = CS.addNoiseIClamp(sim)
+if sim.cfg.addNoiseConductance:
+  # sim, vecs_dict = BS.addStim.addNoiseGClamp(sim)
+  sim, vecs_dict = BS.addStim.addNoiseIClamp(sim)
 
 
 sim.setupRecording()              	 		# setup variables to record for each cell (spikes, V traces, etc)
@@ -141,5 +140,5 @@ if comm.is_host():
 
   comm.send(out_json)
   comm.close()
-
-sim.close()
+#
+# sim.close()

@@ -757,30 +757,28 @@ if cfg.addIClamp:
                 'loc': 0.5
             }
 
-if cfg.addNoiseIClamp:
+if cfg.addNoiseConductance:
     with open('data/inputResistances.json', 'rb') as f:
         inpRes = json.load(f)
-    netParams.NoiseIClampParams = {}
+    netParams.NoiseConductanceParams = {}
     for pop in cfg.allpops:
         Gin = 1 / inpRes[pop]
         g0 = (cfg.OUamp / 100) * Gin
         sigma = (cfg.OUvar / 100) * Gin
         # print('pop is: '  + pop + ' Input resistance is: ' + str(inpRes[pop]) + ' input conductance is: ' + str(Gin) + '   g0 is:  ' + str(g0))
-        netParams.NoiseIClampParams[pop] = {
+        netParams.NoiseConductanceParams[pop] = {
             'g0': g0,
             'sigma': sigma
         }
 
-        if pop in netParams.NoiseIClampParams.keys():
-            netParams.stimSourceParams['NoiseIClamp_source__'+pop] = {
-                'type': 'IClamp',
-                'del': cfg.NoiseIClampStart,
-                'dur': cfg.NoiseIClampDur,
-                'amp': 0 # netParams.NoiseIClampParams[pop]['g0']
-                # 'noise' : cfg.NoiseIClampParams[pop]['sigma']
+        if pop in netParams.NoiseConductanceParams.keys():
+            netParams.stimSourceParams['NoiseSEClamp_source__'+pop] = {
+                'type': 'ConductanceSource',
+                'dur1': cfg.NoiseConductanceDur,
+                # 'rs': 0
             }
-            netParams.stimTargetParams['NoiseIClamp_target__'+pop] = {
-                'source': 'NoiseIClamp_source__'+pop,
+            netParams.stimTargetParams['NoiseSEClamp_target__'+pop] = {
+                'source': 'NoiseSEClamp_source__'+pop,
                 'sec':'soma_0',
                 'loc': 0.5,
                 'conds': {'pop':pop}

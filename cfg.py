@@ -84,14 +84,14 @@ cfg.recordDipole = False
 # Saving
 # ------------------------------------------------------------------------------
 
-cfg.simLabel = 'IClampFI'
+cfg.simLabel = 'IClampFI2'
 cfg.saveFolder = 'simOutput/' + cfg.simLabel  # Set file output name
 cfg.savePickle = True  # Save pkl file
 cfg.saveJson = False  # Save json file
 cfg.saveDataInclude = ['simData', 'simConfig', 'net', 'netParams',  'netCells', 'netPops']
 cfg.backupCfgFile = None
 cfg.gatherOnlySimData = False
-cfg.saveCellSecs = True
+cfg.saveCellSecs = False
 cfg.saveCellConns = False
 
 # ------------------------------------------------------------------------------
@@ -105,8 +105,8 @@ cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig'
 #                             'saveFig': True, 'showFig': False, 'figSize': (25, 25)}  # Plot conn matrix
 # 'include': [('TC', i) for i in range(40)],
 
-# cfg.analysis['plotTraces'] = {'include': cfg.allpops, 'timeRange': [0, cfg.duration],
-# 'oneFigPer': 'cell', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
+cfg.analysis['plotTraces'] = {'include': cfg.allpops, 'timeRange': [0, cfg.duration],
+'oneFigPer': 'cell', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
 
 def setplotTraces (ncell=1, linclude=[]):
   for pop in cfg.allpops:
@@ -114,7 +114,7 @@ def setplotTraces (ncell=1, linclude=[]):
       linclude.append( (pop,i) )
   cfg.analysis['plotTraces'] = {'include': linclude, 'oneFigPer': 'trace', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
 
-setplotTraces(ncell=5, linclude=cfg.allpops)
+# setplotTraces(ncell=5, linclude=cfg.allpops)
 
 layer_bounds = {'L1': 100, 'L2': 160, 'L3': 950, 'L4': 1250, 'L5A': 1334, 'L5B': 1550, 'L6': 2000}
 
@@ -171,7 +171,7 @@ for key, value in cfgLoad.items():
 
 
 # These values taken from M1 cfg (https://github.com/Neurosim-lab/netpyne/blob/development/examples/M1detailed/cfg.py)
-cfg.singleCellPops = False
+cfg.singleCellPops = True
 cfg.reducedPop = False # insert number to declare specific number of populations, if going for full model set to False
 cfg.singlePop = ''
 cfg.removeWeightNorm = False
@@ -331,13 +331,12 @@ cfg.injectionInterval = 3000  # 1 second in ms
 cfg.injectionDuration = 1000  # 1 second in ms
 cfg.injectionAmplitudes =  np.linspace(0.0, 0.6, 13)
 
-cfg.addNoiseIClamp = 1
+cfg.addNoiseConductance = 1
 
-
-cfg.OUamp = 0.12
-cfg.OUvar = 0.048
-cfg.NoiseIClampStart = 500
-cfg.NoiseIClampDur = cfg.duration
+cfg.OUamp = 1000
+cfg.OUvar = 4.8
+cfg.NoiseConductanceStart = 500
+cfg.NoiseConductanceDur = cfg.duration
 
 # ------------------------------------------------------------------------------
 # NetStim inputs
