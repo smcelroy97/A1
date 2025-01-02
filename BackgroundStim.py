@@ -51,6 +51,12 @@ class addStim():
                 svec.x[n] = svec[n - 1] * mu + noise[n]  # signal [uS]
 
         svec.add(mean)  # shift signal by mean value [uS]
+        svec = abs(svec)
+        for idx, val in enumerate(svec):
+            if val < 0:
+                print('original value is ' + str(val))
+                svec[idx] = 0
+                print('value is now ' + str(val))
 
 
 
@@ -82,13 +88,13 @@ class addStim():
             for stim_ind, stim in enumerate(sim.net.cells[cell_ind].stims):
                 if 'NoiseSEClamp' in stim['label']:
                     mean = sim.net.params.NoiseConductanceParams[cell.tags['pop']]['g0']
-                    variance = sim.net.params.NoiseConductanceParams[cell.tags['pop']]['sigma']
+                    sigma = sim.net.params.NoiseConductanceParams[cell.tags['pop']]['sigma']
                     tvec, svec = addStim.add_ornstein_uhlenbeck(
                         tau=10,
-                        sigma=variance,
+                        sigma=sigma,
                         mean=mean,
                         duration=stim['dur1'],
-                        dt=0.025,
+                        dt=0.05,
                         seed=cell_seed,
                         plotFig=False)
 
@@ -104,7 +110,7 @@ class addStim():
                     #     sim.net.cells[cell_ind].stims[stim_ind]['hObj']._ref_rs, vecs_dict[cell_ind]['tvecs'][stim_ind],
                     #     True
                     # )
-                return sim, vecs_dict
+        return sim, vecs_dict
 
 
 

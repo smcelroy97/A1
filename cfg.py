@@ -44,7 +44,7 @@ cfg.validateNetParams = False
 # Recording
 # ------------------------------------------------------------------------------
 cfg.allpops = ['NGF1', 'IT2', 'SOM2', 'PV2', 'VIP2', 'NGF2', 'IT3', 'SOM3', 'PV3', 'VIP3', 'NGF3', 'ITP4', 'ITS4',
-               'SOM4', 'PV4', 'VIP4', 'NGF4', 'IT5A', 'CT5A', 'SOM5A', 'PV5A', 'VIP5A', 'NGF5A', 'IT5B', 'PT5B', 'CT5B',
+               'SOM4', 'PV4', 'VIP4', 'NGF4', 'IT5A', 'CT5A', 'SOM5A', 'PV5A', 'VIP5A', 'NGF5A', 'IT5B', 'CT5B', 'PT5B',
                'SOM5B', 'PV5B', 'VIP5B', 'NGF5B', 'IT6', 'CT6', 'SOM6', 'PV6', 'VIP6', 'NGF6', 'TC', 'TCM', 'HTC',
                'IRE', 'IREM', 'TI', 'TIM']
 
@@ -84,7 +84,7 @@ cfg.recordDipole = False
 # Saving
 # ------------------------------------------------------------------------------
 
-cfg.simLabel = 'IClampFI2'
+cfg.simLabel = 'gClampamp50Base'
 cfg.saveFolder = 'simOutput/' + cfg.simLabel  # Set file output name
 cfg.savePickle = True  # Save pkl file
 cfg.saveJson = False  # Save json file
@@ -106,7 +106,9 @@ cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig'
 # 'include': [('TC', i) for i in range(40)],
 
 cfg.analysis['plotTraces'] = {'include': cfg.allpops, 'timeRange': [0, cfg.duration],
-'oneFigPer': 'cell', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
+'oneFigPer': 'cell', 'overlay': True, 'saveFig': False, 'showFig': False, 'figSize':(12,8)}
+# cfg.analysis['plotTraces'] = {'include': cfg.allpops, 'timeRange': [100, 200],
+# 'oneFigPer': 'cell', 'overlay': True, 'saveFig': 'zoom', 'showFig': False, 'figSize':(12,8)}
 
 def setplotTraces (ncell=1, linclude=[]):
   for pop in cfg.allpops:
@@ -171,7 +173,7 @@ for key, value in cfgLoad.items():
 
 
 # These values taken from M1 cfg (https://github.com/Neurosim-lab/netpyne/blob/development/examples/M1detailed/cfg.py)
-cfg.singleCellPops = True
+cfg.singleCellPops = False
 cfg.reducedPop = False # insert number to declare specific number of populations, if going for full model set to False
 cfg.singlePop = ''
 cfg.removeWeightNorm = False
@@ -333,8 +335,8 @@ cfg.injectionAmplitudes =  np.linspace(0.0, 0.6, 13)
 
 cfg.addNoiseConductance = 1
 
-cfg.OUamp = 1000
-cfg.OUvar = 4.8
+cfg.OUamp = 50
+cfg.OUvar = 25
 cfg.NoiseConductanceStart = 500
 cfg.NoiseConductanceDur = cfg.duration
 

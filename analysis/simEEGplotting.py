@@ -11,18 +11,18 @@ from matplotlib import pyplot as plt
 from lfpykit.eegmegcalc import NYHeadModel
 
 stim_on = 2000  # Define onset of stimulus if necessary
-calcEEG = {'start': 2800, 'stop': 4000}
-filter = {'lowCut':2, 'hiCut': 12}
-plotERP = {'useFilter': True}
+# calcEEG = {'start': 2800, 'stop': 4000}
+# filter = {'lowCut':2, 'hiCut': 12}
+# plotERP = {'useFilter': True}
 # plotSpectrogram = {'useFilter': False}
 # plotPSD = {'useFilter': True}
-plotRaster = {'timeRange': [0, 6000]}
+plotRaster = {'timeRange': [0, 2000]}
 # PSDSpect = {'timeRange': [3000, 4000], 'useLFP': False, 'useCSD': True}
 # plotMUA = {'stimDur': 1000}
 
-# calcEEG = False
-# filter = False
-# plotERP = False
+calcEEG = False
+filter = False
+plotERP = False
 plotSpectrogram = False
 plotPSD = False
 # plotRaster = False
@@ -30,7 +30,7 @@ PSDSpect = False
 plotMUA = False
 
 
-batch = 'ANsynapseReduction1118A'  # Name of batch for fig saving
+batch = 'v34_batch58'  # Name of batch for fig saving
 
 # Load sim EEG data
 base_dir = '/Users/scoot/A1ProjData/A1_sim_data/' + batch + '/'  # Define dir from saved data dir

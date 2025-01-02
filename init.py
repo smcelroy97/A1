@@ -16,7 +16,6 @@ Contributors: ericaygriffith@gmail.com, salvadordura@gmail.com
 """
 from netpyne.batchtools import specs, comm
 import matplotlib;
-
 matplotlib.use('Agg')  # to avoid graphics error in servers
 from netpyne import sim
 from netParams import netParams, cfg
@@ -47,6 +46,24 @@ def setdminID (sim, lpop):
   sim.simData['dnumc'] = {pop:np.amax(dGIDs[pop])-np.amin(dGIDs[pop]) for pop in lpop if len(dGIDs[pop])>0}
 
 setdminID(sim, cfg.allpops)
+
+# updating a json with result values because the current batchtools format generates a big string of results
+def append_to_json(file_path, new_data):
+  # Check if the file exists
+  if os.path.exists(file_path):
+    # Read the existing data
+    with open(file_path, 'r') as file:
+      data = json.load(file)
+  else:
+    # Initialize an empty list if the file does not exist
+    data = {}
+
+  # Append the new data
+  # data[sim.cfg.simLabel] = new_data
+  data = new_data
+  # Write the updated data back to the file
+  with open(file_path, 'w') as file:
+    json.dump(data, file)
 
 def setCochCellLocationsX (pop, sz, scale):
   # set the cell positions on a line
@@ -87,34 +104,41 @@ sim.net.addStims() 							# add network stimulation
 # ###############################
 
 if sim.cfg.addNoiseConductance:
-  # sim, vecs_dict = BS.addStim.addNoiseGClamp(sim)
-  sim, vecs_dict = BS.addStim.addNoiseIClamp(sim)
+  sim, vecs_dict = BS.addStim.addNoiseGClamp(sim)
+
 
 
 sim.setupRecording()              	 		# setup variables to record for each cell (spikes, V traces, etc)
 sim.runSim()                                    # run parallel Neuron simulation
-# sim.saveDataInNodes()
 sim.gatherData()
 sim.saveData()
 sim.analysis.plotData()    # plot spike raster etc
 
-# updating a json with result values because the current batchtools format generates a big string of results
-def append_to_json(file_path, new_data):
-  # Check if the file exists
-  if os.path.exists(file_path):
-    # Read the existing data
-    with open(file_path, 'r') as file:
-      data = json.load(file)
-  else:
-    # Initialize an empty list if the file does not exist
-    data = {}
+plotPops = sim.cfg.allpops
+rmpPops  = {}
+for pop_ind, pop in enumerate(plotPops):
+  print('\n\n', pop)
+  # sim.analysis.plotTraces(
+  figs, traces_dict = sim.analysis.plotTraces(
+    include=[pop],
+    # include=[record_pops[pop_ind]],
+    # timeRange=[2500, 3000],
+    # overlay=True, oneFigPer='trace',
+    # ylim=[-90, -40],
+    axis=True,
+    # figSize=(70, 15),
+    figSize=(25, 15),
+    # figSize=(60, 18),
+    fontSize=15,
+    # saveFig=False,
+    # saveFig=sim.cfg.saveFigPath+'/'+sim.cfg.filename+'_traces_'+pop+ '.png'
+    saveFig=sim.cfg.saveFolder + '/' + sim.cfg.simLabel + '_traces__' + pop + '.png'
+  )
 
-  # Append the new data
-  data[sim.cfg.simLabel] = new_data
+# for pop_ind, pop in enumerate(plotPops):
+#   rmpPops[pop] = np.mean(traces_dict['tracesData'][pop_ind]['cell_' + str(pop_ind) + '_V_soma'])
 
-  # Write the updated data back to the file
-  with open(file_path, 'w') as file:
-    json.dump(data, file)
+spikeFig, spikesDict = sim.analysis.plotSpikeStats()
 
 newOUmap = {
     'OUamp': sim.cfg.OUamp,
@@ -122,11 +146,14 @@ newOUmap = {
 }
 avgRates = sim.analysis.popAvgRates(tranges=[2000, 3000], show=False)
 
-for pop in cfg.allpops:
-  newOUmap[pop]= avgRates[pop]
+for idx, pop in enumerate(cfg.allpops):
+  newOUmap[pop] = {}
+  newOUmap[pop]['rate'] = avgRates[pop]
+  newOUmap[pop]['isicv'] = np.mean(spikesDict['statData'][idx])
 
-append_to_json('../A1/simOutput/OUmapping.json', newOUmap)
 
+# append_to_json('../A1/simOutput/OUmapping.json', newOUmap)
+# append_to_json('data/rmpPops.json', rmpPops)
 # Terminate batch process
 if comm.is_host():
   netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))

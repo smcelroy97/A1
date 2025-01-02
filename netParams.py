@@ -150,7 +150,7 @@ if cfg.singleCellPops:
     for pop in netParams.popParams.values(): pop['numCells'] = 1
 
 if cfg.reducedPop:
-    for pop in netParams.popParams.values(): pop['numCells'] = 25
+    for pop in netParams.popParams.values(): pop['numCells'] = cfg.reducedPop
 
 ## List of E and I pops to use later on
 Epops = ['IT2', 'IT3', 'ITP4', 'ITS4', 'IT5A', 'CT5A', 'IT5B', 'CT5B' , 'PT5B', 'IT6', 'CT6']  # all layers
@@ -760,6 +760,8 @@ if cfg.addIClamp:
 if cfg.addNoiseConductance:
     with open('data/inputResistances.json', 'rb') as f:
         inpRes = json.load(f)
+    with open ('data/rmpPops.json') as f:
+        rmpPops = json.load(f)
     netParams.NoiseConductanceParams = {}
     for pop in cfg.allpops:
         Gin = 1 / inpRes[pop]
@@ -771,15 +773,15 @@ if cfg.addNoiseConductance:
             'sigma': sigma
         }
 
-        if pop in netParams.NoiseConductanceParams.keys():
-            netParams.stimSourceParams['NoiseSEClamp_source__'+pop] = {
+        for pop in cfg.allpops:
+            netParams.stimSourceParams['NoiseSEClamp_source_'+pop] = {
                 'type': 'ConductanceSource',
                 'dur1': cfg.NoiseConductanceDur,
-                # 'rs': 0
+                'amp1' : rmpPops[pop]
             }
-            netParams.stimTargetParams['NoiseSEClamp_target__'+pop] = {
-                'source': 'NoiseSEClamp_source__'+pop,
-                'sec':'soma_0',
+            netParams.stimTargetParams['NoiseSEClamp_target_'+pop] = {
+                'source': 'NoiseSEClamp_source_'+pop,
+                'sec':'soma',
                 'loc': 0.5,
                 'conds': {'pop':pop}
         }
