@@ -31,8 +31,8 @@ sim.initialize(simConfig = cfg,
 sim.net.createPops()               			# instantiate network populations
 sim.net.createCells()              			# instantiate network cells based on defined populations
 
-# sim.net.allCells = [cell.__getstate__() for cell in sim.net.cells]
-# sim.net.allPops = {label: pop.__getstate__() for label, pop in sim.net.pops.items()}
+sim.net.allCells = [cell.__getstate__() for cell in sim.net.cells]
+sim.net.allPops = {label: pop.__getstate__() for label, pop in sim.net.pops.items()}
 
 def setdminID (sim, lpop):
   # setup min,max ID and dnumc for each population in lpop
@@ -152,7 +152,7 @@ for idx, pop in enumerate(cfg.allpops):
   newOUmap[pop]['isicv'] = np.mean(spikesDict['statData'][idx])
 
 
-# append_to_json('../A1/simOutput/OUmapping.json', newOUmap)
+append_to_json('../A1/simOutput/OUmapping.json', newOUmap)
 # append_to_json('data/rmpPops.json', rmpPops)
 # Terminate batch process
 if comm.is_host():
@@ -160,12 +160,12 @@ if comm.is_host():
   print('transmitting data...')
   inputs = specs.get_mappings()
   results = sim.analysis.popAvgRates(tranges= [1000, 2000], show=False)
-  # results['loss'] = results['TC']
+  results['loss'] = 700
   out_json = json.dumps({**inputs, **results})
 
   print(out_json)
 
   comm.send(out_json)
   comm.close()
-#
-# sim.close()
+
+sim.close()
