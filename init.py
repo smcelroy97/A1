@@ -16,6 +16,7 @@ Contributors: ericaygriffith@gmail.com, salvadordura@gmail.com
 """
 from netpyne.batchtools import specs, comm
 import matplotlib; matplotlib.use('Agg')  # to avoid graphics error in servers
+from matplotlib import pyplot as plt
 from input import cochlearInputSpikes
 from netpyne import sim
 from netParams import netParams, cfg
@@ -130,10 +131,32 @@ for pop_ind, pop in enumerate(plotPops):
     figSize=(25, 15),
     # figSize=(60, 18),
     fontSize=15,
-    # saveFig=False,
-    # saveFig=sim.cfg.saveFigPath+'/'+sim.cfg.filename+'_traces_'+pop+ '.png'
-    saveFig=sim.cfg.saveFolder + '/' + sim.cfg.simLabel + '_traces__' + pop + '.png'
+    saveFig=False
+    # # saveFig=sim.cfg.saveFigPath+'/'+sim.cfg.filename+'_traces_'+pop+ '.png'
+    # saveFig=sim.cfg.saveFolder + '/' + sim.cfg.simLabel + '_traces__' + pop + '.png'
   )
+  tracesData = traces_dict['tracesData']
+  # store_v={}
+  store_v = []
+  store_voltages = {}
+  for rec_ind in range(len(tracesData)):
+    for trace in tracesData[rec_ind].keys():
+      if '_V_soma' in trace:
+        cell_gid_str = trace.split('_V_soma')[0].split('cell_')[1]
+        # store_v.update({cell_gid_str:list(tracesData[rec_ind][trace])})
+        store_v.append(list(tracesData[rec_ind][trace]))
+        store_voltages.update({cell_gid_str: list(tracesData[rec_ind][trace])})
+
+  t_vector = list(tracesData[0]['t'])
+  mean_v = np.mean(store_v, axis=0)
+  t_vector_ = [t_vector[i] for i in range(len(mean_v))]
+  plt.figure(figsize=(70, 15))
+  for trace in store_v: plt.plot(t_vector_, trace, 'gray', alpha=0.2)
+  plt.plot(t_vector_, mean_v, 'r')
+  plt.ylim([-110, 50])
+  plt.xlim([min(t_vector_), max(t_vector_)])
+  # plt.plot(mean_v,'k')
+  plt.savefig(sim.cfg.saveFolder + '/' + sim.cfg.simLabel + '_mean_traces_' + pop + '.png')
 
 spikeFig, spikesDict = sim.analysis.plotSpikeStats()
 
