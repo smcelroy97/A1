@@ -785,8 +785,7 @@ if cfg.addNoiseConductance:
                 'loc': 0.5,
                 'conds': {'pop':pop}
         }
-        else:
-            print(pop)
+
 #------------------------------------------------------------------------------
 # NetStim inputs (to simulate short external stimuli; not bkg)
 #------------------------------------------------------------------------------

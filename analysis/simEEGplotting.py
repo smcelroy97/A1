@@ -30,7 +30,7 @@ PSDSpect = False
 plotMUA = False
 
 
-batch = 'v34_batch58'  # Name of batch for fig saving
+batch = 'GABAB_KO1003'  # Name of batch for fig saving
 
 # Load sim EEG data
 base_dir = '/Users/scoot/A1ProjData/A1_sim_data/' + batch + '/'  # Define dir from saved data dir

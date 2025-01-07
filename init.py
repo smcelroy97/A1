@@ -15,8 +15,8 @@ MPI usage:
 Contributors: ericaygriffith@gmail.com, salvadordura@gmail.com
 """
 from netpyne.batchtools import specs, comm
-import matplotlib;
-matplotlib.use('Agg')  # to avoid graphics error in servers
+import matplotlib; matplotlib.use('Agg')  # to avoid graphics error in servers
+from input import cochlearInputSpikes
 from netpyne import sim
 from netParams import netParams, cfg
 import numpy as np
@@ -59,8 +59,8 @@ def append_to_json(file_path, new_data):
     data = {}
 
   # Append the new data
-  # data[sim.cfg.simLabel] = new_data
-  data = new_data
+  data[sim.cfg.simLabel] = new_data
+  # data = new_data
   # Write the updated data back to the file
   with open(file_path, 'w') as file:
     json.dump(data, file)
@@ -134,9 +134,6 @@ for pop_ind, pop in enumerate(plotPops):
     # saveFig=sim.cfg.saveFigPath+'/'+sim.cfg.filename+'_traces_'+pop+ '.png'
     saveFig=sim.cfg.saveFolder + '/' + sim.cfg.simLabel + '_traces__' + pop + '.png'
   )
-
-# for pop_ind, pop in enumerate(plotPops):
-#   rmpPops[pop] = np.mean(traces_dict['tracesData'][pop_ind]['cell_' + str(pop_ind) + '_V_soma'])
 
 spikeFig, spikesDict = sim.analysis.plotSpikeStats()
 

@@ -13,7 +13,7 @@ shell_config = {'command': 'mpiexec -np 4 nrniv -python -mpi init.py'}
 # use batch_sge_config if running on Downstate HPC or other SGE systems
 sge_config = {
     'queue': 'cpu.q',
-    'cores': 32,
+    'cores': 1,
     'vmem': '128G',
     'realtime': '01:40:00',
     'command': 'mpiexec -n $NSLOTS -hosts $(hostname) nrniv -python -mpi init.py'

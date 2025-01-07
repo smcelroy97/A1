@@ -88,7 +88,7 @@ cfg.simLabel = 'gClampamp50Base'
 cfg.saveFolder = 'simOutput/' + cfg.simLabel  # Set file output name
 cfg.savePickle = True  # Save pkl file
 cfg.saveJson = False  # Save json file
-cfg.saveDataInclude = ['simData', 'simConfig', 'net', 'netParams',  'netCells', 'netPops']
+cfg.saveDataInclude = ['simData', 'simConfig', 'net', 'netParams',  'netCells', 'netPops', 'spkinds', 'spkts']
 cfg.backupCfgFile = None
 cfg.gatherOnlySimData = False
 cfg.saveCellSecs = False
@@ -103,7 +103,9 @@ cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig'
 
 # cfg.analysis['plotConn'] = {'includePre': cfg.allpops, 'includePost': ['TC'], 'feature': 'strength',
 #                             'saveFig': True, 'showFig': False, 'figSize': (25, 25)}  # Plot conn matrix
-# 'include': [('TC', i) for i in range(40)],
+# 'include': [('TC', i) for i in range(40)]
+
+cfg.analysis['plotSpikeStats'] = {'stats' : ['isicv'], 'saveFig' : True}
 
 cfg.analysis['plotTraces'] = {'include': cfg.allpops, 'timeRange': [0, cfg.duration],
 'oneFigPer': 'cell', 'overlay': True, 'saveFig': False, 'showFig': False, 'figSize':(12,8)}
@@ -173,7 +175,7 @@ for key, value in cfgLoad.items():
 
 
 # These values taken from M1 cfg (https://github.com/Neurosim-lab/netpyne/blob/development/examples/M1detailed/cfg.py)
-cfg.singleCellPops = False
+cfg.singleCellPops = True
 cfg.reducedPop = False # insert number to declare specific number of populations, if going for full model set to False
 cfg.singlePop = ''
 cfg.removeWeightNorm = False
