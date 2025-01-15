@@ -75,7 +75,7 @@ cfg.recordTraces = {'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'}
 }
 cfg.recordStim = False  # Seen in M1 cfg.py
 cfg.recordTime = True  # SEen in M1 cfg.py
-cfg.recordStep = 0.05  # Step size (in ms) to save data -- value from M1 cfg.py
+cfg.recordStep =   0.5 #KEEP FOR GOOD FIGS - 0.05  # St ep size (in ms) to save data -- value from M1 cfg.py
 
 cfg.recordLFP = False # [[100, y, 100] for y in range(0, 2000, 100)]
 cfg.recordDipole = False
@@ -88,7 +88,7 @@ cfg.simLabel = 'gClampamp50Base'
 cfg.saveFolder = 'simOutput/' + cfg.simLabel  # Set file output name
 cfg.savePickle = True  # Save pkl file
 cfg.saveJson = False  # Save json file
-cfg.saveDataInclude = ['simData', 'simConfig', 'net', 'netParams',  'netCells', 'netPops', 'spkinds', 'spkts']
+cfg.saveDataInclude = ['simData', 'simConfig', 'net', 'netParams',  'netCells', 'netPops']
 cfg.backupCfgFile = None
 cfg.gatherOnlySimData = False
 cfg.saveCellSecs = False
@@ -107,18 +107,19 @@ cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig'
 
 cfg.analysis['plotSpikeStats'] = {'stats' : ['isicv'], 'saveFig' : True}
 
-cfg.analysis['plotTraces'] = {'include': cfg.allpops, 'timeRange': [0, cfg.duration],
-'oneFigPer': 'cell', 'overlay': True, 'saveFig': False, 'showFig': False, 'figSize':(12,8)}
+# cfg.analysis['plotTraces'] = {'include': cfg.allpops, 'timeRange': [0, cfg.duration],
+# 'oneFigPer': 'cell', 'overlay': True, 'saveFig': False, 'showFig': False, 'figSize':(12,8)}
 # cfg.analysis['plotTraces'] = {'include': cfg.allpops, 'timeRange': [100, 200],
 # 'oneFigPer': 'cell', 'overlay': True, 'saveFig': 'zoom', 'showFig': False, 'figSize':(12,8)}
 
-def setplotTraces (ncell=1, linclude=[]):
-  for pop in cfg.allpops:
+def setplotTraces (ncell=40, linclude=cfg.allpops, timeRange = cfg.duration):
+  pops = []
+  for pop in linclude:
     for i in range(ncell):
-      linclude.append( (pop,i) )
-  cfg.analysis['plotTraces'] = {'include': linclude, 'oneFigPer': 'trace', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
+      pops.append((pop,i))
+  cfg.analysis['plotTraces'] = {'include': linclude, 'timeRange' : timeRange, 'oneFigPer': 'trace', 'overlay': True, 'saveFig': False, 'showFig': False, 'figSize':(12,8)}
 
-# setplotTraces(ncell=5, linclude=cfg.allpops)
+setplotTraces(ncell=50, timeRange=[1750, 3000])
 
 layer_bounds = {'L1': 100, 'L2': 160, 'L3': 950, 'L4': 1250, 'L5A': 1334, 'L5B': 1550, 'L6': 2000}
 
@@ -175,7 +176,7 @@ for key, value in cfgLoad.items():
 
 
 # These values taken from M1 cfg (https://github.com/Neurosim-lab/netpyne/blob/development/examples/M1detailed/cfg.py)
-cfg.singleCellPops = True
+cfg.singleCellPops = False
 cfg.reducedPop = False # insert number to declare specific number of populations, if going for full model set to False
 cfg.singlePop = ''
 cfg.removeWeightNorm = False
@@ -338,7 +339,7 @@ cfg.injectionAmplitudes =  np.linspace(0.0, 0.6, 13)
 cfg.addNoiseConductance = 1
 
 cfg.OUamp = 50
-cfg.OUvar = 25
+cfg.OUvar = 50
 cfg.NoiseConductanceStart = 500
 cfg.NoiseConductanceDur = cfg.duration
 

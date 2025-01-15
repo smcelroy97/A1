@@ -473,5 +473,5 @@ for pop_ind, pop in enumerate(plotPops):
   plt.ylim([-110, 50])
   plt.xlim([min(t_vector_), max(t_vector_)])
   # plt.plot(mean_v,'k')
-  plt.savefig(sim.cfg.saveFolder + '/' + sim.cfg.simLabel + '_mean_traces__' + pop + '.png')
+  plt.savefig(sim.cfg.saveFolder + '/' + sim.cfg.simLabel + '_mean_traces_' + pop + '.png')
   '''

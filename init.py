@@ -27,8 +27,7 @@ import os
 
 comm.initialize()
 
-sim.initialize(simConfig = cfg,
-               netParams = netParams)  		# create network object and set cfg and net params
+sim.initialize(simConfig = cfg, netParams = netParams)  		# create network object and set cfg and net params
 sim.net.createPops()               			# instantiate network populations
 sim.net.createCells()              			# instantiate network cells based on defined populations
 
@@ -116,24 +115,16 @@ sim.saveData()
 sim.analysis.plotData()    # plot spike raster etc
 
 plotPops = sim.cfg.allpops
-rmpPops  = {}
+
 for pop_ind, pop in enumerate(plotPops):
   print('\n\n', pop)
-  # sim.analysis.plotTraces(
   figs, traces_dict = sim.analysis.plotTraces(
     include=[pop],
-    # include=[record_pops[pop_ind]],
-    # timeRange=[2500, 3000],
-    # overlay=True, oneFigPer='trace',
-    # ylim=[-90, -40],
     axis=True,
-    # figSize=(70, 15),
-    figSize=(25, 15),
-    # figSize=(60, 18),
+    figSize=(18, 15),
     fontSize=15,
     saveFig=False
-    # # saveFig=sim.cfg.saveFigPath+'/'+sim.cfg.filename+'_traces_'+pop+ '.png'
-    # saveFig=sim.cfg.saveFolder + '/' + sim.cfg.simLabel + '_traces__' + pop + '.png'
+    # saveFig=sim.cfg.saveFigPath+'/'+sim.cfg.filename+'_traces_'+pop+ '.png'
   )
   tracesData = traces_dict['tracesData']
   # store_v={}
@@ -150,8 +141,9 @@ for pop_ind, pop in enumerate(plotPops):
   t_vector = list(tracesData[0]['t'])
   mean_v = np.mean(store_v, axis=0)
   t_vector_ = [t_vector[i] for i in range(len(mean_v))]
-  plt.figure(figsize=(70, 15))
+  plt.figure(figsize=(20, 15))
   for trace in store_v: plt.plot(t_vector_, trace, 'gray', alpha=0.2)
+  plt.title(pop)
   plt.plot(t_vector_, mean_v, 'r')
   plt.ylim([-110, 50])
   plt.xlim([min(t_vector_), max(t_vector_)])
@@ -171,9 +163,8 @@ for idx, pop in enumerate(cfg.allpops):
   newOUmap[pop]['rate'] = avgRates[pop]
   newOUmap[pop]['isicv'] = np.mean(spikesDict['statData'][idx])
 
-
 append_to_json('../A1/simOutput/OUmapping.json', newOUmap)
-# append_to_json('data/rmpPops.json', rmpPops)
+
 # Terminate batch process
 if comm.is_host():
   netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))

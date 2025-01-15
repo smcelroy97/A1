@@ -33,7 +33,8 @@ plotMUA = False
 batch = 'GABAB_KO1003'  # Name of batch for fig saving
 
 # Load sim EEG data
-base_dir = '/Users/scoot/A1ProjData/A1_sim_data/' + batch + '/'  # Define dir from saved data dir
+# base_dir = '/Users/scoot/A1ProjData/A1_sim_data/' + batch + '/'  # Define dir from saved data dir
+base_dir = '/Users/scoot/A1/simOutput/gClampamp50Base/'
 figure_dir = '/Users/scoot/A1ProjData/A1_figs/SIMfigs/' # Define dir for saving figures
 
 nmda_per_file = {}
@@ -42,7 +43,7 @@ for file in os.listdir(base_dir):
     if file.endswith('_data.pkl') or file.endswith('_data.json'): # make sure you only download output data
 
         sim.initialize()
-        all = sim.loadAll(os.path.join(base_dir, file))  # Valery did this and fixed some problems, not sure why necessary
+        all = sim.loadAll(os.path.join(base_dir, file), instantiate=False)  # Valery did this and fixed some problems, not sure why necessary
         fname = file[0:-9] # Create filename (can change to whatever)
         if not os.path.exists(figure_dir + batch):
             os.mkdir(figure_dir + batch)  # Create Figure directory if one doesn't already exist
