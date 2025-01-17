@@ -1,11 +1,11 @@
 from netpyne.batchtools.search import search
 import numpy as np
 
-label = 'v45_batch4'
+label = 'v45_batch4a'
 
 params = {
-    'OUamp': np.linspace(20, 25, 1),
-    'OUvar': np.linspace(20, 25, 1)}
+    'OUamp': np.linspace(1, 5, 10),
+    'OUvar': np.linspace(1, 5, 10)}
 
 # use batch_shell_config if running directly on the machine
 shell_config = {'command': 'mpiexec -np 4 nrniv -python -mpi init.py'}
