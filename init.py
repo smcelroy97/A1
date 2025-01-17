@@ -116,7 +116,7 @@ sim.saveData()
 sim.analysis.plotData()    # plot spike raster etc
 
 # simPlotting.plotMeanTraces(sim, cellsPerPop = 5, plotPops=sim.cfg.allpops)
-spikeFig, spikesDict = sim.analysis.plotSpikeStats(saveFig=False)
+spikesDict = simPlotting.spikeStats(sim, stats=['isicv'])
 
 newOUmap = {
     'OUamp': sim.cfg.OUamp,

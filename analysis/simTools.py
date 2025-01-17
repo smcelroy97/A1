@@ -338,6 +338,12 @@ class simPlotting:
             plt.xlim([min(t_vector_), max(t_vector_)])
             plt.savefig(sim.cfg.saveFolder + '/' + sim.cfg.simLabel + '_mean_traces_' + pop + '.png')
 
+    def spikeStats(sim, stats):
+
+        statFig, statDict = sim.analysis.plotSpikeStats(stats = ['isicv'], savefig = False, showfig =False)
+
+        return statDict
+
 
 #########################################################################
 #    Funcitons for editing a network after cells and conns are made     #
