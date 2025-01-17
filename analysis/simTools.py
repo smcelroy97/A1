@@ -11,7 +11,7 @@ from    matplotlib  import  pyplot  as plt
 #########################################################################
 #    Funcitons for analysis, code to use found in simEEGplotting.py     #
 #########################################################################
-class simTools:
+class simPlotting:
     def calculateEEG(
             sim,
             start,
@@ -306,6 +306,38 @@ class simTools:
         plt.legend(fontsize = 30)
         plt.savefig(save_dir + '_MUA.png')
 
+    def plotMeanTraces(sim, cellsPerPop, plotPops):
+        record_pops = [(pop, list(np.arange(0, cellsPerPop))) for pop in plotPops]
+        for pop_ind, pop in enumerate(plotPops):
+            print('\n\n', pop)
+            figs, traces_dict = sim.analysis.plotTraces(
+                include=[record_pops[pop_ind]],
+                axis=True,
+                figSize=(18, 15),
+                fontSize=15,
+                saveFig=False
+            )
+            tracesData = traces_dict['tracesData']
+            store_v = []
+            store_voltages = {}
+            for rec_ind in range(len(tracesData)):
+                for trace in tracesData[rec_ind].keys():
+                    if '_V_soma' in trace:
+                        cell_gid_str = trace.split('_V_soma')[0].split('cell_')[1]
+                        store_v.append(list(tracesData[rec_ind][trace]))
+                        store_voltages.update({cell_gid_str: list(tracesData[rec_ind][trace])})
+
+            t_vector = list(tracesData[0]['t'])
+            mean_v = np.mean(store_v, axis=0)
+            t_vector_ = [t_vector[i] for i in range(len(mean_v))]
+            plt.figure(figsize=(20, 15))
+            for trace in store_v: plt.plot(t_vector_, trace, 'gray', alpha=0.2)
+            plt.title(pop)
+            plt.plot(t_vector_, mean_v, 'r')
+            plt.ylim([-110, 50])
+            plt.xlim([min(t_vector_), max(t_vector_)])
+            plt.savefig(sim.cfg.saveFolder + '/' + sim.cfg.simLabel + '_mean_traces_' + pop + '.png')
+
 
 #########################################################################
 #    Funcitons for editing a network after cells and conns are made     #
@@ -427,18 +459,16 @@ class editNet:
 
 ################## Snippet for mean voltage trace plotting ##################################################
 '''
-plotPops = ['TC', 'IRE']
-try:
-  record_pops = [(pop, list(np.arange(0, netParams.popParams[pop]['numCells']))) for pop in plotPops]
-except:
-  record_pops = [(pop, list(np.arange(0, 40))) for pop in plotPops]
+
+cellsPerPop = 5
+record_pops = [(pop, list(np.arange(0, cellsPerPop))) for pop in plotPops]
 
 for pop_ind, pop in enumerate(plotPops):
   print('\n\n', pop)
   # sim.analysis.plotTraces(
   figs, traces_dict = sim.analysis.plotTraces(
-    include=[pop],
-    # include=[record_pops[pop_ind]],
+    # include=[pop],
+    include=[record_pops[pop_ind]],
     # timeRange=[490,550],
     overlay=True, oneFigPer='trace',
     ylim=[-110, 50],

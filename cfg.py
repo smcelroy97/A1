@@ -112,14 +112,14 @@ cfg.analysis['plotSpikeStats'] = {'stats' : ['isicv'], 'saveFig' : True}
 # cfg.analysis['plotTraces'] = {'include': cfg.allpops, 'timeRange': [100, 200],
 # 'oneFigPer': 'cell', 'overlay': True, 'saveFig': 'zoom', 'showFig': False, 'figSize':(12,8)}
 
-def setplotTraces (ncell=40, linclude=cfg.allpops, timeRange = cfg.duration):
+def setplotTraces (ncell=50, linclude=cfg.allpops, timeRange = cfg.duration):
   pops = []
   for pop in linclude:
     for i in range(ncell):
       pops.append((pop,i))
   cfg.analysis['plotTraces'] = {'include': linclude, 'timeRange' : timeRange, 'oneFigPer': 'trace', 'overlay': True, 'saveFig': False, 'showFig': False, 'figSize':(12,8)}
 
-setplotTraces(ncell=50, timeRange=[1750, 3000])
+setplotTraces(ncell=5, timeRange=[1750, 3000])
 
 layer_bounds = {'L1': 100, 'L2': 160, 'L3': 950, 'L4': 1250, 'L5A': 1334, 'L5B': 1550, 'L6': 2000}
 

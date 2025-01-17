@@ -3,7 +3,7 @@ from netpyne import sim
 from netpyne.plotting import plotCSDPSD
 from netpyne.support.morlet import MorletSpec, index2ms
 from netpyne.analysis import spikes_legacy
-from simTools import simTools
+from simTools import simPlotting
 import os
 import numpy as np
 from scipy import signal
@@ -52,7 +52,7 @@ for file in os.listdir(base_dir):
 
 
         if calcEEG:
-            stim_data, stim_window = simTools.calculateEEG(
+            stim_data, stim_window = simPlotting.calculateEEG(
                     sim   = sim,
                     start = calcEEG['start'],
                     end   = calcEEG['stop']
@@ -64,7 +64,7 @@ for file in os.listdir(base_dir):
 
         # Filter EEG data
         if filter:
-            filtered_data = simTools.filterEEG(
+            filtered_data = simPlotting.filterEEG(
                     EEG     = stim_data,
                     lowcut  = filter['lowCut'],
                     highcut = filter['hiCut'],
@@ -75,14 +75,14 @@ for file in os.listdir(base_dir):
         # Plot ERP '
         if plotERP:
             if plotERP['useFilter'] == True:
-                simTools.plotERP(
+                simPlotting.plotERP(
                     data     = filtered_data,
                     time     = stim_window,
                     save_dir = save_dir
                 )  # Create filtered ERP plot of time window specified
 
             else:
-                simTools.plotERP(
+                simPlotting.plotERP(
                     data     = stim_data,
                     time     = t,
                     save_dir = save_dir
@@ -91,14 +91,14 @@ for file in os.listdir(base_dir):
         # Plot EEG Spectrogram
         if plotSpectrogram:
             if plotSpectrogram['useFilter'] == True:
-                simTools.plot_spectrogram(
+                simPlotting.plot_spectrogram(
                     data     = filtered_data,
                     time     = t,
                     save_dir = save_dir
                 )
 
             else:
-                simTools.plot_spectrogram(
+                simPlotting.plot_spectrogram(
                     data     = stim_data,
                     time     = t,
                     save_dir = save_dir
@@ -107,13 +107,13 @@ for file in os.listdir(base_dir):
         # Plot EEG PSD
         if plotPSD:
             if plotPSD['useFilter'] == True:
-                simTools.plot_PSD(
+                simPlotting.plot_PSD(
                     data     = filtered_data,
                     save_dir = save_dir
                 )
 
             else:
-                simTools.plot_PSD(
+                simPlotting.plot_PSD(
                     data     = stim_data,
                     save_dir = save_dir
                 )
@@ -131,7 +131,7 @@ for file in os.listdir(base_dir):
 
 
         if PSDSpect:
-            simTools.plotPSDSpectrogram(
+            simPlotting.plotPSDSpectrogram(
                     sim       = sim,
                     save_dir  = save_dir,
                     timeRange = PSDSpect['timeRange'],
@@ -148,7 +148,7 @@ for file in os.listdir(base_dir):
             for i in range(sim.cfg.numInjections):
                 starts.append(i * sim.cfg.injectionInterval)
             for pop in pops:
-                simTools.plotMUApops(
+                simPlotting.plotMUApops(
                         sim             = sim,
                         populations     = [pop],
                         bin_start_times = starts,
