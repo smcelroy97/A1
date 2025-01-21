@@ -20,12 +20,12 @@ plotRaster = {'timeRange': [0, 2000]}
 # PSDSpect = {'timeRange': [3000, 4000], 'useLFP': False, 'useCSD': True}
 # plotMUA = {'stimDur': 1000}
 
-calcEEG = False
-filter = False
-plotERP = False
+# calcEEG = False
+# filter = False
+# plotERP = False
 plotSpectrogram = False
 plotPSD = False
-# plotRaster = False
+plotRaster = False
 PSDSpect = False
 plotMUA = False
 
