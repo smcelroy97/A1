@@ -250,7 +250,7 @@ for post in preWeights.keys():
             'postConds': {'pop': post},
             'sec': 'soma',
             'synMech': synMech,
-                'weight': wmat[prePop][post],
-                'synsPerConn': 1,
-                'delay': 0.5
+            'weight': wmat[prePop][post],
+            'synsPerConn': 1,
+            'delay': 0.5
             }

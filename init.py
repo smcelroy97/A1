@@ -50,18 +50,21 @@ setdminID(sim, cfg.allpops)
 
 # updating a json with result values because the current batchtools format generates a big string of results
 def append_to_json(file_path, new_data):
+
   # Check if the file exists
   if os.path.exists(file_path):
+
     # Read the existing data
     with open(file_path, 'r') as file:
       data = json.load(file)
   else:
+
     # Initialize an empty list if the file does not exist
     data = {}
 
   # Append the new data
   data[sim.cfg.simLabel] = new_data
-  # data = new_data
+
   # Write the updated data back to the file
   with open(file_path, 'w') as file:
     json.dump(data, file)
@@ -97,26 +100,29 @@ if cfg.cochlearThalInput: setCochCellLocationsX(
 )
 
 
-sim.net.connectCells()            			# create connections between cells based on params
-sim.net.addStims() 							# add network stimulation
+sim.net.connectCells()      # create connections between cells based on params
+sim.net.addStims() 			# add network stimulation
 
 ################################
 # - Adding OU Noise Stims for each Cell -#
 # ###############################
 
 if sim.cfg.addNoiseConductance:
-  sim, vecs_dict = BS.addStim.addNoiseGClamp(sim)
+  sim, vecs_dict = (
+    BS.addStim.addNoiseGClamp(sim)
+  )
 
 
 
-sim.setupRecording()              	 		# setup variables to record for each cell (spikes, V traces, etc)
-sim.runSim()                                    # run parallel Neuron simulation
+sim.setupRecording()       # setup variables to record for each cell (spikes, V traces, etc)
+sim.runSim()               # run parallel Neuron simulation
 sim.gatherData()
 sim.saveData()
 sim.analysis.plotData()    # plot spike raster etc
 
-# simPlotting.plotMeanTraces(sim, cellsPerPop = 5, plotPops=sim.cfg.allpops)
-spikesDict = simPlotting.spikeStats(sim, stats=['isicv'])
+
+figs, spikesDict = simPlotting.spikeStats(stats = ['isicv'], saveFig = False)
+
 
 newOUmap = {
     'OUamp': sim.cfg.OUamp,
@@ -127,7 +133,7 @@ avgRates = sim.analysis.popAvgRates(tranges=[2000, 3000], show=False)
 for idx, pop in enumerate(cfg.allpops):
   newOUmap[pop] = {}
   newOUmap[pop]['rate'] = avgRates[pop]
-  newOUmap[pop]['isicv'] = np.mean(spikesDict['statData'][idx])
+  newOUmap[pop]['isicv'] = np.mean(spikesDict['statData'][idx+1])
 
 append_to_json('../A1/simOutput/OUmapping.json', newOUmap)
 
