@@ -99,7 +99,6 @@ if cfg.cochlearThalInput: setCochCellLocationsX(
   cfg.sizeX
 )
 
-
 sim.net.connectCells()      # create connections between cells based on params
 sim.net.addStims() 			# add network stimulation
 
@@ -112,30 +111,11 @@ if sim.cfg.addNoiseConductance:
     BS.addStim.addNoiseGClamp(sim)
   )
 
-
-
 sim.setupRecording()       # setup variables to record for each cell (spikes, V traces, etc)
 sim.runSim()               # run parallel Neuron simulation
 sim.gatherData()
 sim.saveData()
 sim.analysis.plotData()    # plot spike raster etc
-
-
-figs, spikesDict = simPlotting.spikeStats(stats = ['isicv'], saveFig = False)
-
-
-newOUmap = {
-    'OUamp': sim.cfg.OUamp,
-    'OUvar': sim.cfg.OUvar
-}
-avgRates = sim.analysis.popAvgRates(tranges=[2000, 3000], show=False)
-
-for idx, pop in enumerate(cfg.allpops):
-  newOUmap[pop] = {}
-  newOUmap[pop]['rate'] = avgRates[pop]
-  newOUmap[pop]['isicv'] = np.mean(spikesDict['statData'][idx+1])
-
-append_to_json('../A1/simOutput/OUmapping.json', newOUmap)
 
 # Terminate batch process
 if comm.is_host():
@@ -146,7 +126,20 @@ if comm.is_host():
   results['loss'] = 700
   out_json = json.dumps({**inputs, **results})
 
-  print(out_json)
+  figs, spikesDict = simPlotting.spikeStats(stats=['isicv'], saveFig=False)
+
+  newOUmap = {
+    'OUamp': sim.cfg.OUamp,
+    'OUvar': sim.cfg.OUvar
+  }
+  avgRates = sim.analysis.popAvgRates(tranges=[2000, 3000], show=False)
+
+  for idx, pop in enumerate(cfg.allpops):
+    newOUmap[pop] = {}
+    newOUmap[pop]['rate'] = avgRates[pop]
+    newOUmap[pop]['isicv'] = np.mean(spikesDict['statData'][idx + 1])
+
+  append_to_json('../A1/simOutput/OUmapping.json', newOUmap)
 
   comm.send(out_json)
   comm.close()
