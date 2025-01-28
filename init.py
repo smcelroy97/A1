@@ -114,6 +114,7 @@ if sim.cfg.addNoiseConductance:
 sim.setupRecording()       # setup variables to record for each cell (spikes, V traces, etc)
 sim.runSim()               # run parallel Neuron simulation
 sim.gatherData()
+sim.pc.barrier
 sim.saveData()
 sim.analysis.plotData()    # plot spike raster etc
 
@@ -126,7 +127,8 @@ if comm.is_host():
   results['loss'] = 700
   out_json = json.dumps({**inputs, **results})
 
-  figs, spikesDict = simPlotting.spikeStats(stats=['isicv'], saveFig=False)
+  figs, spikesDict = sim.analysis.plotSpikeStats(stats=['isicv', 'rate'], saveFig=False)
+  print(spikesDict)
 
   newOUmap = {
     'OUamp': sim.cfg.OUamp,

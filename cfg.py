@@ -75,7 +75,7 @@ cfg.recordTraces = {'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'}
 }
 cfg.recordStim = False  # Seen in M1 cfg.py
 cfg.recordTime = True  # SEen in M1 cfg.py
-cfg.recordStep =   0.5 #KEEP FOR GOOD FIGS - 0.05  # St ep size (in ms) to save data -- value from M1 cfg.py
+cfg.recordStep =  0.05  # St ep size (in ms) to save data -- value from M1 cfg.py
 
 cfg.recordLFP = False # [[100, y, 100] for y in range(0, 2000, 100)]
 cfg.recordDipole = False
