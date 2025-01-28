@@ -80,14 +80,12 @@ def setCochCellLocationsX (pop, sz, scale):
       if sidx == -1: sidx = idx # start index
       ncellinrange += 1
   if sidx > -1: offset += sidx
-  # print('setCochCellLocations: sidx, offset, ncellinrange = ', sidx, offset, ncellinrange)
   for c in sim.net.cells:
     if c.gid in sim.net.pops[pop].cellGids:
       cf = netParams.cf[c.gid-sim.simData['dminID'][pop]]
       if cf >= cfg.cochThalFreqRange[0] and cf <= cfg.cochThalFreqRange[1]:
         c.tags['x'] = cellx = scale * (cf - cfg.cochThalFreqRange[0])/(cfg.cochThalFreqRange[1]-cfg.cochThalFreqRange[0])
         c.tags['xnorm'] = cellx / netParams.sizeX # make sure these values consistent
-        # print('gid,cellx,xnorm,cf=',c.gid,cellx,cellx/netParams.sizeX,cf)
       else:
         c.tags['x'] = cellx = 100000000  # put it outside range for core
         c.tags['xnorm'] = cellx / netParams.sizeX # make sure these values consistent
@@ -128,8 +126,6 @@ if comm.is_host():
   out_json = json.dumps({**inputs, **results})
 
   figs, spikesDict = sim.analysis.plotSpikeStats(stats=['isicv', 'rate'], saveFig=False)
-  print(spikesDict)
-
   newOUmap = {
     'OUamp': sim.cfg.OUamp,
     'OUvar': sim.cfg.OUvar
