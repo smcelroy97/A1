@@ -101,7 +101,7 @@ cfg.saveCellConns = False
 cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig': False, 'orderInverse': True, 'figSize': (25, 25),
                               'markerSize': 1}   # Plot a raster
 
-cfg.analysis['plotSpikeStats'] = {'stats' : ['isicv'], 'saveFig' : True}
+# cfg.analysis['plotSpikeStats'] = {'stats' : ['isicv'], 'saveFig' : True}
 
 # cfg.analysis['plotTraces'] = {'include': cfg.allpops, 'timeRange': [0, cfg.duration],
 # 'oneFigPer': 'cell', 'overlay': True, 'saveFig': False, 'showFig': False, 'figSize':(12,8)}
