@@ -116,7 +116,7 @@ sim.pc.barrier
 sim.saveData()
 sim.analysis.plotData()    # plot spike raster etc
 
-simPlotting.plotMeanTraces(sim, cellsPerPop=100, plotPops = sim.cfg.allpops)
+# simPlotting.plotMeanTraces(sim, cellsPerPop=100, plotPops = sim.cfg.allpops)
 
 # Terminate batch process
 if comm.is_host():

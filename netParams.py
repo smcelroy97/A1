@@ -766,7 +766,7 @@ if cfg.addNoiseConductance:
     for pop in cfg.allpops:
         Gin = 1 / inpRes[pop]
         g0 = (cfg.OUamp / 100) * Gin
-        sigma = ((0.1* cfg.OUamp) / 100) * Gin
+        sigma = (cfg.OUstd/ 100) * Gin
         # print('pop is: '  + pop + ' Input resistance is: ' + str(inpRes[pop]) + ' input conductance is: ' + str(Gin) + '   g0 is:  ' + str(g0))
         netParams.NoiseConductanceParams[pop] = {
             'g0': g0,

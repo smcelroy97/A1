@@ -54,6 +54,7 @@ class addStim():
         # svec = abs(svec)
         # print('fuck you')
 
+
         if plotFig:
             import matplotlib.pyplot as plt
             plt.figure(figsize=(30, 5))
@@ -91,14 +92,20 @@ class addStim():
                         dt=0.05,
                         seed=cell_seed,
                         plotFig=False)
+                    use_vector = True
+                    for val in svec:
+                        if val < 0.0:
+                            use_vector = False
+                            break
+                    if use_vector == False:
+                        print('Negative Resistance generated for cell ' + str(cell_ind) + ' from the pop ' + cell.tags['pop'])
+                    else:
+                        vecs_dict[cell_ind]['tvecs'].update({stim_ind: tvec})
+                        vecs_dict[cell_ind]['svecs'].update({stim_ind: svec})
+                        conductance_source = sim.net.cells[cell_ind].stims[stim_ind]['hObj']
 
-                    vecs_dict[cell_ind]['tvecs'].update({stim_ind: tvec})
-                    vecs_dict[cell_ind]['svecs'].update({stim_ind: svec})
-                    conductance_source = sim.net.cells[cell_ind].stims[stim_ind]['hObj']
-
-                    # Play the vector into the rs variable of the ConductanceSource object
-                    vecs_dict[cell_ind]['svecs'][stim_ind].play(conductance_source._ref_rs, vecs_dict[cell_ind]['tvecs'][stim_ind], True)
-
+                        # Play the vector into the rs variable of the ConductanceSource object
+                        vecs_dict[cell_ind]['svecs'][stim_ind].play(conductance_source._ref_rs, vecs_dict[cell_ind]['tvecs'][stim_ind], True)
         return sim, vecs_dict
 
 
