@@ -116,7 +116,7 @@ netParams.popParams['PV5A'] =     {'cellType': 'PV',  'cellModel': 'HH_reduced',
 netParams.popParams['VIP5A'] =    {'cellType': 'VIP', 'cellModel': 'HH_reduced',    'ynormRange': layer['5A'],   'density': density[('A1','VIP')][3]}
 netParams.popParams['NGF5A'] =    {'cellType': 'NGF', 'cellModel': 'HH_reduced',    'ynormRange': layer['5A'],   'density': density[('A1','nonVIP')][3]}
 
-### LAYER 5B:
+## LAYER 5B:
 netParams.popParams['IT5B'] =     {'cellType': 'IT',  'cellModel': 'HH_reduced',   'ynormRange': layer['5B'], 	'density': (1/3)*density[('A1','E')][4]}
 netParams.popParams['CT5B'] =     {'cellType': 'CT',  'cellModel': 'HH_reduced',   'ynormRange': layer['5B'],   'density': (1/3)*density[('A1','E')][4]}  # density is [5] because we are using same numbers for L5B and L6 for CT cells?
 netParams.popParams['PT5B'] =     {'cellType': 'PT',  'cellModel': 'HH_reduced',   'ynormRange': layer['5B'], 	'density': (1/3)*density[('A1','E')][4]}
@@ -766,7 +766,7 @@ if cfg.addNoiseConductance:
     for pop in cfg.allpops:
         Gin = 1 / inpRes[pop]
         g0 = (cfg.OUamp / 100) * Gin
-        sigma = (cfg.OUvar / 100) * Gin
+        sigma = ((0.1* cfg.OUamp) / 100) * Gin
         # print('pop is: '  + pop + ' Input resistance is: ' + str(inpRes[pop]) + ' input conductance is: ' + str(Gin) + '   g0 is:  ' + str(g0))
         netParams.NoiseConductanceParams[pop] = {
             'g0': g0,

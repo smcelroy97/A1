@@ -5,7 +5,7 @@ import numpy as np
 # adapted from: https://github.com/BlueBrain/neurodamus/blob/2c7052096c22fb5183fdef120d080608748da48d/neurodamus/core/stimuli.py#L271
 class addStim():
     @staticmethod
-    def add_ornstein_uhlenbeck(tau, sigma, mean, duration, dt=0.025, seed=100000, plotFig=False):
+    def add_ornstein_uhlenbeck(tau, sigma, mean, duration, dt=0.025, seed=100000, plotFig=True):
         from neuron import h
         import numpy as np
 
@@ -51,14 +51,8 @@ class addStim():
                 svec.x[n] = svec[n - 1] * mu + noise[n]  # signal [uS]
 
         svec.add(mean)  # shift signal by mean value [uS]
-        svec = abs(svec)
-        for idx, val in enumerate(svec):
-            if val < 0:
-                print('original value is ' + str(val))
-                svec[idx] = 0
-                print('value is now ' + str(val))
-
-
+        # svec = abs(svec)
+        # print('fuck you')
 
         if plotFig:
             import matplotlib.pyplot as plt
@@ -105,11 +99,6 @@ class addStim():
                     # Play the vector into the rs variable of the ConductanceSource object
                     vecs_dict[cell_ind]['svecs'][stim_ind].play(conductance_source._ref_rs, vecs_dict[cell_ind]['tvecs'][stim_ind], True)
 
-
-                    # vecs_dict[cell_ind]['svecs'][stim_ind].play(
-                    #     sim.net.cells[cell_ind].stims[stim_ind]['hObj']._ref_rs, vecs_dict[cell_ind]['tvecs'][stim_ind],
-                    #     True
-                    # )
         return sim, vecs_dict
 
 

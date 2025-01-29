@@ -114,7 +114,7 @@ def setplotTraces (ncell=50, linclude=cfg.allpops, timeRange = cfg.duration):
       pops.append((pop,i))
   cfg.analysis['plotTraces'] = {'include': linclude, 'timeRange' : timeRange, 'oneFigPer': 'trace', 'overlay': True, 'saveFig': False, 'showFig': False, 'figSize':(12,8)}
 
-# setplotTraces(ncell=5, timeRange=[1750, 3000])
+setplotTraces(ncell=1, timeRange=[1750, 3000])
 
 layer_bounds = {'L1': 100, 'L2': 160, 'L3': 950, 'L4': 1250, 'L5A': 1334, 'L5B': 1550, 'L6': 2000}
 
@@ -333,8 +333,8 @@ cfg.injectionAmplitudes =  np.linspace(0.0, 0.6, 13)
 
 cfg.addNoiseConductance = 1
 
-cfg.OUamp = 50
-cfg.OUvar = 50
+cfg.OUamp = 100
+cfg.OUstd = 0.2 * cfg.OUamp
 cfg.NoiseConductanceStart = 500
 cfg.NoiseConductanceDur = cfg.duration
 

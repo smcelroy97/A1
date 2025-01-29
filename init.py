@@ -100,9 +100,9 @@ if cfg.cochlearThalInput: setCochCellLocationsX(
 sim.net.connectCells()      # create connections between cells based on params
 sim.net.addStims() 			# add network stimulation
 
-################################
+##########################################
 # - Adding OU Noise Stims for each Cell -#
-# ###############################
+##########################################
 
 if sim.cfg.addNoiseConductance:
   sim, vecs_dict = (
@@ -116,6 +116,8 @@ sim.pc.barrier
 sim.saveData()
 sim.analysis.plotData()    # plot spike raster etc
 
+simPlotting.plotMeanTraces(sim, cellsPerPop=100, plotPops = sim.cfg.allpops)
+
 # Terminate batch process
 if comm.is_host():
   netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
@@ -128,7 +130,7 @@ if comm.is_host():
   figs, spikesDict = sim.analysis.plotSpikeStats(stats=['isicv', 'rate'], saveFig=False)
   newOUmap = {
     'OUamp': sim.cfg.OUamp,
-    'OUvar': sim.cfg.OUvar
+    'OUvar': sim.cfg.OUstd
   }
   avgRates = sim.analysis.popAvgRates(tranges=[2000, 3000], show=False)
 
