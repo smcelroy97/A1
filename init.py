@@ -23,7 +23,9 @@ from netParams import netParams, cfg
 from analysis.simTools import simPlotting
 import numpy as np
 import BackgroundStim as BS
+import pandas as pd
 import json
+import pickle
 import os
 
 comm.initialize()
@@ -127,19 +129,53 @@ if comm.is_host():
   results['loss'] = 700
   out_json = json.dumps({**inputs, **results})
 
-  figs, spikesDict = sim.analysis.plotSpikeStats(stats=['isicv', 'rate'], saveFig=False)
-  newOUmap = {
-    'OUamp': sim.cfg.OUamp,
-    'OUvar': sim.cfg.OUstd
-  }
   avgRates = sim.analysis.popAvgRates(tranges=[2000, 3000], show=False)
+  figs, spikesDict = sim.analysis.plotSpikeStats(stats=['isicv', 'rate'], saveFig=False)
 
+  # Define the file path for the pickle file
+  pickle_file_path = '../A1/simOutput/OUmapping.pkl'
+
+  # Ensure sim.cfg.OUamp and sim.cfg.OUstd are list-like
+  ouamp_list = sim.cfg.OUamp if isinstance(sim.cfg.OUamp, (list, np.ndarray)) else [sim.cfg.OUamp]
+  oustd_list = sim.cfg.OUstd if isinstance(sim.cfg.OUstd, (list, np.ndarray)) else [sim.cfg.OUstd]
+
+  # Load the existing dictionaries from the pickle file if it exists
+  if os.path.exists(pickle_file_path):
+    with open(pickle_file_path, 'rb') as file:
+      pop_dataframes = pickle.load(file)
+      rate_dataframes = pop_dataframes['rate']
+      isicv_dataframes = pop_dataframes['isicv']
+  else:
+    # Initialize dictionaries to store DataFrames for each population
+    rate_dataframes = {pop: pd.DataFrame(index=oustd_list, columns=ouamp_list) for pop in cfg.allpops}
+    isicv_dataframes = {pop: pd.DataFrame(index=oustd_list, columns=ouamp_list) for pop in cfg.allpops}
+
+    # Set the names of the rows and columns
+    for df in rate_dataframes.values():
+      df.index.name = 'OUstd'
+      df.columns.name = 'OUamp'
+    for df in isicv_dataframes.values():
+      df.index.name = 'OUstd'
+      df.columns.name = 'OUamp'
+
+  # Populate the DataFrames with firing rates and isicv values
   for idx, pop in enumerate(cfg.allpops):
-    newOUmap[pop] = {}
-    newOUmap[pop]['rate'] = avgRates[pop]
-    newOUmap[pop]['isicv'] = np.mean(spikesDict['statData'][idx + 1])
+    for ouamp in ouamp_list:
+      for oustd in oustd_list:
+        if ouamp not in rate_dataframes[pop].columns:
+          rate_dataframes[pop][ouamp] = np.nan
+          isicv_dataframes[pop][ouamp] = np.nan
 
-  append_to_json('../A1/simOutput/OUmapping.json', newOUmap)
+        if oustd not in rate_dataframes[pop].index:
+          rate_dataframes[pop].loc[oustd] = np.nan
+          isicv_dataframes[pop].loc[oustd] = np.nan
+
+        rate_dataframes[pop].at[oustd, ouamp] = avgRates[pop]
+        isicv_dataframes[pop].at[oustd, ouamp] = np.mean(spikesDict['statData'][idx + 1])
+
+  # Save the updated dictionaries to the pickle file
+  with open(pickle_file_path, 'wb') as file:
+    pickle.dump({'rate': rate_dataframes, 'isicv': isicv_dataframes}, file)
 
   comm.send(out_json)
   comm.close()

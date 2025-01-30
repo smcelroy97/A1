@@ -98,7 +98,7 @@ cfg.saveCellConns = False
 # Analysis and plotting
 # ------------------------------------------------------------------------------
 
-cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig': False, 'orderInverse': True, 'figSize': (25, 25),
+cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': False, 'showFig': False, 'orderInverse': True, 'figSize': (25, 25),
                               'markerSize': 1}   # Plot a raster
 
 # cfg.analysis['plotSpikeStats'] = {'stats' : ['isicv'], 'saveFig' : True}
@@ -168,7 +168,6 @@ with open('data/initCfg.json', 'rb') as f:
 
 for key, value in cfgLoad.items():
     setattr(cfg, key, value)
-
 
 # These values taken from M1 cfg (https://github.com/Neurosim-lab/netpyne/blob/development/examples/M1detailed/cfg.py)
 cfg.singleCellPops = False
@@ -333,8 +332,8 @@ cfg.injectionAmplitudes =  np.linspace(0.0, 0.6, 13)
 
 cfg.addNoiseConductance = 1
 
-cfg.OUamp = 75
-cfg.OUstd = 30
+cfg.OUamp = 44
+cfg.OUstd = 12
 cfg.NoiseConductanceStart = 500
 cfg.NoiseConductanceDur = cfg.duration
 

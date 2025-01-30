@@ -1,7 +1,6 @@
 import json
 import numpy as np
 
-
 # adapted from: https://github.com/BlueBrain/neurodamus/blob/2c7052096c22fb5183fdef120d080608748da48d/neurodamus/core/stimuli.py#L271
 class addStim():
     @staticmethod
