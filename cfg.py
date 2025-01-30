@@ -171,7 +171,7 @@ for key, value in cfgLoad.items():
 
 
 # These values taken from M1 cfg (https://github.com/Neurosim-lab/netpyne/blob/development/examples/M1detailed/cfg.py)
-cfg.singleCellPops = True
+cfg.singleCellPops = False
 cfg.reducedPop = False # insert number to declare specific number of populations, if going for full model set to False
 cfg.singlePop = ''
 cfg.removeWeightNorm = False
@@ -334,7 +334,7 @@ cfg.injectionAmplitudes =  np.linspace(0.0, 0.6, 13)
 cfg.addNoiseConductance = 1
 
 cfg.OUamp = 75
-cfg.OUstd = 10
+cfg.OUstd = 30
 cfg.NoiseConductanceStart = 500
 cfg.NoiseConductanceDur = cfg.duration
 

@@ -8,7 +8,7 @@ class addStim():
     def add_ornstein_uhlenbeck(tau, sigma, mean, duration, dt=0.025, seed=100000, plotFig=True):
         from neuron import h
         import numpy as np
-
+        from math import sqrt, exp
         """
         Adds an Ornstein-Uhlenbeck process with given correlation time,
         standard deviation and mean value.
@@ -19,17 +19,9 @@ class addStim():
         duration: duration of signal [ms]
         dt: timestep [ms]
         """
-        from math import sqrt, exp
 
         """Creates a default RNG, currently based on ACG"""
         rng = h.Random(seed)
-
-        # rng = RNG()  # Creates a default RNG
-        # if not self._rng:
-        #     logging.warning("Using a default RNG for Ornstein-Uhlenbeck process")
-
-        # tvec = h.Vector()
-        # tvec.indgen(self._cur_t, self._cur_t + duration, dt)  # time vector
         tvec = h.Vector(np.linspace(0, duration, int(duration / dt)))
         ntstep = len(tvec)  # total number of timesteps
 
@@ -51,9 +43,6 @@ class addStim():
                 svec.x[n] = svec[n - 1] * mu + noise[n]  # signal [uS]
 
         svec.add(mean)  # shift signal by mean value [uS]
-        # svec = abs(svec)
-        # print('fuck you')
-
 
         if plotFig:
             import matplotlib.pyplot as plt
@@ -77,7 +66,12 @@ class addStim():
         print('Creating Ornstein Uhlenbeck process to create noise conductance signal')
         import math
         vecs_dict = {}
+        pop_use_vector = {}
+
         for cell_ind, cell in enumerate(sim.net.cells):
+            pop = cell.tags['pop']
+            if pop not in pop_use_vector:
+                pop_use_vector[pop] = True
             vecs_dict.update({cell_ind: {'tvecs': {}, 'svecs': {}}})
             cell_seed = sim.cfg.seeds['stim']+ cell.gid
             for stim_ind, stim in enumerate(sim.net.cells[cell_ind].stims):
@@ -92,20 +86,23 @@ class addStim():
                         dt=0.05,
                         seed=cell_seed,
                         plotFig=False)
-                    use_vector = True
-                    for val in svec:
-                        if val < 0.0:
-                            use_vector = False
-                            break
-                    if use_vector == False:
+
+                    if any(val<0.0 for val in svec):
+                        pop_use_vector[pop] = False
                         print('Negative Resistance generated for cell ' + str(cell_ind) + ' from the pop ' + cell.tags['pop'])
+                        break
                     else:
                         vecs_dict[cell_ind]['tvecs'].update({stim_ind: tvec})
                         vecs_dict[cell_ind]['svecs'].update({stim_ind: svec})
-                        conductance_source = sim.net.cells[cell_ind].stims[stim_ind]['hObj']
 
-                        # Play the vector into the rs variable of the ConductanceSource object
+        for cell_ind, cell in enumerate(sim.net.cells):
+            pop = cell.tags['pop']
+            for stim_ind, stim in enumerate(sim.net.cells[cell_ind].stims):
+                if 'NoiseSEClamp' in stim['label']:
+                    if pop_use_vector.get(pop, True):  # Check the flag for the population
+                        conductance_source = sim.net.cells[cell_ind].stims[stim_ind]['hObj']
                         vecs_dict[cell_ind]['svecs'][stim_ind].play(conductance_source._ref_rs, vecs_dict[cell_ind]['tvecs'][stim_ind], True)
+
         return sim, vecs_dict
 
 
@@ -121,15 +118,8 @@ class addStim():
             cell_seed = sim.cfg.seeds['stim']+ cell.gid
             for stim_ind, stim in enumerate(sim.net.cells[cell_ind].stims):
                 if 'NoiseIClamp' in stim['label']:
-
-                    # try:
                     mean = sim.net.params.NoiseIClampParams[cell.tags['pop']]['g0']
                     variance = sim.net.params.NoiseIClampParams[cell.tags['pop']]['sigma']
-                    # print(cell.tags['pop'] + '      '  + str(variance) + '     ' + str(mean))
-                        # print('mean noise: ', mean, ' nA')
-                    # except:
-                    #     mean = 0
-                        # print('except mean noise: ', mean, ' nA')
 
                     tvec, svec = BackgroundStim.add_ornstein_uhlenbeck(
                         tau= 10,
