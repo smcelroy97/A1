@@ -777,7 +777,7 @@ if cfg.addNoiseConductance:
             netParams.stimSourceParams['NoiseSEClamp_source_'+pop] = {
                 'type': 'ConductanceSource',
                 'dur1': cfg.NoiseConductanceDur,
-                'amp1' : rmpPops[pop]
+                'amp1' : rmpPops[pop] + 10 #abs(rmpPops[pop] * 0.18)
             }
             netParams.stimTargetParams['NoiseSEClamp_target_'+pop] = {
                 'source': 'NoiseSEClamp_source_'+pop,

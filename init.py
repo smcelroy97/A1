@@ -118,7 +118,7 @@ sim.pc.barrier
 sim.saveData()
 sim.analysis.plotData()    # plot spike raster etc
 
-# simPlotting.plotMeanTraces(sim, cellsPerPop=100, plotPops = sim.cfg.allpops)
+simPlotting.plotMeanTraces(sim, cellsPerPop=100, plotPops = sim.cfg.allpops)
 
 # Terminate batch process
 if comm.is_host():
@@ -133,7 +133,7 @@ if comm.is_host():
   figs, spikesDict = sim.analysis.plotSpikeStats(stats=['isicv', 'rate'], saveFig=False)
 
   # Define the file path for the pickle file
-  pickle_file_path = '../A1/simOutput/OUmapping.pkl'
+  pickle_file_path = '../A1/simOutput/OUmappingp10.pkl'
 
   # Ensure sim.cfg.OUamp and sim.cfg.OUstd are list-like
   ouamp_list = sim.cfg.OUamp if isinstance(sim.cfg.OUamp, (list, np.ndarray)) else [sim.cfg.OUamp]

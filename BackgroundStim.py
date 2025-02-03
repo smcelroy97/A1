@@ -4,7 +4,7 @@ import numpy as np
 # adapted from: https://github.com/BlueBrain/neurodamus/blob/2c7052096c22fb5183fdef120d080608748da48d/neurodamus/core/stimuli.py#L271
 class addStim():
     @staticmethod
-    def add_ornstein_uhlenbeck(tau, sigma, mean, duration, dt=0.025, seed=100000, plotFig=True):
+    def add_ornstein_uhlenbeck(tau, sigma, mean, duration, dt=0.025, seed=100000, plotFig=False):
         from neuron import h
         import numpy as np
         from math import sqrt, exp
@@ -88,9 +88,11 @@ class addStim():
 
                     if any(val<0.0 for val in svec):
                         pop_use_vector[pop] = False
-                        print('Negative Resistance generated for cell ' + str(cell_ind) + ' from the pop ' + cell.tags['pop'])
                         break
                     else:
+                    # for idx, val in enumerate(svec):
+                    #     if val < 0.0:
+                    #         svec[idx] = 0.001
                         vecs_dict[cell_ind]['tvecs'].update({stim_ind: tvec})
                         vecs_dict[cell_ind]['svecs'].update({stim_ind: svec})
 
@@ -101,6 +103,10 @@ class addStim():
                     if pop_use_vector.get(pop, True):  # Check the flag for the population
                         conductance_source = sim.net.cells[cell_ind].stims[stim_ind]['hObj']
                         vecs_dict[cell_ind]['svecs'][stim_ind].play(conductance_source._ref_rs, vecs_dict[cell_ind]['tvecs'][stim_ind], True)
+        for pop in pop_use_vector:
+            if pop_use_vector[pop] == False:
+                print('Negative Resistance generated for ' + pop + '... Removing OU stim')
+
 
         return sim, vecs_dict
 
