@@ -40,8 +40,10 @@ class addStim():
             # Exact update formula (independent of dt) from Gillespie 1996
             for n in range(1, ntstep):
                 svec.x[n] = svec[n - 1] * mu + noise[n]  # signal [uS]
+            print('balls')
 
         svec.add(mean)  # shift signal by mean value [uS]
+        print('shart')
 
         if plotFig:
             import matplotlib.pyplot as plt
@@ -72,7 +74,7 @@ class addStim():
             if pop not in pop_use_vector:
                 pop_use_vector[pop] = True
             vecs_dict.update({cell_ind: {'tvecs': {}, 'svecs': {}}})
-            cell_seed = sim.cfg.seeds['stim']+ cell.gid
+            cell_seed = (sim.cfg.seeds['stim']+ cell.gid) * 2
             for stim_ind, stim in enumerate(sim.net.cells[cell_ind].stims):
                 if 'NoiseSEClamp' in stim['label']:
                     mean = sim.net.params.NoiseConductanceParams[cell.tags['pop']]['g0']
@@ -108,7 +110,7 @@ class addStim():
                 print('Negative Resistance generated for ' + pop + '... Removing OU stim')
 
 
-        return sim, vecs_dict
+        return sim, vecs_dict, pop_use_vector
 
 
 

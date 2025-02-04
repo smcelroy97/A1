@@ -333,7 +333,7 @@ cfg.injectionAmplitudes =  np.linspace(0.0, 0.6, 13)
 cfg.addNoiseConductance = 1
 
 cfg.OUamp = 45
-cfg.OUstd = 10
+cfg.OUstd = 0.4
 cfg.NoiseConductanceDur = cfg.duration
 
 # ------------------------------------------------------------------------------
