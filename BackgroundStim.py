@@ -40,10 +40,9 @@ class addStim():
             # Exact update formula (independent of dt) from Gillespie 1996
             for n in range(1, ntstep):
                 svec.x[n] = svec[n - 1] * mu + noise[n]  # signal [uS]
-            print('balls')
+
 
         svec.add(mean)  # shift signal by mean value [uS]
-        print('shart')
 
         if plotFig:
             import matplotlib.pyplot as plt
