@@ -103,7 +103,7 @@ class addStim():
                 if 'NoiseSEClamp' in stim['label']:
                     if pop_use_vector.get(pop, True):  # Check the flag for the population
                         conductance_source = sim.net.cells[cell_ind].stims[stim_ind]['hObj']
-                        vecs_dict[cell_ind]['svecs'][stim_ind].play(conductance_source._ref_rs, vecs_dict[cell_ind]['tvecs'][stim_ind], True)
+                        vecs_dict[cell_ind]['svecs'][stim_ind].play(conductance_source._ref_rs, vecs_dict[cell_ind]['tvecs'][stim_ind], 1)
         for pop in pop_use_vector:
             if pop_use_vector[pop] == False:
                 print('Negative Resistance generated for ' + pop + '... Removing OU stim')
