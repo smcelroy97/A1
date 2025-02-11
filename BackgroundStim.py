@@ -66,12 +66,11 @@ class addStim():
         print('Creating Ornstein Uhlenbeck process to create noise conductance signal')
         import math
         vecs_dict = {}
-        pop_use_vector = {}
 
         for cell_ind, cell in enumerate(sim.net.cells):
             pop = cell.tags['pop']
-            if pop not in pop_use_vector:
-                pop_use_vector[pop] = True
+            if 'OUFlag' not in sim.net.pops[pop].tags:
+                sim.net.pops[pop].tags['OUFlag'] = True
             vecs_dict.update({cell_ind: {'tvecs': {}, 'svecs': {}}})
             cell_seed = (sim.cfg.seeds['stim']+ cell.gid) * 2
             for stim_ind, stim in enumerate(sim.net.cells[cell_ind].stims):
@@ -88,7 +87,7 @@ class addStim():
                         plotFig=False)
 
                     if any(val<0.0 for val in svec):
-                        pop_use_vector[pop] = False
+                        sim.net.pops[pop].tags['OUFlag'] = False
                         break
                     else:
                     # for idx, val in enumerate(svec):
@@ -101,15 +100,14 @@ class addStim():
             pop = cell.tags['pop']
             for stim_ind, stim in enumerate(sim.net.cells[cell_ind].stims):
                 if 'NoiseSEClamp' in stim['label']:
-                    if pop_use_vector.get(pop, True):  # Check the flag for the population
+                    if sim.net.pops[pop].tags['OUFlag'] == True:  # Check the flag for the population
                         conductance_source = sim.net.cells[cell_ind].stims[stim_ind]['hObj']
                         vecs_dict[cell_ind]['svecs'][stim_ind].play(conductance_source._ref_rs, vecs_dict[cell_ind]['tvecs'][stim_ind], 1)
-        for pop in pop_use_vector:
-            if pop_use_vector[pop] == False:
-                print('Negative Resistance generated for ' + pop + '... Removing OU stim')
+                    else:
+                        print('Negative Resistance generated for ' + pop + '... Removing OU stim')
 
 
-        return sim, vecs_dict, pop_use_vector
+        return sim, vecs_dict
 
 
 

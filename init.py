@@ -87,7 +87,7 @@ sim.net.addStims() 			# add network stimulation
 ##########################################
 
 if sim.cfg.addNoiseConductance:
-  sim, vecs_dict, pop_use_vector = (
+  sim, vecs_dict= (
     BS.addStim.addNoiseGClamp(sim)
   )
 
@@ -164,7 +164,7 @@ if comm.is_host():
   for idx, pop in enumerate(cfg.allpops):
     for ouamp in ouamp_list:
       for oustd in oustd_list:
-        if pop_use_vector[pop] == False:
+        if sim.net.pops[pop].tags['OUFlag'] == False:
           rate_dataframes[pop].at[oustd, ouamp] = np.nan
           isicv_dataframes[pop].at[oustd, ouamp] = np.nan
         else:
