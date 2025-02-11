@@ -105,7 +105,7 @@ class addStim():
                         vecs_dict[cell_ind]['svecs'][stim_ind].play(conductance_source._ref_rs, vecs_dict[cell_ind]['tvecs'][stim_ind], 1)
 
         for pop in sim.net.pops:
-            if pop.tags['OUFlag'] == False:
+            if sim.net.pops[pop].tags['OUFlag'] == False:
                 print('Negative Resistance generated for ' + pop + '... Removing OU stim')
         return sim, vecs_dict
 
