@@ -103,10 +103,10 @@ class addStim():
                     if sim.net.pops[pop].tags['OUFlag'] == True:  # Check the flag for the population
                         conductance_source = sim.net.cells[cell_ind].stims[stim_ind]['hObj']
                         vecs_dict[cell_ind]['svecs'][stim_ind].play(conductance_source._ref_rs, vecs_dict[cell_ind]['tvecs'][stim_ind], 1)
-                    else:
-                        print('Negative Resistance generated for ' + pop + '... Removing OU stim')
 
-
+        for pop in sim.net.pops:
+            if pop.tags['OUFlag'] == False:
+                print('Negative Resistance generated for ' + pop + '... Removing OU stim')
         return sim, vecs_dict
 
 
