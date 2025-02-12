@@ -94,7 +94,7 @@ if sim.cfg.addNoiseConductance:
 sim.setupRecording()       # setup variables to record for each cell (spikes, V traces, etc)
 sim.runSim()               # run parallel Neuron simulation
 sim.gatherData()
-sim.pc.barrier
+sim.pc.barrier()
 sim.saveData()
 sim.analysis.plotData()    # plot spike raster etc
 
