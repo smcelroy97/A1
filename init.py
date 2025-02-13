@@ -87,14 +87,24 @@ sim.net.addStims() 			# add network stimulation
 ##########################################
 
 if sim.cfg.addNoiseConductance:
-  sim, vecs_dict = (
+  sim, vecs_dict, OUFlags = (
     BS.addStim.addNoiseGClamp(sim)
   )
+
+
 
 sim.setupRecording()       # setup variables to record for each cell (spikes, V traces, etc)
 sim.runSim()               # run parallel Neuron simulation
 sim.gatherData()
 sim.pc.barrier()
+
+if sim.cfg.addNoiseConductance:
+  allOUFlags = sim.pc.py_allgather(OUFlags)
+  combinedOUFlags = {}
+  for flags in allOUFlags:
+    combinedOUFlags.update(flags)
+  sim.OUFlags = combinedOUFlags
+
 sim.saveData()
 sim.analysis.plotData()    # plot spike raster etc
 
@@ -109,7 +119,7 @@ if comm.is_host():
     results['loss'] = 700
     out_json = json.dumps({**inputs, **results})
 
-    avgRates = sim.analysis.popAvgRates(tranges=[2000, 3000], show=False)
+    avgRates = sim.analysis.popAvgRates(tranges=[cfg.duration-1000, cfg.duration], show=False)
     figs, spikesDict = sim.analysis.plotSpikeStats(stats=['isicv', 'rate'], saveFig=False)
 
 
