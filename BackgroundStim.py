@@ -66,11 +66,11 @@ class addStim():
         print('Creating Ornstein Uhlenbeck process to create noise conductance signal')
         import math
         vecs_dict = {}
-        sim.OUFlag = {}
+        sim.OUFlags = {}
         for cell_ind, cell in enumerate(sim.net.cells):
             pop = cell.tags['pop']
-            if pop not in sim.OUFlag:
-                sim.OUFlag[pop] = True
+            if pop not in sim.OUFlags:
+                sim.OUFlags[pop] = True
             vecs_dict.update({cell_ind: {'tvecs': {}, 'svecs': {}}})
             cell_seed = (sim.cfg.seeds['stim']+ cell.gid) * 2
             for stim_ind, stim in enumerate(sim.net.cells[cell_ind].stims):
@@ -87,7 +87,8 @@ class addStim():
                         plotFig=False)
 
                     if any(val<0.0 for val in svec):
-                        sim.OUFlag[pop] = False
+                        sim.OUFlags[pop] = False
+                        break
                     else:
                     # for idx, val in enumerate(svec):
                     #     if val < 0.0:
@@ -99,10 +100,13 @@ class addStim():
             pop = cell.tags['pop']
             for stim_ind, stim in enumerate(sim.net.cells[cell_ind].stims):
                 if 'NoiseSEClamp' in stim['label']:
-                    if sim.OUFlag[pop]== True:  # Check the flag for the population
+                    if sim.OUFlags[pop] == True:  # Check the flag for the population
                         conductance_source = sim.net.cells[cell_ind].stims[stim_ind]['hObj']
                         vecs_dict[cell_ind]['svecs'][stim_ind].play(conductance_source._ref_rs, vecs_dict[cell_ind]['tvecs'][stim_ind], 1)
 
+        for pop in sim.OUFlags:
+            if sim.OUFlags[pop] == False:
+                print('Negative Resistance generated for ' + pop + '... data excluded from mapping')
 
         return sim, vecs_dict
 
