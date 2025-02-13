@@ -164,8 +164,8 @@ if comm.is_host():
   for idx, pop in enumerate(cfg.allpops):
     for ouamp in ouamp_list:
       for oustd in oustd_list:
-        if sim.net.pops[pop].tags['OUFlag'] == False:
-          print('Negative Resistance generated for ' + pop + '... Removing OU stim')
+        if sim.OUFlag[pop] == False:
+          print('Negative Resistance generated for ' + pop + '... data excluded from mapping')
           rate_dataframes[pop].at[oustd, ouamp] = np.nan
           isicv_dataframes[pop].at[oustd, ouamp] = np.nan
         else:
