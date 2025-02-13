@@ -171,7 +171,7 @@ for key, value in cfgLoad.items():
 
 # These values taken from M1 cfg (https://github.com/Neurosim-lab/netpyne/blob/development/examples/M1detailed/cfg.py)
 cfg.singleCellPops = False
-cfg.reducedPop = 50 # insert number to declare specific number of populations, if going for full model set to False
+cfg.reducedPop = False # insert number to declare specific number of populations, if going for full model set to False
 cfg.singlePop = ''
 cfg.removeWeightNorm = False
 cfg.scale = 1.0  # Is this what should be used?

@@ -104,9 +104,6 @@ class addStim():
                         conductance_source = sim.net.cells[cell_ind].stims[stim_ind]['hObj']
                         vecs_dict[cell_ind]['svecs'][stim_ind].play(conductance_source._ref_rs, vecs_dict[cell_ind]['tvecs'][stim_ind], 1)
 
-        for pop in sim.OUFlags:
-            if sim.OUFlags[pop] == False:
-                print('Negative Resistance generated for ' + pop + '... data excluded from mapping')
 
         return sim, vecs_dict
 

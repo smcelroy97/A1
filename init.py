@@ -165,6 +165,7 @@ if comm.is_host():
       for ouamp in ouamp_list:
         for oustd in oustd_list:
           if sim.OUFlags[pop] == False:
+            print('Negative Resistance generated for ' + pop + '... data excluded from mapping')
             rate_dataframes[pop].at[oustd, ouamp] = np.nan
             isicv_dataframes[pop].at[oustd, ouamp] = np.nan
           else:
