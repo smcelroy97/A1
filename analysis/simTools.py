@@ -363,7 +363,7 @@ class simPlotting:
                     df['rate'][pop] = df['rate'][pop].apply(pd.to_numeric, errors='coerce')
 
                     # Plot the DataFrame as a heatmap
-                    plt.figure(figsize=(10, 8))
+                    plt.figure(figsize=(12.5, 10))
                     ax = sns.heatmap(df['rate'][pop], annot=False, fmt=".2f", cmap="viridis")
                     plt.title(f'Heatmap of Rate DataFrame for Population {pop}')
                     plt.xlabel('OUamp')
