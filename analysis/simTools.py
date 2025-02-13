@@ -369,6 +369,7 @@ class simPlotting:
                     plt.xlabel('OUamp')
                     plt.ylabel('OUstd')
                     ax.invert_yaxis()
+                    ax.invert_xaxis()
 
                     # Set the tick labels to the actual values
                     ax.set_xticks(range(len(df['rate'][pop].columns)))
