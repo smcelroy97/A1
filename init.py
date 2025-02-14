@@ -108,8 +108,6 @@ if sim.cfg.addNoiseConductance:
 sim.saveData()
 sim.analysis.plotData()    # plot spike raster etc
 
-simPlotting.plotMeanTraces(sim, cellsPerPop=50, plotPops=sim.cfg.allpops)
-
 
 # Terminate batch process
 if comm.is_host():
@@ -122,8 +120,9 @@ if comm.is_host():
     out_json = json.dumps({**inputs, **results})
 
     avgRates = sim.analysis.popAvgRates(tranges=[cfg.duration-1000, cfg.duration], show=False)
-    figs, spikesDict = sim.analysis.plotSpikeStats(stats=['isicv', 'rate'], saveFig=False)
+    figs, spikesDict = sim.analysis.plotSpikeStats(stats=['isicv', 'rate'], saveFig=False, showFig = False, show = False)
 
+    # simPlotting.plotMeanTraces(sim, cellsPerPop=1, plotPops=sim.cfg.allpops)
 
     # Function to load pickle file with file locking
     def load_pickle_file(file_path):

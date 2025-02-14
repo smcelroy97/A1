@@ -105,8 +105,9 @@ class addStim():
                 if 'NoiseSEClamp' in stim['label']:
                     if OUFlags[pop] == True:  # Check the flag for the population
                         conductance_source = sim.net.cells[cell_ind].stims[stim_ind]['hObj']
+                        # stim_vec = h.Vector([1 / x if x > 1E-9 and x < 1E9 else 1E9 for x in vecs_dict[cell_ind]['svecs'][stim_ind]])
                         stim_vec = vecs_dict[cell_ind]['svecs'][stim_ind]
-                        stim_vec = h.Vector(1/x if x > 1E-9 and x < 1E9 else 1E9 for x in stim_vec)
+                        # stim_vecInv = h.Vector([1/x if x > 1E-9 and x < 1E9 else 1E9 for x in stim_vec])
                         stim_vec.play(conductance_source._ref_rs, vecs_dict[cell_ind]['tvecs'][stim_ind], 1)
 
 

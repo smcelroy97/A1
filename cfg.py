@@ -37,7 +37,7 @@ cfg.cache_efficient = True
 # cfg.printRunTime = 0.1  			## specified above
 cfg.oneSynPerNetcon = False
 cfg.includeParamsLabel = False
-cfg.printPopAvgRates = [1000, 2000]  # "printPopAvgRates": [[1500,1750],[1750,2000],[2000,2250],[2250,2500]]
+# cfg.printPopAvgRates = [1000, 2000]  # "printPopAvgRates": [[1500,1750],[1750,2000],[2000,2250],[2250,2500]]
 cfg.validateNetParams = False
 
 # ------------------------------------------------------------------------------
@@ -84,7 +84,7 @@ cfg.recordDipole = False
 # Saving
 # ------------------------------------------------------------------------------
 
-cfg.simLabel = 'gClampamp50Base'
+cfg.simLabel = 'inverse1000000'
 cfg.saveFolder = 'simOutput/' + cfg.simLabel  # Set file output name
 cfg.savePickle = True  # Save pkl file
 cfg.saveJson = False  # Save json file
@@ -114,8 +114,8 @@ def setplotTraces (ncell=50, linclude=cfg.allpops, timeRange = cfg.duration):
       pops.append((pop,i))
   cfg.analysis['plotTraces'] = {'include': linclude, 'timeRange' : timeRange, 'oneFigPer': 'trace', 'overlay': True, 'saveFig': False, 'showFig': False, 'figSize':(12,8)}
 
-setplotTraces(ncell=1, timeRange=[1750, 3000])
-
+# setplotTraces(ncell=1, timeRange=[1750, 3000])
+#
 layer_bounds = {'L1': 100, 'L2': 160, 'L3': 950, 'L4': 1250, 'L5A': 1334, 'L5B': 1550, 'L6': 2000}
 
 
@@ -171,7 +171,7 @@ for key, value in cfgLoad.items():
 
 # These values taken from M1 cfg (https://github.com/Neurosim-lab/netpyne/blob/development/examples/M1detailed/cfg.py)
 cfg.singleCellPops = False
-cfg.reducedPop = 50 # insert number to declare specific number of populations, if going for full model set to False
+cfg.reducedPop = False # insert number to declare specific number of populations, if going for full model set to False
 cfg.singlePop = ''
 cfg.removeWeightNorm = False
 cfg.scale = 1.0  # Is this what should be used?
@@ -332,8 +332,8 @@ cfg.injectionAmplitudes =  np.linspace(0.0, 0.6, 13)
 
 cfg.addNoiseConductance = 1
 
-cfg.OUamp = 5
-cfg.OUstd = 0
+cfg.OUamp = 0.0000005
+cfg.OUstd =  0.0
 cfg.NoiseConductanceDur = cfg.duration
 
 # ------------------------------------------------------------------------------
