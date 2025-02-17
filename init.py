@@ -28,6 +28,7 @@ import json
 import fcntl
 import pickle
 import os
+from neuron import h
 
 comm.initialize()
 
@@ -108,18 +109,17 @@ if sim.cfg.addNoiseConductance:
 sim.saveData()
 sim.analysis.plotData()    # plot spike raster etc
 
-
 # Terminate batch process
 if comm.is_host():
   if comm.rank == 0:
     netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
     print('transmitting data...')
     inputs = specs.get_mappings()
-    results = sim.analysis.popAvgRates(tranges= [1000, 2000], show=False)
-    results['loss'] = 700
-    out_json = json.dumps({**inputs, **results})
+    avgRates = sim.analysis.popAvgRates(tranges=[cfg.duration - 1000, cfg.duration], show=False)
+    avgRates['loss'] = 700
+    out_json = json.dumps({**inputs, **avgRates})
 
-    avgRates = sim.analysis.popAvgRates(tranges=[cfg.duration-1000, cfg.duration], show=False)
+
     figs, spikesDict = sim.analysis.plotSpikeStats(stats=['isicv', 'rate'], saveFig=False, showFig = False, show = False)
 
     # simPlotting.plotMeanTraces(sim, cellsPerPop=1, plotPops=sim.cfg.allpops)

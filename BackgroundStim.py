@@ -1,5 +1,4 @@
 import json
-
 import h5py.h5d
 import numpy as np
 
@@ -39,12 +38,12 @@ class addStim():
             A = sigma * sqrt(1 - mu * mu)  # amplitude [uS]
             noise.mul(A)  # scale noise by amplitude [uS]
 
-            # Exact update formula (independent of dt) from Gillespie 1996
             for n in range(1, ntstep):
                 svec.x[n] = svec[n - 1] * mu + noise[n]  # signal [uS]
 
 
         svec.add(mean)  # shift signal by mean value [uS]
+        svec = h.Vector([1 / x if x > 1E-9 and x < 1E9 else 1E9 for x in svec])
 
         if plotFig:
             import matplotlib.pyplot as plt
@@ -93,9 +92,6 @@ class addStim():
                         OUFlags[pop] = False
                         break
                     else:
-                    # for idx, val in enumerate(svec):
-                    #     if val < 0.0:
-                    #         svec[idx] = 0.001
                         vecs_dict[cell_ind]['tvecs'].update({stim_ind: tvec})
                         vecs_dict[cell_ind]['svecs'].update({stim_ind: svec})
 
@@ -105,10 +101,9 @@ class addStim():
                 if 'NoiseSEClamp' in stim['label']:
                     if OUFlags[pop] == True:  # Check the flag for the population
                         conductance_source = sim.net.cells[cell_ind].stims[stim_ind]['hObj']
-                        # stim_vec = h.Vector([1 / x if x > 1E-9 and x < 1E9 else 1E9 for x in vecs_dict[cell_ind]['svecs'][stim_ind]])
                         stim_vec = vecs_dict[cell_ind]['svecs'][stim_ind]
-                        # stim_vecInv = h.Vector([1/x if x > 1E-9 and x < 1E9 else 1E9 for x in stim_vec])
-                        stim_vec.play(conductance_source._ref_rs, vecs_dict[cell_ind]['tvecs'][stim_ind], 1)
+                        stim_vec.play(conductance_source._ref_rs, vecs_dict[cell_ind]['tvecs'][stim_ind])
+
 
 
         return sim, vecs_dict, OUFlags

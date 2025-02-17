@@ -21,7 +21,7 @@ cfg = specs.SimConfig()
 # ------------------------------------------------------------------------------
 # Run parameters
 # ------------------------------------------------------------------------------
-cfg.duration = 1000  # Duration of the sim, in ms
+cfg.duration = 3000  # Duration of the sim, in ms
 cfg.dt = 0.05  # Internal Integration Time Step
 cfg.verbose = 0  # Show detailed messages
 cfg.progressBar = 0  # even more detailed message
@@ -115,7 +115,7 @@ def setplotTraces (ncell=50, linclude=cfg.allpops, timeRange = cfg.duration):
   cfg.analysis['plotTraces'] = {'include': linclude, 'timeRange' : timeRange, 'oneFigPer': 'trace', 'overlay': True, 'saveFig': False, 'showFig': False, 'figSize':(12,8)}
 
 # setplotTraces(ncell=1, timeRange=[1750, 3000])
-#
+
 layer_bounds = {'L1': 100, 'L2': 160, 'L3': 950, 'L4': 1250, 'L5A': 1334, 'L5B': 1550, 'L6': 2000}
 
 
@@ -332,8 +332,8 @@ cfg.injectionAmplitudes =  np.linspace(0.0, 0.6, 13)
 
 cfg.addNoiseConductance = 1
 
-cfg.OUamp = 0.0000005
-cfg.OUstd =  0.0
+cfg.OUamp =   0.02 # 200
+cfg.OUstd =   0.0035 # 35
 cfg.NoiseConductanceDur = cfg.duration
 
 # ------------------------------------------------------------------------------
