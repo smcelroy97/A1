@@ -122,14 +122,14 @@ if comm.is_host():
 
     figs, spikesDict = sim.analysis.plotSpikeStats(stats=['isicv', 'rate'], saveFig=False, showFig = False, show = False)
 
-    # simPlotting.plotMeanTraces(sim, cellsPerPop=1, plotPops=sim.cfg.allpops)
+    simPlotting.plotMeanTraces(sim, cellsPerPop=1, plotPops=sim.cfg.allpops)
 
     # Function to load pickle file with file locking
     def load_pickle_file(file_path):
       if os.path.exists(file_path):
         with open(file_path, 'rb') as file:
           try:
-            # fcntl.flock(file, fcntl.LOCK_SH)  # Acquire a shared lock
+            fcntl.flock(file, fcntl.LOCK_SH)  # Acquire a shared lock
             data = pickle.load(file)
           except EOFError:
             print("Error: The pickle file is empty or corrupted.")
