@@ -118,50 +118,21 @@ if comm.is_host():
     avgRates = sim.analysis.popAvgRates(tranges=[cfg.duration - 1000, cfg.duration], show=False)
     avgRates['loss'] = 700
     out_json = json.dumps({**inputs, **avgRates})
-
-
     figs, spikesDict = sim.analysis.plotSpikeStats(stats=['isicv', 'rate'], saveFig=False, showFig = False, show = False)
 
-    simPlotting.plotMeanTraces(sim, cellsPerPop=1, plotPops=sim.cfg.allpops)
+    # simPlotting.plotMeanTraces(sim, cellsPerPop=1, plotPops=sim.cfg.allpops)
 
-    # Function to load pickle file with file locking
-    def load_pickle_file(file_path):
-      if os.path.exists(file_path):
-        with open(file_path, 'rb') as file:
-          try:
-            fcntl.flock(file, fcntl.LOCK_SH)  # Acquire a shared lock
-            data = pickle.load(file)
-          except EOFError:
-            print("Error: The pickle file is empty or corrupted.")
-            data = {}
-          finally:
-            fcntl.flock(file, fcntl.LOCK_UN)  # Release the lock
-        return data
-      else:
-        print("Error: The pickle file does not exist.")
-        return {}
-
-
-    # Function to save pickle file with file locking
-    def save_pickle_file(file_path, data):
-      with open(file_path, 'wb') as file:
-        try:
-          fcntl.flock(file, fcntl.LOCK_EX)  # Acquire an exclusive lock
-          pickle.dump(data, file)
-        finally:
-          fcntl.flock(file, fcntl.LOCK_UN)  # Release the lock
 
     # Define the file path for the pickle file
-    pickle_file_path = '../A1/simOutput/OUmapping.pkl'
+    pickle_file_path = f'../A1/simOutput/OUmapping_{cfg.simLabel}.pkl'
 
     # Ensure sim.cfg.OUamp and sim.cfg.OUstd are list-like
     ouamp_list = sim.cfg.OUamp if isinstance(sim.cfg.OUamp, (list, np.ndarray)) else [sim.cfg.OUamp]
     oustd_list = sim.cfg.OUstd if isinstance(sim.cfg.OUstd, (list, np.ndarray)) else [sim.cfg.OUstd]
 
-    # Load the existing dictionaries from the pickle file if it exists
-    pop_dataframes = load_pickle_file(pickle_file_path)
-    rate_dataframes = pop_dataframes.get('rate', {pop: pd.DataFrame(index=oustd_list, columns=ouamp_list) for pop in cfg.allpops})
-    isicv_dataframes = pop_dataframes.get('isicv', {pop: pd.DataFrame(index=oustd_list, columns=ouamp_list) for pop in cfg.allpops})
+    # Create new dictionaries for the DataFrames
+    rate_dataframes = {pop: pd.DataFrame(index=oustd_list, columns=ouamp_list) for pop in cfg.allpops}
+    isicv_dataframes = {pop: pd.DataFrame(index=oustd_list, columns=ouamp_list) for pop in cfg.allpops}
 
     # Set the names of the rows and columns
     for df in rate_dataframes.values():
@@ -183,14 +154,9 @@ if comm.is_host():
             rate_dataframes[pop].at[oustd, ouamp] = avgRates[pop]
             isicv_dataframes[pop].at[oustd, ouamp] = np.mean(spikesDict['statData'][idx + 1])
 
-    # Sort the DataFrames by index
-    for df in rate_dataframes.values():
-      df.sort_index(inplace=True)
-    for df in isicv_dataframes.values():
-      df.sort_index(inplace=True)
-
-    # Save the updated dictionaries to the pickle file
-    save_pickle_file(pickle_file_path, {'rate': rate_dataframes, 'isicv': isicv_dataframes})
+    # Save the DataFrames to the pickle file
+    with open(pickle_file_path, 'wb') as file:
+      pickle.dump({'rate': rate_dataframes, 'isicv': isicv_dataframes}, file)
 
     comm.send(out_json)
     comm.close()
