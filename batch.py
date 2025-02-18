@@ -1,11 +1,11 @@
 from netpyne.batchtools.search import search
 import numpy as np
 
-label = 'v45_batch12'
+label = 'v45_batch13'
 
 params = {
-    'OUamp': np.linspace(0.001, 1, 3),
-    'OUstd': np.linspace(0.0001, 0.4, 3)}
+    'OUamp': np.linspace(0.001, 1, 50),
+    'OUstd': np.linspace(0.0001, 0.4, 50)}
 
 # use batch_shell_config if running directly on the machine
 shell_config = {'command': 'mpiexec -np 4 nrniv -python -mpi init.py'}
@@ -14,7 +14,7 @@ shell_config = {'command': 'mpiexec -np 4 nrniv -python -mpi init.py'}
 sge_config = {
     'queue': 'cpu.q',
     'cores': 20,
-    'vmem': '64G',
+    'vmem': '128G',
     'realtime': '02:00:00',
     'command': 'mpiexec -n $NSLOTS -hosts $(hostname) nrniv -python -mpi init.py'
 }
