@@ -15,7 +15,7 @@ sge_config = {
     'queue': 'cpu.q',
     'cores': 20,
     'vmem': '64G',
-    'realtime': '00:40:00',
+    'realtime': '02:00:00',
     'command': 'mpiexec -n $NSLOTS -hosts $(hostname) nrniv -python -mpi init.py'
 }
 

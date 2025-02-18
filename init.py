@@ -23,13 +23,8 @@ from netParams import netParams, cfg
 from analysis.simTools import simPlotting
 import numpy as np
 import BackgroundStim as BS
-import pandas as pd
 import json
-import fcntl
-import pickle
 import os
-from neuron import h
-
 comm.initialize()
 
 sim.initialize(simConfig = cfg, netParams = netParams)  		# create network object and set cfg and net params
@@ -118,45 +113,36 @@ if comm.is_host():
     avgRates = sim.analysis.popAvgRates(tranges=[cfg.duration - 1000, cfg.duration], show=False)
     avgRates['loss'] = 700
     out_json = json.dumps({**inputs, **avgRates})
-    figs, spikesDict = sim.analysis.plotSpikeStats(stats=['isicv', 'rate'], saveFig=False, showFig = False, show = False)
 
+    figs, spikesDict = sim.analysis.plotSpikeStats(stats=['isicv', 'rate'], timeRange = [cfg.duration-1000, cfg.duration],saveFig=False, showFig=False, show=False)
     # simPlotting.plotMeanTraces(sim, cellsPerPop=1, plotPops=sim.cfg.allpops)
 
-
-    # Define the file path for the pickle file
-    pickle_file_path = f'../A1/simOutput/OUmapping_{cfg.simLabel}.pkl'
+    # Define the file path for the JSON file
+    json_file_path = f'../A1/simOutput/OUmapping_{cfg.simLabel}.json'
 
     # Ensure sim.cfg.OUamp and sim.cfg.OUstd are list-like
     ouamp_list = sim.cfg.OUamp if isinstance(sim.cfg.OUamp, (list, np.ndarray)) else [sim.cfg.OUamp]
     oustd_list = sim.cfg.OUstd if isinstance(sim.cfg.OUstd, (list, np.ndarray)) else [sim.cfg.OUstd]
 
-    # Create new dictionaries for the DataFrames
-    rate_dataframes = {pop: pd.DataFrame(index=oustd_list, columns=ouamp_list) for pop in cfg.allpops}
-    isicv_dataframes = {pop: pd.DataFrame(index=oustd_list, columns=ouamp_list) for pop in cfg.allpops}
+    # Create new dictionaries for the data
+    rate_dict = {pop: {oustd: {ouamp: None for ouamp in ouamp_list} for oustd in oustd_list} for pop in cfg.allpops}
+    isicv_dict = {pop: {oustd: {ouamp: None for ouamp in ouamp_list} for oustd in oustd_list} for pop in cfg.allpops}
 
-    # Set the names of the rows and columns
-    for df in rate_dataframes.values():
-      df.index.name = 'OUstd'
-      df.columns.name = 'OUamp'
-    for df in isicv_dataframes.values():
-      df.index.name = 'OUstd'
-      df.columns.name = 'OUamp'
-
-    # Populate the DataFrames with firing rates and isicv values
+    # Populate the dictionaries with firing rates and isicv values
     for idx, pop in enumerate(cfg.allpops):
       for ouamp in ouamp_list:
         for oustd in oustd_list:
           if sim.OUFlags[pop] == False:
             print('Negative Resistance generated for ' + pop + '... data excluded from mapping')
-            rate_dataframes[pop].at[oustd, ouamp] = np.nan
-            isicv_dataframes[pop].at[oustd, ouamp] = np.nan
+            rate_dict[pop] = None
+            isicv_dict[pop] = None
           else:
-            rate_dataframes[pop].at[oustd, ouamp] = avgRates[pop]
-            isicv_dataframes[pop].at[oustd, ouamp] = np.mean(spikesDict['statData'][idx + 1])
+            rate_dict[pop]= avgRates[pop]
+            isicv_dict[pop] = np.mean(spikesDict['statData'][idx + 1])
 
-    # Save the DataFrames to the pickle file
-    with open(pickle_file_path, 'wb') as file:
-      pickle.dump({'rate': rate_dataframes, 'isicv': isicv_dataframes}, file)
+    # Save the dictionaries to the JSON file
+    with open(json_file_path, 'w') as file:
+      json.dump({'OUamp': cfg.OUamp, 'OUstd': cfg.OUstd, 'rate': rate_dict, 'isicv': isicv_dict}, file)
 
     comm.send(out_json)
     comm.close()
