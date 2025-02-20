@@ -100,12 +100,6 @@ if sim.cfg.addNoiseConductance:
     combinedOUFlags.update(flags)
   sim.OUFlags = combinedOUFlags
 
-meanV = simPlotting.plotMeanTraces(sim, cellsPerPop=50, plotPops=sim.cfg.allpops, plotFig=False)
-for pop in meanV:
-  if meanV[pop] > -40:
-    sim.OUFlags[pop] = False
-del sim.allSimData['V_soma']
-
 sim.saveData()
 sim.analysis.plotData()    # plot spike raster etc
 
