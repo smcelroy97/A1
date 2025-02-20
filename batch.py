@@ -5,7 +5,7 @@ label = 'v45_batch15'
 
 params = {
     'OUamp': np.linspace(0.0001, 0.05, 20),
-    'OUstd': np.linspace(0.0005, 0.025, 20)}
+    'OUstd': np.linspace(0.00005, 0.025, 20)}
 
 # use batch_shell_config if running directly on the machine
 shell_config = {'command': 'mpiexec -np 4 nrniv -python -mpi init.py'}
