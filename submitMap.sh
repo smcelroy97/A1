@@ -9,4 +9,4 @@
 #$ -e /ddn/smcelroy97/A1/OUmap.err
 
 source ~/.bashrc
-mpiexec -n $NSLOTS -hosts $(hostname) nrniv -python -mpi init.py
+mpiexec -n $NSLOTS -hosts $(hostname) nrniv -python -mpi analysis/makeOUmap.py
