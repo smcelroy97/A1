@@ -34,7 +34,7 @@ batch = 'GABAB_KO1003'  # Name of batch for fig saving
 
 # Load sim EEG data
 # base_dir = '/Users/scoot/A1ProjData/A1_sim_data/' + batch + '/'  # Define dir from saved data dir
-base_dir = '/Users/scoot/A1ProjData/A1_sim_data/v45_batch5_00033_data.pkl'
+base_dir = '/Users/scoot/A1ProjData/A1_sim_data/'
 figure_dir = '/Users/scoot/A1ProjData/A1_figs/SIMfigs/' # Define dir for saving figures
 
 nmda_per_file = {}
@@ -43,7 +43,7 @@ for file in os.listdir(base_dir):
     if file.endswith('_data.pkl') or file.endswith('_data.json'): # make sure you only download output data
 
         sim.initialize()
-        all = sim.loadAll('/Users/scoot/A1ProjData/A1_sim_data/v45_batch5_00033_data.pkl', instantiate=False)
+        all = sim.loadSimData('/Users/scoot/A1ProjData/A1_sim_data/EIvsIETune0930_00002_data.pkl')
         # all = sim.loadAll(os.path.join(base_dir, file), instantiate=False)# Valery did this and fixed some problems, not sure why necessary
         fname = file[0:-9] # Create filename (can change to whatever)
         if not os.path.exists(figure_dir + batch):
