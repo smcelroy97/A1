@@ -1,71 +1,116 @@
-import os
+from mpi4py import MPI
 import pickle
 import pandas as pd
-from netpyne import sim
 import numpy as np
+from netpyne import sim
+import os
 
-def process_file(file_path):
-    sim.initialize()
-    sim.loadAll(file_path, instantiate=False)
+# MPI setup
+comm = MPI.COMM_WORLD
+rank = comm.Get_rank()
+size = comm.Get_size()
 
-    if not hasattr(sim.net, 'allCells') or not hasattr(sim.net, 'allPops'):
-        print(f"Error: Network object in file {file_path} does not have allCells or allPops attributes")
-        return {}, {}
+# Directory containing simulation data
+sim_dir = "simOutput/v45_batch15"
+all_files = sorted([f for f in os.listdir(sim_dir) if f.endswith("_data.pkl")])
+files_per_rank = np.array_split(all_files, size)
 
-    avgRates = sim.analysis.popAvgRates(tranges=[2000, 3000], show=False)
-    result = sim.analysis.plotSpikeStats(stats=['isicv', 'rate'], timeRange=[2000, 3000], saveFig=False, showFig=False, show=False)
 
-    if not isinstance(result, dict):
-        print(f"Error in plotSpikeStats for file {file_path}")
-        return {}, {}
+# Helper function to compute firing rate and ISICV
+def compute_metrics(spike_times, spike_gids, pops, t_start=2000, t_end=3000):
+    rate_dict = {pop: 0.0 for pop in pops}
+    isicv_dict = {pop: None for pop in pops}
 
-    spikesDict = result
+    pop_gids = {pop: list(pops[pop].cellGids) for pop in pops}
+    pop_spikes = {pop: {gid: [] for gid in gids} for pop, gids in pop_gids.items()}
 
-    ouamp_list = sim.cfg.OUamp if isinstance(sim.cfg.OUamp, (list, np.ndarray)) else [sim.cfg.OUamp]
-    oustd_list = sim.cfg.OUstd if isinstance(sim.cfg.OUstd, (list, np.ndarray)) else [sim.cfg.OUstd]
+    for gid, spk_time in zip(spike_gids, spike_times):
+        if not isinstance(spk_time, list):
+            spk_time = [spk_time]  # Convert single float to list
+        spk_time = [t for t in spk_time if t_start <= t <= t_end]  # Apply time filtering
 
-    rate_dataframes = {}
-    isicv_dataframes = {}
+        for pop, gids in pop_gids.items():
+            if gid in gids:
+                pop_spikes[pop][gid].extend(spk_time)
 
-    for pop in sim.cfg.allpops:
-        if pop not in rate_dataframes:
-            rate_dataframes[pop] = pd.DataFrame(index=oustd_list, columns=ouamp_list)
-            isicv_dataframes[pop] = pd.DataFrame(index=oustd_list, columns=ouamp_list)
-            rate_dataframes[pop].index.name = 'OUstd'
-            rate_dataframes[pop].columns.name = 'OUamp'
-            isicv_dataframes[pop].index.name = 'OUstd'
-            isicv_dataframes[pop].columns.name = 'OUamp'
+    for pop, spikes_by_gid in pop_spikes.items():
+        cell_isicvs = []
+        for gid, spikes in spikes_by_gid.items():
+            if spikes:
+                isis = np.diff(sorted(spikes))
+                if len(isis) > 1:
+                    cell_isicvs.append(np.std(isis) / np.mean(isis))
+        if cell_isicvs:
+            isicv_dict[pop] = np.mean(cell_isicvs)
+        rate_dict[pop] = sum(len(spikes) for spikes in spikes_by_gid.values()) / ((t_end - t_start) / 1000 * len(pop_gids[pop]))
 
-        for ouamp in ouamp_list:
-            for oustd in oustd_list:
-                rate_dataframes[pop].at[oustd, ouamp] = avgRates[pop]
-                isicv_dataframes[pop].at[oustd, ouamp] = np.mean(spikesDict['statData'][sim.cfg.allpops.index(pop) + 1])
+    return rate_dict, isicv_dict
 
-    return rate_dataframes, isicv_dataframes
 
-def makeOUmap(batch_dir):
-    files = [os.path.join(batch_dir, file) for file in os.listdir(batch_dir) if file.endswith('_data.pkl') or file.endswith('_data.json')]
+# Rank-specific processing
+rate_dicts, isicv_dicts = [], []
+for file in files_per_rank[rank]:
+    filepath = os.path.join(sim_dir, file)
 
-    final_rate_dataframes = {}
-    final_isicv_dataframes = {}
+    data = sim.load(filepath, instantiate=False)
 
-    for file in files:
-        rate_dataframes, isicv_dataframes = process_file(file)
-        for pop in rate_dataframes:
-            if pop not in final_rate_dataframes:
-                final_rate_dataframes[pop] = rate_dataframes[pop]
-                final_isicv_dataframes[pop] = isicv_dataframes[pop]
-            else:
-                final_rate_dataframes[pop] = final_rate_dataframes[pop].add(rate_dataframes[pop], fill_value=0)
-                final_isicv_dataframes[pop] = final_isicv_dataframes[pop].add(isicv_dataframes[pop], fill_value=0)
+    # Ensure pops and cells are properly instantiated
+    sim.net.createPops()
+    sim.net.createCells()
 
-    for df in final_rate_dataframes.values():
-        df.sort_index(inplace=True)
-    for df in final_isicv_dataframes.values():
-        df.sort_index(inplace=True)
+    print(f"[DEBUG] Rank {rank}: Type of sim.net.pops = {type(sim.net.pops)}")
+    print(f"[DEBUG] Rank {rank}: sim.net.pops keys = {list(sim.net.pops.keys())}")
 
-    with open('OUmapping.pkl', 'wb') as file:
-        pickle.dump({'rate': final_rate_dataframes, 'isicv': final_isicv_dataframes}, file)
+    if not isinstance(sim.net.pops, dict):
+        raise ValueError(f"sim.net.pops is not a dict! Found type {type(sim.net.pops)}")
 
-if __name__ == '__main__':
-    makeOUmap('simOutput/v45_batch15')
+    spike_times = list(sim.allSimData["spkt"])
+    spike_gids = list(sim.allSimData["spkid"])
+
+    if len(spike_times) == 0 or len(spike_gids) == 0:
+        raise ValueError(f"No spike data in {file}")
+
+    rate_dict, isicv_dict = compute_metrics(spike_times, spike_gids, sim.net.pops)
+
+    rate_dicts.append((sim.cfg.OUstd, sim.cfg.OUamp, rate_dict))
+    isicv_dicts.append((sim.cfg.OUstd, sim.cfg.OUamp, isicv_dict))
+
+# Gather results
+all_rate_dicts = comm.gather(rate_dicts, root=0)
+all_isicv_dicts = comm.gather(isicv_dicts, root=0)
+
+if rank == 0:
+    final_rate_dict = {}
+    final_isicv_dict = {}
+
+    # Organizing rate and ISICV into dictionaries
+    for d_list in all_rate_dicts:
+        for OUstd, OUamp, d in d_list:
+            for pop, val in d.items():
+                if pop not in final_rate_dict:
+                    final_rate_dict[pop] = {}
+                final_rate_dict[pop][(OUstd, OUamp)] = val
+
+    for d_list in all_isicv_dicts:
+        for OUstd, OUamp, d in d_list:
+            for pop, val in d.items():
+                if pop not in final_isicv_dict:
+                    final_isicv_dict[pop] = {}
+                final_isicv_dict[pop][(OUstd, OUamp)] = val
+
+    # Convert dictionaries to structured DataFrames
+    for pop in final_rate_dict:
+        df = pd.DataFrame.from_dict(final_rate_dict[pop], orient='index')
+        df.index = pd.MultiIndex.from_tuples(df.index, names=['OUstd', 'OUamp'])
+        final_rate_dict[pop] = df.unstack(level=1).droplevel(0, axis=1)  # Make OUstd the rows, OUamp the columns
+
+    for pop in final_isicv_dict:
+        df = pd.DataFrame.from_dict(final_isicv_dict[pop], orient='index')
+        df.index = pd.MultiIndex.from_tuples(df.index, names=['OUstd', 'OUamp'])
+        final_isicv_dict[pop] = df.unstack(level=1).droplevel(0, axis=1)  # Make OUstd the rows, OUamp the columns
+
+    # Save results
+    with open("OUmapping.pkl", "wb") as f:
+        pickle.dump({"rate": final_rate_dict, "isicv": final_isicv_dict}, f)
+
+    print("Final results saved as OUmapping.pkl")
