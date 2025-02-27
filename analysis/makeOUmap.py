@@ -22,7 +22,7 @@ def compute_metrics(spike_times, spike_gids, pops, t_start=2000, t_end=3000):
     isicv_dict = {pop: None for pop in pops}
 
     pop_gids = {pop: list(pops[pop].cellGids) for pop in pops}
-    pop_spikes = {pop: {gid: [] for gid in gids} for pop, gids in pop_gids.items()}
+    pop_spikes = {pop: [] for pop in pops}
 
     for gid, spk_time in zip(spike_gids, spike_times):
         if not isinstance(spk_time, list):
@@ -31,18 +31,14 @@ def compute_metrics(spike_times, spike_gids, pops, t_start=2000, t_end=3000):
 
         for pop, gids in pop_gids.items():
             if gid in gids:
-                pop_spikes[pop][gid].extend(spk_time)
+                pop_spikes[pop].extend(spk_time)  # Use the corrected variable
 
-    for pop, spikes_by_gid in pop_spikes.items():
-        cell_isicvs = []
-        for gid, spikes in spikes_by_gid.items():
-            if spikes:
-                isis = np.diff(sorted(spikes))
-                if len(isis) > 1:
-                    cell_isicvs.append(np.std(isis) / np.mean(isis))
-        if cell_isicvs:
-            isicv_dict[pop] = np.mean(cell_isicvs)
-        rate_dict[pop] = sum(len(spikes) for spikes in spikes_by_gid.values()) / ((t_end - t_start) / 1000 * len(pop_gids[pop]))
+    for pop, spikes in pop_spikes.items():
+        if spikes:
+            rate_dict[pop] = len(spikes) / ((t_end - t_start) / 1000 * len(pop_gids[pop]))
+            isis = np.diff(sorted(spikes))
+            if len(isis) > 1:
+                isicv_dict[pop] = np.std(isis) / np.mean(isis)
 
     return rate_dict, isicv_dict
 
