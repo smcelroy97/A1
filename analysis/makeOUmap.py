@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 from netpyne import sim
 import os
+import spike_utils
 
 # MPI setup
 comm = MPI.COMM_WORLD
@@ -11,34 +12,35 @@ rank = comm.Get_rank()
 size = comm.Get_size()
 
 # Directory containing simulation data
-sim_dir = "simOutput/v45_batch15"
+sim_dir = "/Users/scoot/A1ProjData/A1_sim_data/v45_batch15/"
 all_files = sorted([f for f in os.listdir(sim_dir) if f.endswith("_data.pkl")])
 files_per_rank = np.array_split(all_files, size)
 
 
 # Helper function to compute firing rate and ISICV
-def compute_metrics(spike_times, spike_gids, pops, t_start=2000, t_end=3000):
-    rate_dict = {pop: 0.0 for pop in pops}
-    isicv_dict = {pop: None for pop in pops}
+def compute_metrics(simResults, trange = [2000, 3000]):
 
-    pop_gids = {pop: list(pops[pop].cellGids) for pop in pops}
-    pop_spikes = {pop: [] for pop in pops}
+    rate_dict = {}
+    isicv_dict = {}
+    pop_spikes_combo = {}
+    pop_spikes = {}
+    for pop in simResults['net']['pops']:
+        pop_spikes_combo[pop] = spike_utils.get_pop_spikes(simResults, pop, combine_cells=True, t0 = trange[0]/1000, ms = True)
+        pop_spikes[pop] = spike_utils.get_pop_spikes(simResults, pop, combine_cells=False, t0 = trange[0]/1000, ms = True)
 
-    for gid, spk_time in zip(spike_gids, spike_times):
-        if not isinstance(spk_time, list):
-            spk_time = [spk_time]  # Convert single float to list
-        spk_time = [t for t in spk_time if t_start <= t <= t_end]  # Apply time filtering
+    for pop in pop_spikes_combo:
+        rate_dict[pop] = len(pop_spikes_combo[pop])/((trange[1]-trange[0]) / 1000 * len(simResults['net']['pops'][pop]['cellGids']))
 
-        for pop, gids in pop_gids.items():
-            if gid in gids:
-                pop_spikes[pop].extend(spk_time)  # Use the corrected variable
-
-    for pop, spikes in pop_spikes.items():
-        if spikes:
-            rate_dict[pop] = len(spikes) / ((t_end - t_start) / 1000 * len(pop_gids[pop]))
-            isis = np.diff(sorted(spikes))
-            if len(isis) > 1:
-                isicv_dict[pop] = np.std(isis) / np.mean(isis)
+    for pop in pop_spikes:
+        isicvs = []
+        for cell in pop_spikes[pop]:
+            isi  = np.diff(cell)
+            if len(isi) > 1:
+                isicv = np.nanstd(isi)/np.nanmean(isi)
+            else:
+                isicv = np.nan
+            isicvs.append(isicv)
+        isicv_dict[pop] = np.nanmean(isicvs)
 
     return rate_dict, isicv_dict
 
@@ -48,25 +50,11 @@ rate_dicts, isicv_dicts = [], []
 for file in files_per_rank[rank]:
     filepath = os.path.join(sim_dir, file)
 
-    data = sim.load(filepath, instantiate=False)
+    with open(filepath, 'rb') as file:
+        simResults = pickle.load(file)
 
-    # Ensure pops and cells are properly instantiated
-    sim.net.createPops()
-    sim.net.createCells()
 
-    print(f"[DEBUG] Rank {rank}: Type of sim.net.pops = {type(sim.net.pops)}")
-    print(f"[DEBUG] Rank {rank}: sim.net.pops keys = {list(sim.net.pops.keys())}")
-
-    if not isinstance(sim.net.pops, dict):
-        raise ValueError(f"sim.net.pops is not a dict! Found type {type(sim.net.pops)}")
-
-    spike_times = list(sim.allSimData["spkt"])
-    spike_gids = list(sim.allSimData["spkid"])
-
-    if len(spike_times) == 0 or len(spike_gids) == 0:
-        raise ValueError(f"No spike data in {file}")
-
-    rate_dict, isicv_dict = compute_metrics(spike_times, spike_gids, sim.net.pops)
+    rate_dict, isicv_dict = compute_metrics(simResults)
 
     rate_dicts.append((sim.cfg.OUstd, sim.cfg.OUamp, rate_dict))
     isicv_dicts.append((sim.cfg.OUstd, sim.cfg.OUamp, isicv_dict))
