@@ -12,7 +12,7 @@ rank = comm.Get_rank()
 size = comm.Get_size()
 
 # Directory containing simulation data
-sim_dir = "/Users/scoot/A1ProjData/A1_sim_data/v45_batch15/"
+sim_dir = "simOutput/v45_batch15/"
 all_files = sorted([f for f in os.listdir(sim_dir) if f.endswith("_data.pkl")])
 files_per_rank = np.array_split(all_files, size)
 
@@ -56,8 +56,8 @@ for file in files_per_rank[rank]:
 
     rate_dict, isicv_dict = compute_metrics(simResults)
 
-    rate_dicts.append((sim.cfg.OUstd, sim.cfg.OUamp, rate_dict))
-    isicv_dicts.append((sim.cfg.OUstd, sim.cfg.OUamp, isicv_dict))
+    rate_dicts.append((simResults['simConfig']['OUstd'], simResults['simConfig']['OUamp'], rate_dict))
+    isicv_dicts.append((simResults['simConfig']['OUstd'], simResults['simConfig']['OUamp'], isicv_dict))
 
 # Gather results
 all_rate_dicts = comm.gather(rate_dicts, root=0)
