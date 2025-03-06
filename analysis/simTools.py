@@ -306,8 +306,9 @@ class simPlotting:
         plt.legend(fontsize = 30)
         plt.savefig(save_dir + '_MUA.png')
 
-    def plotMeanTraces(sim, cellsPerPop, plotPops):
+    def plotMeanTraces(sim, cellsPerPop, plotPops, plotFig = True):
         record_pops = [(pop, list(np.arange(0, cellsPerPop))) for pop in plotPops]
+        meanV = {}
         for pop_ind, pop in enumerate(plotPops):
             print('\n\n', pop)
             figs, traces_dict = sim.analysis.plotTraces(
@@ -329,14 +330,18 @@ class simPlotting:
 
             t_vector = list(tracesData[0]['t'])
             mean_v = np.mean(store_v, axis=0)
+            meanV[pop] = np.mean(mean_v)
             t_vector_ = [t_vector[i] for i in range(len(mean_v))]
-            plt.figure(figsize=(20, 15))
-            for trace in store_v: plt.plot(t_vector_, trace, 'gray', alpha=0.2)
-            plt.title(pop)
-            plt.plot(t_vector_, mean_v, 'r')
-            plt.ylim([-110, 50])
-            plt.xlim([min(t_vector_), max(t_vector_)])
-            plt.savefig(sim.cfg.saveFolder + '/' + sim.cfg.simLabel + '_mean_traces_' + pop + '.png')
+            if plotFig:
+                plt.figure(figsize=(20, 15))
+                for trace in store_v: plt.plot(t_vector_, trace, 'gray', alpha=0.2)
+                plt.title(pop)
+                plt.plot(t_vector_, mean_v, 'r')
+                plt.ylim([-110, 50])
+                plt.xlim([min(t_vector_), max(t_vector_)])
+                plt.savefig(sim.cfg.saveFolder + '/' + sim.cfg.simLabel + '_mean_traces_' + pop + '.png')
+
+        return meanV
 
     def plotOUheatMap(
             df_path,                    # Data of interest
