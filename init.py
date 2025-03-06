@@ -103,6 +103,8 @@ if sim.cfg.addNoiseConductance:
 sim.saveData()
 sim.analysis.plotData()    # plot spike raster etc
 
+# simPlotting.plotMeanTraces(sim, cellsPerPop = 1, plotPops = sim.cfg.allpops)
+
 # Terminate batch process
 if comm.is_host():
   if comm.rank == 0:
@@ -113,6 +115,7 @@ if comm.is_host():
     avgRates['loss'] = 700
     out_json = json.dumps({**inputs, **avgRates})
 
+    # figs, spikesDict = sim.analysis.plotSpikeStats(stats=['isicv'], timeRange=[2000, 3000], saveFig=False, showFig=False, show=False)
 
     comm.send(out_json)
     comm.close()
