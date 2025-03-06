@@ -3,6 +3,7 @@ import numpy as np
 
 label = 'v45_batch16'
 
+# params for search
 params = {
     'OUamp': np.linspace(0.000075, 0.02, 20),
     'OUstd': np.linspace(3.75e-05, 0.01, 20)}
