@@ -10,9 +10,10 @@ import spike_utils
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
+batch = 'v45_batch18'
 
 # Directory containing simulation data
-sim_dir = "simOutput/v45_batch15/"
+sim_dir = str("simOutput/" + batch + "/")
 all_files = sorted([f for f in os.listdir(sim_dir) if f.endswith("_data.pkl")])
 files_per_rank = np.array_split(all_files, size)
 
@@ -94,7 +95,7 @@ if rank == 0:
         final_isicv_dict[pop] = df.unstack(level=1).droplevel(0, axis=1)  # Make OUstd the rows, OUamp the columns
 
     # Save results
-    with open("OUmapping.pkl", "wb") as f:
+    with open(str("OUmapping" + batch + ".pkl", "wb")) as f:
         pickle.dump({"rate": final_rate_dict, "isicv": final_isicv_dict}, f)
 
-    print("Final results saved as OUmapping.pkl")
+    print(str("Final results saved as OUmapping_" + batch + ".pkl"))
