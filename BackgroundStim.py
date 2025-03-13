@@ -5,7 +5,7 @@ import numpy as np
 # adapted from: https://github.com/BlueBrain/neurodamus/blob/2c7052096c22fb5183fdef120d080608748da48d/neurodamus/core/stimuli.py#L271
 class addStim():
     @staticmethod
-    def add_ornstein_uhlenbeck(tau, sigma, mean, duration, dt=0.025, seed=100000, plotFig=False):
+    def add_ornstein_uhlenbeck(tau, sigma, mean, duration, dt, seed=100000, plotFig=False):
         from neuron import h
         import numpy as np
         from math import sqrt, exp
@@ -43,7 +43,7 @@ class addStim():
 
 
         svec.add(mean)  # shift signal by mean value [uS]
-        svec = h.Vector([1 / x if x > 1E-9 and x < 1E9 else 1E9 for x in svec])
+        svec = h.Vector([1 / x for x in svec])
 
         if plotFig:
             import matplotlib.pyplot as plt
@@ -84,16 +84,12 @@ class addStim():
                         sigma=sigma,
                         mean=mean,
                         duration=stim['dur1'],
-                        dt=0.05,
+                        dt=sim.cfg.dt,
                         seed=cell_seed,
                         plotFig=False)
 
-                    if any(val<0.0 for val in svec):
-                        OUFlags[pop] = False
-                        break
-                    else:
-                        vecs_dict[cell_ind]['tvecs'].update({stim_ind: tvec})
-                        vecs_dict[cell_ind]['svecs'].update({stim_ind: svec})
+                    vecs_dict[cell_ind]['tvecs'].update({stim_ind: tvec})
+                    vecs_dict[cell_ind]['svecs'].update({stim_ind: svec})
 
         for cell_ind, cell in enumerate(sim.net.cells):
             pop = cell.tags['pop']
