@@ -14,6 +14,7 @@ MPI usage:
 
 Contributors: ericaygriffith@gmail.com, salvadordura@gmail.com
 """
+
 from netpyne.batchtools import specs, comm
 import matplotlib; matplotlib.use('Agg')  # to avoid graphics error in servers
 from matplotlib import pyplot as plt
@@ -25,6 +26,8 @@ import numpy as np
 import BackgroundStim as BS
 import json
 import os
+
+
 comm.initialize()
 
 sim.initialize(simConfig = cfg, netParams = netParams)  		# create network object and set cfg and net params
@@ -78,21 +81,18 @@ if cfg.cochlearThalInput: setCochCellLocationsX(
 sim.net.connectCells()      # create connections between cells based on params
 sim.net.addStims() 			# add network stimulation
 
-##########################################
-# - Adding OU Noise Stims for each Cell -#
-##########################################
-
+# Add OU conductance input to each Cell
 if sim.cfg.addNoiseConductance:
   sim, vecs_dict, OUFlags = (
     BS.addStim.addNoiseGClamp(sim)
   )
 
-
-
+# Run
 sim.setupRecording()       # setup variables to record for each cell (spikes, V traces, etc)
 sim.runSim()               # run parallel Neuron simulation
 sim.gatherData()
 
+# Gather OUFlags
 if sim.cfg.addNoiseConductance:
   allOUFlags = sim.pc.py_allgather(OUFlags)
   combinedOUFlags = {}
@@ -100,6 +100,7 @@ if sim.cfg.addNoiseConductance:
     combinedOUFlags.update(flags)
   sim.OUFlags = combinedOUFlags
 
+# Save and plot the result
 sim.saveData()
 sim.analysis.plotData()    # plot spike raster etc
 
@@ -112,8 +113,6 @@ if comm.is_host():
     avgRates = sim.analysis.popAvgRates(tranges=[cfg.duration - 1000, cfg.duration], show=False)
     avgRates['loss'] = 700
     out_json = json.dumps({**inputs, **avgRates})
-
-
     comm.send(out_json)
     comm.close()
 

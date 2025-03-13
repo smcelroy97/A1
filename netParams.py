@@ -43,6 +43,8 @@ netParams.defaultDelay = 2.0 # default conn delay (ms)
 netParams.propVelocity = 500.0 # propagation velocity (um/ms)
 netParams.probLambda = 100.0  # length constant (lambda) for connection probability decay (um)
 ThalamicCoreLambda = 50.0
+
+
 #------------------------------------------------------------------------------
 # Cell parameters
 #------------------------------------------------------------------------------
@@ -56,11 +58,11 @@ layer = {'1': [0.00, 0.05], '2': [0.05, 0.08], '3': [0.08, 0.475], '4': [0.475, 
          '5A': [0.625, 0.667], '5B': [0.667, 0.775], '6': [0.775, 1], 'thal': [1.2, 1.4],
          'cochlear': [1.6, 1.601]} # normalized layer boundaries
 
-layerGroups = {
+""" layerGroups = {
     '1-3': [layer['1'][0], layer['3'][1]],    # L1-3
     '4': layer['4'],                                   # L4
     '5': [layer['5A'][0], layer['5B'][1]],  # L5A-5B
-    '6': layer['6']}                                  # L6
+    '6': layer['6']}                                  # L6 """
 
 #------------------------------------------------------------------------------
 ## Load cell rules previously saved using netpyne format (DOES NOT INCLUDE VIP, NGF and spiny stellate)
@@ -71,16 +73,19 @@ cellParamLabels = ['IT2_reduced', 'IT3_reduced', 'ITP4_reduced', 'ITS4_reduced',
                     'PV_reduced', 'SOM_reduced', 'VIP_reduced', 'NGF_reduced',
                     'RE_reduced', 'TC_reduced', 'HTC_reduced', 'TI_reduced']  # , 'TI_reduced']
 
+# Load cellParams for each of the above cell subtype
 for ruleLabel in cellParamLabels:
-    netParams.loadCellParamsRule(label=ruleLabel, fileName='cells/' + ruleLabel + '_cellParams.json')  # Load cellParams for each of the above cell subtype
+    netParams.loadCellParamsRule(label=ruleLabel, fileName='cells/' + ruleLabel + '_cellParams.json')
+
 
 #------------------------------------------------------------------------------
 # Population parameters
 #------------------------------------------------------------------------------
 
-## load densities
-with open('cells/cellDensity.pkl', 'rb') as fileObj: density = pickle.load(fileObj)['density']
-density = {k: [x * cfg.scaleDensity for x in v] for k,v in density.items()} # Scale densities
+## Load densities
+with open('cells/cellDensity.pkl', 'rb') as fileObj:
+    density = pickle.load(fileObj)['density']
+density = {k: [x * cfg.scaleDensity for x in v] for k, v in density.items()} # Scale densities
 
 ### LAYER 1:
 netParams.popParams['NGF1'] = {'cellType': 'NGF', 'cellModel': 'HH_reduced','ynormRange': layer['1'],   'density': density[('A1','nonVIP')][0]}
@@ -98,7 +103,6 @@ netParams.popParams['SOM3'] =    {'cellType': 'SOM', 'cellModel': 'HH_reduced', 
 netParams.popParams['PV3'] =     {'cellType': 'PV',  'cellModel': 'HH_reduced',   'ynormRange': layer['3'],   'density': density[('A1','PV')][1]} ## CHANGE DENSITY
 netParams.popParams['VIP3'] =    {'cellType': 'VIP', 'cellModel': 'HH_reduced',   'ynormRange': layer['3'],   'density': density[('A1','VIP')][1]} ## CHANGE DENSITY
 netParams.popParams['NGF3'] =    {'cellType': 'NGF', 'cellModel': 'HH_reduced',   'ynormRange': layer['3'],   'density': density[('A1','nonVIP')][1]}
-
 
 ### LAYER 4:
 netParams.popParams['ITP4'] =	 {'cellType': 'IT', 'cellModel': 'HH_reduced',  'ynormRange': layer['4'],   'density': 0.5*density[('A1','E')][2]}      ## CHANGE DENSITY #
@@ -135,8 +139,7 @@ netParams.popParams['NGF6'] =    {'cellType': 'NGF', 'cellModel': 'HH_reduced', 
 
 
 ### THALAMIC POPULATIONS (from prev model)
-thalDensity = density[('A1','PV')][2] * 1.25  # temporary estimate (from prev model)
-
+thalDensity = density[('A1', 'PV')][2] * 1.25  # temporary estimate (from prev model)
 netParams.popParams['TC'] =     {'cellType': 'TC',  'cellModel': 'HH_reduced',  'ynormRange': layer['thal'],   'density': 0.75*thalDensity}
 netParams.popParams['TCM'] =    {'cellType': 'TC',  'cellModel': 'HH_reduced',  'ynormRange': layer['thal'],   'density': thalDensity}
 netParams.popParams['HTC'] =    {'cellType': 'HTC', 'cellModel': 'HH_reduced',  'ynormRange': layer['thal'],   'density': 0.25*thalDensity}
@@ -154,7 +157,6 @@ if cfg.reducedPop:
 
 ## List of E and I pops to use later on
 Epops = ['IT2', 'IT3', 'ITP4', 'ITS4', 'IT5A', 'CT5A', 'IT5B', 'CT5B' , 'PT5B', 'IT6', 'CT6']  # all layers
-
 Ipops = ['NGF1',                            # L1
         'PV2', 'SOM2', 'VIP2', 'NGF2',      # L2
         'PV3', 'SOM3', 'VIP3', 'NGF3',      # L3
@@ -162,7 +164,6 @@ Ipops = ['NGF1',                            # L1
         'PV5A', 'SOM5A', 'VIP5A', 'NGF5A',  # L5A
         'PV5B', 'SOM5B', 'VIP5B', 'NGF5B',  # L5B
         'PV6', 'SOM6', 'VIP6', 'NGF6']      # L6
-
 
 
 #------------------------------------------------------------------------------
@@ -193,8 +194,9 @@ ThalIISynMech = ['GABAASlow']
 # Local connectivity parameters
 #------------------------------------------------------------------------------
 
-## load data from conn pre-processing file
-with open('conn/conn.pkl', 'rb') as fileObj: connData = pickle.load(fileObj)
+## Load data from conn pre-processing file
+with open('conn/conn.pkl', 'rb') as fileObj:
+    connData = pickle.load(fileObj)
 pmat = connData['pmat']
 lmat = connData['lmat']
 wmat = connData['wmat']
@@ -346,13 +348,13 @@ def wireCortex():
                             'synsPerConn': 1,
                             'sec': 'proximal'}
 
-if cfg.addConn and cfg.wireCortex: wireCortex()
+if cfg.addConn and cfg.wireCortex:
+    wireCortex()
 
 
 #------------------------------------------------------------------------------
 # Thalamic connectivity parameters
 #------------------------------------------------------------------------------
-
 
 #------------------------------------------------------------------------------
 ## Intrathalamic
@@ -360,7 +362,8 @@ if cfg.addConn and cfg.wireCortex: wireCortex()
 TEpops = ['TC', 'TCM', 'HTC']
 TIpops = ['IRE', 'IREM', 'TI', 'TIM']
 
-def IsThalamicCore (ct): return ct == 'TC' or ct == 'HTC' or ct == 'IRE' or ct == 'TI'
+def IsThalamicCore (ct):
+    return ct == 'TC' or ct == 'HTC' or ct == 'IRE' or ct == 'TI'
 
 def wireThal ():
   # set intrathalamic connections
@@ -400,7 +403,9 @@ def wireThal ():
                   'synsPerConn': 1,
                   'sec': 'soma'}
 
-if cfg.addConn and cfg.addIntraThalamicConn: wireThal()
+if cfg.addConn and cfg.addIntraThalamicConn:
+    wireThal()
+
 #------------------------------------------------------------------------------
 ## Corticothalamic
 def connectCortexToThal ():
@@ -427,7 +432,9 @@ def connectCortexToThal ():
                   'synsPerConn': 1,
                   'sec': 'soma'}
 
-if cfg.addConn and cfg.addCorticoThalamicConn: connectCortexToThal()
+if cfg.addConn and cfg.addCorticoThalamicConn:
+    connectCortexToThal()
+
 #------------------------------------------------------------------------------
 ## Thalamocortical - this was added from Christoph Metzner's branch
 def connectThalToCortex ():
@@ -492,7 +499,10 @@ def connectThalToCortex ():
                   'synsPerConn': 1,
                   'sec': 'soma'}
 
-if cfg.addConn and cfg.addThalamoCorticalConn: connectThalToCortex()
+if cfg.addConn and cfg.addThalamoCorticalConn:
+    connectThalToCortex()
+
+
 #------------------------------------------------------------------------------
 # Subcellular connectivity (synaptic distributions)
 #------------------------------------------------------------------------------
@@ -595,13 +605,16 @@ def addSubConn ():
       'groupSynMechs': ESynMech,
       'density': 'uniform'}
 
-if cfg.addSubConn: addSubConn()
+if cfg.addSubConn:
+    addSubConn()
+
 
 #------------------------------------------------------------------------------
 # Background inputs
 #------------------------------------------------------------------------------
 if cfg.addBkgConn:
-    # add bkg sources for E and I cells
+
+    # Add bkg sources for E and I cells
     netParams.stimSourceParams['excBkg'] = {
         'type': 'NetStim',
         'start': cfg.startBkg,
@@ -637,7 +650,7 @@ if cfg.addBkgConn:
                  'PV5A', 'VIP5A', 'NGF5A', 'SOM5B', 'PV5B', 'VIP5B', 'NGF5B', 'SOM6', 'PV6', 'VIP6', 'NGF6']:
         weightBkg[pop] *= cfg.BkgCtxIGain
 
-
+    # Define bkg targets
     for pop in pops:
         netParams.stimTargetParams['excBkg->'+pop] =  {
             'source': 'excBkg',
@@ -658,13 +671,18 @@ if cfg.addBkgConn:
             'weight': weightBkg[pop],
             'delay': cfg.delayBkg}
 
+
+#------------------------------------------------------------------------------
+# Cochlear inputs
+#------------------------------------------------------------------------------
+
 def prob2conv(prob, npre):
     # probability to convergence; prob is connection probability, npre is number of presynaptic neurons
     return int(0.5 + prob * npre)
 
-
-# cochlea -> thal
+# Cochlea -> thal
 def connectCochleaToThal():
+    # Cochlea -> Thal Core
     prob = '%f * exp(-dist_x/%f)' % (cfg.cochlearThalInput['probECore'], ThalamicCoreLambda)
     netParams.connParams['cochlea->ThalECore'] = {
         'preConds': {'pop': 'cochlea'},
@@ -687,7 +705,7 @@ def connectCochleaToThal():
         'weight': cfg.cochlearThalInput['weightICore'],
         'synMechWeightFactor': cfg.synWeightFractionEI,
         'delay': cfg.delayBkg}
-    # cochlea -> Thal Matrix
+    # Cochlea -> Thal Matrix
     netParams.connParams['cochlea->ThalEMatrix'] = {
         'preConds': {'pop': 'cochlea'},
         'postConds': {'pop': 'TCM'},
@@ -709,14 +727,15 @@ def connectCochleaToThal():
         'synMechWeightFactor': cfg.synWeightFractionEI,
         'delay': cfg.delayBkg}
 
-
 if cfg.cochlearThalInput:
     from input import cochlearSpikes
-    dcoch = cochlearSpikes(freqRange = cfg.cochlearThalInput['freqRange'],
-                                numCenterFreqs=cfg.cochlearThalInput['numCenterFreqs'],
-                                loudnessScale=cfg.cochlearThalInput['loudnessScale'],
-                                lfnwave=cfg.cochlearThalInput['lfnwave'],
-                                lonset=cfg.cochlearThalInput['lonset'])
+    dcoch = cochlearSpikes(
+        freqRange = cfg.cochlearThalInput['freqRange'],
+        numCenterFreqs=cfg.cochlearThalInput['numCenterFreqs'],
+        loudnessScale=cfg.cochlearThalInput['loudnessScale'],
+        lfnwave=cfg.cochlearThalInput['lfnwave'],
+        lonset=cfg.cochlearThalInput['lonset']
+    )
     cochlearSpkTimes = dcoch['spkT']
     cochlearCenterFreqs = dcoch['cf']
     netParams.cf = dcoch['cf']
@@ -757,13 +776,20 @@ if cfg.addIClamp:
                 'loc': 0.5
             }
 
+
+#------------------------------------------------------------------------------
+# OU conductance inputs
+#------------------------------------------------------------------------------
+
 if cfg.addNoiseConductance:
     with open('data/inputResistances.json', 'rb') as f:
         inpRes = json.load(f)
-    with open ('data/rmpPops.json') as f:
-        rmpPops = json.load(f)
+    #with open ('data/rmpPops.json') as f:
+    #    rmpPops = json.load(f)
     netParams.NoiseConductanceParams = {}
+    
     for pop in cfg.allpops:
+        
         Gin = 1 / inpRes[pop]
         g0 = (cfg.OUamp / 100) * Gin
         sigma = (cfg.OUstd/ 100) * Gin
@@ -785,6 +811,7 @@ if cfg.addNoiseConductance:
                 'loc': 0.5,
                 'conds': {'pop':pop}
         }
+
 
 #------------------------------------------------------------------------------
 # NetStim inputs (to simulate short external stimuli; not bkg)
@@ -813,6 +840,7 @@ if cfg.addNetStim:
                 'weight': weight,
                 'synMechWeightFactor': synMechWeightFactor,
                 'delay': delay}
+
 
 #------------------------------------------------------------------------------
 # Description

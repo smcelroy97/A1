@@ -98,14 +98,26 @@ cfg.saveCellConns = False
 # Analysis and plotting
 # ------------------------------------------------------------------------------
 
-cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig': False, 'orderInverse': True, 'figSize': (25, 25),
-                              'markerSize': 1}   # Plot a raster
+cfg.analysis['plotRaster'] = {
+    'include': cfg.allpops,
+    'saveFig': True,
+    'showFig': False,
+    'orderInverse': True,
+    'figSize': (25, 25),
+    'markerSize': 1
+}
 
-# cfg.analysis['plotSpikeStats'] = {'stats' : ['isicv'], 'saveFig' : True}
+cfg.analysis['plotSpikeStats'] = {
+   'stats': ['rate', 'isicv'],
+   'figSize': (6, 12),
+   'timeRange': [1000, cfg.duration],
+   'dpi': 300,
+   'showFig': 0,
+   'saveFig': 1
+}
 
 # cfg.analysis['plotTraces'] = {'include': cfg.allpops, 'timeRange': [0, cfg.duration],
 # 'oneFigPer': 'cell', 'overlay': True, 'saveFig': False, 'showFig': False, 'figSize':(12,8)}
-
 
 def setplotTraces (ncell=50, linclude=cfg.allpops, timeRange = cfg.duration):
   pops = []
@@ -161,7 +173,6 @@ cfg.synWeightFractionThalCtxIE = [1.0, 0.0]
 # Network
 # ------------------------------------------------------------------------------
 
-# Insert params from previous tuning
 # Insert params from previous tuning
 with open('data/initCfg.json', 'rb') as f:
     cfgLoad = json.load(f)
@@ -254,9 +265,9 @@ cfg.cochThalFreqRange = [750, 1250]
 cfg.thalL4PV = 0.21367245896786016
 cfg.thalL4SOM = 0.24260966747847523
 cfg.thalL4E = 2.0 #1.9540886147587417
-
 cfg.thalL4VIP = 1.0
 cfg.thalL4NGF = 1.0
+
 cfg.L3L3scaleFactor = 1.0
 cfg.CT6ScaleFactor = 1.0
 
@@ -283,6 +294,7 @@ with open('conn/conn.pkl', 'rb') as fileObj:
 cfg.wmat = connData['wmat']
 
 cfg.seeds = {'conn': 23451, 'stim': 1, 'loc': 1}
+
 # ------------------------------------------------------------------------------
 # Background inputs
 # ------------------------------------------------------------------------------
@@ -299,10 +311,8 @@ cfg.BkgCtxIGain = 0.8285714285714285
 
 cfg.NGF6bkgGain = 1.0
 
+# Parameters to generate realistic auditory thalamic inputs using Brian Hears
 cfg.cochlearThalInput = False
-# parameters to generate realistic  auditory thalamic inputs using Brian Hears
-
-
 if cfg.cochlearThalInput:
     cfg.cochlearThalInput = {"lonset" : [0], "numCenterFreqs": 100, "freqRange":[125, 20000], "loudnessScale": 1,
                              "lfnwave": ["wav/silence6.5s.wav"]}
@@ -318,7 +328,6 @@ if cfg.cochlearThalInput:
 else:
     cfg.cochlearThalInput = False
 
-
 # ------------------------------------------------------------------------------
 # Current inputs
 # ------------------------------------------------------------------------------
@@ -330,10 +339,12 @@ cfg.injectionInterval = 3000  # 1 second in ms
 cfg.injectionDuration = 1000  # 1 second in ms
 cfg.injectionAmplitudes =  np.linspace(0.0, 0.6, 13)
 
+# ------------------------------------------------------------------------------
+# OU conductance inputs
+# -----------------------------------------------------------------------------
 cfg.addNoiseConductance = 1
-
-cfg.OUamp =   0.05 # 0.00007 # 200 # 0.05
-cfg.OUstd =   0.5 * cfg.OUamp# 35
+cfg.OUamp =   1.0
+cfg.OUstd =   0.4 * cfg.OUamp
 cfg.NoiseConductanceDur = cfg.duration
 
 # ------------------------------------------------------------------------------
@@ -341,5 +352,10 @@ cfg.NoiseConductanceDur = cfg.duration
 # ------------------------------------------------------------------------------
 cfg.addNetStim = 0
 
+# ------------------------------------------------------------------------------
+# # Get params from batchtools
+# ------------------------------------------------------------------------------
+
 cfg.tune = {}
+
 cfg.update_cfg()

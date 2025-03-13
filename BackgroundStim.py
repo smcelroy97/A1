@@ -2,8 +2,9 @@ import json
 import h5py.h5d
 import numpy as np
 
-# adapted from: https://github.com/BlueBrain/neurodamus/blob/2c7052096c22fb5183fdef120d080608748da48d/neurodamus/core/stimuli.py#L271
+# Adapted from: https://github.com/BlueBrain/neurodamus/blob/2c7052096c22fb5183fdef120d080608748da48d/neurodamus/core/stimuli.py#L271
 class addStim():
+
     @staticmethod
     def add_ornstein_uhlenbeck(tau, sigma, mean, duration, dt=0.025, seed=100000, plotFig=False):
         from neuron import h
@@ -41,9 +42,9 @@ class addStim():
             for n in range(1, ntstep):
                 svec.x[n] = svec[n - 1] * mu + noise[n]  # signal [uS]
 
-
         svec.add(mean)  # shift signal by mean value [uS]
         svec = h.Vector([1 / x if x > 1E-9 and x < 1E9 else 1E9 for x in svec])
+        # TODO: fix the expression above: (x < 1E9) condition is wrong
 
         if plotFig:
             import matplotlib.pyplot as plt
@@ -61,20 +62,25 @@ class addStim():
 
         return tvec, svec
 
+
     def addNoiseGClamp(sim):
         # from init import vecs_dict
         from neuron import h
         import numpy as np
         print('Creating Ornstein Uhlenbeck process to create noise conductance signal')
         import math
+
+        # Generate OU signal(s)
         vecs_dict = {}
         OUFlags = {}
         for cell_ind, cell in enumerate(sim.net.cells):
+
             pop = cell.tags['pop']
             if pop not in OUFlags:
                 OUFlags[pop] = True
             vecs_dict.update({cell_ind: {'tvecs': {}, 'svecs': {}}})
-            cell_seed = (sim.cfg.seeds['stim']+ cell.gid) * 2
+            cell_seed = (sim.cfg.seeds['stim'] + cell.gid) * 2
+
             for stim_ind, stim in enumerate(sim.net.cells[cell_ind].stims):
                 if 'NoiseSEClamp' in stim['label']:
                     mean = sim.net.params.NoiseConductanceParams[cell.tags['pop']]['g0']
@@ -84,17 +90,19 @@ class addStim():
                         sigma=sigma,
                         mean=mean,
                         duration=stim['dur1'],
-                        dt=0.05,
+                        dt=0.05,    # TODO: what if it is different than cfg.dt ?
                         seed=cell_seed,
-                        plotFig=False)
-
-                    if any(val<0.0 for val in svec):
+                        plotFig=False
+                    )
+                    if any(val < 0.0 for val in svec):  # TODO: remove this check?
                         OUFlags[pop] = False
+                        raise ValueError('Negative values in the conductance signal are not allowed')
                         break
                     else:
                         vecs_dict[cell_ind]['tvecs'].update({stim_ind: tvec})
                         vecs_dict[cell_ind]['svecs'].update({stim_ind: svec})
 
+        # Play the OU signals to the cells (via ConductanceSource mechanism)
         for cell_ind, cell in enumerate(sim.net.cells):
             pop = cell.tags['pop']
             for stim_ind, stim in enumerate(sim.net.cells[cell_ind].stims):
@@ -102,12 +110,12 @@ class addStim():
                     if OUFlags[pop] == True:  # Check the flag for the population
                         conductance_source = sim.net.cells[cell_ind].stims[stim_ind]['hObj']
                         stim_vec = vecs_dict[cell_ind]['svecs'][stim_ind]
-                        stim_vec.play(conductance_source._ref_rs, vecs_dict[cell_ind]['tvecs'][stim_ind])
-
-
+                        stim_vec.play(
+                            conductance_source._ref_rs,
+                            vecs_dict[cell_ind]['tvecs'][stim_ind]
+                        )
 
         return sim, vecs_dict, OUFlags
-
 
 
     def addNoiseIClamp(sim):
