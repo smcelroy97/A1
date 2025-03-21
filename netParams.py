@@ -782,17 +782,30 @@ if cfg.addIClamp:
 #------------------------------------------------------------------------------
 
 if cfg.addNoiseConductance:
+
+    # Load input resistances
     with open('data/inputResistances.json', 'rb') as f:
         inpRes = json.load(f)
-    #with open ('data/rmpPops.json') as f:
-    #    rmpPops = json.load(f)
+    
+    # Load OU parameters for each population
+    if not cfg.ou_common:
+        with open(cfg.ou_params_fpath, 'r') as fid:
+            cfg.ou_pop_inputs = json.load(fid)['ou_inputs']
+    
     netParams.NoiseConductanceParams = {}
     
     for pop in cfg.allpops:
+
+        if cfg.ou_common:
+            ou_amp = cfg.OUamp
+            ou_std = cfg.OUstd
+        else:
+            ou_amp = cfg.ou_pop_inputs[pop]['ou_mean']
+            ou_std = cfg.ou_pop_inputs[pop]['ou_std']
         
         Gin = 1 / inpRes[pop]
         g0 = (cfg.OUamp / 100) * Gin
-        sigma = (cfg.OUstd/ 100) * Gin
+        sigma = (cfg.OUstd / 100) * Gin
         # print('pop is: '  + pop + ' Input resistance is: ' + str(inpRes[pop]) + ' input conductance is: ' + str(Gin) + '   g0 is:  ' + str(g0))
         netParams.NoiseConductanceParams[pop] = {
             'g0': g0,

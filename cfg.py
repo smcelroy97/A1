@@ -342,10 +342,19 @@ cfg.injectionAmplitudes =  np.linspace(0.0, 0.6, 13)
 # ------------------------------------------------------------------------------
 # OU conductance inputs
 # -----------------------------------------------------------------------------
+
 cfg.addNoiseConductance = 1
+cfg.ou_common = 0
+cfg.NoiseConductanceDur = cfg.duration
+
+# Common OU properties
 cfg.OUamp =   1.0
 cfg.OUstd =   0.4 * cfg.OUamp
-cfg.NoiseConductanceDur = cfg.duration
+
+# Individual OU properties for each population
+cfg.ou_pop_inputs = {}
+cfg.ou_params_fpath = 'ou_inputs.json'
+
 
 # ------------------------------------------------------------------------------
 # NetStim inputs

@@ -116,4 +116,4 @@ if comm.is_host():
     comm.send(out_json)
     comm.close()
 
-sim.close()
+#sim.close()
