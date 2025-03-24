@@ -22,7 +22,7 @@ cfg = specs.SimConfig()
 # Run parameters
 # ------------------------------------------------------------------------------
 cfg.duration = 3000  # Duration of the sim, in ms
-cfg.dt = 0.05  # Internal Integration Time Step
+cfg.dt = 0.025  # Internal Integration Time Step
 cfg.verbose = 0  # Show detailed messages
 cfg.progressBar = 0  # even more detailed message
 cfg.hParams['celsius'] = 37
@@ -84,7 +84,7 @@ cfg.recordDipole = False
 # Saving
 # ------------------------------------------------------------------------------
 
-cfg.simLabel = 'inverse1000000'
+cfg.simLabel = 'fxndtpt025'
 cfg.saveFolder = 'simOutput/' + cfg.simLabel  # Set file output name
 cfg.savePickle = True  # Save pkl file
 cfg.saveJson = False  # Save json file
@@ -169,7 +169,7 @@ with open('data/initCfg.json', 'rb') as f:
 for key, value in cfgLoad.items():
     setattr(cfg, key, value)
 
-# These values taken from M1 cfg (https://github.com/Neurosim-lab/netpyne/blob/development/examples/M1detailed/cfg.py)
+# These values taken from M1 cfg (https://github.com/Neurosim-lab/netpyne/bflob/development/examples/M1detailed/cfg.py)
 cfg.singleCellPops = False
 cfg.reducedPop = False  # insert number to declare specific number of populations, if going for full model set to False
 cfg.singlePop = ''
@@ -324,16 +324,28 @@ else:
 # ------------------------------------------------------------------------------
 # The way this is set up now is to make F-I curves for each population but can be used for other purposes
 # Just needs to be modified for the specific use
-cfg.addIClamp = 0
-cfg.numInjections = 13
-cfg.injectionInterval = 3000  # 1 second in ms
-cfg.injectionDuration = 1000  # 1 second in ms
-cfg.injectionAmplitudes =  np.linspace(0.0, 0.6, 13)
+cfg.addIClamp = {
+    'FIcurve' : False,
+    'numInjections' : 13,
+    'injectionInterval' : 3000,
+    'injectionDuration' : 1000,
+    'injectionAmplitudes' : np.linspace(0.0, 0.6, 13),
+    'holdingCurrent' : True,
+    'includePops' : ['IRE', 'IREM', 'TI', 'TIM', 'TC', 'TCM', 'HTC',
+                     'SOM2', 'VIP2', 'SOM3', 'VIP3', 'SOM4', 'VIP4',
+                     'SOM5A', 'VIP5A', 'SOM5B', 'VIP5B','SOM6', 'VIP6'],
+    'holdingAmp' : -0.05
+
+}
+
+
+# ------------------------------------------------------------------------------
+# Background conductance inputs
+# ------------------------------------------------------------------------------
 
 cfg.addNoiseConductance = 1
-
-cfg.OUamp =   -100 # 0.00007 # 200 # 0.05
-cfg.OUstd =   10  # 35
+cfg.OUamp =  0.002899 # 200 # 0.05
+cfg.OUstd =   0.00056763157894736845
 cfg.NoiseConductanceDur = cfg.duration
 
 # ------------------------------------------------------------------------------
