@@ -333,8 +333,8 @@ cfg.addIClamp = {
     'holdingCurrent' : True,
     'includePops' : ['IRE', 'IREM', 'TI', 'TIM', 'TC', 'TCM', 'HTC',
                      'SOM2', 'VIP2', 'SOM3', 'VIP3', 'SOM4', 'VIP4',
-                     'SOM5A', 'VIP5A', 'SOM5B', 'VIP5B','SOM6', 'VIP6'],
-    'holdingAmp' : -0.05
+                     'SOM5A', 'VIP5A', 'SOM5B', 'VIP5B','SOM6', 'VIP6', 'TC', 'TCM', 'HTC'],
+    'holdingAmp' : -0.0575
 
 }
 
