@@ -198,9 +198,12 @@ cfg.scaleDensity = 1.0  # Should be 1.0 unless need lower cell density for test 
 # ------------------------------------------------------------------------------
 
 # Cortical
-cfg.addConn = 0
+cfg.addConn = 1
 cfg.addSubConn = 1.0
 cfg.wireCortex = 1.0
+
+# Global weight multiplier
+cfg.wmult = 0.01
 
 # cfg.EEGain = 0.75
 # cfg.EIGain = 1.5

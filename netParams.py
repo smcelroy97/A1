@@ -205,6 +205,11 @@ connDataSource = connData['connDataSource']
 
 wmat = cfg.wmat
 
+# Apply global weight multiplier
+for pre in wmat.keys():
+    for post in wmat[pre].keys():
+        wmat[pre][post] *= cfg.wmult
+
 layerGainLabels = ['1', '2', '3', '4', '5A', '5B', '6']
 
 def wireCortex():
