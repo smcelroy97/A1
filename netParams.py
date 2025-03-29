@@ -797,15 +797,15 @@ if cfg.addNoiseConductance:
     for pop in cfg.allpops:
 
         if cfg.ou_common:
-            ou_amp = cfg.OUamp
-            ou_std = cfg.OUstd
+            ou_amp = cfg.OUamp / 100
+            ou_std = cfg.OUstd / 100
         else:
-            ou_amp = cfg.ou_pop_inputs[pop]['ou_mean']
-            ou_std = cfg.ou_pop_inputs[pop]['ou_std']
+            ou_amp = cfg.ou_pop_inputs[pop]['ou_mean'] / 100
+            ou_std = cfg.ou_pop_inputs[pop]['ou_std'] / 100
         
         Gin = 1 / inpRes[pop]
-        g0 = (cfg.OUamp / 100) * Gin
-        sigma = (cfg.OUstd / 100) * Gin
+        g0 = ou_amp * Gin
+        sigma = ou_std * Gin
         # print('pop is: '  + pop + ' Input resistance is: ' + str(inpRes[pop]) + ' input conductance is: ' + str(Gin) + '   g0 is:  ' + str(g0))
         netParams.NoiseConductanceParams[pop] = {
             'g0': g0,
@@ -816,7 +816,7 @@ if cfg.addNoiseConductance:
             netParams.stimSourceParams['NoiseSEClamp_source_'+pop] = {
                 'type': 'ConductanceSource',
                 'dur1': cfg.NoiseConductanceDur,
-                'amp1' : 0 # rmpPops[pop] #abs(rmpPops[pop] * 0.18)
+                'amp1': 0 # rmpPops[pop] #abs(rmpPops[pop] * 0.18)
             }
             netParams.stimTargetParams['NoiseSEClamp_target_'+pop] = {
                 'source': 'NoiseSEClamp_source_'+pop,

@@ -69,9 +69,10 @@ cfg.TEpops = ['TC', 'TCM', 'HTC']
 cfg.TIpops = ['IRE', 'IREM', 'TI', 'TIM']
 
 # Dict with traces to record -- taken from M1 cfg.py
-cfg.recordTraces = {'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'}
-                    # 'g_NMDA': {'sec':'soma', 'loc':0.5, 'synMech':'NMDA', 'var':'g'},
-                    # 'g_GABAB': {'sec':'soma', 'loc':0.5, 'synMech':'GABAB', 'var':'g'}
+cfg.recordTraces = {
+    #'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'}
+    # 'g_NMDA': {'sec':'soma', 'loc':0.5, 'synMech':'NMDA', 'var':'g'},
+    # 'g_GABAB': {'sec':'soma', 'loc':0.5, 'synMech':'GABAB', 'var':'g'}
 }
 cfg.recordStim = False  # Seen in M1 cfg.py
 cfg.recordTime = True  # SEen in M1 cfg.py
@@ -84,7 +85,7 @@ cfg.recordDipole = False
 # Saving
 # ------------------------------------------------------------------------------
 
-cfg.simLabel = 'inverse1000000'
+cfg.simLabel = 'ou_pop_test_2'
 cfg.saveFolder = 'simOutput/' + cfg.simLabel  # Set file output name
 cfg.savePickle = True  # Save pkl file
 cfg.saveJson = False  # Save json file
@@ -108,6 +109,7 @@ cfg.analysis['plotRaster'] = {
 }
 
 cfg.analysis['plotSpikeStats'] = {
+   'include': cfg.allpops,
    'stats': ['rate', 'isicv'],
    'figSize': (6, 12),
    'timeRange': [1000, cfg.duration],
