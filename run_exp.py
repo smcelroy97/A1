@@ -161,7 +161,7 @@ if need_run:
     sim.net.addStims() 			# add network stimulation
 
     # Add OU conductance input to each Cell
-    if sim.cfg.addNoiseConductance:
+    if sim.cfg.add_ou_conductance:
         sim, vecs_dict, OUFlags = BS.addStim.addNoiseGClamp(sim)
 
     # Run
@@ -170,7 +170,7 @@ if need_run:
     sim.gatherData()
 
     # Gather OUFlags
-    if sim.cfg.addNoiseConductance:
+    if sim.cfg.add_ou_conductance:
         allOUFlags = sim.pc.py_allgather(OUFlags)
         combinedOUFlags = {}
         for flags in allOUFlags:
