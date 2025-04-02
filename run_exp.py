@@ -1,25 +1,18 @@
-import BackgroundStim as BS
-from create_net_params import create_net_params
-from create_base_cfg import create_base_cfg
-from netpyne import sim
-from netpyne.batchtools import comm, specs
-import importlib.util
+import argparse
 import json
 from pathlib import Path
-import sys
 
 import matplotlib
 matplotlib.use('Agg')  # to avoid graphics error on servers
 
+from netpyne.batchtools import comm, specs
+from netpyne import sim
 
-def _load_module(fpath_mod):
-    """Load py-file as a module to acess its functions. """
-    mod_spec = importlib.util.spec_from_file_location(
-        'module.name', fpath_mod)
-    mod = importlib.util.module_from_spec(mod_spec)
-    sys.modules['module.name'] = mod
-    mod_spec.loader.exec_module(mod)
-    return mod
+import BackgroundStim as BS
+from create_base_cfg import create_base_cfg
+from create_net_params import create_net_params
+from load_module import load_module
+
 
 def setdminID(sim, lpop):
     # Setup min, max ID and dnumc for each population in lpop
@@ -72,12 +65,23 @@ def setCochCellLocationsX(cfg, netParams, pop, sz, scale):
 DIRNAME_EXP_CONFIGS = 'exp_configs'
 DIRNAME_EXP_RESULTS = 'exp_results'    # without batchtools
 
-is_batch = False
+# Take batch flag from command line arguments, default to False
+parser = argparse.ArgumentParser(description="Run experiment script.")
+parser.add_argument('--batch', action='store_true',
+                    help="Run in batch mode.")
+parser.add_argument('--name', type=str,
+                    help="Experiment name (required if not in batch mode).")
+args, _ = parser.parse_known_args()
+is_batch = args.batch
+
+if not args.batch and args.name is None:
+    raise ValueError("Either --name or --batch is requred")
+
 need_run = True
 
 # Experiment name (define the folder name in exp_configs and exp_results)
 if not is_batch:
-    exp_name = 'test_wmult_0.01'
+    exp_name = args.name
 
 
 dirpath_self = Path(__file__).resolve().parent
@@ -87,9 +91,13 @@ if is_batch:
     # which is then used to generate the path to exp_cfg.py
     exp_name = specs.mappings['simLabel'][:-6]  # cut away job id
 
-# Import experiment-specific config py-file
+# Import experiment-specific config and batch py-files
 fpath_exp_cfg = dirpath_self / DIRNAME_EXP_CONFIGS / exp_name / 'exp_cfg.py'
-cfg_mod = _load_module(fpath_exp_cfg)
+fpath_exp_batch = dirpath_self / DIRNAME_EXP_CONFIGS / exp_name / 'batch_params.py'
+#print(f'Experiment config: {fpath_exp_cfg}')
+cfg_mod = load_module(fpath_exp_cfg)
+if is_batch:
+    batch_mod = load_module(fpath_exp_batch)
 
 # Initialize config object, common for every experiment of the model
 cfg = create_base_cfg()
@@ -104,6 +112,11 @@ if not is_batch:
 
 # Update config by batchtools (if applicable)
 cfg.update_cfg()
+
+# Apply experiment-specific post-update config modifications
+# (derive other params from the ones set by batchtools in update_cfg)
+if is_batch and hasattr(batch_mod, 'post_update'):
+    batch_mod.post_update(cfg)
 
 # Create netParams based on the config
 netParams = create_net_params(cfg)
@@ -152,8 +165,7 @@ if need_run:
         sim, vecs_dict, OUFlags = BS.addStim.addNoiseGClamp(sim)
 
     # Run
-    # setup variables to record for each cell (spikes, V traces, etc)
-    sim.setupRecording()
+    sim.setupRecording()       # setup variables to record for each cell (spikes, V traces, etc)
     sim.runSim()               # run parallel Neuron simulation
     sim.gatherData()
 
@@ -171,15 +183,14 @@ if need_run:
 
 # Finalize
 if comm.is_host():
-    if comm.rank == 0:
-        netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
-        print('transmitting data...')
-        inputs = specs.get_mappings()
-        avgRates = sim.analysis.popAvgRates(
-            tranges=[cfg.duration - 1000, cfg.duration],
-            show=False
-        )
-        avgRates['loss'] = 700
-        out_json = json.dumps({**inputs, **avgRates})
-        comm.send(out_json)
-        comm.close()
+    netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
+    print('transmitting data...')
+    inputs = specs.get_mappings()
+    avgRates = sim.analysis.popAvgRates(
+        tranges=[cfg.duration - 1000, cfg.duration],
+        show=False
+    )
+    avgRates['loss'] = 700
+    out_json = json.dumps({**inputs, **avgRates})
+    comm.send(out_json)
+    comm.close()
