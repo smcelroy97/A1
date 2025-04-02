@@ -1,7 +1,8 @@
-from netpyne.batchtools import specs
 import pickle
 import json
 import numpy as np
+
+from netpyne.batchtools import specs
 
 
 def create_base_cfg():
@@ -361,6 +362,7 @@ def create_base_cfg():
     # Individual OU properties for each population
     cfg.ou_pop_inputs = {}
     cfg.ou_params_fpath = 'ou_inputs.json'
+    cfg.ou_pop_inputs_override = {}  # override params loaded from ou_params_fpath
 
 
     # ------------------------------------------------------------------------------

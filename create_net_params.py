@@ -830,8 +830,14 @@ def create_net_params(cfg):
                 ou_amp = cfg.OUamp / 100
                 ou_std = cfg.OUstd / 100
             else:
-                ou_amp = cfg.ou_pop_inputs[pop]['ou_mean'] / 100
-                ou_std = cfg.ou_pop_inputs[pop]['ou_std'] / 100
+                if pop in cfg.ou_pop_inputs_override:
+                    # OU params from cfg
+                    ou_amp = cfg.ou_pop_inputs_override[pop]['ou_mean'] / 100
+                    ou_std = cfg.ou_pop_inputs_override[pop]['ou_std'] / 100
+                else:
+                    # OU params from json file
+                    ou_amp = cfg.ou_pop_inputs[pop]['ou_mean'] / 100
+                    ou_std = cfg.ou_pop_inputs[pop]['ou_std'] / 100
             
             Gin = 1 / inpRes[pop]
             g0 = ou_amp * Gin
