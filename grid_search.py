@@ -8,7 +8,8 @@ from load_module import load_module
 # Folder name for experiment configs (relative to this script)
 DIRNAME_EXP_CONFIGS = 'exp_configs'
 
-exp_name = 'batch_ouamp_all_unconn_1'
+#exp_name = 'batch_ouamp_all_unconn_1'
+exp_name = 'batch_oumean_ngf1_unconn'
 
 # Import experiment-specific batch_params.py and get batch params
 fpath_batch_params = (

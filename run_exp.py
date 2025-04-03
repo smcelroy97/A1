@@ -4,6 +4,7 @@ from pathlib import Path
 
 import matplotlib
 matplotlib.use('Agg')  # to avoid graphics error on servers
+import numpy as np
 
 from netpyne.batchtools import comm, specs
 from netpyne import sim

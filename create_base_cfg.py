@@ -356,14 +356,12 @@ def create_base_cfg():
     cfg.NoiseConductanceDur = cfg.duration
 
     # Common OU properties
-    cfg.OUamp =   1.0
-    cfg.OUstd =   0.4 * cfg.OUamp
+    cfg.OUamp = 1.0
+    cfg.OUstd = 0.4 * cfg.OUamp
 
     # Individual OU properties for each population
     cfg.ou_pop_inputs = {}
-    cfg.ou_params_fpath = 'ou_inputs.json'
-    cfg.ou_pop_inputs_override = {}  # override params loaded from ou_params_fpath
-
+    cfg.ou_params_fpath = ''
 
     # ------------------------------------------------------------------------------
     # NetStim inputs

@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 
@@ -15,3 +16,5 @@ def apply_exp_cfg(cfg):
     cfg.add_ou_conductance = 1
     cfg.ou_common = 0
     cfg.ou_params_fpath = (dirpath_self / 'ou_inputs.json').as_posix()
+    with open(cfg.ou_params_fpath, 'r') as fid:
+        cfg.ou_pop_inputs = json.load(fid)['ou_inputs']
