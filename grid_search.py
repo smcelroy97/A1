@@ -24,7 +24,7 @@ sge_config = {
     'queue': 'cpu.q',
     'cores': 30,
     'vmem': '128G',
-    'realtime': '1:00:00',
+    'realtime': '2:00:00',
     'command': (
         'conda activate netpyne_batch \n'
         'export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$LD_LIBRARY_PATH \n'
