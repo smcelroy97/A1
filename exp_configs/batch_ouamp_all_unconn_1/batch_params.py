@@ -7,3 +7,5 @@ def get_batch_params():
 
 def post_update(cfg):    
     cfg.OUstd = cfg.OUamp * 0.4
+    
+    

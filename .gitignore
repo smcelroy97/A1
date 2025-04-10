@@ -10,3 +10,4 @@ x86_64/
 .idea
 *exp_results*
 *ray*
+simulations/
