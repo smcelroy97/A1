@@ -30,16 +30,16 @@ def gen_regular_grid(
 if __name__ == '__main__':
     
     # Define the ranges and number of points for the grid
-    ou_mean_range = (-0.002, 0.008)
+    ou_mean_range = (0, 0.02)
     ou_mean_npoints = 4
-    ou_std_range = (0, 0.004)
+    ou_std_range = (0, 0.008)
     ou_std_npoints = 3
 
     # Define the output file path
     fpath_out = (
         Path(__file__).resolve().parents[2] /  # two levels above this script
         'exp_configs' / 
-        'batch_ougrid_ngf_0' / 
+        'batch_ougrid_pv_0' / 
         'ou_grid.csv'
     )
 
