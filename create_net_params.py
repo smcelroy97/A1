@@ -163,6 +163,23 @@ def create_net_params(cfg):
             'PV5B', 'SOM5B', 'VIP5B', 'NGF5B',  # L5B
             'PV6', 'SOM6', 'VIP6', 'NGF6']      # L6
 
+    # Remove unused pops
+    if hasattr(cfg, 'pops_active') and cfg.pops_active:
+        pop_params_new = {}
+        for pop in cfg.pops_active:
+            if pop in netParams.popParams:
+                pop_params_new[pop] = netParams.popParams[pop]
+            else:
+                print(f"Warning: pop '{pop}' not found in netParams.popParams")
+        netParams.popParams = pop_params_new
+    
+    # Selecting a subset of pops is not supporte in some cases
+    if hasattr(cfg, 'pops_active') and cfg.pops_active:
+        if cfg.addConn:
+            raise ValueError("cfg.pops_active is not supported for connected networks.")
+        if cfg.cochlearThalInput:
+            raise ValueError("cfg.pops_active is not supported for cochlear thalamic input.")
+    
 
     #------------------------------------------------------------------------------
     # Synaptic mechanism parameters
@@ -626,7 +643,7 @@ def create_net_params(cfg):
             'density': 'uniform'
         }
 
-    if cfg.addSubConn:
+    if cfg.addConn and cfg.addSubConn:
         addSubConn()
 
 
