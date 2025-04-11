@@ -7,6 +7,7 @@ dirpath_self = Path(__file__).resolve().parent
 
 def apply_exp_cfg(cfg):
     
+    # Duration
     cfg.duration = 3 * 1e3
     
     # Turn off the connections
@@ -23,6 +24,9 @@ def apply_exp_cfg(cfg):
         cfg.analysis['plotSpikeStats']['include'] = cfg.pops_active
     if 'plotTraces' in cfg.analysis:
         cfg.analysis['plotTraces']['include'] = cfg.pops_active
+    
+    # Time range for rate and CV calculation
+    cfg.analysis['plotSpikeStats']['timeRange'] = [2000, cfg.duration]
     
     # OU conductance
     cfg.add_ou_conductance = 1
