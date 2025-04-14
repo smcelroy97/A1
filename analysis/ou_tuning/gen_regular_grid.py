@@ -30,13 +30,13 @@ def gen_regular_grid(
 if __name__ == '__main__':
     
     # Define the ranges and number of points for the grid
-    ou_mean_range = (0, 0.02)
-    ou_mean_npoints = 4
-    ou_std_range = (0, 0.008)
-    ou_std_npoints = 3
+    ou_mean_range = (-0.001, 0.015)
+    ou_mean_npoints = 20
+    ou_std_range = (0, 0.03)
+    ou_std_npoints = 20
 
     # Experiment name
-    exp_name = 'batch_ougrid_som_0'
+    exp_name = 'batch_ougrid_ngf_0'
 
     # Define the output file path
     fpath_out = (

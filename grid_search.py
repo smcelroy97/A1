@@ -9,7 +9,7 @@ from load_module import load_module
 DIRNAME_EXP_CONFIGS = 'exp_configs'
 
 # Experiment name
-exp_name = 'batch_ougrid_som_0'
+exp_name = 'batch_ougrid_ngf_0'
 
 # Import experiment-specific batch_params.py and get batch params
 fpath_batch_params = (
@@ -26,7 +26,7 @@ sge_config = {
     'vmem': '128G',
     'realtime': '2:00:00',
     'command': (
-        'conda activate netpyne_batch \n'
+        'conda activate netpyne_sm \n'
         'export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$LD_LIBRARY_PATH \n'
         'export MKL_THREADING_LAYER=GNU \n'
         'mpiexec -n $NSLOTS -hosts $(hostname) nrniv -python -mpi run_exp.py --batch')
