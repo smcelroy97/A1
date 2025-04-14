@@ -23,28 +23,6 @@ def calc_pop_rate(
         rates = rates[0]
     return rates
 
-def calc_pop_cv(
-        pop_spikes: List[np.ndarray],  # per cells
-        time_limits: Tuple[float],
-        nspikes_min: int=3,   # min. number of spikes to compute CV for a cell
-        avg_result: bool=False
-        ) -> float | List[float]:
-    cvs = []
-    T = time_limits[1] - time_limits[0]
-    for spike_times in pop_spikes:
-        mask = ((spike_times >= time_limits[0]) & (spike_times <= time_limits[1]))
-        s = spike_times[mask]
-        if len(s) < nspikes_min:
-            continue
-        isi = s[1:] = s[:-1]
-        cv = np.std(isi) / np.mean(isi)
-        cvs.append(cv)
-    cvs = np.array(cvs)
-    if avg_result:
-        return cvs.mean()
-    else:
-        return cvs
-
 def calc_net_rates(
         net_spikes: Dict[str, List[np.ndarray]],  # {pop: spikes}
         time_limits: Tuple[float],
@@ -60,11 +38,32 @@ def calc_net_rates(
         )
     return net_rates
 
+def calc_pop_cv(
+        pop_spikes: List[np.ndarray],  # per cells
+        time_limits: Tuple[float],
+        nspikes_min: int = 3,   # min. number of spikes to compute CV for a cell
+        avg_result: bool = True
+        ) -> float | List[float]:
+    cvs = []
+    T = time_limits[1] - time_limits[0]
+    for spike_times in pop_spikes:
+        mask = ((spike_times >= time_limits[0]) & (spike_times <= time_limits[1]))
+        s = spike_times[mask]
+        if len(s) < nspikes_min:
+            continue
+        isi = s[1:] - s[:-1]
+        cvs.append(np.std(isi) / np.mean(isi))
+    cvs = np.array(cvs)
+    if avg_result:
+        return cvs.mean()
+    else:
+        return cvs
+
 def calc_net_cvs(
         net_spikes: Dict[str, List[np.ndarray]],  # {pop: spikes}
         time_limits: Tuple[float],
-        nspikes_min: int=3,   # min. number of spikes to compute CV for a cell
-        avg_result: bool=False,
+        nspikes_min: int = 3,   # min. number of spikes to compute CV for a cell
+        avg_result: bool = True,
         pop_names: List[str] | None = None,
         ) -> Dict[str, float | List[float]]:  # {pop: rates}
     net_cvs = {}

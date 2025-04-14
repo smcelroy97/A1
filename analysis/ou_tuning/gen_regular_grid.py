@@ -35,12 +35,13 @@ if __name__ == '__main__':
     ou_std_range = (0, 0.008)
     ou_std_npoints = 3
 
+    # Experiment name
+    exp_name = 'batch_ougrid_som_0'
+
     # Define the output file path
     fpath_out = (
         Path(__file__).resolve().parents[2] /  # two levels above this script
-        'exp_configs' / 
-        'batch_ougrid_pv_0' / 
-        'ou_grid.csv'
+        'exp_configs' / exp_name / 'ou_grid.csv'
     )
 
     # Generate and save the grid

@@ -1,24 +1,43 @@
+"""
+This script reads a batch simulation result folder,
+extracts the OU parameters from the json config files,
+calculates the firing rates and CVs from pkl files,
+and saves the results to a CSV file.
+
+Each table row corresponds to a single batch job.
+
+"""
+
 import json
+import os
 from pathlib import Path
 import pickle
 
-import numpy as np
 import pandas as pd
 
 import data_proc_utils as proc_utils
 import netpyne_res_parse_utils as parse_utils
 
 
-dirpath_base = Path(r'D:\WORK\Salvador\repo\A1_OUinp\simulations\exp_results_common'
-                    r'\batch_ougrid_pv_0')
+# Experiment name
+exp_name = 'batch_ougrid_som_0'
+
+# Time limits for the rate and CV calculation (in seconds)
+t_limits = (2, 3)  # in seconds
+
+# Min. number of spikes to use a cell for CV calculation
+nspikes_min = 5
+
+
+# Define the output file path
+dirpath_base = (
+    Path(__file__).resolve().parents[2] /  # two levels above this script
+    'exp_results' / exp_name
+)
 
 cfg_files = list(dirpath_base.rglob('*_cfg.json'))
-data_files = [file.with_name(file.stem.replace('_cfg', '_data') + '.pkl') for file in cfg_files]
-
-""" for c, d in zip(cfg_files, data_files):
-    print(f'cfg: {c}')
-    print(f'data: {d}')
-    print('') """
+data_files = [file.with_name(file.stem.replace('_cfg', '_data') + '.pkl')
+              for file in cfg_files]
 
 res = []
 
@@ -35,9 +54,6 @@ for n, (cfg_file, data_file) in enumerate(zip(cfg_files, data_files)):
     # Load sim result
     with open(data_file, 'rb') as fid:
         sim_result = pickle.load(fid)
-
-    t_limits = (2, 3)  # in seconds
-    nspikes_min = 3
 
     ncells = parse_utils.get_net_size(sim_result)
 
@@ -75,4 +91,3 @@ df = pd.DataFrame(data, columns=columns)
 # Save the DataFrame to a CSV file
 fpath_res = dirpath_base / 'batch_result.csv'
 df.to_csv(fpath_res, index=False)
-
