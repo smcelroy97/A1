@@ -30,7 +30,7 @@ def gen_regular_grid(
 if __name__ == '__main__':
     
     # Define the ranges and number of points for the grid
-    ou_mean_range = (-0.01, 0.015)
+    ou_mean_range = (-0.03, 0.015)
     ou_mean_npoints = 30
     ou_std_range = (0, 0.03)
     ou_std_npoints = 30
