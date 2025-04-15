@@ -1,0 +1,19 @@
+#!/bin/bash
+#$ -N jobbatch_ougrid_ngf_0_00288
+#$ -q cpu.q
+#$ -pe smp 30
+#$ -l h_vmem=128G
+#$ -l h_rt=2:00:00
+#$ -o /ddn/smcelroy97/A1-OUinp/exp_results/batch_ougrid_ngf_0/batch_ougrid_ngf_0_00288.run
+cd /ddn/smcelroy97/A1-OUinp
+source ~/.bashrc
+export JOBID=$JOB_ID
+export SOCNAME="('10.0.0.16', 43419)"
+
+export TUPLERUNTK0="ou_tuple=(-0.0160344827586206, 0.0186206896551724)"
+export STRRUNTK1="saveFolder=./exp_results/batch_ougrid_ngf_0"
+export STRRUNTK2="simLabel=batch_ougrid_ngf_0_00288"
+conda activate netpyne_sm 
+export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$LD_LIBRARY_PATH 
+export MKL_THREADING_LAYER=GNU 
+mpiexec -n $NSLOTS -hosts $(hostname) nrniv -python -mpi run_exp.py --batch
