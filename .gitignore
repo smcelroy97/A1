@@ -2,12 +2,11 @@ __pycache__/
 x86_64/
 .idea/
 *.mat
-*.png
 *.pyc
 *.iml
 *.xml
+*.pkl
 *DS_Store
 .idea
-*exp_results*
 *ray*
 simulations/
