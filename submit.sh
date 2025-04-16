@@ -9,4 +9,4 @@
 #$ -e /ddn/smcelroy97/A1model_sm/data/singleSim.err
 
 source ~/.bashrc
-mpiexec -n $NSLOTS -hosts $(hostname) nrniv -python -mpi init.py
+mpiexec -n $NSLOTS -hosts $(hostname) nrniv -python -mpi fart.py
