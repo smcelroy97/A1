@@ -10,3 +10,8 @@ x86_64/
 .idea
 *ray*
 simulations/
+exp_results/*/*.png
+exp_results/*/*.pkl
+exp_results/*/*.json
+exp_results/*/*.run
+exp_results/*/*.sh
