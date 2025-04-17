@@ -7,7 +7,6 @@ x86_64/
 *.xml
 *.pkl
 *DS_Store
-*.sh
 *.out
 .idea
 *ray*
