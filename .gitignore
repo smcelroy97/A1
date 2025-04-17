@@ -7,6 +7,8 @@ x86_64/
 *.xml
 *.pkl
 *DS_Store
+*.sh
+*.out
 .idea
 *ray*
 simulations/
@@ -15,3 +17,4 @@ exp_results/*/*.pkl
 exp_results/*/*.json
 exp_results/*/*.run
 exp_results/*/*.sh
+!exp_results/*/plots/*.png
