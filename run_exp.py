@@ -182,6 +182,9 @@ if need_run:
     sim.saveData()
     sim.analysis.plotData()    # plot spike raster etc
 
+    #import time
+    #time.sleep(10)
+
 # Finalize
 if comm.is_host():
     netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
@@ -195,3 +198,6 @@ if comm.is_host():
     out_json = json.dumps({**inputs, **avgRates})
     comm.send(out_json)
     comm.close()
+    """ out_json = json.dumps({'loss': 0})
+    comm.send(out_json)
+    comm.close() """

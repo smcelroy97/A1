@@ -16,4 +16,7 @@ exp_results/*/*.pkl
 exp_results/*/*.json
 exp_results/*/*.run
 exp_results/*/*.sh
+exp_results/*/*.out
 !exp_results/*/plots/*.png
+simOutput/
+batch.out
