@@ -9,7 +9,7 @@ from load_module import load_module
 DIRNAME_EXP_CONFIGS = 'exp_configs'
 
 # Experiment name
-exp_name = 'batch_ougrid_som_0'
+exp_name = 'its4_10x10_large'
 
 # Import experiment-specific batch_params.py and get batch params
 fpath_batch_params = (
