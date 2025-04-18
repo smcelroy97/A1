@@ -24,6 +24,8 @@ def apply_exp_cfg(cfg):
         cfg.analysis['plotSpikeStats']['include'] = cfg.pops_active
     if 'plotTraces' in cfg.analysis:
         cfg.analysis['plotTraces']['include'] = cfg.pops_active
+
+    #####
     
     # Time range for rate and CV calculation
     cfg.analysis['plotSpikeStats']['timeRange'] = [2000, cfg.duration]
