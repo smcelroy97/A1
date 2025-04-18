@@ -26,7 +26,7 @@ sge_config = {
     'vmem': '64G',
     'realtime': '2:00:00',
     'command': (
-        'conda activate netpyne_batch \n'
+        'conda activate netpyne_sm \n'
         'export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$LD_LIBRARY_PATH \n'
         'export MKL_THREADING_LAYER=GNU \n'
         'mpiexec -n $NSLOTS -hosts $(hostname) nrniv -python -mpi run_exp.py --batch')
