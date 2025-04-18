@@ -25,10 +25,13 @@ def get_batch_params():
 
     # Put the list of tuples to batch params
     ou_tuples = list(df.itertuples(index=False, name=None))
-    params = {
-        'ou_tuple': ou_tuples  # (OUamp, OUstd)
-    }
-    return params
+    if ou_tuples:
+        params = {
+            'ou_tuple': ou_tuples  # (OUamp, OUstd)
+        }
+        return params
+    else:
+        return {}
 
 
 def post_update(cfg):

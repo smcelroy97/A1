@@ -70,7 +70,7 @@ def interpolate_to_xr(
     )
 
 
-exp_name = 'batch_ougrid_som_0'
+exp_name = 'batch_ougrid_itp4_10x10_large'
 
 dirpath_root = Path(__file__).resolve().parents[2]   # two levels above this script
 fpath_in = dirpath_root / 'exp_results' / exp_name / 'batch_result.csv'

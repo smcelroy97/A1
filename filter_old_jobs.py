@@ -26,7 +26,8 @@ def filter_old_jobs(dirpath_res: Path, df: pd.DataFrame):
         new_run_folder = dirpath_res / "old_run_1"
 
     # Process each *_cfg.json file
-    for cfg_file in dirpath_res.rglob("*_cfg.json"):  # incl. subfolders
+    cfg_files = list(dirpath_res.rglob("*_cfg.json"))  # incl. subfolders
+    for cfg_file in cfg_files:
         with open(cfg_file) as f:
             cfg = json.load(f)
 

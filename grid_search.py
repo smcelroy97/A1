@@ -9,7 +9,7 @@ from load_module import load_module
 DIRNAME_EXP_CONFIGS = 'exp_configs'
 
 # Experiment name
-exp_name = 'batch_ougrid_som_0'
+exp_name = 'batch_ougrid_itp4_10x10_large'
 
 # Import experiment-specific batch_params.py and get batch params
 fpath_batch_params = (
@@ -32,14 +32,17 @@ sge_config = {
         'mpiexec -n $NSLOTS -hosts $(hostname) nrniv -python -mpi run_exp.py --batch')
 }
 
-search(
-    job_type='sge',
-    comm_type='socket',
-    label=exp_name,
-    params=params,
-    output_path=f'./exp_results/{exp_name}',
-    checkpoint_path=f'./exp_logs/{exp_name}/ray',
-    run_config=sge_config,
-    num_samples=1,
-    max_concurrent=13
-)
+if params:
+    search(
+        job_type='sge',
+        comm_type='socket',
+        label=exp_name,
+        params=params,
+        output_path=f'./exp_results/{exp_name}',
+        checkpoint_path=f'./exp_logs/{exp_name}/ray',
+        run_config=sge_config,
+        num_samples=1,
+        max_concurrent=20
+    )
+else:
+    print('Parameter list is empty - exit')
