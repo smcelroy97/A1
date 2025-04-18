@@ -20,7 +20,7 @@ import netpyne_res_parse_utils as parse_utils
 
 
 # Experiment name
-exp_name = 'its4_10x10_large'
+exp_name = 'batch_ougrid_som_0'
 
 # Time limits for the rate and CV calculation (in seconds)
 t_limits = (2, 3)  # in seconds

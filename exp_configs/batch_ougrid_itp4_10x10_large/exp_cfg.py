@@ -12,10 +12,10 @@ def apply_exp_cfg(cfg):
     
     # Turn off the connections
     cfg.addConn = 0
-    
+
     # Populations to use
     cfg.pops_active = [
-        'SOM2', 'SOM3', 'SOM4', 'SOM5A','SOM5B', 'SOM6'
+        'ITP4'
     ]
     cfg.allpops = cfg.pops_active
     if 'plotRaster' in cfg.analysis:
@@ -25,8 +25,19 @@ def apply_exp_cfg(cfg):
     if 'plotTraces' in cfg.analysis:
         cfg.analysis['plotTraces']['include'] = cfg.pops_active
 
-    #####
-    
+    # Record voltage traces
+    ncells_rec = 5
+    ncells_plot = 3
+    cfg.recordCells = [(pop, list(range(ncells_rec))) for pop in cfg.allpops]
+    cfg.recordTraces = {'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'}}
+    cfg.recordStep =  0.1
+    cfg.analysis['plotTraces'] = {
+        'include': [(pop, list(range(ncells_plot))) for pop in cfg.allpops],
+        'timeRange': [1000, 3000],
+        'oneFigPer': 'trace', 'overlay': False,
+        'saveFig': True, 'showFig': False, 'figSize': (12, 8)
+    }
+
     # Time range for rate and CV calculation
     cfg.analysis['plotSpikeStats']['timeRange'] = [2000, cfg.duration]
     
