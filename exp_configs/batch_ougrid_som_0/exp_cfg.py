@@ -15,7 +15,7 @@ def apply_exp_cfg(cfg):
     
     # Populations to use
     cfg.pops_active = [
-        'SOM2', 'SOM3', #...
+        'SOM2', 'SOM3', 'SOM4', 'SOM5A','SOM5B', 'SOM6'
     ]
     cfg.allpops = cfg.pops_active
     if 'plotRaster' in cfg.analysis:
@@ -24,6 +24,8 @@ def apply_exp_cfg(cfg):
         cfg.analysis['plotSpikeStats']['include'] = cfg.pops_active
     if 'plotTraces' in cfg.analysis:
         cfg.analysis['plotTraces']['include'] = cfg.pops_active
+
+    #####
     
     # Time range for rate and CV calculation
     cfg.analysis['plotSpikeStats']['timeRange'] = [2000, cfg.duration]

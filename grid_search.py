@@ -9,7 +9,7 @@ from load_module import load_module
 DIRNAME_EXP_CONFIGS = 'exp_configs'
 
 # Experiment name
-exp_name = 'batch_ougrid_ngf_0'
+exp_name = 'batch_ougrid_itp4_10x10_large'
 
 # Import experiment-specific batch_params.py and get batch params
 fpath_batch_params = (
@@ -22,24 +22,27 @@ params = batch_params_mod.get_batch_params()
 
 sge_config = {
     'queue': 'cpu.q',
-    'cores': 30,
-    'vmem': '128G',
+    'cores': 8,
+    'vmem': '64G',
     'realtime': '2:00:00',
     'command': (
-        'conda activate netpyne_sm \n'
+        'conda activate netpyne_batch \n'
         'export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$LD_LIBRARY_PATH \n'
         'export MKL_THREADING_LAYER=GNU \n'
         'mpiexec -n $NSLOTS -hosts $(hostname) nrniv -python -mpi run_exp.py --batch')
 }
 
-search(
-    job_type='sge',
-    comm_type='socket',
-    label=exp_name,
-    params=params,
-    output_path=f'./exp_results/{exp_name}',
-    checkpoint_path=f'./exp_logs/{exp_name}/ray',
-    run_config=sge_config,
-    num_samples=1,
-    max_concurrent=13
-)
+if params:
+    search(
+        job_type='sge',
+        comm_type='socket',
+        label=exp_name,
+        params=params,
+        output_path=f'./exp_results/{exp_name}',
+        checkpoint_path=f'./exp_logs/{exp_name}/ray',
+        run_config=sge_config,
+        num_samples=1,
+        max_concurrent=20
+    )
+else:
+    print('Parameter list is empty - exit')
