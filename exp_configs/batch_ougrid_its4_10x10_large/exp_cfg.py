@@ -28,11 +28,13 @@ def apply_exp_cfg(cfg):
     if 'plotTraces' in cfg.analysis:
         cfg.analysis['plotTraces']['include'] = cfg.pops_active
 
+    ncell = 10
     for pop in cfg.allpops:
-        for i in range(10):
-            pops.append((pop, i))
-    cfg.analysis['plotTraces'] = {'include': pop, 'oneFigPer': 'trace', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize': (12, 8)}
-
+        linclude = []
+        for pop in cfg.allpops:
+            for i in range(ncell):
+                linclude.append( (pop,i) )
+        cfg.analysis['plotTraces'] = {'include': linclude, 'oneFigPer': 'trace', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)} 
     # Time range for rate and CV calculation
     cfg.analysis['plotSpikeStats']['timeRange'] = [2000, cfg.duration]
     
