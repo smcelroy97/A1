@@ -18,5 +18,6 @@ exp_results/**/*.run
 exp_results/**/*.sh
 exp_results/**/*.out
 !exp_results/*/plots/*.png
+exp_results/UNUSED
 simOutput/
 batch.out

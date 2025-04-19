@@ -8,7 +8,7 @@ dirpath_self = Path(__file__).resolve().parent
 def apply_exp_cfg(cfg):
     
     # Duration
-    cfg.duration = 3 * 1e3
+    cfg.duration = 10 * 1e3
     
     # Turn off the connections
     cfg.addConn = 0
@@ -26,16 +26,16 @@ def apply_exp_cfg(cfg):
         cfg.analysis['plotTraces']['include'] = cfg.pops_active
 
     # Record voltage traces
-    ncells_rec = 5
-    ncells_plot = 3
+    ncells_rec = 6
+    ncells_plot = 6
     cfg.recordCells = [(pop, list(range(ncells_rec))) for pop in cfg.allpops]
     cfg.recordTraces = {'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'}}
     cfg.recordStep =  0.1
     cfg.analysis['plotTraces'] = {
         'include': [(pop, list(range(ncells_plot))) for pop in cfg.allpops],
-        'timeRange': [1000, 3000],
+        'timeRange': [1000, 10000],
         'oneFigPer': 'trace', 'overlay': False,
-        'saveFig': True, 'showFig': False, 'figSize': (12, 8)
+        'saveFig': True, 'showFig': False, 'figSize': (18, 12)
     }
 
     # Time range for rate and CV calculation
@@ -44,6 +44,7 @@ def apply_exp_cfg(cfg):
     # OU conductance
     cfg.add_ou_conductance = 1
     cfg.ou_common = 1    # all pops receive the same OU input
+    cfg.NoiseConductanceDur = cfg.duration
     
     # This field will be updated by batchtools
     # (it will be set to a tuple of (OUamp, OUstd))

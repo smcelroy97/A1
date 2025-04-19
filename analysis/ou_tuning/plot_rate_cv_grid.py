@@ -70,7 +70,8 @@ def interpolate_to_xr(
     )
 
 
-exp_name = 'batch_ougrid_itp4_10x10_large'
+#exp_name = 'batch_ougrid_itp4_10x10_large_oupos'
+exp_name = 'batch_ougrid_itp4_4x4_med_3s_oubal2'
 
 dirpath_root = Path(__file__).resolve().parents[2]   # two levels above this script
 fpath_in = dirpath_root / 'exp_results' / exp_name / 'batch_result.csv'
@@ -136,6 +137,7 @@ def plot_pop_data(pop: str):
 
         # 2D image with grid points marked
         plt.subplot(2, 3, n * nx + 1)
+        plt.plot([0, ou_mean.max()], [0, ou_mean.max() * 0.5], 'k')
         plot_xr(Z, xmult=xmult, ymult=xmult, margin=margin)
         plt.plot(ou_mean, ou_std, 'k.')
         plt.title(f'{data_type}, {pop}')
@@ -145,6 +147,7 @@ def plot_pop_data(pop: str):
 
         # 2D image with horiontal slicing lines
         plt.subplot(2, 3, n * nx + 2)
+        plt.plot([0, ou_mean.max()], [0, ou_mean.max() * 0.5], 'k')
         plot_xr(Z, xmult=xmult, ymult=xmult, margin=margin)
         for ou_std_slice in ou_std_slices:
             plt.plot([ou_mean.min(), ou_mean.max()],

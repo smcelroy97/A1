@@ -2,8 +2,8 @@
 #$ -cwd
 #$ -N OUGrid
 #$ -q cpu.q
-#$ -pe smp 8
-#$ -l h_vmem=64G
+#$ -pe smp 6
+#$ -l h_vmem=128G
 #$ -V
 #$ -l h_rt=12:00:00
 #$ -o /ddn/niknovikov19/repo/A1_OUinp/batch.out
