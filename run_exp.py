@@ -9,7 +9,8 @@ import numpy as np
 from netpyne.batchtools import comm, specs
 from netpyne import sim
 
-import BackgroundStim as BS
+#import BackgroundStim as BS
+import background_stim_new as bs
 from create_base_cfg import create_base_cfg
 from create_net_params import create_net_params
 from load_module import load_module
@@ -163,7 +164,7 @@ if need_run:
 
     # Add OU conductance input to each Cell
     if sim.cfg.add_ou_conductance:
-        sim, vecs_dict, OUFlags = BS.addStim.addNoiseGClamp(sim)
+        sim, vecs_dict, OUFlags = bs.add_noise_gclamp(sim)
 
     # Run
     sim.setupRecording()       # setup variables to record for each cell (spikes, V traces, etc)

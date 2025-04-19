@@ -836,7 +836,7 @@ def create_net_params(cfg):
         netParams.NoiseConductanceParams = {}
         
         for pop in cfg.allpops:
-            
+                        
             # Set OU parameters: common or per population
             if cfg.ou_common:
                 ou_amp = cfg.OUamp / 100
