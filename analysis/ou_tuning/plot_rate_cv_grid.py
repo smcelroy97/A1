@@ -70,115 +70,116 @@ def interpolate_to_xr(
     )
 
 
-exp_name = 'batch_ougrid_vip_0'
+def plot_rate_cv_grid(
+        dirpath_exp: str | Path,
+        npoints: int = 100,   # grid resolution
+        nslices: int = 5   # num. ou_std==const slices to plot
+        ) -> None:
 
-dirpath_root = Path(__file__).resolve().parents[2]   # two levels above this script
-fpath_in = dirpath_root / 'exp_results' / exp_name / 'batch_result.csv'
+    # Read the CSV file into a pandas DataFrame
+    fpath_in = dirpath_exp / 'batch_result.csv'
+    df = pd.read_csv(fpath_in)
 
-# Read the CSV file into a pandas DataFrame
-df = pd.read_csv(fpath_in)
+    # Create a list of (ou_mean, ou_std) tuples
+    ou_mean = df['ou_mean'].to_numpy()
+    ou_std = df['ou_std'].to_numpy()
+    data_coords = list(zip(ou_mean, ou_std))
 
-# Create a list of (ou_mean, ou_std) tuples
-ou_mean = df['ou_mean'].to_numpy()
-ou_std = df['ou_std'].to_numpy()
-data_coords = list(zip(ou_mean, ou_std))
+    # Extract pop_names
+    rate_columns = [col for col in df.columns if col.endswith('_r')]
+    pop_names = [col[:-2] for col in rate_columns]
 
-# Extract pop_names
-rate_columns = [col for col in df.columns if col.endswith('_r')]
-pop_names = [col[:-2] for col in rate_columns]
+    # Read pop rates and Cv's from df
+    data = {}
+    for pop in pop_names:
+        data[pop] = {
+            'Rate': df[f'{pop}_r'].to_numpy(),
+            'CV': df[f'{pop}_cv'].to_numpy()
+        }
 
-# Read pop rates and Cv's from df
-data = {}
-for pop in pop_names:
-    data[pop] = {
-        'Rate': df[f'{pop}_r'].to_numpy(),
-        'CV': df[f'{pop}_cv'].to_numpy()
-    }
+    # Properties of the visualized grid
+    ou_mean_range = (ou_mean.min(), ou_mean.max())
+    ou_std_range = (ou_std.min(), ou_std.max())
 
-# Properties of the visualized grid
-ou_mean_range = (ou_mean.min(), ou_mean.max())
-ou_std_range = (ou_std.min(), ou_std.max())
-npoints = 100
+    # Interpolate data to fill the visualized grid
+    data_interp = {}
+    for pop in pop_names:
+        data_interp[pop] = {}
+        for data_type in ('Rate', 'CV'):
+            data_interp[pop][data_type] = interpolate_to_xr(
+                data_coords,
+                data[pop][data_type],
+                ou_mean_range, ou_std_range,
+                nx=npoints, ny=npoints,
+                coord_names=('ou_mean', 'ou_std')
+            )
 
-# Interpolate data to fill the visualized grid
-data_interp = {}
-for pop in pop_names:
-    data_interp[pop] = {}
-    for data_type in ('Rate', 'CV'):
-        data_interp[pop][data_type] = interpolate_to_xr(
-            data_coords,
-            data[pop][data_type],
-            ou_mean_range, ou_std_range,
-            nx=npoints, ny=npoints,
-            coord_names=('ou_mean', 'ou_std')
-        )
+    # 1D slices of 2D data with ou_std==const
+    nslices = 5
+    d = (ou_std.max() - ou_std.min()) * 0.1
+    ou_std_slices = np.linspace(
+        ou_std.min() + d, ou_std.max() - d, nslices)
 
-# 1D slices of 2D data with ou_std==const
-nslices = 5
-d = (ou_std.max() - ou_std.min()) * 0.1
-ou_std_slices = np.linspace(
-    ou_std.min() + d, ou_std.max() - d, nslices)
+    # Coordinates multiplier for visualization
+    xmult, ymult = 100, 100
+    ou_mean *= xmult
+    ou_std *= ymult
 
-# Coordinates multiplier for visualization
-xmult, ymult = 100, 100
-ou_mean *= xmult
-ou_std *= ymult
+    margin = 0.05
 
-margin = 0.05
+    nx = 3
+    ny = 2
 
-nx = 3
-ny = 2
+    def plot_pop_data(pop: str):
 
-def plot_pop_data(pop: str):
+        for n, data_type in enumerate(['Rate', 'CV']):
+            Z = data_interp[pop][data_type]
 
-    for n, data_type in enumerate(['Rate', 'CV']):
-        Z = data_interp[pop][data_type]
+            # 2D image with grid points marked
+            plt.subplot(2, 3, n * nx + 1)
+            plot_xr(Z, xmult=xmult, ymult=xmult, margin=margin)
+            plt.plot(ou_mean, ou_std, 'k.')
+            plt.title(f'{data_type}, {pop}')
+            if n == ny - 1:
+                plt.xlabel(f'ou_mean * {xmult}')
+            plt.ylabel(f'ou_std * {ymult}')
 
-        # 2D image with grid points marked
-        plt.subplot(2, 3, n * nx + 1)
-        plot_xr(Z, xmult=xmult, ymult=xmult, margin=margin)
-        plt.plot(ou_mean, ou_std, 'k.')
-        plt.title(f'{data_type}, {pop}')
-        if n == ny - 1:
-            plt.xlabel(f'ou_mean * {xmult}')
-        plt.ylabel(f'ou_std * {ymult}')
+            # 2D image with horiontal slicing lines
+            plt.subplot(2, 3, n * nx + 2)
+            plot_xr(Z, xmult=xmult, ymult=xmult, margin=margin)
+            for ou_std_slice in ou_std_slices:
+                plt.plot([ou_mean.min(), ou_mean.max()],
+                        [ou_std_slice * ymult] * 2,
+                        '--')
+            plt.title(f'{data_type}, {pop}')
+            if n == ny - 1:
+                plt.xlabel(f'ou_mean * {xmult}')
+            
+            # 1D slices: value vs. ou_mean (ou_std==const)
+            plt.subplot(2, 3, n * nx + 3)
+            for ou_std_slice in ou_std_slices:
+                zz = Z.sel(ou_std=ou_std_slice, method='nearest')
+                plt.plot(zz.coords['ou_mean'], zz.values)
+            plt.title(f'{data_type} slices (ou_std=const), {pop}')
+            if n == ny - 1:
+                plt.xlabel(f'ou_mean * {xmult}')
+            plt.ylabel(data_type)
 
-        # 2D image with horiontal slicing lines
-        plt.subplot(2, 3, n * nx + 2)
-        plot_xr(Z, xmult=xmult, ymult=xmult, margin=margin)
-        for ou_std_slice in ou_std_slices:
-            plt.plot([ou_mean.min(), ou_mean.max()],
-                    [ou_std_slice * ymult] * 2,
-                    '--')
-        plt.title(f'{data_type}, {pop}')
-        if n == ny - 1:
-            plt.xlabel(f'ou_mean * {xmult}')
-        
-        # 1D slices: value vs. ou_mean (ou_std==const)
-        plt.subplot(2, 3, n * nx + 3)
-        for ou_std_slice in ou_std_slices:
-            zz = Z.sel(ou_std=ou_std_slice, method='nearest')
-            plt.plot(zz.coords['ou_mean'], zz.values)
-        plt.title(f'{data_type} slices (ou_std=const), {pop}')
-        if n == ny - 1:
-            plt.xlabel(f'ou_mean * {xmult}')
-        plt.ylabel(data_type)
+    # Folder for saving the figures
+    dirpath_out = dirpath_exp / 'plots'
+    os.makedirs(dirpath_out, exist_ok=True)
 
-# Folder for saving the figures
-dirpath_out = dirpath_root / 'exp_results' / exp_name / 'plots'
-os.makedirs(dirpath_out, exist_ok=True)
+    #plt.ion()
+    plt.figure(figsize=(14, 7))
 
-#plt.ion()
-plt.figure(figsize=(14, 7))
+    for pop in pop_names:
+        print(f'Plotting {pop}...')
 
-for pop in pop_names:
-    print(f'Plotting {pop}...')
+        plt.clf()
+        plot_pop_data(pop)
 
-    plt.clf()
-    plot_pop_data(pop)
+        fpath_fig = dirpath_out / f'{pop}.png'
+        plt.savefig(fpath_fig, dpi=300)
 
-    fpath_fig = dirpath_out / f'{pop}.png'
-    plt.savefig(fpath_fig, dpi=300)
-
-#plt.show()
-#input('Press any key...')
+    #plt.show()
+    #input('Press any key...')
