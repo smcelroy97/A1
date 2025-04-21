@@ -22,10 +22,5 @@ exp_results/UNUSED
 simOutput/
 batch.out
 *exp_logs/
-grid_search.py
-submit_batch.sh
-submitJob.sh
-analysis/ou_tuning/create_batch_res_table.py
-analysis/ou_tuning/gen_regular_grid.py
-analysis/ou_tuning/plot_rate_cv_grid.py
-analysis/ou_tuning/collect_trace_figures.py
+grid_search_local.py
+submit_batch_local.sh

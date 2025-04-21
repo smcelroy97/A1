@@ -6,11 +6,11 @@
 #$ -l h_vmem=128G
 #$ -V
 #$ -l h_rt=12:00:00
-#$ -o /ddn/niknovikov19/repo/A1_OUinp/batch.out
-#$ -e /ddn/niknovikov19/repo/A1_OUinp/batch.err
+#$ -o <USER_REPO_DIR>/batch.out
+#$ -e <USER_REPO_DIR>/batch.err
 
 source ~/.bashrc
-conda activate netpyne_batch
+conda activate "<USER_CONDA_ENV>"
 export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$LD_LIBRARY_PATH
-cd /ddn/niknovikov19/repo/A1_OUinp
+cd "<USER_REPO_DIR>"
 python grid_search.py
