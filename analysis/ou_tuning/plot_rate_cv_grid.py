@@ -8,6 +8,8 @@ import pandas as pd
 from scipy.interpolate import griddata
 import xarray as xr
 
+from read_batch_res_table import read_batch_res_table
+
 
 def plot_xr(Z: xr.DataArray, vmin=None, vmax=None,
             show_ax_names=False, colorbar=True,
@@ -76,26 +78,11 @@ def plot_rate_cv_grid(
         nslices: int = 5   # num. ou_std==const slices to plot
         ) -> None:
 
-    # Read the CSV file into a pandas DataFrame
+    # Read and parse batch result table
     fpath_in = dirpath_exp / 'batch_result.csv'
-    df = pd.read_csv(fpath_in)
-
-    # Create a list of (ou_mean, ou_std) tuples
-    ou_mean = df['ou_mean'].to_numpy()
-    ou_std = df['ou_std'].to_numpy()
+    ou_mean, ou_std, data = read_batch_res_table(fpath_in)
     data_coords = list(zip(ou_mean, ou_std))
-
-    # Extract pop_names
-    rate_columns = [col for col in df.columns if col.endswith('_r')]
-    pop_names = [col[:-2] for col in rate_columns]
-
-    # Read pop rates and Cv's from df
-    data = {}
-    for pop in pop_names:
-        data[pop] = {
-            'Rate': df[f'{pop}_r'].to_numpy(),
-            'CV': df[f'{pop}_cv'].to_numpy()
-        }
+    pop_names = list(data.keys())
 
     # Properties of the visualized grid
     ou_mean_range = (ou_mean.min(), ou_mean.max())
