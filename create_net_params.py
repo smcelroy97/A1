@@ -824,16 +824,24 @@ def create_net_params(cfg):
 
 
     #------------------------------------------------------------------------------
-    # OU conductance inputs
+    # OU current / conductance inputs
     #------------------------------------------------------------------------------
 
-    if cfg.add_ou_conductance:
+    if cfg.add_ou_current and cfg.add_ou_conductance:
+        raise ValueError('You should choose either cfg.add_ou_current=1 '
+                         'or cfg.add_ou_current=1, not both')
+
+    if cfg.add_ou_current or cfg.add_ou_conductance:
 
         # Load input resistances
         with open('data/inputResistances.json', 'rb') as f:
             inpRes = json.load(f)
         
-        netParams.NoiseConductanceParams = {}
+        print('create_net_params()')
+        print(f'\tcfg.add_ou_current = {cfg.add_ou_current}')
+        print(f'\tcfg.add_ou_conductance = {cfg.add_ou_conductance}')
+        
+        netParams.NoiseOUParams = {}
         
         for pop in cfg.allpops:
                         
@@ -845,26 +853,56 @@ def create_net_params(cfg):
                 ou_amp = cfg.ou_pop_inputs[pop]['ou_mean'] / 100
                 ou_std = cfg.ou_pop_inputs[pop]['ou_std'] / 100
             
-            Gin = 1 / inpRes[pop]
-            g0 = ou_amp * Gin
-            sigma = ou_std * Gin
+            # Reference value (ou_amp and ou_sigma are defined as percentage of it)
+            if cfg.add_ou_conductance:
+                K = 1 / inpRes[pop]
+            elif cfg.add_ou_current:
+                K = 70 / inpRes[pop]   # arbitrary multiplier (70 mV), for unit consistency
+
+            mean = ou_amp * K
+            sigma = ou_std * K
+
+            print(f'\tou_amp = {ou_amp}')
+            print(f'\tou_std = {ou_std}')
+            print(f'\tmean = {mean}')
+            print(f'\tsigma = {sigma}')
+            
             # print('pop is: '  + pop + ' Input resistance is: ' + str(inpRes[pop]) + ' input conductance is: ' + str(Gin) + '   g0 is:  ' + str(g0))
-            netParams.NoiseConductanceParams[pop] = {
-                'g0': g0,
+            netParams.NoiseOUParams[pop] = {
+                'mean': mean,
                 'sigma': sigma
             }
 
+            # Mechanism of deliverance, field names
+            if cfg.add_ou_conductance:
+                mech = 'ConductanceSource'
+                dur_name = 'dur1'
+                amp_name = 'amp1'
+            elif cfg.add_ou_current:
+                mech = 'IClamp'
+                dur_name = 'dur'
+                amp_name = 'amp'
+
+            # Duration
+            if cfg.add_ou_conductance and hasattr(cfg, 'NoiseConductanceDur'):
+                duration = cfg.NoiseConductanceDur   # for compatibility with previous version
+            else:
+                duration = cfg.ou_noise_duration
+            
+            print(f'\tduration = {duration}')
+            print(f'\tmech = {mech}')
+
             for pop in cfg.allpops:
-                netParams.stimSourceParams['NoiseSEClamp_source_'+pop] = {
-                    'type': 'ConductanceSource',
-                    'dur1': cfg.NoiseConductanceDur,
-                    'amp1': 0 # rmpPops[pop] #abs(rmpPops[pop] * 0.18)
+                netParams.stimSourceParams[f'NoiseOU_source_{pop}'] = {
+                    'type': mech,
+                    dur_name: duration,
+                    amp_name: 0
                 }
-                netParams.stimTargetParams['NoiseSEClamp_target_'+pop] = {
-                    'source': 'NoiseSEClamp_source_'+pop,
+                netParams.stimTargetParams[f'NoiseOU_target_{pop}'] = {
+                    'source': f'NoiseOU_source_{pop}',
                     'sec':'soma',
                     'loc': 0.5,
-                    'conds': {'pop':pop}
+                    'conds': {'pop': pop}
                 }
 
 

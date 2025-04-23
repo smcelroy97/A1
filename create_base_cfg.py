@@ -348,12 +348,16 @@ def create_base_cfg():
     cfg.injectionAmplitudes =  np.linspace(0.0, 0.6, 13)
 
     # ------------------------------------------------------------------------------
-    # OU conductance inputs
+    # OU current or conductance inputs
     # -----------------------------------------------------------------------------
 
-    cfg.add_ou_conductance = 1
+    cfg.add_ou_current = 0
+    cfg.add_ou_conductance = 0
+    
     cfg.ou_common = 0
-    cfg.NoiseConductanceDur = cfg.duration
+
+    cfg.ou_noise_duration = cfg.duration
+    #cfg.NoiseConductanceDur = cfg.duration   # for compatibility with previous version
 
     # Common OU properties
     cfg.OUamp = 1.0

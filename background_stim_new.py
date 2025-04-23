@@ -10,19 +10,19 @@ import numpy as np
 
 def generate_ou_signal(tau, sigma, mean, duration, dt=0.025,
                        seed=100000, plotFig=False,
-                       output_type='resistance', cutoff=1E-9,
+                       invert_output=True, cutoff=1E-9,
                        verbose=False):
     """
     Generate an Ornstein-Uhlenbeck process with given correlation time,
     standard deviation and mean value.
 
     tau: correlation time [ms], white noise if zero
-    sigma: standard deviation [uS]
-    mean: mean value [uS]
+    sigma: standard deviation
+    mean: mean value
     duration: duration of signal [ms]
     dt: timestep [ms]
-    output_type: resistance | conductance
-    cutoff: lower cutoff value [uS]
+    invert_output: return signal or 1/signal
+    cutoff: lower cutoff value
     verbose: print debug info flag
     """
 
@@ -53,18 +53,16 @@ def generate_ou_signal(tau, sigma, mean, duration, dt=0.025,
     # Remove small and negative values from the noise
     # (clamp to a small positive number smin)
     svec_np = np.array(svec, dtype=np.float64)
-    mask_neg = (svec_np < cutoff)
-    svec_np[mask_neg] = cutoff
-    if verbose:
-        print(f'Proportion of clamped OU values: {np.mean(mask_neg)}')
+    if cutoff:
+        mask_neg = (svec_np < cutoff)
+        svec_np[mask_neg] = cutoff
+        if verbose:
+            print(f'Proportion of clamped OU values: {np.mean(mask_neg)}')
 
-    # Take the inverse of the signal (conductance -> resistance)
-    if output_type == 'resistance':
-        svec = h.Vector(1. / svec_np)
-    elif output_type == 'conductance':
-        svec = h.Vector(svec_np)
-    else:
-        raise ValueError(f'Wrong output_type: {output_type}')
+    # Take the inverse of the signal if needed
+    if invert_output:
+        svec_np = 1. / svec_np
+    svec = h.Vector(svec_np)
 
     if plotFig:
         import matplotlib.pyplot as plt
@@ -84,11 +82,11 @@ def generate_ou_signal(tau, sigma, mean, duration, dt=0.025,
 
 
 def add_noise_gclamp(sim):
-    """Generate and play OU signal(s) for every cell. """
+    """Generate and play OU conductance signal(s) for every cell. """
 
     vecs_dict = {}
     OUFlags = {}
-    print(f'Create OU inputs (dt={sim.cfg.dt})')
+    print(f'add_noise_gclamp(): create OU inputs (dt={sim.cfg.dt})')
 
     # Generate OU signal(s)
     for cell_ind, cell in enumerate(sim.net.cells):
@@ -100,9 +98,10 @@ def add_noise_gclamp(sim):
         cell_seed = (sim.cfg.seeds['stim'] + cell.gid) * 2
 
         for stim_ind, stim in enumerate(sim.net.cells[cell_ind].stims):
-            if 'NoiseSEClamp' in stim['label']:
-                mean = sim.net.params.NoiseConductanceParams[cell.tags['pop']]['g0']
-                sigma = sim.net.params.NoiseConductanceParams[cell.tags['pop']]['sigma']
+            if 'NoiseOU' in stim['label']:
+                mean = sim.net.params.NoiseOUParams[cell.tags['pop']]['mean']
+                sigma = sim.net.params.NoiseOUParams[cell.tags['pop']]['sigma']
+
                 tvec, svec = generate_ou_signal(
                     tau=10,
                     sigma=sigma,
@@ -112,6 +111,12 @@ def add_noise_gclamp(sim):
                     seed=cell_seed,
                     plotFig=False
                 )
+
+                if (cell_ind == 0) and (stim_ind == 0):
+                    print(f'mean = {mean}')
+                    print(f'sigma = {sigma}')
+                    print(f'duration = {stim["dur1"]}')
+
                 if any(val < 0.0 for val in svec):
                     raise ValueError('Negative values in the conductance signal are not allowed')
                 else:
@@ -125,14 +130,55 @@ def add_noise_gclamp(sim):
         if not OUFlags[pop]:
             continue
         for stim_ind, stim in enumerate(cell.stims):
-            if 'NoiseSEClamp' in stim['label']:
+            if 'NoiseOU' in stim['label']:
                 stim_vec = vecs_dict[cell_ind]['svecs'][stim_ind]
                 stim_vec.play(
                     stim['hObj']._ref_rs,
                     vecs_dict[cell_ind]['tvecs'][stim_ind]
                 )
+                if (cell_ind == 0) and (stim_ind == 0):
+                    print('play()')
 
     return sim, vecs_dict, OUFlags
+
+
+def add_noise_iclamp(sim):
+    """Generate and play OU current signal(s) for every cell. """
+
+    vecs_dict = {}
+
+    for cell_ind, cell in enumerate(sim.net.cells):
+
+        vecs_dict.update({cell_ind: {'tvecs': {}, 'svecs': {}}})
+        cell_seed = sim.cfg.seeds['stim']+ cell.gid
+
+        for stim_ind, stim in enumerate(cell.stims):
+            if 'NoiseOU' in stim['label']:
+                mean = sim.net.params.NoiseOUParams[cell.tags['pop']]['mean']
+                sigma = sim.net.params.NoiseOUParams[cell.tags['pop']]['sigma']
+
+                tvec, svec = generate_ou_signal(
+                    tau=10,
+                    sigma=sigma,
+                    mean=mean,
+                    duration=stim['dur'],
+                    dt=sim.cfg.dt,
+                    seed=cell_seed,
+                    invert_output=False,
+                    cutoff=None,   # don't prune negative values
+                    plotFig=False
+                )
+
+                vecs_dict[cell_ind]['tvecs'].update({stim_ind: tvec})
+                vecs_dict[cell_ind]['svecs'].update({stim_ind: svec})
+
+                vecs_dict[cell_ind]['svecs'][stim_ind].play(
+                    stim['hObj']._ref_amp,
+                    vecs_dict[cell_ind]['tvecs'][stim_ind],
+                    True   # continuous
+                )
+    
+    return sim, vecs_dict
 
 
 if __name__ == '__main__':
@@ -160,7 +206,7 @@ if __name__ == '__main__':
         dt=0.05,
         seed=1111111,
         plotFig=False,
-        output_type='conductance',
+        invert_output=False,
         cutoff = -0.0001,
         verbose=True
     )
