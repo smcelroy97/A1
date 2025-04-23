@@ -162,7 +162,9 @@ if need_run:
     sim.net.connectCells()      # create connections between cells based on params
     sim.net.addStims() 			# add network stimulation
 
-    # Add OU conductance input to each Cell
+    # Add OU current or conductance input to each Cell
+    if sim.cfg.add_ou_current:
+        sim, vecs_dict = bs.add_noise_iclamp(sim)
     if sim.cfg.add_ou_conductance:
         sim, vecs_dict, OUFlags = bs.add_noise_gclamp(sim)
 
