@@ -1,0 +1,113 @@
+,data,loss,timestamp,checkpoint_dir_name,done,training_iteration,trial_id,date,time_this_iter_s,time_total_s,pid,hostname,node_ip,time_since_restore,iterations_since_restore,config/ou_tuple,config/saveFolder,config/simLabel,logdir
+0,"saveFolder    ./exp_results/batch_ougrid_ire_4x4
+simLabel              batch_ougrid_ire_4x4_00000
+ou_tuple                            [-0.04, 0.0]
+IRE                                          0.0
+IREM                                         0.0
+loss                                         700
+dtype: object",700,1745355881,,False,1,5ce76_00000,2025-04-22_17-04-41,11.652252197265625,11.652252197265625,466671,node08,10.0.0.8,11.652252197265625,1,"(-0.04, 0.0)",./exp_results/batch_ougrid_ire_4x4,batch_ougrid_ire_4x4_00000,5ce76_00000
+1,"saveFolder    ./exp_results/batch_ougrid_ire_4x4
+simLabel              batch_ougrid_ire_4x4_00001
+ou_tuple           [-0.04, 0.013333333333333001]
+IRE                                     1.012903
+IREM                                    1.141935
+loss                                         700
+dtype: object",700,1745355882,,False,1,5ce76_00001,2025-04-22_17-04-42,12.590456247329712,12.590456247329712,466672,node08,10.0.0.8,12.590456247329712,1,"(-0.04, 0.0133333333333333)",./exp_results/batch_ougrid_ire_4x4,batch_ougrid_ire_4x4_00001,5ce76_00001
+2,"saveFolder    ./exp_results/batch_ougrid_ire_4x4
+simLabel              batch_ougrid_ire_4x4_00002
+ou_tuple           [-0.04, 0.026666666666666002]
+IRE                                    23.529032
+IREM                                   25.109677
+loss                                         700
+dtype: object",700,1745355884,,False,1,5ce76_00002,2025-04-22_17-04-44,14.790653944015503,14.790653944015503,466673,node08,10.0.0.8,14.790653944015503,1,"(-0.04, 0.0266666666666666)",./exp_results/batch_ougrid_ire_4x4,batch_ougrid_ire_4x4_00002,5ce76_00002
+3,"saveFolder    ./exp_results/batch_ougrid_ire_4x4
+simLabel              batch_ougrid_ire_4x4_00003
+ou_tuple                           [-0.04, 0.04]
+IRE                                    42.012903
+IREM                                   43.670968
+loss                                         700
+dtype: object",700,1745355889,,False,1,5ce76_00003,2025-04-22_17-04-49,19.755372762680054,19.755372762680054,466674,node08,10.0.0.8,19.755372762680054,1,"(-0.04, 0.04)",./exp_results/batch_ougrid_ire_4x4,batch_ougrid_ire_4x4_00003,5ce76_00003
+4,"saveFolder    ./exp_results/batch_ougrid_ire_4x4
+simLabel              batch_ougrid_ire_4x4_00004
+ou_tuple               [-0.016666666666666, 0.0]
+IRE                                          0.0
+IREM                                         0.0
+loss                                         700
+dtype: object",700,1745355884,,False,1,5ce76_00004,2025-04-22_17-04-44,14.093287467956543,14.093287467956543,466691,node08,10.0.0.8,14.093287467956543,1,"(-0.0166666666666666, 0.0)",./exp_results/batch_ougrid_ire_4x4,batch_ougrid_ire_4x4_00004,5ce76_00004
+5,"saveFolder            ./exp_results/batch_ougrid_ire_4x4
+simLabel                      batch_ougrid_ire_4x4_00005
+ou_tuple      [-0.016666666666666, 0.013333333333333001]
+IRE                                             22.76129
+IREM                                           23.948387
+loss                                                 700
+dtype: object",700,1745355884,,False,1,5ce76_00005,2025-04-22_17-04-44,14.700587749481201,14.700587749481201,466708,node08,10.0.0.8,14.700587749481201,1,"(-0.0166666666666666, 0.0133333333333333)",./exp_results/batch_ougrid_ire_4x4,batch_ougrid_ire_4x4_00005,5ce76_00005
+6,"saveFolder            ./exp_results/batch_ougrid_ire_4x4
+simLabel                      batch_ougrid_ire_4x4_00006
+ou_tuple      [-0.016666666666666, 0.026666666666666002]
+IRE                                            50.290323
+IREM                                           51.664516
+loss                                                 700
+dtype: object",700,1745355886,,False,1,5ce76_00006,2025-04-22_17-04-46,16.185177326202393,16.185177326202393,466725,node08,10.0.0.8,16.185177326202393,1,"(-0.0166666666666666, 0.0266666666666666)",./exp_results/batch_ougrid_ire_4x4,batch_ougrid_ire_4x4_00006,5ce76_00006
+7,"saveFolder    ./exp_results/batch_ougrid_ire_4x4
+simLabel              batch_ougrid_ire_4x4_00007
+ou_tuple              [-0.016666666666666, 0.04]
+IRE                                    75.890323
+IREM                                   76.845161
+loss                                         700
+dtype: object",700,1745355884,,False,1,5ce76_00007,2025-04-22_17-04-44,14.960726976394653,14.960726976394653,466742,node08,10.0.0.8,14.960726976394653,1,"(-0.0166666666666666, 0.04)",./exp_results/batch_ougrid_ire_4x4,batch_ougrid_ire_4x4_00007,5ce76_00007
+8,"saveFolder    ./exp_results/batch_ougrid_ire_4x4
+simLabel              batch_ougrid_ire_4x4_00008
+ou_tuple                [0.006666666666666, 0.0]
+IRE                                         76.0
+IREM                                        76.0
+loss                                         700
+dtype: object",700,1745355890,,False,1,5ce76_00008,2025-04-22_17-04-50,20.607823848724365,20.607823848724365,466775,node08,10.0.0.8,20.607823848724365,1,"(0.0066666666666666, 0.0)",./exp_results/batch_ougrid_ire_4x4,batch_ougrid_ire_4x4_00008,5ce76_00008
+9,"saveFolder           ./exp_results/batch_ougrid_ire_4x4
+simLabel                     batch_ougrid_ire_4x4_00009
+ou_tuple      [0.006666666666666, 0.013333333333333001]
+IRE                                           91.670968
+IREM                                               91.6
+loss                                                700
+dtype: object",700,1745355891,,False,1,5ce76_00009,2025-04-22_17-04-51,21.266721963882446,21.266721963882446,466792,node08,10.0.0.8,21.266721963882446,1,"(0.0066666666666666, 0.0133333333333333)",./exp_results/batch_ougrid_ire_4x4,batch_ougrid_ire_4x4_00009,5ce76_00009
+10,"saveFolder           ./exp_results/batch_ougrid_ire_4x4
+simLabel                     batch_ougrid_ire_4x4_00010
+ou_tuple      [0.006666666666666, 0.026666666666666002]
+IRE                                          115.187097
+IREM                                         115.174194
+loss                                                700
+dtype: object",700,1745355892,,False,1,5ce76_00010,2025-04-22_17-04-52,22.037760972976685,22.037760972976685,466809,node08,10.0.0.8,22.037760972976685,1,"(0.0066666666666666, 0.0266666666666666)",./exp_results/batch_ougrid_ire_4x4,batch_ougrid_ire_4x4_00010,5ce76_00010
+11,"saveFolder    ./exp_results/batch_ougrid_ire_4x4
+simLabel              batch_ougrid_ire_4x4_00011
+ou_tuple               [0.006666666666666, 0.04]
+IRE                                        133.6
+IREM                                  133.690323
+loss                                         700
+dtype: object",700,1745355889,,False,1,5ce76_00011,2025-04-22_17-04-49,19.10691785812378,19.10691785812378,466810,node08,10.0.0.8,19.10691785812378,1,"(0.0066666666666666, 0.04)",./exp_results/batch_ougrid_ire_4x4,batch_ougrid_ire_4x4_00011,5ce76_00011
+12,"saveFolder    ./exp_results/batch_ougrid_ire_4x4
+simLabel              batch_ougrid_ire_4x4_00012
+ou_tuple                             [0.03, 0.0]
+IRE                                        233.0
+IREM                                       233.0
+loss                                         700
+dtype: object",700,1745355895,,False,1,5ce76_00012,2025-04-22_17-04-55,25.300436973571777,25.300436973571777,466827,node08,10.0.0.8,25.300436973571777,1,"(0.03, 0.0)",./exp_results/batch_ougrid_ire_4x4,batch_ougrid_ire_4x4_00012,5ce76_00012
+13,"saveFolder    ./exp_results/batch_ougrid_ire_4x4
+simLabel              batch_ougrid_ire_4x4_00013
+ou_tuple            [0.03, 0.013333333333333001]
+IRE                                   221.922581
+IREM                                  221.993548
+loss                                         700
+dtype: object",700,1745355895,,False,1,5ce76_00013,2025-04-22_17-04-55,24.94103169441223,24.94103169441223,466861,node08,10.0.0.8,24.94103169441223,1,"(0.03, 0.0133333333333333)",./exp_results/batch_ougrid_ire_4x4,batch_ougrid_ire_4x4_00013,5ce76_00013
+14,"saveFolder    ./exp_results/batch_ougrid_ire_4x4
+simLabel              batch_ougrid_ire_4x4_00014
+ou_tuple            [0.03, 0.026666666666666002]
+IRE                                        208.4
+IREM                                  208.593548
+loss                                         700
+dtype: object",700,1745355890,,False,1,5ce76_00014,2025-04-22_17-04-50,20.236549615859985,20.236549615859985,466860,node08,10.0.0.8,20.236549615859985,1,"(0.03, 0.0266666666666666)",./exp_results/batch_ougrid_ire_4x4,batch_ougrid_ire_4x4_00014,5ce76_00014
+15,"saveFolder    ./exp_results/batch_ougrid_ire_4x4
+simLabel              batch_ougrid_ire_4x4_00015
+ou_tuple                            [0.03, 0.04]
+IRE                                   206.109677
+IREM                                  206.019355
+loss                                         700
+dtype: object",700,1745355894,,False,1,5ce76_00015,2025-04-22_17-04-54,24.333078384399414,24.333078384399414,466878,node08,10.0.0.8,24.333078384399414,1,"(0.03, 0.04)",./exp_results/batch_ougrid_ire_4x4,batch_ougrid_ire_4x4_00015,5ce76_00015
