@@ -32,7 +32,7 @@ There are files that always differ between our branches (containing paths, conda
 
 All the other stuff that includes (often changing) experiment name is in:
 - `analysis/ou_tuning/workflow_local.py`
-It is also local added to .gitignore.
+It is also local and added to .gitignore.
 
 Please find these three files in `/ddn/niknovikov19/repo/A1_OUinp`, copy them to your repo folder, and modify accordingly.
 
@@ -43,21 +43,23 @@ You will routinely change two files:
 - `analysis/ou_tuning/workflow_local.py` (grid creation and result processing)
 
 In `analysis/ou_tuning/workflow_local.py`, the block of parameters you will change is in the beginning of the file:
-- experiment name
-- action flags (what to do)
-- grid properties (for `need_create_grid=1`)
+- Eperiment name
+- Action flags (what to do)
+- Grid properties (for `need_create_grid=1`)
+
+Maybe you would also decide to change `t_limits` (time interval for rate and CV calculation) and `nspikes_min` (min. number of spikes to use a cell for CV calculation).
 
 Action flags:
-- need_create_grid: create `ou_grid.csv` file in the experiment config folder
-- need_calc_result_table: collect sim results into `batch_result.csv` file in the exp result folder
-- need_plot_rate_cv_grid: plot sim results (subfolder `plot` in the exp result folder)
-- need_collect_trace_figures: copy voltage trace plots to `traces` subfolder of the exp result folder, give them meaningful names
+- `need_create_grid`: create `ou_grid.csv` file in the experiment config folder
+- `need_calc_result_table`: collect sim results into `batch_result.csv` file in the exp result folder
+- `need_plot_rate_cv_grid`: plot sim results (subfolder `plot` in the exp result folder)
+- `need_collect_trace_figures`: copy voltage trace plots to `traces` subfolder of the exp result folder, give them meaningful names
 
 A typical routine is:
 - Create exp subfolder in `exp_configs`
-- Copy `exp_cfg.py` and `batch_results.py` there (e.g. from `exp_configs/batch_i_ougrid_its4_20x20_med`)
+- Copy `exp_cfg.py` and `batch_results.py` there (e.g. from `exp_configs/batch_i_ougrid_its4_20x20_tau_10`)
 - Modify `exp_cfg.py`
-- Create `ou_grid.csv`: in `analysis/workflow_local.py`, set the exp name, grid properties, `need_create_grid=1` and other flags to 0, and run it.
+- Create `ou_grid.csv`: in `analysis/workflow_local.py`, set the exp name, grid properties, set `need_create_grid=1` and other flags to 0, and run it.
 - Set the experiment name in `grid_search_local.py`
 - Run experiment (`qsub submit_batch_local.sh`)
 - In `analysis/workflow_local.py`, set `need_create_grid=0` and other flags to 1 and run it again.
@@ -71,11 +73,11 @@ I had troubles with running batchtools on some nodes, so I always submit it to n
 ## EXPERIMENT TEMPLATE
 
 As a template for OU-current experiment, you can take:
-`exp_configs/batch_i_ougrid_its4_20x20_med`
+`exp_configs/batch_i_ougrid_its4_20x20_tau_10`
 
-Note that batch_params.py is updated to allow skipping of previously calculated jobs (if the batch crashed last time).
+Note that `batch_params.py` is updated to allow skipping of previously calculated jobs (if the batch crashed last time).
 
-In `exp_cfg.py`, you will change `cfg.pops_active`. Also you may eventually want to change `cfg.duration`, `ncells_rec`, and  `ncells_plot`.
+In `exp_cfg.py`, you will change `cfg.pops_active`. Also you may eventually want to change `cfg.duration`, `ncells_rec`, and  `ncells_plot` (if you have several pops in your experiment, better set `ncells_plot=1`, as each pop produces its own traces).
 
 In the OU-current setup, `ou_mean` and `ou_std` are interpreted as percentages of `Gin * 70`. With this normalization, the ranges of interest are almost the same as in the OU-conductance setup (i.e. you can re-use old grid csv files).
 
@@ -83,7 +85,7 @@ In the OU-current setup, `ou_mean` and `ou_std` are interpreted as percentages o
 
 All the code related to OU stimulation is refactored, and the new file is `background_stim_new.py` (in replaces `BackgroundStim.py`)
 
-In `BackgroundStim.py`, there was something, you should NEVER do: methods `addNoiseGClamp()` and `addNoiseIClamp()` are non-static (without `@staticmethod` decorator), but their first argument (`sim`) is treated not as an instance of addStim class (usually it has the name `self`) but as something else. These methods are called for a class, not for an instance (`addStim.addNoiseGClamp(sim)` instead of `x = addStim(); x.addNoiseGClamp(sim)`), so it works fine. But such usage is EXTREMELY unusual. If you write a method to be called for a class, you should use `@staticmethod` decorator.
+In `BackgroundStim.py`, there was something, you should NEVER do: methods `addNoiseGClamp()` and `addNoiseIClamp()` are non-static (without `@staticmethod` decorator), but their first argument (`sim`) is treated not as an instance of `addStim` class (usually this argument has the name `self`) but as something else. These methods are called for a class, not for an instance (`addStim.addNoiseGClamp(sim)` instead of `x = addStim(); x.addNoiseGClamp(sim)`), so it works fine. But such usage is EXTREMELY unusual. If you write a method to be called for a class, you should use `@staticmethod` decorator.
 
 Also, class names should begin from a capital letter (e.g. `AddStim`), see PEP8. But in our case, all the methods are static, so the class is not needed at all (see `background_stim_new.py`). 
 
