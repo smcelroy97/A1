@@ -351,11 +351,17 @@ def create_base_cfg():
     # OU current or conductance inputs
     # -----------------------------------------------------------------------------
 
+    # Turn on current ot condactance OU inputs
     cfg.add_ou_current = 0
     cfg.add_ou_conductance = 0
     
+    # Commonn OU for all pops or individual for each pop
     cfg.ou_common = 0
 
+    # OU time constant
+    cfg.ou_tau = 10
+
+    # OU signal duration
     cfg.ou_noise_duration = cfg.duration
     #cfg.NoiseConductanceDur = cfg.duration   # for compatibility with previous version
 

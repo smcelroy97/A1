@@ -103,7 +103,7 @@ def add_noise_gclamp(sim):
                 sigma = sim.net.params.NoiseOUParams[cell.tags['pop']]['sigma']
 
                 tvec, svec = generate_ou_signal(
-                    tau=10,
+                    tau=sim.cfg.ou_tau,
                     sigma=sigma,
                     mean=mean,
                     duration=stim['dur1'],
@@ -146,6 +146,8 @@ def add_noise_iclamp(sim):
     """Generate and play OU current signal(s) for every cell. """
 
     vecs_dict = {}
+    print('add_noise_iclamp(): create OU inputs '
+          f'(dt={sim.cfg.dt}, ou_tau={sim.cfg.ou_tau})')
 
     for cell_ind, cell in enumerate(sim.net.cells):
 
@@ -158,7 +160,7 @@ def add_noise_iclamp(sim):
                 sigma = sim.net.params.NoiseOUParams[cell.tags['pop']]['sigma']
 
                 tvec, svec = generate_ou_signal(
-                    tau=10,
+                    tau=sim.cfg.ou_tau,
                     sigma=sigma,
                     mean=mean,
                     duration=stim['dur'],
