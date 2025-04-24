@@ -36,6 +36,30 @@ def plot_xr(Z: xr.DataArray, vmin=None, vmax=None,
     if colorbar:
         plt.colorbar()
 
+def plot_xr_contour(
+        Z: xr.DataArray,
+        name: str,
+        levels: List[float],
+        colors: List[str] | None = None,
+        style: str = '-',
+        xmult: int = 1,
+        ymult: int = 1
+        ) -> None:
+
+    def fmt_func(x):
+        if x == int(x): return f'{name}={int(x)}'
+        else: return f'{name}={x:.1f}'
+    
+    x = Z.coords[Z.dims[1]] * xmult
+    y = Z.coords[Z.dims[0]] * ymult
+
+    contours = plt.contour(
+        x, y, Z.values, linestyles=style,
+        levels=levels, colors=colors
+    )
+    plt.clabel(contours, inline=True, fontsize=8, 
+               fmt=fmt_func, rightside_up=True)
+
 def interpolate_to_xr(
         data_coords: List[Tuple[float, float]],  # (x, y),
         data_values: np.ndarray,
@@ -75,7 +99,10 @@ def interpolate_to_xr(
 def plot_rate_cv_grid(
         dirpath_exp: str | Path,
         npoints: int = 100,   # grid resolution
-        nslices: int = 5   # num. ou_std==const slices to plot
+        nslices: int = 5,   # num. ou_std==const slices to plot
+        show_grid: bool = True,
+        show_r_cv_contours: bool = False,
+        dirname_out: str = 'plots'
         ) -> None:
 
     # Read and parse batch result table
@@ -122,22 +149,34 @@ def plot_rate_cv_grid(
         for n, data_type in enumerate(['Rate', 'CV']):
             Z = data_interp[pop][data_type]
 
-            # 2D image with grid points marked
+            # 2D image with rate/CV contours 
             plt.subplot(2, 3, n * nx + 1)
             plot_xr(Z, xmult=xmult, ymult=xmult, margin=margin)
-            plt.plot(ou_mean, ou_std, 'k.')
+            if show_r_cv_contours:
+                plot_xr_contour(
+                    data_interp[pop]['Rate'], 'r', levels=[5, 10],
+                    colors=['r', 'k'], style='-',
+                    xmult=xmult, ymult=xmult
+                )
+                plot_xr_contour(
+                    data_interp[pop]['CV'], 'CV', levels=[0.5, 1],
+                    colors=['r', 'k'], style='--',
+                    xmult=xmult, ymult=xmult
+                )
             plt.title(f'{data_type}, {pop}')
             if n == ny - 1:
                 plt.xlabel(f'ou_mean * {xmult}')
             plt.ylabel(f'ou_std * {ymult}')
 
-            # 2D image with horiontal slicing lines
+            # 2D image with horiontal slicing lines and grid points
             plt.subplot(2, 3, n * nx + 2)
             plot_xr(Z, xmult=xmult, ymult=xmult, margin=margin)
+            if show_grid:
+                plt.plot(ou_mean, ou_std, 'k.', markersize=1)
             for ou_std_slice in ou_std_slices:
                 plt.plot([ou_mean.min(), ou_mean.max()],
                         [ou_std_slice * ymult] * 2,
-                        '--')
+                        '--', linewidth=2)
             plt.title(f'{data_type}, {pop}')
             if n == ny - 1:
                 plt.xlabel(f'ou_mean * {xmult}')
@@ -153,7 +192,7 @@ def plot_rate_cv_grid(
             plt.ylabel(data_type)
 
     # Folder for saving the figures
-    dirpath_out = dirpath_exp / 'plots'
+    dirpath_out = dirpath_exp / dirname_out
     os.makedirs(dirpath_out, exist_ok=True)
 
     #plt.ion()
