@@ -25,5 +25,6 @@ batch.out
 *exp_logs/
 grid_search_local.py
 submit_batch_local.sh
+submit_single_local.sh
 analysis/ou_tuning/workflow_local.py
 batchtools_csv/
