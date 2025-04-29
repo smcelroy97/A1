@@ -39,11 +39,9 @@ def plot_voltage_metrics_grid(
                 if not callable(data_type[1]):
                     raise ValueError(f'Expected a callable for {data_type[1]}')
                 data_values = data_type[1](data[pop])
-                data_type_title = data_type[0]
             else:
                 # Otherwise, treat it as a column name
                 data_values = data[pop][data_type]
-                data_type_title = data_type
 
             data_interp[pop][data_type] = interpolate_to_xr(
                 data_coords,
@@ -133,9 +131,6 @@ if __name__ == '__main__':
 
     # Experiment config and result folders
     dirpath_exp = dirpath_base / 'exp_results' / 'batch_ougrid_ire_4x4'
-
-    def V_ratio(x):
-        return x['V_num_-70_-50']
 
     metrics_vis = [
         'V_median_-200_0',
