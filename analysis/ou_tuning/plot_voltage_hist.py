@@ -4,23 +4,27 @@ import pickle
 import matplotlib
 import matplotlib.pyplot as plt
 
+from batch_result_manager import BatchResultManager
 import netpyne_res_parse_utils as parse_utils
 
 
 dirpath_base = Path(
-    r'D:\WORK\Salvador\repo\A1_OUinp\exp_results\batch_i_ougrid_its4_20x20_tau_10'
-    #r'D:\WORK\Salvador\repo\A1_OUinp\exp_results\batch_ougrid_vip_0'
+    r'D:\WORK\Salvador\repo\A1_OUinp\exp_results\batch_ougrid_ire_4x4'
 )
 
-sim_name = 'batch_i_ougrid_its4_20x20_med_00236'
-#sim_name = 'batch_ougrid_vip_0_00290'
+params = {
+    'ou_mean': 0.006,
+    'ou_std': 0.01
+}
 
-pop_vis = 'ITS4'
-#pop_vis = 'VIP5A'
+pop_vis = 'IRE'
 
+# Get path to the data by job params
+batch_res_mgr = BatchResultManager(dirpath_base)
+fpath_sim_res = batch_res_mgr.job_data_fpath_by_params(params)
+print(fpath_sim_res)
 
 # Load sim result
-fpath_sim_res = dirpath_base / f'{sim_name}_data.pkl'
 with open(fpath_sim_res, 'rb') as fid:
     sim_res = pickle.load(fid)
 
