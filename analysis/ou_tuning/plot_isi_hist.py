@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 import pickle
 
@@ -10,12 +11,12 @@ import netpyne_res_parse_utils as parse_utils
 
 
 dirpath_base = Path(
-    r'D:\WORK\Salvador\repo\A1_OUinp\exp_results\batch_i_ougrid_its4_20x20_tau_10'
+    '/ddn/niknovikov19/repo/A1_OUinp/exp_results/batch_i_ougrid_its4_20x20_tau_2'
 )
 
 params = {
-    'ou_mean': 0.001,
-    'ou_std': 0.001
+    'ou_mean': 0.002,
+    'ou_std': 0.0125
 }
 
 pop_vis = 'ITS4'
@@ -57,7 +58,7 @@ for n in range(ncells):
     H[n, :], _ = np.histogram(cell_ISI[n], bins=bins,
                               density=True)
 
-matplotlib.use('Qt5Agg', force=True)
+#matplotlib.use('Agg', force=True)
 
 # Plot ISI histograms
 #plt.ion()
@@ -65,7 +66,7 @@ plt.figure(figsize=(12, 6))
 
 plt.subplot(1, 2, 1)
 plt.plot(bins[:-1], h)
-plt.title(f'Histogram of {pop_vis} ISI')
+plt.title(f'Histogram of {pop_vis} ISI (cells combined)')
 plt.xlabel('ISI, ms')
 
 plt.subplot(1, 2, 2)
@@ -73,8 +74,18 @@ extent = (bins[0], bins[-1], 0, ncells)
 plt.imshow(H, aspect='auto', interpolation='nearest',
            extent=extent)
 #plt.colorbar(label='Density')
+plt.title(f'Histogram of {pop_vis} ISI (per cell)')
 plt.xlabel('ISI, ms')
 plt.ylabel('Cells')
 
 #plt.draw()
 plt.show()
+
+dirpath_out = dirpath_base / 'plots_ISI'
+os.makedirs(dirpath_out, exist_ok=True)
+fname_fig = (f'ISI_hist_{pop_vis}'
+             f'_oumean_{params["ou_mean"] * 100}'
+             f'_oustd_{params["ou_std"] * 100}'
+             '.png')
+fpath_out = dirpath_out / fname_fig
+plt.savefig(fpath_out, dpi=300)
