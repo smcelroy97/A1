@@ -56,9 +56,9 @@ def create_batch_res_table(
 
         # Calculate CVs
         cell_spikes = parse_utils.get_net_spikes(sim_result,
-                                                combine_cells=False)
+                                                 combine_cells=False)
         cvs = proc_utils.calc_net_cvs(cell_spikes, time_limits=t_limits,
-                                    nspikes_min=nspikes_min, avg_result=True)
+                                      nspikes_min=nspikes_min, avg_result=True)
 
         entry = {'ou_mean': ou_mean, 'ou_std': ou_std,
                 'rate': rates, 'cv': cvs}
