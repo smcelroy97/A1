@@ -74,8 +74,7 @@ plt.plot(bins[:-1], h)
 plt.plot(bins[:-1], h_gamma, 'k--')
 plt.title(f'Histogram of {pop_vis} ISI (cells combined)')
 plt.xlabel('ISI, ms')
-plt.xlim(-10, 1000)
-plt.ylim(0, 0.01)
+plt.ylim(0, 0.008)
 
 # Add a text box to the top-right corner of the plot
 r = 1000. / gamma_k / gamma_scale
@@ -99,6 +98,7 @@ plt.imshow(H, aspect='auto', interpolation='nearest',
 plt.title(f'Histogram of {pop_vis} ISI (per cell)')
 plt.xlabel('ISI, ms')
 plt.ylabel('Cells')
+
 
 #plt.draw()
 plt.show()
