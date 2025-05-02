@@ -9,7 +9,7 @@ NEURON {
 	USEION k READ ek WRITE ik
 	USEION ca READ cai
 	RANGE gpeak, gkact, caPh, caPk, caPmax, caPmin
-	RANGE caVhh, CaVhk, caVhmax, caVhmin, k, tau
+	RANGE caVhh, CaVhk, caVhmax, caVhmin, k, tau, ik
         GLOBAL pinfmin : cutoff - if pinf < pinfmin, set to 0.; by default cutoff not used (pinfmin==0)
 }
 
