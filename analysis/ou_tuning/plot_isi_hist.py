@@ -11,12 +11,12 @@ import netpyne_res_parse_utils as parse_utils
 
 
 dirpath_base = Path(
-    '/ddn/niknovikov19/repo/A1_OUinp/exp_results/batch_i_ougrid_its4_20x20_tau_2'
+    '/ddn/smcelroy97/A1-OUinp/exp_results/batch_i_ougrid_its4_20x20_tau_2_10sec_small'
 )
 
 params = {
-    'ou_mean': 0.002,
-    'ou_std': 0.0125
+    'ou_mean': 0.0003,
+    'ou_std': 0.0065
 }
 
 pop_vis = 'ITS4'
@@ -68,6 +68,7 @@ plt.subplot(1, 2, 1)
 plt.plot(bins[:-1], h)
 plt.title(f'Histogram of {pop_vis} ISI (cells combined)')
 plt.xlabel('ISI, ms')
+plt.ylim(0, 0.008)
 
 plt.subplot(1, 2, 2)
 extent = (bins[0], bins[-1], 0, ncells)
@@ -77,6 +78,7 @@ plt.imshow(H, aspect='auto', interpolation='nearest',
 plt.title(f'Histogram of {pop_vis} ISI (per cell)')
 plt.xlabel('ISI, ms')
 plt.ylabel('Cells')
+
 
 #plt.draw()
 plt.show()

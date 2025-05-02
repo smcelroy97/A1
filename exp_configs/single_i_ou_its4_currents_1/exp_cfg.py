@@ -47,7 +47,7 @@ def apply_exp_cfg(cfg):
 
         }
     
-    rec_curr = [('ih', 'i')]
+    rec_curr = [('ih', 'i'), ('kBK', 'ik')]
     for curr in rec_curr: 
         cfg.recordTraces.update({'i__soma__'+curr[0]+'__'+curr[1]:
                                  {'sec':'soma','loc':0.5,'mech':curr[0],'var':curr[1]},})

@@ -1,5 +1,5 @@
 import os
-from scipy.signal import welch
+from scipy.signal import welch, spectrogram
 from batch_result_manager import BatchResultManager
 import netpyne_res_parse_utils as parse_utils
 from pathlib import Path
@@ -13,12 +13,12 @@ dirpath_base = Path(
     '/ddn/smcelroy97/A1-OUinp/exp_results/batch_i_ougrid_its4_20x20_tau_2_10sec_small'
 )
 
-plot_individual_cells = True
-plot_pop_avg = True
+plot_individual_cells = False
+plot_pop_avg = False
 
 params = {
-    'ou_mean': 0.002,
-    'ou_std': 0.0125
+    'ou_mean': 0.0005,
+    'ou_std': 0.0005
 }
 
 pop_vis = 'ITS4'
@@ -81,3 +81,23 @@ if plot_pop_avg:
                  '.png')
     fpath_out = dirpath_out / fname_fig
     plt.savefig(fpath_out, dpi=300)
+
+Sxx_all = []
+for idx, v_cell in enumerate(v_data['ITS4']):  # Iterate over each cell's voltage trace
+    f, t, Sxx = spectrogram(v_cell, fs, nperseg=256)
+    Sxx_all.append(Sxx)
+
+    # Plot the spectrogram
+    plt.pcolormesh(t, f, 10 * np.log10(Sxx), shading='gouraud')
+    plt.colorbar(label='Power (dB)')
+    plt.ylabel('Frequency (Hz)')
+    plt.xlabel('Time (s)')
+    plt.title('Spectrogram of Subthreshold Voltage')
+    plt.show()
+    fname_fig = (f'Vm_spectro_{pop_vis}_{idx}'
+                    f'_oumean_{params["ou_mean"] * 100}'
+                    f'_oustd_{params["ou_std"] * 100}'
+                    '.png')
+    fpath_out = dirpath_out / fname_fig
+    plt.savefig(fpath_out, dpi=300)
+    plt.close()
