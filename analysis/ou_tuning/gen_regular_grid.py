@@ -10,7 +10,8 @@ def gen_regular_grid(
         ou_mean_npoints: int,
         ou_std_range: Tuple[float, float],
         ou_std_npoints: int,
-        fpath_out: str | Path
+        fpath_out: str | Path,
+        need_save: True
         ) -> None:
     """Generate a regular grid of OU mean and std values. """
     # Generate grid
@@ -23,8 +24,12 @@ def gen_regular_grid(
     grid = np.array(np.meshgrid(ou_mean_values, ou_std_values)).T.reshape(-1, 2)
     
     # Save grid to CSV
-    df = pd.DataFrame(grid, columns=["ou_mean", "ou_std"])
-    df.to_csv(fpath_out, index=False)
+    if need_save:
+        df = pd.DataFrame(grid, columns=["ou_mean", "ou_std"])
+        df.to_csv(fpath_out, index=False)
+
+    else:
+        return grid
 
 
 if __name__ == '__main__':
