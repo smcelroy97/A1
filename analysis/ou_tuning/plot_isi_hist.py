@@ -74,8 +74,8 @@ plt.plot(bins[:-1], h)
 plt.plot(bins[:-1], h_gamma, 'k--')
 plt.title(f'Histogram of {pop_vis} ISI (cells combined)')
 plt.xlabel('ISI, ms')
-plt.ylim(0, 0.008)
-<<<<<<< HEAD
+plt.xlim(-10, 1000)
+plt.ylim(0, 0.01)
 
 # Add a text box to the top-right corner of the plot
 r = 1000. / gamma_k / gamma_scale
@@ -84,14 +84,12 @@ text_str = (
     f'Gamma_k: {gamma_k:.2f}\n'
     f'Rate: {r:.2f} Hz\n'
     f'CV: {CV:.2f}'
-)    
+)
 plt.text(0.95, 0.95, text_str,
          horizontalalignment='right',
          verticalalignment='top',
          transform=plt.gca().transAxes,
          bbox=dict(facecolor='white', edgecolor='black'))
-=======
->>>>>>> origin/ou-gridSM
 
 plt.subplot(1, 2, 2)
 extent = (bins[0], bins[-1], 0, ncells)
@@ -101,7 +99,6 @@ plt.imshow(H, aspect='auto', interpolation='nearest',
 plt.title(f'Histogram of {pop_vis} ISI (per cell)')
 plt.xlabel('ISI, ms')
 plt.ylabel('Cells')
-
 
 #plt.draw()
 plt.show()
@@ -114,3 +111,4 @@ fname_fig = (f'ISI_hist_{pop_vis}'
              '.png')
 fpath_out = dirpath_out / fname_fig
 plt.savefig(fpath_out, dpi=300)
+
