@@ -48,10 +48,14 @@ def apply_exp_cfg(cfg):
         }
     
 <<<<<<< HEAD
+<<<<<<< HEAD
     rec_curr = [('ih', 'i'), ('kBK', 'ik')]
 =======
     rec_curr = [('ih', 'i')]
 >>>>>>> c7e43c4 (Updating results from tau = 10 and additional voltage hists from tau = 2)
+=======
+    rec_curr = [('ih', 'i'), ('kBK', 'ik')]
+>>>>>>> a095e5a (updating kBK.mod)
     for curr in rec_curr: 
         cfg.recordTraces.update({'i__soma__'+curr[0]+'__'+curr[1]:
                                  {'sec':'soma','loc':0.5,'mech':curr[0],'var':curr[1]},})
