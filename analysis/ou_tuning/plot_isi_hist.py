@@ -75,6 +75,7 @@ plt.plot(bins[:-1], h_gamma, 'k--')
 plt.title(f'Histogram of {pop_vis} ISI (cells combined)')
 plt.xlabel('ISI, ms')
 plt.ylim(0, 0.008)
+<<<<<<< HEAD
 
 # Add a text box to the top-right corner of the plot
 r = 1000. / gamma_k / gamma_scale
@@ -89,6 +90,8 @@ plt.text(0.95, 0.95, text_str,
          verticalalignment='top',
          transform=plt.gca().transAxes,
          bbox=dict(facecolor='white', edgecolor='black'))
+=======
+>>>>>>> origin/ou-gridSM
 
 plt.subplot(1, 2, 2)
 extent = (bins[0], bins[-1], 0, ncells)
