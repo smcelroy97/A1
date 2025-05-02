@@ -6,6 +6,7 @@ Low-level functions to extract data from a NetPyNE simulation result.
 from typing import Dict, List, Tuple
 
 import numpy as np
+import xarray as xr
 
 
 def get_pop_names(sim_result):
@@ -149,3 +150,42 @@ def get_voltages(
 #     r = np.array([len(s[(s >= t0) & (s <= tmax)]) / T for s in S])
 #     return r
 # =============================================================================
+
+
+def get_voltages_xr(
+        sim_result: Dict,
+        t_limits: Tuple[float, float] | None = None,
+        ) -> Dict[str, xr.Dataset]:
+    """Returns a dict: {pop: Vmat (cells x time)}. """
+
+    pop_names = get_pop_names(sim_result)
+
+    # Time bins and limits
+    tvec = np.array(sim_result['simData']['t'])
+    if t_limits is not None:
+        tmask = (tvec >= t_limits[0]) & (tvec <= t_limits[1])
+        tvec = tvec[tmask]
+    else:
+        tmask = np.full_like(tvec, True)
+
+    # Extract voltages and the corresponding cell gids
+    V_data = {pop: [] for pop in pop_names}
+    cell_gids = {pop: [] for pop in pop_names}
+    for cell, V_vec in sim_result['simData']['V_soma'].items():
+        gid = int(cell.split('_')[-1])
+        pop = sim_result['net']['cells'][gid]['tags']['pop']
+        V_data[pop].append(np.array(V_vec)[tmask])
+        cell_gids[pop].append(gid)
+
+    # Convert to xarray
+    for pop in pop_names:
+        V_data[pop] = xr.DataArray(
+            np.array(V_data[pop]),
+            dims=['cell_gid', 'time'],
+            coords={
+                'cell_gid': cell_gids[pop],
+                'time': tvec
+            }
+        )
+
+    return V_data
