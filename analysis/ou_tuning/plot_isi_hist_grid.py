@@ -14,12 +14,12 @@ import netpyne_res_parse_utils as parse_utils
 
 
 dirpath_base = Path(
-    '/ddn/smcelroy97/A1-OUinp/exp_results/batch_i_ougrid_its4_20x20_tau_2_10sec_small'
+    '/ddn/smcelroy97/A1-OUinp/exp_results/batch_i_ougrid_pv4_20x20_tau_2_10sec'
 )
 
-ou_mean_range = (-0.01, 0.0125)
+ou_mean_range = (0.002, 0.04)
 ou_mean_npoints = 10
-ou_std_range = (0, 0.0075)
+ou_std_range = (0, 0.015)
 ou_std_npoints = 10
 
 grid = gen_regular_grid(
@@ -28,7 +28,7 @@ grid = gen_regular_grid(
             dirpath_base, need_save= False 
             )
 
-pop_vis = 'ITS4'
+pop_vis = 'PV4'
 
 t_limits=(2, 10)   # in seconds
 
@@ -135,4 +135,4 @@ for pair in grid:
     plt.savefig(fpath_out, dpi=300)
     plt.close()
 
-print('\n' + str(skip_counter) + 'files have been skipped...')
+print('\n' + str(skip_counter) + ' files have been skipped...')
