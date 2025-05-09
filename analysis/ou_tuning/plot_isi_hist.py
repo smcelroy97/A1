@@ -74,12 +74,9 @@ plt.plot(bins[:-1], h)
 plt.plot(bins[:-1], h_gamma, 'k--')
 plt.title(f'Histogram of {pop_vis} ISI (cells combined)')
 plt.xlabel('ISI, ms')
-<<<<<<< HEAD
 plt.ylim(0, 0.008)
-=======
 plt.xlim(-10, 1000)
 plt.ylim(0, 0.01)
->>>>>>> 8b78e66 (fixing more merge weirdness)
 
 # Add a text box to the top-right corner of the plot
 r = 1000. / gamma_k / gamma_scale
