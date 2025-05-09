@@ -12,6 +12,7 @@ def plot_rate_cv_grid(
         dirpath_exp: str | Path,
         npoints: int = 100,   # grid resolution
         nslices: int = 5,   # num. ou_std==const slices to plot
+        slice_d: float = 0.1,   # relative margin between 1-st slice and min. ou_std
         show_grid: bool = True,
         show_r_cv_contours: bool = False,
         dirname_out: str = 'plots'
@@ -41,8 +42,7 @@ def plot_rate_cv_grid(
             )
 
     # 1D slices of 2D data with ou_std==const
-    nslices = 5
-    d = (ou_std.max() - ou_std.min()) * 0.1
+    d = (ou_std.max() - ou_std.min()) * slice_d
     ou_std_slices = np.linspace(
         ou_std.min() + d, ou_std.max() - d, nslices)
 
