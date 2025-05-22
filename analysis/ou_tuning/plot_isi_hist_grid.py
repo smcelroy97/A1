@@ -17,9 +17,9 @@ dirpath_base = Path(
     '/ddn/smcelroy97/A1-OUinp/exp_results/batch_i_ougrid_pv4_20x20_tau_2_10sec'
 )
 
-ou_mean_range = (0.002, 0.04)
-ou_mean_npoints = 10
-ou_std_range = (0, 0.015)
+ou_mean_range = (0.01, 0.016)
+ou_mean_npoints = 4
+ou_std_range = (0, 0.0075)
 ou_std_npoints = 10
 
 grid = gen_regular_grid(
@@ -100,8 +100,8 @@ for pair in grid:
     plt.plot(bins[:-1], h_gamma, 'k--')
     plt.title(f'Histogram of {pop_vis} ISI (cells combined)')
     plt.xlabel('ISI, ms')
-    plt.xlim(-10, 1000)
-    plt.ylim(0, 0.045)
+    # plt.xlim(-10, 50)
+    # plt.ylim(0, 5)
 
     # Add a text box to the top-right corner of the plot
     r = 1000. / gamma_k / gamma_scale

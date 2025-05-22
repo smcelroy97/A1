@@ -15,8 +15,9 @@ def apply_exp_cfg(cfg):
 
     # Populations to use
     cfg.pops_active = [
-        'PV4'
+        'TI', 'TIM'
     ]
+    
     cfg.allpops = cfg.pops_active
     if 'plotRaster' in cfg.analysis:
         cfg.analysis['plotRaster']['include'] = cfg.pops_active
@@ -27,13 +28,13 @@ def apply_exp_cfg(cfg):
 
     # Record voltage traces
     ncells_rec = 4
-    ncells_plot = 4
+    ncells_plot = 2
     cfg.recordCells = [(pop, list(range(ncells_rec))) for pop in cfg.allpops]
     cfg.recordTraces = {'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'}}
     cfg.recordStep = 0.1
     cfg.analysis['plotTraces'] = {
         'include': [(pop, list(range(ncells_plot))) for pop in cfg.allpops],
-        'timeRange': [6000, 7000],
+        'timeRange': [3000, 7000],
         'oneFigPer': 'trace', 'overlay': False,
         'saveFig': True, 'showFig': False, 'figSize': (18, 12)
     }

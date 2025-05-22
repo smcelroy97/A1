@@ -12,12 +12,12 @@ from xr_utils import plot_xr
 
 
 dirpath_base = Path(
-    r'/ddn/smcelroy97/A1-OUinp/exp_results/batch_i_ougrid_pv4_20x20_tau_2_10sec'
+    r'/ddn/smcelroy97/A1-OUinp/exp_results/batch_i_ougrid_pv4_20x20_tau_2_10sec_currents_small'
 )
 
 params = {
-    'ou_mean': 0.016,
-    'ou_std': 0.0063
+    'ou_mean': 0.015,
+    'ou_std': 0.0025
 }
 
 pop_vis = 'PV4'
@@ -49,8 +49,7 @@ cell_spikes = parse_utils.get_pop_spikes(
 cell_spikes = [s.ravel() for s in cell_spikes]   # make sure spike trains are 1-d
 ncells = len(cell_spikes)
 
-# Extract voltages
-V_data = parse_utils.get_voltages_xr(sim_res, t_limits_ms)[pop_vis]
+
 
 # Filter spikes to include only those corresponding to recorded cell gids
 pop_cell_gids_all = parse_utils.get_pop_cell_gids(sim_res, pop_vis)

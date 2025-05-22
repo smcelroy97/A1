@@ -15,8 +15,10 @@ def apply_exp_cfg(cfg):
 
     # Populations to use
     cfg.pops_active = [
-        'PV4'
+        'VIP2', 'VIP3', 'VIP4', 
+        'VIP5A', 'VIP5B', 'VIP6'
     ]
+    
     cfg.allpops = cfg.pops_active
     if 'plotRaster' in cfg.analysis:
         cfg.analysis['plotRaster']['include'] = cfg.pops_active
