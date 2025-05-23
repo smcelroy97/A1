@@ -22,8 +22,8 @@ cfg = specs.SimConfig()
 # ------------------------------------------------------------------------------
 # Run parameters
 # ------------------------------------------------------------------------------
-cfg.duration = 30  # Duration of the sim, in ms
-cfg.dt = 0.5   # 0.025  # Internal Integration Time Step
+cfg.duration = 6500  # Duration of the sim, in ms
+cfg.dt = 0.025   # 0.025  # Internal Integration Time Step
 cfg.verbose = 0  # Show detailed messages
 cfg.progressBar = 0  # even more detailed message
 cfg.hParams['celsius'] = 37
@@ -69,23 +69,23 @@ cfg.TEpops = ['TC', 'TCM', 'HTC']
 
 cfg.TIpops = ['IRE', 'IREM', 'TI', 'TIM']
 
-cfg.pops_active = ['NGF1', 'ITS4']
+cfg.pops_active = cfg.allpops
 
 if cfg.pops_active:
     cfg.allpops = cfg.pops_active
 
 # Dict with traces to record -- taken from M1 cfg.py
-# cfg.recordTraces = {'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'}
-#                     # 'g_NMDA': {'sec':'soma', 'loc':0.5, 'synMech':'NMDA', 'var':'g'},
-#                     # 'g_GABAB': {'sec':'soma', 'loc':0.5, 'synMech':'GABAB', 'var':'g'}
-#                     }
+cfg.recordTraces = {'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'}
+                    # 'g_NMDA': {'sec':'soma', 'loc':0.5, 'synMech':'NMDA', 'var':'g'},
+                    # 'g_GABAB': {'sec':'soma', 'loc':0.5, 'synMech':'GABAB', 'var':'g'}
+                    }
 
 cfg.recordStim = False  # Seen in M1 cfg.py
 cfg.recordTime = True  # SEen in M1 cfg.py
-cfg.recordStep = 0.5   # 0.05  # St ep size (in ms) to save data -- value from M1 cfg.py
+cfg.recordStep = 0.05  # St ep size (in ms) to save data -- value from M1 cfg.py
 
-cfg.recordLFP = False  # [[100, y, 100] for y in range(0, 2000, 100)]
-cfg.recordDipole = False
+cfg.recordLFP = True  # [[100, y, 100] for y in range(0, 2000, 100)]
+cfg.recordDipole = True
 
 # ------------------------------------------------------------------------------
 # Saving
@@ -179,7 +179,7 @@ for key, value in cfgLoad.items():
 
 # These values taken from M1 cfg (https://github.com/Neurosim-lab/netpyne/bflob/development/examples/M1detailed/cfg.py)
 cfg.singleCellPops = False
-cfg.reducedPop = False  # insert number to declare specific number of populations, if going for full model set to False
+cfg.reducedPop = False # insert number to declare specific number of populations, if going for full model set to False
 cfg.singlePop = ''
 cfg.removeWeightNorm = False
 cfg.scale = 1.0  # Is this what should be used?
@@ -294,8 +294,8 @@ cfg.seeds = {'conn': 23451, 'stim': 1, 'loc': 1}
 # ------------------------------------------------------------------------------
 # Background inputs
 # ------------------------------------------------------------------------------
-cfg.addBkgConn = 0
-cfg.noiseBkg = 0  # firing rate random noise
+cfg.addBkgConn = 1.0
+cfg.noiseBkg = 1.0  # firing rate random noise
 cfg.delayBkg = 5.0  # (ms)
 cfg.startBkg = 0  # start at 0 ms
 cfg.rateBkg = {'exc': 40, 'inh': 40}
@@ -307,13 +307,13 @@ cfg.BkgCtxIGain = 0.8285714285714285
 
 cfg.NGF6bkgGain = 1.0
 
-cfg.cochlearThalInput = False
+cfg.cochlearThalInput = True
 # parameters to generate realistic  auditory thalamic inputs using Brian Hears
 
 
 if cfg.cochlearThalInput:
     cfg.cochlearThalInput = {"lonset": [0], "numCenterFreqs": 100, "freqRange": [125, 20000], "loudnessScale": 1,
-                             "lfnwave": ["wav/silence6.5s.wav"]}
+                             "lfnwave": ["wav/A1/wav/9kHzClick_624ISI_2sDelay_6.5s.wav"]}
     cfg.cochlearThalInput['probECore'] = cfg.cochThalprobECore
     cfg.cochlearThalInput['weightECore'] = cfg.cochThalweightECore
     cfg.cochlearThalInput['probICore'] = cfg.cochThalprobICore

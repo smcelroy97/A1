@@ -1,7 +1,7 @@
 from netpyne.batchtools.search import search
 import numpy as np
 
-label = 'v45_batch21'
+label = 'v45_batch22'
 
 # params for search
 params = {
