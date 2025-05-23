@@ -11,30 +11,30 @@ from matplotlib import pyplot as plt
 from lfpykit.eegmegcalc import NYHeadModel
 
 stim_on = 2000  # Define onset of stimulus if necessary
-# calcEEG = {'start': 2800, 'stop': 4000}
-# filter = {'lowCut':2, 'hiCut': 12}
-# plotERP = {'useFilter': True}
+calcEEG = {'start': 2800, 'stop': 4000}
+filter = {'lowCut':2, 'hiCut': 12}
+plotERP = {'useFilter': True}
 # plotSpectrogram = {'useFilter': False}
 # plotPSD = {'useFilter': True}
-plotRaster = {'timeRange': [0, 2000]}
+# plotRaster = {'timeRange': [0, 2000]}
 # PSDSpect = {'timeRange': [3000, 4000], 'useLFP': False, 'useCSD': True}
 # plotMUA = {'stimDur': 1000}
 
-calcEEG = False
-filter = False
-plotERP = False
+# calcEEG = False
+# filter = False
+# plotERP = False
 plotSpectrogram = False
 plotPSD = False
-# plotRaster = False
+plotRaster = False
 PSDSpect = False
 plotMUA = False
 
 
-batch = 'GABAB_KO1003'  # Name of batch for fig saving
+batch = 'ASSR_grid_0226'  # Name of batch for fig saving
 
 # Load sim EEG data
-# base_dir = '/Users/scoot/A1ProjData/A1_sim_data/' + batch + '/'  # Define dir from saved data dir
-base_dir = '/Users/scoot/A1ProjData/A1_sim_data/'
+base_dir = '/Users/scoot/A1ProjData/A1_sim_data/' + batch + '/'  # Define dir from saved data dir
+# base_dir = '/Users/scoot/A1ProjData/A1_sim_data/'
 figure_dir = '/Users/scoot/A1ProjData/A1_figs/SIMfigs/' # Define dir for saving figures
 
 nmda_per_file = {}
@@ -43,8 +43,8 @@ for file in os.listdir(base_dir):
     if file.endswith('_data.pkl') or file.endswith('_data.json'): # make sure you only download output data
 
         sim.initialize()
-        all = sim.loadSimData('/Users/scoot/A1ProjData/A1_sim_data/EIvsIETune0930_00002_data.pkl')
-        # all = sim.loadAll(os.path.join(base_dir, file), instantiate=False)# Valery did this and fixed some problems, not sure why necessary
+        # all = sim.loadSimData('/Users/scoot/A1ProjData/A1_sim_data/EIvsIETune0930_00002_data.pkl')
+        all = sim.loadAll(os.path.join(base_dir, file), instantiate=False)# Valery did this and fixed some problems, not sure why necessary
         fname = file[0:-9] # Create filename (can change to whatever)
         if not os.path.exists(figure_dir + batch):
             os.mkdir(figure_dir + batch)  # Create Figure directory if one doesn't already exist
@@ -157,76 +157,6 @@ for file in os.listdir(base_dir):
                         save_dir        = save_dir + '_' + pop
                     )
 
-        # figs, traces_dict = sim.analysis.plotTraces(include=['TC'], timeRange=[1950, 2400], saveFig=False, axis=True)
-        # tracesData = traces_dict['tracesData']
-        # store_NMDA = []
-        # store_NMDAt = {}
-        # storeGABAB = []
-        # storeGABABt = {}
-        # store_v = []
-        # store_voltages = {}
-        # for rec_ind in range(len(tracesData)):
-        #     for trace in tracesData[rec_ind].keys():
-        #         if '_V_soma' in trace:
-        #             cell_gid_str = trace.split('_V_soma')[0].split('cell_')[1]
-        #             # store_v.update({cell_gid_str:list(tracesData[rec_ind][trace])})
-        #             store_v.append(list(tracesData[rec_ind][trace]))
-        #             store_voltages.update({cell_gid_str: list(tracesData[rec_ind][trace])})
-                # if '_g_NMDA' in trace:
-                #     cell_gid_str = trace.split('_V_soma')[0].split('cell_')[1]
-                #     # store_v.update({cell_gid_str:list(tracesData[rec_ind][trace])})
-                #     store_NMDA.append(list(tracesData[rec_ind][trace]))
-                #     store_NMDAt.update({cell_gid_str: list(tracesData[rec_ind][trace])})
-                # if '_g_GABAB' in trace:
-                #     cell_gid_str = trace.split('_V_soma')[0].split('cell_')[1]
-                #     # store_v.update({cell_gid_str:list(tracesData[rec_ind][trace])})
-                #     storeGABAB.append(list(tracesData[rec_ind][trace]))
-                #     storeGABABt.update({cell_gid_str: list(tracesData[rec_ind][trace])})
-
-
-
-        # t_vector = list(tracesData[0]['t'])
-        # bin_start_times = [2000, 2724, 3448, 4172, 4896, 5620, 6344]
-        # mVtimes = []
-        # bins = []
-        # for time in bin_start_times:
-        #     mVtimes.append(time - 5)
-        # # mean_NMDA = np.mean(store_NMDA, axis=0)
-        # # nmda_per_file[file] = mean_NMDA
-        # # meanGABAB = np.mean(storeGABAB, axis=0)
-        # # gabab_per_file[file] = mean_GABAB
-        # mean_v = np.mean(store_v, axis=0)
-        # t_vector_ = [t_vector[i] for i in range(len(mean_v))]
-        # plt.rcParams['font.weight'] = 'bold'
-        # plt.figure(figsize=(27.5, 12.5))
-        # for trace in store_v: plt.plot(t_vector_, trace, 'gray', alpha=0.2)
-        # plt.plot(t_vector_, mean_v, 'r', label = 'Mean Population Voltage')
-        # plt.ylim([-110, 50])
-        # plt.xlim([min(t_vector_), max(t_vector_)])
-        # plt.xlabel('Time(ms)', fontsize = 30, fontweight = 'bold')
-        # plt.ylabel('Voltage (mV)', fontsize = 30, fontweight = 'bold')
-        # plt.title('First Stimulus Voltage Trace', fontweight = 'bold', fontsize = 50)
-        # plt.legend()
-        # # plt.plot(mean_v,'k')
-        # plt.savefig(save_dir + '_mean_traces_TC.png')
-        #
-        # plt.rcParams['font.weight'] = 'bold'
-        # plt.figure(figsize=(27.5,12.5))
-        # plt.plot(t_vector[0:94000], meanGABAB, linewidth = 6)
-        # plt.xlabel('Time(ms)', fontsize = 30, fontweight = 'bold')
-        # plt.ylabel('Conductance (uS)', fontsize = 30, fontweight = 'bold')
-        # plt.title('GABAB Conductance', fontweight = 'bold', fontsize = 50)
-        # plt.xticks(fontsize=25)
-        # plt.yticks(fontsize=25)
-        # plt.savefig(save_dir + '_avgGABAB.png')
-# plt.figure(figsize=(27.5,12.5))
-# for key in nmda_per_file.keys():
-#     plt.plot(t_vector[0:94000], nmda_per_file[key], label = key)
-# plt.xlabel('Time(ms)', fontsize = 20, fontweight = 'bold')
-# plt.ylabel('Conductance (uS)', fontsize = 20, fontweight = 'bold')
-# plt.title('NMDA Conductance', fontweight = 'bold', fontsize = 30)
-# plt.legend(['w/ GABAB', 'GABAB Blocked'], fontsize = 20)
-# plt.savefig('/Users/scoot/A1ProjData/avgNMDA.png')
 
 ################## Scrap for resampling if needed later ##################################################
 # num_samples = len(stim_data)

@@ -10,6 +10,7 @@ from netpyne.batchtools import specs
 import pickle
 import json
 import numpy as np
+
 cfg = specs.SimConfig()
 
 # ------------------------------------------------------------------------------
@@ -21,8 +22,8 @@ cfg = specs.SimConfig()
 # ------------------------------------------------------------------------------
 # Run parameters
 # ------------------------------------------------------------------------------
-cfg.duration = 3000  # Duration of the sim, in ms
-cfg.dt = 0.025  # Internal Integration Time Step
+cfg.duration = 30  # Duration of the sim, in ms
+cfg.dt = 0.5   # 0.025  # Internal Integration Time Step
 cfg.verbose = 0  # Show detailed messages
 cfg.progressBar = 0  # even more detailed message
 cfg.hParams['celsius'] = 37
@@ -54,37 +55,43 @@ cfg.allCorticalPops = ['NGF1', 'IT2', 'SOM2', 'PV2', 'VIP2', 'NGF2', 'IT3', 'SOM
 
 cfg.allThalPops = ['TC', 'TCM', 'HTC', 'IRE', 'IREM', 'TI', 'TIM']
 
-cfg.Epops = ['IT2', 'IT3', 'ITP4', 'ITS4', 'IT5A', 'CT5A', 'IT5B', 'CT5B' , 'PT5B', 'IT6', 'CT6']  # all layers
+cfg.Epops = ['IT2', 'IT3', 'ITP4', 'ITS4', 'IT5A', 'CT5A', 'IT5B', 'CT5B', 'PT5B', 'IT6', 'CT6']  # all layers
 
 cfg.Ipops = ['NGF1',                            # L1
-        'PV2', 'SOM2', 'VIP2', 'NGF2',      # L2
-        'PV3', 'SOM3', 'VIP3', 'NGF3',      # L3
-        'PV4', 'SOM4', 'VIP4', 'NGF4',      # L4
-        'PV5A', 'SOM5A', 'VIP5A', 'NGF5A',  # L5A
-        'PV5B', 'SOM5B', 'VIP5B', 'NGF5B',  # L5B
-        'PV6', 'SOM6', 'VIP6', 'NGF6']      # L6
+             'PV2', 'SOM2', 'VIP2', 'NGF2',      # L2
+             'PV3', 'SOM3', 'VIP3', 'NGF3',      # L3
+             'PV4', 'SOM4', 'VIP4', 'NGF4',      # L4
+             'PV5A', 'SOM5A', 'VIP5A', 'NGF5A',  # L5A
+             'PV5B', 'SOM5B', 'VIP5B', 'NGF5B',  # L5B
+             'PV6', 'SOM6', 'VIP6', 'NGF6']      # L6
 
 cfg.TEpops = ['TC', 'TCM', 'HTC']
 
 cfg.TIpops = ['IRE', 'IREM', 'TI', 'TIM']
 
+cfg.pops_active = cfg.Epops
+
+if cfg.pops_active:
+    cfg.allpops = cfg.pops_active
+
 # Dict with traces to record -- taken from M1 cfg.py
-cfg.recordTraces = {'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'}
-                    # 'g_NMDA': {'sec':'soma', 'loc':0.5, 'synMech':'NMDA', 'var':'g'},
-                    # 'g_GABAB': {'sec':'soma', 'loc':0.5, 'synMech':'GABAB', 'var':'g'}
-}
+# cfg.recordTraces = {'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'}
+#                     # 'g_NMDA': {'sec':'soma', 'loc':0.5, 'synMech':'NMDA', 'var':'g'},
+#                     # 'g_GABAB': {'sec':'soma', 'loc':0.5, 'synMech':'GABAB', 'var':'g'}
+#                     }
+
 cfg.recordStim = False  # Seen in M1 cfg.py
 cfg.recordTime = True  # SEen in M1 cfg.py
-cfg.recordStep =  0.05  # St ep size (in ms) to save data -- value from M1 cfg.py
+cfg.recordStep = 0.5   # 0.05  # St ep size (in ms) to save data -- value from M1 cfg.py
 
-cfg.recordLFP = False # [[100, y, 100] for y in range(0, 2000, 100)]
+cfg.recordLFP = False  # [[100, y, 100] for y in range(0, 2000, 100)]
 cfg.recordDipole = False
 
 # ------------------------------------------------------------------------------
 # Saving
 # ------------------------------------------------------------------------------
 
-cfg.simLabel = 'fxndtpt025'
+cfg.simLabel = 'EpopsOUcurrent'
 cfg.saveFolder = 'simOutput/' + cfg.simLabel  # Set file output name
 cfg.savePickle = True  # Save pkl file
 cfg.saveJson = False  # Save json file
@@ -107,14 +114,15 @@ cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig'
 # 'oneFigPer': 'cell', 'overlay': True, 'saveFig': False, 'showFig': False, 'figSize':(12,8)}
 
 
-def setplotTraces (ncell=50, linclude=cfg.allpops, timeRange = cfg.duration):
-  pops = []
-  for pop in linclude:
-    for i in range(ncell):
-      pops.append((pop,i))
-  cfg.analysis['plotTraces'] = {'include': linclude, 'timeRange' : timeRange, 'oneFigPer': 'trace', 'overlay': True, 'saveFig': False, 'showFig': False, 'figSize':(12,8)}
+def setplotTraces(ncell=50, linclude=cfg.allpops, timeRange=cfg.duration):
+    pops = []
+    for pop in linclude:
+        for i in range(ncell):
+            pops.append((pop, i))
+    cfg.analysis['plotTraces'] = {'include': linclude, 'timeRange': timeRange, 'oneFigPer': 'trace', 'overlay': True, 'saveFig': False, 'showFig': False, 'figSize': (12, 8)}
 
-# setplotTraces(ncell=1, timeRange=[1750, 3000])
+
+setplotTraces(ncell=1, timeRange=[1750, 3000])
 
 layer_bounds = {'L1': 100, 'L2': 160, 'L3': 950, 'L4': 1250, 'L5A': 1334, 'L5B': 1550, 'L6': 2000}
 
@@ -170,7 +178,7 @@ for key, value in cfgLoad.items():
     setattr(cfg, key, value)
 
 # These values taken from M1 cfg (https://github.com/Neurosim-lab/netpyne/bflob/development/examples/M1detailed/cfg.py)
-cfg.singleCellPops = False
+cfg.singleCellPops = True
 cfg.reducedPop = False  # insert number to declare specific number of populations, if going for full model set to False
 cfg.singlePop = ''
 cfg.removeWeightNorm = False
@@ -185,7 +193,7 @@ cfg.scaleDensity = 1.0  # Should be 1.0 unless need lower cell density for test 
 # ------------------------------------------------------------------------------
 
 # Cortical
-cfg.addConn = 0
+cfg.addConn = 1.0
 cfg.addSubConn = 1.0
 cfg.wireCortex = 1.0
 
@@ -239,10 +247,10 @@ cfg.intraThalamicIEGain = 0.1
 cfg.intraThalamicIIGain = 1.0
 
 # these params control cochlea -> Thalamus
-cfg.cochThalweightECore = 0.225  #1.0  # 0.1125
+cfg.cochThalweightECore = 0.225  # 1.0  # 0.1125
 cfg.cochThalprobECore = 0.3
 cfg.cochThalweightICore = 0.0675
-cfg.cochThalprobICore =  0.15 #0.5
+cfg.cochThalprobICore = 0.15  # 0.5
 cfg.cochThalMatrixCoreFactor = 0.1
 cfg.cochthalweightEMatrix = 0.1125
 cfg.cochthalweightIMatrix = 0.0675
@@ -253,7 +261,7 @@ cfg.cochThalFreqRange = [750, 1250]
 # Control the strength of thalamic inputs to different subpopulations
 cfg.thalL4PV = 0.21367245896786016
 cfg.thalL4SOM = 0.24260966747847523
-cfg.thalL4E = 2.0 #1.9540886147587417
+cfg.thalL4E = 2.0  # 1.9540886147587417
 
 cfg.thalL4VIP = 1.0
 cfg.thalL4NGF = 1.0
@@ -304,7 +312,7 @@ cfg.cochlearThalInput = False
 
 
 if cfg.cochlearThalInput:
-    cfg.cochlearThalInput = {"lonset" : [0], "numCenterFreqs": 100, "freqRange":[125, 20000], "loudnessScale": 1,
+    cfg.cochlearThalInput = {"lonset": [0], "numCenterFreqs": 100, "freqRange": [125, 20000], "loudnessScale": 1,
                              "lfnwave": ["wav/silence6.5s.wav"]}
     cfg.cochlearThalInput['probECore'] = cfg.cochThalprobECore
     cfg.cochlearThalInput['weightECore'] = cfg.cochThalweightECore
@@ -325,27 +333,30 @@ else:
 # The way this is set up now is to make F-I curves for each population but can be used for other purposes
 # Just needs to be modified for the specific use
 cfg.addIClamp = {
-    'FIcurve' : False,
-    'numInjections' : 13,
-    'injectionInterval' : 3000,
-    'injectionDuration' : 1000,
-    'injectionAmplitudes' : np.linspace(0.0, 0.6, 13),
-    'holdingCurrent' : True,
-    'includePops' : ['IRE', 'IREM', 'TI', 'TIM', 'TC', 'TCM', 'HTC',
-                     'SOM2', 'VIP2', 'SOM3', 'VIP3', 'SOM4', 'VIP4',
-                     'SOM5A', 'VIP5A', 'SOM5B', 'VIP5B','SOM6', 'VIP6', 'TC', 'TCM', 'HTC'],
-    'holdingAmp' : -0.0575
+    'FIcurve': False,
+    'numInjections': 13,
+    'injectionInterval': 3000,
+    'injectionDuration': 1000,
+    'injectionAmplitudes': np.linspace(0.0, 0.6, 13),
+    'holdingCurrent': True,
+    'includePops': ['IRE', 'IREM', 'TI', 'TIM', 'TC', 'TCM', 'HTC',
+                    'SOM2', 'VIP2', 'SOM3', 'VIP3', 'SOM4', 'VIP4',
+                    'SOM5A', 'VIP5A', 'SOM5B', 'VIP5B', 'SOM6', 'VIP6',
+                    'TC', 'TCM', 'HTC'],
+    'holdingAmp': -0.0575
 
 }
+
+cfg.addNoiseIClamp = 1
 
 
 # ------------------------------------------------------------------------------
 # Background conductance inputs
 # ------------------------------------------------------------------------------
 
-cfg.addNoiseConductance = 1
-cfg.OUamp =  0.002899 # 200 # 0.05
-cfg.OUstd =   0.00056763157894736845
+cfg.addNoiseConductance = 0
+cfg.OUamp = -0.05  # 200 # 0.05
+cfg.OUstd = 1.5
 cfg.NoiseConductanceDur = cfg.duration
 
 # ------------------------------------------------------------------------------

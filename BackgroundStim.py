@@ -42,8 +42,8 @@ class addStim():
                 svec.x[n] = svec[n - 1] * mu + noise[n]  # signal [uS]
 
 
-        svec.add(mean)  # shift signal by mean value [uS]
-        svec = h.Vector([1 / x for x in svec])
+        svec = svec.add(mean)  # shift signal by mean value [uS]
+        # svec = h.Vector([1 / x for x in svec])
 
         if plotFig:
             import matplotlib.pyplot as plt
@@ -120,7 +120,7 @@ class addStim():
                     mean = sim.net.params.NoiseIClampParams[cell.tags['pop']]['g0']
                     variance = sim.net.params.NoiseIClampParams[cell.tags['pop']]['sigma']
 
-                    tvec, svec = BackgroundStim.add_ornstein_uhlenbeck(
+                    tvec, svec = addStim.add_ornstein_uhlenbeck(
                         tau= 10,
                         sigma=variance,
                         mean=mean,

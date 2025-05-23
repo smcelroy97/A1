@@ -5,8 +5,8 @@ label = 'v45_batch21'
 
 # params for search
 params = {
-    'OUamp': np.linspace(0.00001, 0.005, 20),
-    'OUstd': np.linspace(0.000005, 0.0025, 20)}
+    'addSubConn': [0, 1]
+}
 
 
 # use batch_shell_config if running directly on the machine
