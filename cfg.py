@@ -69,7 +69,7 @@ cfg.TEpops = ['TC', 'TCM', 'HTC']
 
 cfg.TIpops = ['IRE', 'IREM', 'TI', 'TIM']
 
-cfg.pops_active = cfg.Epops
+cfg.pops_active = ['NGF1', 'ITS4']
 
 if cfg.pops_active:
     cfg.allpops = cfg.pops_active
@@ -178,7 +178,7 @@ for key, value in cfgLoad.items():
     setattr(cfg, key, value)
 
 # These values taken from M1 cfg (https://github.com/Neurosim-lab/netpyne/bflob/development/examples/M1detailed/cfg.py)
-cfg.singleCellPops = True
+cfg.singleCellPops = False
 cfg.reducedPop = False  # insert number to declare specific number of populations, if going for full model set to False
 cfg.singlePop = ''
 cfg.removeWeightNorm = False
@@ -347,7 +347,7 @@ cfg.addIClamp = {
 
 }
 
-cfg.addNoiseIClamp = 1
+cfg.addNoiseIClamp = 0
 
 
 # ------------------------------------------------------------------------------

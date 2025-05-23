@@ -548,7 +548,7 @@ def addSubConn():
     # E -> E5,6: soma,dendrites (all)
     netParams.subConnParams['E->E5,6'] = {
         'preConds': {'cellType': ['IT', 'ITS4', 'PT', 'CT']},
-        'postConds': {'pops': ['IT5A', 'CT5A', 'IT5B', 'PT5B', 'CT5B', 'IT6', 'CT6']},
+        'postConds': {'pop': ['IT5A', 'CT5A', 'IT5B', 'PT5B', 'CT5B', 'IT6', 'CT6']},
         'sec': 'all',
         'groupSynMechs': ESynMech,
         'density': 'uniform'}
@@ -563,7 +563,7 @@ def addSubConn():
     # ------------------------------------------------------------------------------
     # NGF1 -> E: apic_tuft
     netParams.subConnParams['NGF1->E'] = {
-        'preConds': {'pops': ['NGF1']},
+        'preConds': {'pop': ['NGF1']},
         'postConds': {'cellType': ['IT', 'ITS4', 'PT', 'CT']},
         'sec': 'apic_tuft',
         'groupSynMechs': NGFESynMech,
@@ -571,24 +571,24 @@ def addSubConn():
     # ------------------------------------------------------------------------------
     # NGF2,3,4 -> E2,3,4: apic_trunk
     netParams.subConnParams['NGF2,3,4->E2,3,4'] = {
-        'preConds': {'pops': ['NGF2', 'NGF3', 'NGF4']},
-        'postConds': {'pops': ['IT2', 'IT3', 'ITP4', 'ITS4']},
+        'preConds': {'pop': ['NGF2', 'NGF3', 'NGF4']},
+        'postConds': {'pop': ['IT2', 'IT3', 'ITP4', 'ITS4']},
         'sec': 'apic_trunk',
         'groupSynMechs': NGFESynMech,
         'density': 'uniform'}
     # ------------------------------------------------------------------------------
     # NGF2,3,4 -> E5,6: apic_uppertrunk
     netParams.subConnParams['NGF2,3,4->E5,6'] = {
-        'preConds': {'pops': ['NGF2', 'NGF3', 'NGF4']},
-        'postConds': {'pops': ['IT5A', 'CT5A', 'IT5B', 'PT5B', 'CT5B', 'IT6', 'CT6']},
+        'preConds': {'pop': ['NGF2', 'NGF3', 'NGF4']},
+        'postConds': {'pop': ['IT5A', 'CT5A', 'IT5B', 'PT5B', 'CT5B', 'IT6', 'CT6']},
         'sec': 'apic_uppertrunk',
         'groupSynMechs': NGFESynMech,
         'density': 'uniform'}
     # ------------------------------------------------------------------------------
     # NGF5,6 -> E5,6: apic_lowerrunk
     netParams.subConnParams['NGF5,6->E5,6'] = {
-        'preConds': {'pops': ['NGF5A', 'NGF5B', 'NGF6']},
-        'postConds': {'pops': ['IT5A', 'CT5A', 'IT5B', 'PT5B', 'CT5B', 'IT6', 'CT6']},
+        'preConds': {'pop': ['NGF5A', 'NGF5B', 'NGF6']},
+        'postConds': {'pop': ['IT5A', 'CT5A', 'IT5B', 'PT5B', 'CT5B', 'IT6', 'CT6']},
         'sec': 'apic_lowertrunk',
         'groupSynMechs': NGFESynMech,
         'density': 'uniform'}
