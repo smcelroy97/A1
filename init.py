@@ -92,35 +92,35 @@ if sim.cfg.addNoiseIClamp:
   )
 
 
-# sim.setupRecording()       # setup variables to record for each cell (spikes, V traces, etc)
-# sim.runSim()               # run parallel Neuron simulation
-# sim.gatherData()
-#
-# if sim.cfg.addNoiseConductance:
-#   allOUFlags = sim.pc.py_allgather(OUFlags)
-#   combinedOUFlags = {}
-#   for flags in allOUFlags:
-#     combinedOUFlags.update(flags)
-#   sim.OUFlags = combinedOUFlags
-#
-# sim.saveData()
-# sim.analysis.plotData()    # plot spike raster etc
-#
-# simPlotting.plotMeanTraces(sim, cellsPerPop = 1, plotPops = sim.cfg.allpops)
-#
-# # Terminate batch process
-# if comm.is_host():
-#   if comm.rank == 0:
-#     netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
-#     print('transmitting data...')
-#     inputs = specs.get_mappings()
-#     avgRates = sim.analysis.popAvgRates(tranges=[cfg.duration - 1000, cfg.duration], show=False)
-#     avgRates['loss'] = 700
-#     out_json = json.dumps({**inputs, **avgRates})
-#
-#     # figs, spikesDict = sim.analysis.plotSpikeStats(stats=['isicv'], timeRange=[2000, 3000], saveFig=False, showFig=False, show=False)
-#
-#     comm.send(out_json)
-#     comm.close()
-#
-# sim.close()
+sim.setupRecording()       # setup variables to record for each cell (spikes, V traces, etc)
+sim.runSim()               # run parallel Neuron simulation
+sim.gatherData()
+
+if sim.cfg.addNoiseConductance:
+  allOUFlags = sim.pc.py_allgather(OUFlags)
+  combinedOUFlags = {}
+  for flags in allOUFlags:
+    combinedOUFlags.update(flags)
+  sim.OUFlags = combinedOUFlags
+
+sim.saveData()
+sim.analysis.plotData()    # plot spike raster etc
+
+simPlotting.plotMeanTraces(sim, cellsPerPop = 1, plotPops = sim.cfg.allpops)
+
+# Terminate batch process
+if comm.is_host():
+  if comm.rank == 0:
+    netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
+    print('transmitting data...')
+    inputs = specs.get_mappings()
+    avgRates = sim.analysis.popAvgRates(tranges=[cfg.duration - 1000, cfg.duration], show=False)
+    avgRates['loss'] = 700
+    out_json = json.dumps({**inputs, **avgRates})
+
+    # figs, spikesDict = sim.analysis.plotSpikeStats(stats=['isicv'], timeRange=[2000, 3000], saveFig=False, showFig=False, show=False)
+
+    comm.send(out_json)
+    comm.close()
+
+sim.close()
