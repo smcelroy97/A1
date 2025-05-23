@@ -47,7 +47,7 @@ cfg.validateNetParams = False
 cfg.allpops = ['NGF1', 'IT2', 'SOM2', 'PV2', 'VIP2', 'NGF2', 'IT3', 'SOM3', 'PV3', 'VIP3', 'NGF3', 'ITP4', 'ITS4',
                'SOM4', 'PV4', 'VIP4', 'NGF4', 'IT5A', 'CT5A', 'SOM5A', 'PV5A', 'VIP5A', 'NGF5A', 'IT5B', 'CT5B', 'PT5B',
                'SOM5B', 'PV5B', 'VIP5B', 'NGF5B', 'IT6', 'CT6', 'SOM6', 'PV6', 'VIP6', 'NGF6', 'TC', 'TCM', 'HTC',
-               'IRE', 'IREM', 'TI', 'TIM']
+               'IRE', 'IREM', 'TI', 'TIM', 'cochlea']
 
 cfg.allCorticalPops = ['NGF1', 'IT2', 'SOM2', 'PV2', 'VIP2', 'NGF2', 'IT3', 'SOM3', 'PV3', 'VIP3', 'NGF3', 'ITP4',
                        'ITS4', 'SOM4', 'PV4', 'VIP4', 'NGF4', 'IT5A', 'CT5A', 'SOM5A', 'PV5A', 'VIP5A', 'NGF5A', 'IT5B',
@@ -84,7 +84,7 @@ cfg.recordStim = False  # Seen in M1 cfg.py
 cfg.recordTime = True  # SEen in M1 cfg.py
 cfg.recordStep = 0.05  # St ep size (in ms) to save data -- value from M1 cfg.py
 
-cfg.recordLFP = True  # [[100, y, 100] for y in range(0, 2000, 100)]
+cfg.recordLFP =[[100, y, 100] for y in range(0, 2000, 100)]
 cfg.recordDipole = True
 
 # ------------------------------------------------------------------------------
@@ -313,7 +313,7 @@ cfg.cochlearThalInput = True
 
 if cfg.cochlearThalInput:
     cfg.cochlearThalInput = {"lonset": [0], "numCenterFreqs": 100, "freqRange": [125, 20000], "loudnessScale": 1,
-                             "lfnwave": ["wav/A1/wav/9kHzClick_624ISI_2sDelay_6.5s.wav"]}
+                             "lfnwave": ["wav/9kHzClick_624ISI_2sDelay_6.5s.wav"]}
     cfg.cochlearThalInput['probECore'] = cfg.cochThalprobECore
     cfg.cochlearThalInput['weightECore'] = cfg.cochThalweightECore
     cfg.cochlearThalInput['probICore'] = cfg.cochThalprobICore
@@ -323,9 +323,6 @@ if cfg.cochlearThalInput:
     cfg.cochlearThalInput['probEMatrix'] = cfg.cochThalprobEMatrix
     cfg.cochlearThalInput['probIMatrix'] = cfg.cochThalprobIMatrix
     cfg.cochlearThalInput['MatrixCoreFactor'] = cfg.cochThalMatrixCoreFactor
-else:
-    cfg.cochlearThalInput = False
-
 
 # ------------------------------------------------------------------------------
 # Current inputs
