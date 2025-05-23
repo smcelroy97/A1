@@ -69,7 +69,7 @@ cfg.TEpops = ['TC', 'TCM', 'HTC']
 
 cfg.TIpops = ['IRE', 'IREM', 'TI', 'TIM']
 
-cfg.pops_active = cfg.allpops
+cfg.pops_active = False
 
 if cfg.pops_active:
     cfg.allpops = cfg.pops_active

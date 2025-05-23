@@ -5,6 +5,7 @@ High-level specifications for A1 network model using NetPyNE
 
 Contributors: ericaygriffith@gmail.com, salvadordura@gmail.com, samnemo@gmail.com , & Christoph Metzner
 """
+
 from cfg import cfg
 from netpyne.batchtools import specs
 import pickle
@@ -15,6 +16,7 @@ netParams = specs.NetParams()  # object of class NetParams to store the network 
 # ------------------------------------------------------------------------------
 # VERSION
 # ------------------------------------------------------------------------------
+
 netParams.version = 45
 
 # ------------------------------------------------------------------------------
@@ -651,6 +653,7 @@ if cfg.addBkgConn:
     with open('cells/bkgWeightPops.json', 'r') as f:
         weightBkg = json.load(f)
     pops = list(cfg.allpops)
+    pops.remove('cochlea')
 
     for pop in ['TC', 'TCM', 'HTC']:
         weightBkg[pop] *= cfg.EbkgThalamicGain
@@ -687,7 +690,6 @@ if cfg.addBkgConn:
             'synMech': 'GABAA',
             'weight': weightBkg[pop],
             'delay': cfg.delayBkg}
-
 
 def prob2conv(prob, npre):
     # probability to convergence; prob is connection probability, npre is number of presynaptic neurons
