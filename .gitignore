@@ -17,7 +17,7 @@ exp_results/**/*.json
 exp_results/**/*.run
 exp_results/**/*.sh
 exp_results/**/*.out
-!exp_results/*/plots*/*.png
+!exp_results/**/plots*/*.png
 exp_configs/UNUSED
 exp_results/UNUSED
 simOutput/
@@ -26,6 +26,7 @@ batch.out
 grid_search_local.py
 submit_batch_local.sh
 submit_single_local.sh
+submit_analysis_local.sh
 analysis/ou_tuning/workflow_local.py
 analysis/ou_tuning/*.ipynb
 batchtools_csv/

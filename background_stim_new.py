@@ -29,10 +29,12 @@ def generate_ou_signal(tau, sigma, mean, duration, dt=0.025,
     # Create a default RNG, currently based on ACG
     rng = h.Random(seed)
 
+    #print('generate_ou_signal(): create tvec and svec', flush=True)
     tvec = h.Vector(np.linspace(0, duration, int(duration / dt)))
     ntstep = len(tvec)  # total number of timesteps
     svec = h.Vector(ntstep, 0)  # stim vector
 
+    #print('generate_ou_signal(): create gaussian noise', flush=True)
     noise = h.Vector(ntstep)  # Gaussian noise
     rng.normal(0.0, 1.0)
     noise.setrand(rng)  # generate Gaussian noise
@@ -43,17 +45,20 @@ def generate_ou_signal(tau, sigma, mean, duration, dt=0.025,
         mu = exp(-dt / tau)  # auxiliar factor [unitless]
         A = sigma * sqrt(1 - mu * mu)  # amplitude [uS]
         noise.mul(A)  # scale noise by amplitude [uS]
-        # Generate zero-mean OU    
+        # Generate zero-mean OU
+        #print('generate_ou_signal(): generate OU signal', flush=True)
         for n in range(1, ntstep):
             svec.x[n] = svec[n - 1] * mu + noise[n]  # signal [uS]
 
     # Shift the signal by the mean value [uS]
+    #print(f'generate_ou_signal(): add the mean (type={type(mean)})', flush=True)
     svec.add(mean)
 
     # Remove small and negative values from the noise
     # (clamp to a small positive number smin)
     svec_np = np.array(svec, dtype=np.float64)
     if cutoff:
+        #print('generate_ou_signal(): cutoff', flush=True)
         mask_neg = (svec_np < cutoff)
         svec_np[mask_neg] = cutoff
         if verbose:
@@ -61,10 +66,11 @@ def generate_ou_signal(tau, sigma, mean, duration, dt=0.025,
 
     # Take the inverse of the signal if needed
     if invert_output:
+        #print('generate_ou_signal(): inverse', flush=True)
         svec_np = 1. / svec_np
     svec = h.Vector(svec_np)
 
-    if plotFig:
+    """ if plotFig:
         import matplotlib.pyplot as plt
         plt.figure(figsize=(30, 5))
         plt.plot(list(tvec), list(svec), 'k')
@@ -76,7 +82,9 @@ def generate_ou_signal(tau, sigma, mean, duration, dt=0.025,
 
         plt.figure()
         plt.hist(list(svec), 100)
-        plt.savefig('test_fig_vec_OrnsteinUhlenbeck_hist.png')
+        plt.savefig('test_fig_vec_OrnsteinUhlenbeck_hist.png') """
+    
+    #print('generate_ou_signal(): done', flush=True)
 
     return tvec, svec
 
@@ -86,9 +94,9 @@ def add_noise_gclamp(sim):
 
     vecs_dict = {}
     OUFlags = {}
-    print(f'add_noise_gclamp(): create OU inputs (dt={sim.cfg.dt})')
 
     # Generate OU signal(s)
+    #print(f'add_noise_gclamp(): create OU inputs (dt={sim.cfg.dt})', flush=True)
     for cell_ind, cell in enumerate(sim.net.cells):
 
         pop = cell.tags['pop']
@@ -125,6 +133,7 @@ def add_noise_gclamp(sim):
 
     # Play the OU signals to the cells
     # (via "rs" variable of ConductanceSource.mod)
+    #print(f'add_noise_gclamp(): play OU inputs', flush=True)
     for cell_ind, cell in enumerate(sim.net.cells):
         pop = cell.tags['pop']
         if not OUFlags[pop]:
@@ -146,8 +155,8 @@ def add_noise_iclamp(sim):
     """Generate and play OU current signal(s) for every cell. """
 
     vecs_dict = {}
-    print('add_noise_iclamp(): create OU inputs '
-          f'(dt={sim.cfg.dt}, ou_tau={sim.cfg.ou_tau})')
+    #print('add_noise_iclamp(): create OU inputs '
+    #      f'(dt={sim.cfg.dt}, ou_tau={sim.cfg.ou_tau})')
 
     for cell_ind, cell in enumerate(sim.net.cells):
 

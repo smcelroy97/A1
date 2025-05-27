@@ -7,6 +7,14 @@ from netpyne.batchtools import specs
 def create_net_params(cfg):
     """Create netParams based on a config, common for all parameter sets. """
 
+    #------------------------------------------------------------------------------
+    # Load netParams from json file instead of creating them
+    #------------------------------------------------------------------------------
+    if hasattr(cfg, 'netpar_force_load') and cfg.netpar_force_load:
+        with open(cfg.netpar_fpath_json, 'r') as f:
+            netParamsDict = json.load(f)
+        return specs.NetParams(netParamsDict)
+
     netParams = specs.NetParams()   # object of class NetParams to store the network parameters
 
     #------------------------------------------------------------------------------
@@ -983,3 +991,15 @@ def create_net_params(cfg):
     """
 
     return netParams
+
+
+if __name__ == '__main__':
+    cfg = specs.SimConfig()
+    cfg.netpar_force_load = 0
+    cfg.netpar_fpath_json = (
+        '/ddn/niknovikov19/repo/A1_OUinp/exp_configs'
+        '/subnet/single'
+        '/single_g_ou_subnet_wmult_0.005_som4_ire_netpar'
+        '/par_sub_g_ouinp_wmult_0.005_som4_ire.json'
+    )
+    create_net_params(cfg)

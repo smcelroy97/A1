@@ -1,19 +1,22 @@
 import argparse
 import json
+import os
 from pathlib import Path
 
 import matplotlib
 matplotlib.use('Agg')  # to avoid graphics error on servers
 import numpy as np
+import pandas as pd
 
 from netpyne.batchtools import comm, specs
 from netpyne import sim
 
-#import BackgroundStim as BS
 import background_stim_new as bs
 from create_base_cfg import create_base_cfg
 from create_net_params import create_net_params
 from load_module import load_module
+
+from subnet_tuner import SubnetDesc, SubnetParamBuilder2
 
 
 def setdminID(sim, lpop):
@@ -85,6 +88,8 @@ need_run = True
 if not is_batch:
     exp_name = args.name
 
+#exp_name = 'subnet/single/single_g_ou_subnet_wmult_0.02_som4_ire'
+#os.chdir('/ddn/niknovikov19/repo/A1_OUinp')
 
 dirpath_self = Path(__file__).resolve().parent
 
@@ -92,10 +97,12 @@ if is_batch:
     # Get simLabel from batchtools to identify exp_name,
     # which is then used to generate the path to exp_cfg.py
     exp_name = specs.mappings['simLabel'][:-6]  # cut away job id
+    print(f'>>>> EXP_NAME: {exp_name}', flush=True)
 
 # Import experiment-specific config and batch py-files
-fpath_exp_cfg = dirpath_self / DIRNAME_EXP_CONFIGS / exp_name / 'exp_cfg.py'
-fpath_exp_batch = dirpath_self / DIRNAME_EXP_CONFIGS / exp_name / 'batch_params.py'
+dirpath_exp_cfg = dirpath_self / DIRNAME_EXP_CONFIGS / exp_name
+fpath_exp_cfg = dirpath_exp_cfg / 'exp_cfg.py'
+fpath_exp_batch = dirpath_exp_cfg / 'batch_params.py'
 #print(f'Experiment config: {fpath_exp_cfg}')
 cfg_mod = load_module(fpath_exp_cfg)
 if is_batch:
@@ -109,11 +116,21 @@ cfg_mod.apply_exp_cfg(cfg)
 
 if not is_batch:
     # Automatically set the experiment name in config
-    cfg.simLabel = exp_name
+    cfg.simLabel = exp_name.split('/')[-1]   # remove subfolders if any
     cfg.saveFolder = str(dirpath_self / DIRNAME_EXP_RESULTS / exp_name)
 
 # Update config by batchtools (if applicable)
 cfg.update_cfg()
+
+comm.initialize()
+
+""" if comm.is_host():
+    fpath_cfg = "{}/{}_cfg.json".format(cfg.saveFolder, cfg.simLabel)
+    fpath_cfg_2 = "{}/{}_cfg_2.json".format(cfg.saveFolder, cfg.simLabel)
+    print(f'Saving to {fpath_cfg}', flush=True)
+    cfg.save(fpath_cfg)
+    #with open(fpath_cfg_2, 'w') as fid:
+    #    json.dump(cfg.__dict__, fid, indent=4) """
 
 # Apply experiment-specific post-update config modifications
 # (derive other params from the ones set by batchtools in update_cfg)
@@ -123,12 +140,40 @@ if is_batch and hasattr(batch_mod, 'post_update'):
 # Create netParams based on the config
 netParams = create_net_params(cfg)
 
+# Convert to a subnetwork with some pops. frozen, if needed
+if hasattr(cfg, 'subnet_build_flag') and cfg.subnet_build_flag:
+    desc = SubnetDesc()
+    desc.pops_active = cfg.subnet_params['pops_active']
+    desc.conns_frozen = cfg.subnet_params['conns_frozen']
+
+    # Set firing rates of the frozen pops.
+    frozen_rates = pd.read_csv(dirpath_exp_cfg / 'frozen_rates.csv')
+    frozen_rates = frozen_rates.set_index('pop_name')['target_rate'].to_dict()
+    for pop in netParams['popParams']:
+        desc.inp_surrogates[pop] = {
+            'type': 'irregular',
+            'rate': frozen_rates[pop]
+        }
+    
+    # Build subnet
+    spb = SubnetParamBuilder2()
+    par_dict = netParams.__dict__
+    par_sub = spb.build(par_dict, desc)
+    netParams = specs.NetParams(par_sub)
+
+# Create a folder for the results
+os.makedirs(cfg.saveFolder, exist_ok=True)
+
 comm.initialize()
 
 # Save cfg and netParams into the output folder
+#print('SAVE CFG AND NETPARAMS', flush=True)
 if comm.is_host():
-    cfg.save("{}/{}_cfg.json".format(cfg.saveFolder, cfg.simLabel))
+    fpath_cfg = "{}/{}_cfg.json".format(cfg.saveFolder, cfg.simLabel)
+    print(f'Saving to {fpath_cfg}', flush=True)
+    cfg.save(fpath_cfg)
     netParams.save('{}/{}_netParams.json'.format(cfg.saveFolder, cfg.simLabel))
+#print('SAVING DONE', flush=True)
 
 if need_run:
     # Initialize
@@ -160,15 +205,18 @@ if need_run:
 
     # Create connections and external inputs
     sim.net.connectCells()      # create connections between cells based on params
+    #print('Adding stims...', flush=True)
     sim.net.addStims() 			# add network stimulation
 
     # Add OU current or conductance input to each Cell
     if sim.cfg.add_ou_current:
         sim, vecs_dict = bs.add_noise_iclamp(sim)
     if sim.cfg.add_ou_conductance:
+        #print('Adding OU conductance...', flush=True)
         sim, vecs_dict, OUFlags = bs.add_noise_gclamp(sim)
 
     # Run
+    print('Runing...', flush=True)
     sim.setupRecording()       # setup variables to record for each cell (spikes, V traces, etc)
     sim.runSim()               # run parallel Neuron simulation
     sim.gatherData()
