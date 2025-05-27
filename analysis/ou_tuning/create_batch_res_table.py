@@ -34,14 +34,19 @@ def create_batch_res_table(
     res = []
 
     for n, (cfg_file, data_file) in enumerate(zip(cfg_files, data_files)):
-        #print(cfg_file)
+        print(cfg_file)
+
+        entry = {}
 
         # Get OU params from config json file
         with open(cfg_file, 'r') as fid:
-            cfg = json.load(fid)
-        ou_mean = cfg['simConfig']['OUamp']
-        ou_std = cfg['simConfig']['OUstd']
-        print(f'ou_mean: {ou_mean}, ou_std: {ou_std}')
+            cfg = json.load(fid)['simConfig']
+        if cfg['ou_common']:
+            entry['ou_mean'] = cfg['OUamp']
+            entry['ou_std'] = cfg['OUstd']
+        else:
+            entry['ou_pop_inputs'] = cfg['ou_pop_inputs']
+        #print(f'ou_mean: {ou_mean}, ou_std: {ou_std}')
 
         # Load sim result
         with open(data_file, 'rb') as fid:
@@ -60,20 +65,36 @@ def create_batch_res_table(
         cvs = proc_utils.calc_net_cvs(cell_spikes, time_limits=t_limits,
                                       nspikes_min=nspikes_min, avg_result=True)
 
-        entry = {'ou_mean': ou_mean, 'ou_std': ou_std,
-                'rate': rates, 'cv': cvs}
+        entry['rate'] = rates
+        entry['cv'] = cvs
+
         res.append(entry)
 
-    # Create a DataFrame from the results
-    columns = ['ou_mean', 'ou_std']
-    pop_names = list(res[0]['rate'].keys())
-    for pop in pop_names:
-        columns.extend([f'{pop}_r', f'{pop}_cv'])
+    # Populations
+    if 'ou_pop_inputs' in res[0]:
+        pop_names = list(res[0]['ou_pop_inputs'].keys())
+    else:
+        pop_names = list(res[0]['rate'].keys())
 
+    # Column names
+    columns = []
+    if cfg['ou_common']:
+        columns += ['ou_mean', 'ou_std']
+    for pop in pop_names:
+        if not cfg['ou_common']:
+            columns += [f'{pop}_ou_mean', f'{pop}_ou_std']
+        columns += [f'{pop}_r', f'{pop}_cv']
+
+    # Create a DataFrame from the results
     data = []
     for entry in res:
-        row = [entry['ou_mean'], entry['ou_std']]
+        row = []
+        if 'ou_mean' in entry:
+            row += [entry['ou_mean'], entry['ou_std']]
         for pop in pop_names:
+            if 'ou_pop_inputs' in entry:
+                row += [entry['ou_pop_inputs'][pop]['ou_mean'],
+                        entry['ou_pop_inputs'][pop]['ou_std']]
             row.append(entry['rate'][pop])
             row.append(entry['cv'][pop])
         data.append(row)
@@ -81,5 +102,6 @@ def create_batch_res_table(
     df = pd.DataFrame(data, columns=columns)
 
     # Save the DataFrame to a CSV file
-    fpath_res = dirpath_exp / 'batch_result.csv'
+    fpath_res = dirpath_exp / 'analysis' / 'batch_result.csv'
+    os.makedirs(fpath_res.parent, exist_ok=True)
     df.to_csv(fpath_res, index=False)

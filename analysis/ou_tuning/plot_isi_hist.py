@@ -12,12 +12,12 @@ import netpyne_res_parse_utils as parse_utils
 
 
 dirpath_base = Path(
-    '/ddn/niknovikov19/repo/A1_OUinp/exp_results/batch_i_ougrid_its4_20x20_tau_2'
+    '/ddn/smcelroy97/A1-OUinp/exp_results/batch_i_ougrid_its4_20x20_tau_2_10sec_small'
 )
 
 params = {
-    'ou_mean': 0.0,
-    'ou_std': 0.005
+    'ou_mean': 0.0003,
+    'ou_std': 0.0065
 }
 
 pop_vis = 'ITS4'
@@ -74,6 +74,7 @@ plt.plot(bins[:-1], h)
 plt.plot(bins[:-1], h_gamma, 'k--')
 plt.title(f'Histogram of {pop_vis} ISI (cells combined)')
 plt.xlabel('ISI, ms')
+plt.ylim(0, 0.008)
 plt.xlim(-10, 1000)
 plt.ylim(0, 0.01)
 
@@ -84,7 +85,7 @@ text_str = (
     f'Gamma_k: {gamma_k:.2f}\n'
     f'Rate: {r:.2f} Hz\n'
     f'CV: {CV:.2f}'
-)    
+)
 plt.text(0.95, 0.95, text_str,
          horizontalalignment='right',
          verticalalignment='top',
@@ -111,3 +112,4 @@ fname_fig = (f'ISI_hist_{pop_vis}'
              '.png')
 fpath_out = dirpath_out / fname_fig
 plt.savefig(fpath_out, dpi=300)
+

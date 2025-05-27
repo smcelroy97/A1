@@ -93,7 +93,7 @@ if need_plot_rate_cv_grid:
     )
 
 # Plot matrices of voltage metrics
-if need_plot_rate_cv_grid:
+if need_plot_voltage_metrics_grid:
     print('==== PLOT MATRICES OF VOLTAGE MERTRICS ====')
     plot_voltage_metrics_grid(dirpath_exp_res, metrics_vis)
 

@@ -1,6 +1,6 @@
 from pathlib import Path
 import pickle
-
+import os
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
@@ -12,15 +12,15 @@ from xr_utils import plot_xr
 
 
 dirpath_base = Path(
-    r'D:\WORK\Salvador\repo\A1_OUinp\exp_results\batch_ougrid_ire_4x4'
+    r'/ddn/smcelroy97/A1-OUinp/exp_results/batch_i_ougrid_pv4_20x20_tau_2_10sec'
 )
 
 params = {
-    'ou_mean': -0.006,
-    'ou_std': 0.02
+    'ou_mean': 0.016,
+    'ou_std': 0.0063
 }
 
-pop_vis = 'IRE'
+pop_vis = 'PV4'
 
 # Time limits for spike and voltage selection
 t_limits = (2, 10)   # in seconds
@@ -86,7 +86,7 @@ Vtrig = xr.DataArray(
             "time": tvec_epoch},
 )
 
-matplotlib.use('Qt5Agg', force=True)
+# matplotlib.use('Qt5Agg', force=True)
 
 #plt.ion()
 plt.figure()
@@ -101,5 +101,12 @@ Vtrig_avg = Vtrig.mean(dim='spike')
 plt.plot(tvec_epoch, Vtrig_avg)
 plt.xlabel('Time, ms')
 plt.ylabel('Mean voltage')
-
-plt.show()
+    # Save the plot
+dirpath_out = dirpath_base / 'plots_spike_traces'
+os.makedirs(dirpath_out, exist_ok=True)
+fname_fig = (f'spike_traces_{pop_vis}'
+                f'_oumean_{params["ou_mean"] * 100 : .02f}'
+                f'_oustd_{params["ou_std"] * 100 : .02f}'
+                '.png')
+fpath_out = dirpath_out / fname_fig
+plt.savefig(fpath_out, dpi=300)
