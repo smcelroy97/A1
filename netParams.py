@@ -653,7 +653,8 @@ if cfg.addBkgConn:
     with open('cells/bkgWeightPops.json', 'r') as f:
         weightBkg = json.load(f)
     pops = list(cfg.allpops)
-    pops.remove('cochlea')
+    if 'cochlea' in pops:
+        pops.remove('cochlea')
 
     for pop in ['TC', 'TCM', 'HTC']:
         weightBkg[pop] *= cfg.EbkgThalamicGain

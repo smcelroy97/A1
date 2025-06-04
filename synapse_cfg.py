@@ -63,6 +63,10 @@ cfg.TEpops = ['TC', 'TCM', 'HTC']
 
 cfg.TIpops = ['IRE', 'IREM', 'TI', 'TIM']
 
+cfg.pops_active = ['IT2']
+
+if cfg.pops_active:
+    cfg.allpops = cfg.pops_active
 
 # Dict with traces to record -- taken from M1 cfg.py
 cfg.recordTraces = {'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'}
@@ -121,8 +125,6 @@ with open('conn/conn.pkl', 'rb') as fileObj:
 cfg.wmat = connData['wmat']
 
 cfg.seeds = {'conn': 23451, 'stim': 1, 'loc': 1}
-
-cfg.prePop = 'IT2' # population to be be used for PSP testing, the prePop is taken and the synMechs, weights, and conns are based on this pop but will be a vecStim
 
 # ------------------------------------------------------------------------------
 

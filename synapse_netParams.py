@@ -6,8 +6,8 @@ from synapse_cfg import cfg
 pops = cfg.allpops
 TEpops = ['TC', 'TCM', 'HTC']
 TIpops = ['IRE', 'IREM', 'TI', 'TIM']
-prePop = cfg.prePop
-stimName = prePop+'_stim'
+prePop = cfg.pops_active[0]
+stimName = prePop[0] + '_stim'
 
 netParams.scale = cfg.scale # Scale factor for number of cells # NOT DEFINED YET! 3/11/19 # How is this different than scaleDensity?
 netParams.sizeX = cfg.sizeX # x-dimension (horizontal length) size in um
@@ -19,7 +19,7 @@ netParams.shape = 'cylinder' # cylindrical (column-like) volume
 # General connectivity parameters
 #------------------------------------------------------------------------------
 netParams.scaleConnWeight = 1.0 # Connection weight scale factor (default if no model specified)
-netParams.scaleConnWeightModels = { 'HH_reduced': 1.0, 'HH_full': 1.0} #scale conn weight factor for each cell model
+netParams.scaleConnWeightModels = {'HH_reduced': 1.0, 'HH_full': 1.0} #scale conn weight factor for each cell model
 netParams.scaleConnWeightNetStims = 1.0 #0.5  # scale conn weight factor for NetStims
 netParams.defaultThreshold = 0.0 # spike threshold, 10 mV is NetCon default, lower it for all cells
 netParams.defaultDelay = 2.0 # default conn delay (ms)
@@ -42,12 +42,13 @@ Ipops = ['NGF1',                            # L1
         'PV5B', 'SOM5B', 'VIP5B', 'NGF5B',  # L5B
         'PV6', 'SOM6', 'VIP6', 'NGF6']      # L6
 
-cellModels = ['HH_reduced', 'HH_full'] # List of cell models
+
+cellModels = ['HH_reduced', 'HH_full']  # List of cell models
 
 # II: 100-950, IV: 950-1250, V: 1250-1550, VI: 1550-2000
 layer = {'1': [0.00, 0.05], '2': [0.05, 0.08], '3': [0.08, 0.475], '4': [0.475, 0.625],
          '5A': [0.625, 0.667], '5B': [0.667, 0.775], '6': [0.775, 1], 'thal': [1.2, 1.4],
-         'cochlear': [1.6, 1.601]} # normalized layer boundaries
+         'cochlear': [1.6, 1.601]}  # normalized layer boundaries
 
 layerGroups = {
     '1-3': [layer['1'][0], layer['3'][1]],    # L1-3
@@ -148,6 +149,15 @@ netParams.popParams['TIM'] =    {'cellType': 'TI',  'cellModel': 'HH_reduced',  
 
 for pop in netParams.popParams.values(): pop['numCells'] = 1
 
+if hasattr(cfg, 'pops_active') and cfg.pops_active:
+    pop_params_new = {}
+    for pop in cfg.pops_active:
+        if pop in netParams.popParams:
+            pop_params_new[pop] = netParams.popParams[pop]
+        else:
+            print(f"Warning: pop '{pop}' not found in netParams.popParams")
+    netParams.popParams = pop_params_new
+
 netParams.synMechParams['NMDA'] = {'mod': 'MyExp2SynNMDABB', 'tau1NMDA': 15, 'tau2NMDA': 150, 'e': 0}
 netParams.synMechParams['AMPA'] = {'mod':'MyExp2SynBB', 'tau1': 0.05, 'tau2': 5.3, 'e': 0}
 netParams.synMechParams['GABAB'] = {"mod": "MyExp2SynBB", "tau1": 41, "tau2": 642, "e": -105}
@@ -225,10 +235,12 @@ for post in preWeights.keys():
                 synWeightFactor = cfg.synWeightFractionNGFE
 
 
+
         netParams.connParams[stimName + post] = {
             'preConds': {'pop': stimName},
             'postConds': {'pop': post},
             'sec': 'soma',
+            'loc': 0.5,
             'synMech': synMech,
             'weight': wmat[prePop][post],
             'synsPerConn': 1,
