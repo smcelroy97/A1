@@ -83,13 +83,14 @@ sim.net.addStims() 			# add network stimulation
 ##########################################
 
 if sim.cfg.addNoiseConductance:
-  sim, vecs_dict, OUFlags = (
-    BS.addStim.addNoiseGClamp(sim)
-  )
+    sim, vecs_dict, OUFlags = (
+      BS.addStim.addNoiseGClamp(sim)
+    )
+
 if sim.cfg.addNoiseIClamp:
-  sim, vecs_dict = (
-    BS.addStim.addNoiseIClamp(sim)
-  )
+    sim, vecs_dict = (
+      BS.addStim.addNoiseIClamp(sim)
+    )
 
 
 sim.setupRecording()       # setup variables to record for each cell (spikes, V traces, etc)

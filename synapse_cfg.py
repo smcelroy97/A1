@@ -18,7 +18,7 @@ cfg.scaleDensity = 1.0  # Should be 1.0 unless need lower cell density for test 
 
 
 
-cfg.duration = 150  # Duration of the sim, in ms
+cfg.duration = 10000  # Duration of the sim, in ms
 cfg.dt = 0.05  # Internal Integration Time Step
 cfg.verbose = 0  # Show detailed messages
 cfg.progressBar = 0  # even more detailed message
@@ -63,7 +63,9 @@ cfg.TEpops = ['TC', 'TCM', 'HTC']
 
 cfg.TIpops = ['IRE', 'IREM', 'TI', 'TIM']
 
-cfg.pops_active = ['IT2']
+cfg.pops_active = False
+
+cfg.prePop = 'PV4'
 
 if cfg.pops_active:
     cfg.allpops = cfg.pops_active
@@ -77,7 +79,7 @@ cfg.recordStim = False  # Seen in M1 cfg.py
 cfg.recordTime = True  # SEen in M1 cfg.py
 cfg.recordStep = 0.05  # Step size (in ms) to save data -- value from M1 cfg.py
 
-cfg.recordLFP = [[100, y, 100] for y in range(0, 2000, 100)]
+cfg.recordLFP = False #  [[100, y, 100] for y in range(0, 2000, 100)]
 cfg.recordDipole = False
 
 # ------------------------------------------------------------------------------
@@ -106,14 +108,16 @@ cfg.addNoiseIClamp = False
 #                             'saveFig': True, 'showFig': False, 'figSize': (25, 25)}  # Plot conn matrix
 # 'include': [('TC', i) for i in range(40)],
 
-cfg.analysis['plotTraces'] = {'include': cfg.allpops, 'timeRange': [0, cfg.duration],
-'oneFigPer': 'trace', 'overlay': True, 'saveFig': False, 'showFig': False, 'figSize':(12,8)}
+cfg.analysis['plotTraces'] = {'include': ['all'], 'timeRange': [0, cfg.duration],
+                              'oneFigPer': 'cell', 'overlay': True, 'saveFig': True,
+                              'showFig': False, 'figSize': (12, 8)}
 
-def setplotTraces (ncell=1, linclude=[]):
-  for pop in cfg.allpops:
-    for i in range(ncell):
-      linclude.append( (pop,i) )
-  cfg.analysis['plotTraces'] = {'include': linclude, 'oneFigPer': 'trace', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
+def setplotTraces(ncell=50, linclude=cfg.allpops, timeRange=cfg.duration):
+    pops = []
+    for pop in linclude:
+        for i in range(ncell):
+            pops.append((pop, i))
+    cfg.analysis['plotTraces'] = {'include': linclude, 'timeRange': timeRange, 'oneFigPer': 'trace', 'overlay': True, 'saveFig': False, 'showFig': False, 'figSize': (12, 8)}
 
 # setplotTraces(ncell=20, linclude=['IT2'])
 

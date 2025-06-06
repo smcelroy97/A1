@@ -6,41 +6,41 @@ from synapse_cfg import cfg
 pops = cfg.allpops
 TEpops = ['TC', 'TCM', 'HTC']
 TIpops = ['IRE', 'IREM', 'TI', 'TIM']
-prePop = cfg.pops_active[0]
-stimName = prePop[0] + '_stim'
+prePop = cfg.prePop
+stimName = prePop + '_stim'
 
-netParams.scale = cfg.scale # Scale factor for number of cells # NOT DEFINED YET! 3/11/19 # How is this different than scaleDensity?
-netParams.sizeX = cfg.sizeX # x-dimension (horizontal length) size in um
-netParams.sizeY = cfg.sizeY # y-dimension (vertical height or cortical depth) size in um
-netParams.sizeZ = cfg.sizeZ # z-dimension (horizontal depth) size in um
-netParams.shape = 'cylinder' # cylindrical (column-like) volume
+netParams.scale = cfg.scale  # Scale factor for number of cells # NOT DEFINED YET! 3/11/19 # How is this different than scaleDensity?
+netParams.sizeX = cfg.sizeX  # x-dimension (horizontal length) size in um
+netParams.sizeY = cfg.sizeY  # y-dimension (vertical height or cortical depth) size in um
+netParams.sizeZ = cfg.sizeZ  # z-dimension (horizontal depth) size in um
+netParams.shape = 'cylinder'  # cylindrical (column-like) volume
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # General connectivity parameters
-#------------------------------------------------------------------------------
-netParams.scaleConnWeight = 1.0 # Connection weight scale factor (default if no model specified)
-netParams.scaleConnWeightModels = {'HH_reduced': 1.0, 'HH_full': 1.0} #scale conn weight factor for each cell model
-netParams.scaleConnWeightNetStims = 1.0 #0.5  # scale conn weight factor for NetStims
-netParams.defaultThreshold = 0.0 # spike threshold, 10 mV is NetCon default, lower it for all cells
-netParams.defaultDelay = 2.0 # default conn delay (ms)
-netParams.propVelocity = 500.0 # propagation velocity (um/ms)
+# ------------------------------------------------------------------------------
+netParams.scaleConnWeight = 1.0  # Connection weight scale factor (default if no model specified)
+netParams.scaleConnWeightModels = {'HH_reduced': 1.0, 'HH_full': 1.0}  # scale conn weight factor for each cell model
+netParams.scaleConnWeightNetStims = 1.0  # 0.5  # scale conn weight factor for NetStims
+netParams.defaultThreshold = 0.0  # spike threshold, 10 mV is NetCon default, lower it for all cells
+netParams.defaultDelay = 2.0  # default conn delay (ms)
+netParams.propVelocity = 500.0  # propagation velocity (um/ms)
 netParams.probLambda = 100.0  # length constant (lambda) for connection probability decay (um)
 ThalamicCoreLambda = 50.0
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Cell parameters
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 ## List of E and I pops to use later on
 Epops = ['IT2', 'IT3', 'ITP4', 'ITS4',
          'IT5A', 'CT5A', 'IT5B', 'CT5B' ,
          'PT5B', 'IT6', 'CT6']  # all layers
 
 Ipops = ['NGF1',                            # L1
-        'PV2', 'SOM2', 'VIP2', 'NGF2',      # L2
-        'PV3', 'SOM3', 'VIP3', 'NGF3',      # L3
-        'PV4', 'SOM4', 'VIP4', 'NGF4',      # L4
-        'PV5A', 'SOM5A', 'VIP5A', 'NGF5A',  # L5A
-        'PV5B', 'SOM5B', 'VIP5B', 'NGF5B',  # L5B
-        'PV6', 'SOM6', 'VIP6', 'NGF6']      # L6
+         'PV2', 'SOM2', 'VIP2', 'NGF2',      # L2
+         'PV3', 'SOM3', 'VIP3', 'NGF3',      # L3
+         'PV4', 'SOM4', 'VIP4', 'NGF4',      # L4
+         'PV5A', 'SOM5A', 'VIP5A', 'NGF5A',  # L5A
+         'PV5B', 'SOM5B', 'VIP5B', 'NGF5B',  # L5B
+         'PV6', 'SOM6', 'VIP6', 'NGF6']      # L6
 
 
 cellModels = ['HH_reduced', 'HH_full']  # List of cell models
@@ -56,7 +56,7 @@ layerGroups = {
     '5': [layer['5A'][0], layer['5B'][1]],  # L5A-5B
     '6': layer['6']}                                  # L6
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 ## Load cell rules previously saved using netpyne format (DOES NOT INCLUDE VIP, NGF and spiny stellate)
 ## include conditions ('conds') for each cellRule
 cellParamLabels = ['IT2_reduced', 'IT3_reduced', 'ITP4_reduced', 'ITS4_reduced',
@@ -68,9 +68,9 @@ cellParamLabels = ['IT2_reduced', 'IT3_reduced', 'ITP4_reduced', 'ITS4_reduced',
 for ruleLabel in cellParamLabels:
     netParams.loadCellParamsRule(label=ruleLabel, fileName='cells/' + ruleLabel + '_cellParams.json')  # Load cellParams for each of the above cell subtype
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Population parameters
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 ## load densities
 with open('cells/cellDensity.pkl', 'rb') as fileObj: density = pickle.load(fileObj)['density']
@@ -78,7 +78,7 @@ density = {k: [x * cfg.scaleDensity for x in v] for k,v in density.items()} # Sc
 
 ### Stim Pop
 # create custom list of spike times
-spkTimes = [500,2500,2550,2600,2650,2700,2750,2800,2850,2900,3400]
+spkTimes = [0]
 
 netParams.popParams[stimName] = {'cellModel': 'VecStim', 'numCells': 1, 'spkTimes': spkTimes}  # VecStim with spike times
 
@@ -93,16 +93,16 @@ netParams.popParams['VIP2'] =    {'cellType': 'VIP', 'cellModel': 'HH_reduced', 
 netParams.popParams['NGF2'] =    {'cellType': 'NGF', 'cellModel': 'HH_reduced',   'ynormRange': layer['2'],   'density': density[('A1','nonVIP')][1]}
 
 ## LAYER 3:
-netParams.popParams['IT3'] =     {'cellType': 'IT',  'cellModel': 'HH_reduced',  'ynormRange': layer['3'],   'density': density[('A1','E')][1]} ## CHANGE DENSITY
-netParams.popParams['SOM3'] =    {'cellType': 'SOM', 'cellModel': 'HH_reduced',   'ynormRange': layer['3'],   'density': density[('A1','SOM')][1]} ## CHANGE DENSITY
-netParams.popParams['PV3'] =     {'cellType': 'PV',  'cellModel': 'HH_reduced',   'ynormRange': layer['3'],   'density': density[('A1','PV')][1]} ## CHANGE DENSITY
-netParams.popParams['VIP3'] =    {'cellType': 'VIP', 'cellModel': 'HH_reduced',   'ynormRange': layer['3'],   'density': density[('A1','VIP')][1]} ## CHANGE DENSITY
+netParams.popParams['IT3'] =     {'cellType': 'IT',  'cellModel': 'HH_reduced',  'ynormRange': layer['3'],   'density': density[('A1','E')][1]}  # CHANGE DENSITY
+netParams.popParams['SOM3'] =    {'cellType': 'SOM', 'cellModel': 'HH_reduced',   'ynormRange': layer['3'],   'density': density[('A1','SOM')][1]}  # CHANGE DENSITY
+netParams.popParams['PV3'] =     {'cellType': 'PV',  'cellModel': 'HH_reduced',   'ynormRange': layer['3'],   'density': density[('A1','PV')][1]}  # CHANGE DENSITY
+netParams.popParams['VIP3'] =    {'cellType': 'VIP', 'cellModel': 'HH_reduced',   'ynormRange': layer['3'],   'density': density[('A1','VIP')][1]}  # CHANGE DENSITY
 netParams.popParams['NGF3'] =    {'cellType': 'NGF', 'cellModel': 'HH_reduced',   'ynormRange': layer['3'],   'density': density[('A1','nonVIP')][1]}
 
 
 ## LAYER 4:
-netParams.popParams['ITP4'] =	 {'cellType': 'IT', 'cellModel': 'HH_reduced',  'ynormRange': layer['4'],   'density': 0.5*density[('A1','E')][2]}      ## CHANGE DENSITY #
-netParams.popParams['ITS4'] =	 {'cellType': 'ITS4', 'cellModel': 'HH_reduced', 'ynormRange': layer['4'],  'density': 0.5*density[('A1','E')][2]}      ## CHANGE DENSITY
+netParams.popParams['ITP4'] =	 {'cellType': 'IT', 'cellModel': 'HH_reduced',  'ynormRange': layer['4'],   'density': 0.5*density[('A1','E')][2]}      # CHANGE DENSITY
+netParams.popParams['ITS4'] =	 {'cellType': 'ITS4', 'cellModel': 'HH_reduced', 'ynormRange': layer['4'],  'density': 0.5*density[('A1','E')][2]}      # CHANGE DENSITY
 netParams.popParams['SOM4'] = 	 {'cellType': 'SOM', 'cellModel': 'HH_reduced',   'ynormRange': layer['4'],  'density': density[('A1','SOM')][2]}
 netParams.popParams['PV4'] = 	 {'cellType': 'PV', 'cellModel': 'HH_reduced',   'ynormRange': layer['4'],   'density': density[('A1','PV')][2]}
 netParams.popParams['VIP4'] =	 {'cellType': 'VIP', 'cellModel': 'HH_reduced',   'ynormRange': layer['4'],  'density': density[('A1','VIP')][2]}
@@ -110,7 +110,7 @@ netParams.popParams['NGF4'] =    {'cellType': 'NGF', 'cellModel': 'HH_reduced', 
 
 # ### LAYER 5A:
 netParams.popParams['IT5A'] =     {'cellType': 'IT',  'cellModel': 'HH_reduced',   'ynormRange': layer['5A'], 	'density': 0.5*density[('A1','E')][3]}
-netParams.popParams['CT5A'] =     {'cellType': 'CT',  'cellModel': 'HH_reduced',   'ynormRange': layer['5A'],   'density': 0.5*density[('A1','E')][3]}  # density is [5] because we are using same numbers for L5A and L6 for CT cells?
+netParams.popParams['CT5A'] =     {'cellType': 'CT',  'cellModel': 'HH_reduced',   'ynormRange': layer['5A'],   'density': 0.5*density[('A1','E')][3]}
 netParams.popParams['SOM5A'] =    {'cellType': 'SOM', 'cellModel': 'HH_reduced',    'ynormRange': layer['5A'],	'density': density[('A1','SOM')][3]}
 netParams.popParams['PV5A'] =     {'cellType': 'PV',  'cellModel': 'HH_reduced',    'ynormRange': layer['5A'],	'density': density[('A1','PV')][3]}
 netParams.popParams['VIP5A'] =    {'cellType': 'VIP', 'cellModel': 'HH_reduced',    'ynormRange': layer['5A'],   'density': density[('A1','VIP')][3]}
@@ -118,7 +118,7 @@ netParams.popParams['NGF5A'] =    {'cellType': 'NGF', 'cellModel': 'HH_reduced',
 
 ### LAYER 5B:
 netParams.popParams['IT5B'] =     {'cellType': 'IT',  'cellModel': 'HH_reduced',   'ynormRange': layer['5B'], 	'density': (1/3)*density[('A1','E')][4]}
-netParams.popParams['CT5B'] =     {'cellType': 'CT',  'cellModel': 'HH_reduced',   'ynormRange': layer['5B'],   'density': (1/3)*density[('A1','E')][4]}  # density is [5] because we are using same numbers for L5B and L6 for CT cells?
+netParams.popParams['CT5B'] =     {'cellType': 'CT',  'cellModel': 'HH_reduced',   'ynormRange': layer['5B'],   'density': (1/3)*density[('A1','E')][4]}
 netParams.popParams['PT5B'] =     {'cellType': 'PT',  'cellModel': 'HH_reduced',   'ynormRange': layer['5B'], 	'density': (1/3)*density[('A1','E')][4]}
 netParams.popParams['SOM5B'] =    {'cellType': 'SOM', 'cellModel': 'HH_reduced',    'ynormRange': layer['5B'],   'density': density[('A1', 'SOM')][4]}
 netParams.popParams['PV5B'] =     {'cellType': 'PV',  'cellModel': 'HH_reduced',    'ynormRange': layer['5B'],	'density': density[('A1','PV')][4]}
@@ -149,15 +149,6 @@ netParams.popParams['TIM'] =    {'cellType': 'TI',  'cellModel': 'HH_reduced',  
 
 for pop in netParams.popParams.values(): pop['numCells'] = 1
 
-if hasattr(cfg, 'pops_active') and cfg.pops_active:
-    pop_params_new = {}
-    for pop in cfg.pops_active:
-        if pop in netParams.popParams:
-            pop_params_new[pop] = netParams.popParams[pop]
-        else:
-            print(f"Warning: pop '{pop}' not found in netParams.popParams")
-    netParams.popParams = pop_params_new
-
 netParams.synMechParams['NMDA'] = {'mod': 'MyExp2SynNMDABB', 'tau1NMDA': 15, 'tau2NMDA': 150, 'e': 0}
 netParams.synMechParams['AMPA'] = {'mod':'MyExp2SynBB', 'tau1': 0.05, 'tau2': 5.3, 'e': 0}
 netParams.synMechParams['GABAB'] = {"mod": "MyExp2SynBB", "tau1": 41, "tau2": 642, "e": -105}
@@ -184,85 +175,132 @@ wmat = connData['wmat']
 bins = connData['bins']
 connDataSource = connData['connDataSource']
 
-wmat = cfg.wmat
 preWeights = wmat[prePop]
+pop_params_new = {}
+for pop in preWeights:
+    if preWeights[pop] > 0 and pop in netParams.popParams:
+        pop_params_new[pop] = netParams.popParams[pop]
+pop_params_new[stimName] = netParams.popParams[stimName]
+netParams.popParams = pop_params_new
 
-for post in preWeights.keys():
-    if prePop in Epops:
-        synMech = ESynMech
-        if post in Epops:
-            synMechWeightFactor = cfg.synWeightFractionEE
-        elif post in Ipops:
-            if 'NGF' in post:
-                synMechWeightFactor = cfg.synWeightFractionENGF
-            elif 'PV' in post:
-                synMechWeightFactor = cfg.synWeightFractionEI_CustomCort
-            else:
-                synMechWeightFactor = cfg.synWeightFractionEI
-        elif post in TEpops+TIpops:
+for post in preWeights:
+    if post in netParams.popParams:
+        if prePop in Epops:
             synMech = ESynMech
-            synWeightFactor = cfg.synWeightFractionEE
-            sec = 'soma'
-        netParams.connParams[stimName + post] = {
-            'preConds': {'pop': stimName},
-            'postConds': {'pop': post},
-            'sec': 'soma',
-            'synMech': synMech,
-            'weight': wmat[prePop][post],
-            'synsPerConn': 1,
-            'delay': 0.5
-    }
-    elif prePop in Ipops:
-        if 'PV' in prePop:
-            synMech = PVSynMech
-        if 'VIP' in prePop:
-            synMech = VIPSynMech
-        if post in Ipops:
-            synMechWeightFactor = cfg.synWeightFractionII
-            if 'SOM' in prePop:
-                synMech = SOMISynMech
-                synWeightFactor = cfg.synWeightFractionSOMI
-            elif 'NGF' in prePop:
-                synMech = NGFISynMech
-                synWeightFactor = cfg.synWeightFractionNGFI
-        if post in Epops:
-            synMechWeightFactor = cfg.synWeightFractionIE
-            if 'SOM' in prePop:
-                synMech = SOMESynMech
-                synWeightFactor = cfg.synWeightFractionSOME
-            elif 'NGF' in prePop:
-                synMech = NGFESynMech
-                synWeightFactor = cfg.synWeightFractionNGFE
+            if post in Epops:
+                synMechWeightFactor = cfg.synWeightFractionEE
+                cell_type = next(k for k in netParams.cellParams if k[:3] == post[:3])
+                secs = netParams.cellParams[cell_type]['secs']
+            elif post in Ipops:
+                cell_type = next(k for k in netParams.cellParams if k[:2] == post[:2])
+                secs = netParams.cellParams[cell_type]['secs']
+                if 'NGF' in post:
+                    synMechWeightFactor = cfg.synWeightFractionENGF
+                elif 'PV' in post:
+                    synMechWeightFactor = cfg.synWeightFractionEI_CustomCort
+                else:
+                    synMechWeightFactor = cfg.synWeightFractionEI
+            elif post in TEpops+TIpops:
+                cell_type = next(k for k in netParams.cellParams if k[:3] == post[:3])
+                secs = netParams.cellParams[cell_type]['secs']
+                synMech = ESynMech
+                synWeightFactor = cfg.synWeightFractionEE
+
+            sec_delay = 0
+            for section in secs.items():
+                num_secs = range(1, len(secs))
+                sec_name = section[0]
+                if sec_name != 'axon':
+                    sec_delay += 1500
+
+                    netParams.connParams[stimName + '_' + post + '_' + sec_name] = {
+                        'preConds': {'pop': stimName},
+                        'postConds': {'pop': post},
+                        'sec': sec_name,
+                        'synMech': synMech,
+                        'weight': preWeights[post],
+                        'synsPerConn': 1,
+                        'delay': sec_delay
+                    }
+
+        elif prePop in Ipops:
+            if 'PV' in prePop:
+                synMech = PVSynMech
+            if 'VIP' in prePop:
+                synMech = VIPSynMech
+            if post in Ipops:
+                synMechWeightFactor = cfg.synWeightFractionII
+                cell_type = next(k for k in netParams.cellParams if k[:2] == post[:2])
+                secs = netParams.cellParams[cell_type]['secs']
+                if 'SOM' in prePop:
+                    synMech = SOMISynMech
+                    synWeightFactor = cfg.synWeightFractionSOMI
+                elif 'NGF' in prePop:
+                    synMech = NGFISynMech
+                    synWeightFactor = cfg.synWeightFractionNGFI
+            if post in Epops:
+                synMechWeightFactor = cfg.synWeightFractionIE
+                cell_type = next(k for k in netParams.cellParams if k[:3] == post[:3])
+                secs = netParams.cellParams[cell_type]['secs']
+                if 'SOM' in prePop:
+                    synMech = SOMESynMech
+                    synWeightFactor = cfg.synWeightFractionSOME
+                elif 'NGF' in prePop:
+                    synMech = NGFESynMech
+                    synWeightFactor = cfg.synWeightFractionNGFE
 
 
+            sec_delay = 0
+            for section in secs.items():
+                num_secs = range(1, len(secs))
+                sec_name = section[0]
+                if sec_name != 'axon':
+                    sec_delay += 1500
 
-        netParams.connParams[stimName + post] = {
-            'preConds': {'pop': stimName},
-            'postConds': {'pop': post},
-            'sec': 'soma',
-            'loc': 0.5,
-            'synMech': synMech,
-            'weight': wmat[prePop][post],
-            'synsPerConn': 1,
-            'delay': 0.5
-        }
-    else:
-        if prePop in TEpops:
-            synMech = ESynMech
-            synWeightFactor = cfg.synWeightFractionEE
-        elif post in TEpops:
-            synMech = ThalIESynMech
-            synWeightFactor = cfg.synWeightFractionThalIE
+                    netParams.connParams[stimName + '_' + post + '_' + sec_name] = {
+                        'preConds': {'pop': stimName},
+                        'postConds': {'pop': post},
+                        'sec': sec_name,
+                        'synMech': synMech,
+                        'weight': preWeights[post],
+                        'synsPerConn': 1,
+                        'delay': sec_delay
+                    }
+
         else:
-            synMech = ThalIISynMech
-            synWeightFactor = cfg.synWeightFractionThalII
+            if prePop in TEpops:
+                synMech = ESynMech
+                synWeightFactor = cfg.synWeightFractionEE
+                cell_type = next(k for k in netParams.cellParams if k[:3] == post[:3])
+                secs = netParams.cellParams[cell_type]['secs']
+            elif post in TEpops:
+                synMech = ThalIESynMech
+                synWeightFactor = cfg.synWeightFractionThalIE
+                cell_type = next(k for k in netParams.cellParams if k[:1] == post[:1])
+                secs = netParams.cellParams[cell_type]['secs']
+            else:
+                synMech = ThalIISynMech
+                synWeightFactor = cfg.synWeightFractionThalII
+                if post == 'TI' or post == 'TIM':
+                    synMech = ThalIESynMech
+                    cell_type = next(k for k in netParams.cellParams if k[:2] == post[:2])
+                    secs = netParams.cellParams[cell_type]['secs']
+                else:
+                    secs = ['soma']
 
-        netParams.connParams[stimName+post] = {
-            'preConds': {'pop': stimName},
-            'postConds': {'pop': post},
-            'sec': 'soma',
-            'synMech': synMech,
-            'weight': wmat[prePop][post],
-            'synsPerConn': 1,
-            'delay': 0.5
-            }
+            sec_delay = 0
+            for section in secs.items():
+                num_secs = range(1, len(secs))
+                sec_name = section[0]
+                if sec_name != 'axon':
+                    sec_delay += 1500
+
+                netParams.connParams[stimName + ' ' + post + '_' + sec] = {
+                    'preConds': {'pop': stimName},
+                    'postConds': {'pop': post},
+                    'sec': section,
+                    'synMech': synMech,
+                    'weight': preWeights[post],
+                    'synsPerConn': 1,
+                    'delay': 0.5
+                    }

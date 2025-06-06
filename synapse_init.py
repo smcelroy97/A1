@@ -39,9 +39,9 @@ sim.net.allPops = {label: pop.__getstate__() for label, pop in sim.net.pops.item
 sim.net.connectCells()            			# create connections between cells based on params
 sim.net.addStims() 							# add network stimulation
 
-#########################################################################################
+# ########################################################################################
 # - Adding OU Nose Stims for each Cell
-#########################################################################################
+# ########################################################################################
 
 if sim.cfg.addNoiseIClamp:
   sim, vecs_dict = BS.addStim.addNoiseIClamp(sim)
@@ -63,27 +63,27 @@ sim.gatherDataFromFiles()
 sim.saveData()
 sim.analysis.plotData()    # plot spike raster etc
 
-for pop_ind, pop in enumerate(plotPops):
-  print('\n\n', pop)
-  # sim.analysis.plotTraces(
-  figs, traces_dict = sim.analysis.plotTraces(
-    include=[pop],
-    # include=[record_pops[pop_ind]],
-    timeRange=[50, 100],
-    # overlay=True, oneFigPer='trace',
-    ylim=[-90, -40],
-    axis=True,
-    # figSize=(70, 15),
-    figSize=(25, 15),
-    # figSize=(60, 18),
-    fontSize=15,
-    saveFig=False,
-    # saveFig=sim.cfg.saveFigPath+'/'+sim.cfg.filename+'_traces_'+pop+ '.png'
-    # saveFig=sim.cfg.saveFolder + '/' + sim.cfg.simLabel + '_traces__' + pop + '.png',
-  )
-  for item in traces_dict['tracesData'][0]:
-    if 'soma' in item:
-      trace_analysis[pop] = traces_dict['tracesData'][0][item]
+# for pop_ind, pop in enumerate(plotPops):
+#   print('\n\n', pop)
+#   # sim.analysis.plotTraces(
+#   figs, traces_dict = sim.analysis.plotTraces(
+#     include=[pop],
+#     # include=[record_pops[pop_ind]],
+#     timeRange=[50, 100],
+#     # overlay=True, oneFigPer='trace',
+#     ylim=[-90, -40],
+#     axis=True,
+#     # figSize=(70, 15),
+#     figSize=(25, 15),
+#     # figSize=(60, 18),
+#     fontSize=15,
+#     # saveFig=False,
+#     # saveFig=sim.cfg.saveFolder+'/'+sim.cfg.filename+'_traces_'+pop+ '.png'
+#     # saveFig=sim.cfg.saveFolder + '/' + sim.cfg.simLabel + '_traces__' + pop + '.png',
+#   )
+#   for item in traces_dict['tracesData'][0]:
+#     if 'soma' in item:
+#       trace_analysis[pop] = traces_dict['tracesData'][0][item]
 
 
 basemV = {}
