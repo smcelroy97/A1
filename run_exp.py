@@ -18,6 +18,9 @@ from load_module import load_module
 
 from subnet_tuner import SubnetDesc, SubnetParamBuilder2
 
+#import analysis.ou_tuning.data_proc_utils as proc_utils
+#import analysis.ou_tuning.netpyne_res_parse_utils as parse_utils
+
 
 def setdminID(sim, lpop):
     # Setup min, max ID and dnumc for each population in lpop
@@ -147,12 +150,18 @@ if hasattr(cfg, 'subnet_build_flag') and cfg.subnet_build_flag:
     desc.conns_frozen = cfg.subnet_params['conns_frozen']
 
     # Set firing rates of the frozen pops.
-    frozen_rates = pd.read_csv(dirpath_exp_cfg / 'frozen_rates.csv')
-    frozen_rates = frozen_rates.set_index('pop_name')['target_rate'].to_dict()
-    for pop in netParams['popParams']:
+    df = pd.read_csv(dirpath_exp_cfg / 'frozen_rates.csv')
+    pop_names = df['pop_name'].tolist()
+    frozen_rates = df.set_index('pop_name')['target_rate'].to_dict()
+    if 'target_cv' in df.columns:
+        frozen_cvs = df.set_index('pop_name')['target_cv'].to_dict()
+    else:
+        frozen_cvs = {pop: 1.0 for pop in pop_names}
+    for pop in pop_names:
         desc.inp_surrogates[pop] = {
             'type': 'irregular',
-            'rate': frozen_rates[pop]
+            'rate': frozen_rates[pop],
+            'noise': frozen_cvs[pop]
         }
     
     # Build subnet
@@ -245,6 +254,11 @@ if comm.is_host():
         tranges=[cfg.duration - 1000, cfg.duration],
         show=False
     )
+    
+    fpath_res = '{}/{}_result.json'.format(cfg.saveFolder, cfg.simLabel)
+    with open(fpath_res, 'w') as fid:
+        json.dump({'rates': avgRates}, fid, indent=4)
+
     avgRates['loss'] = 700
     out_json = json.dumps({**inputs, **avgRates})
     comm.send(out_json)

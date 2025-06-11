@@ -57,7 +57,7 @@ def create_batch_res_table(
         # Calculate firing rates
         spikes = parse_utils.get_net_spikes(sim_result)
         rates = proc_utils.calc_net_rates(spikes, time_limits=t_limits,
-                                        ncells=ncells)
+                                          ncells=ncells)
 
         # Calculate CVs
         cell_spikes = parse_utils.get_net_spikes(sim_result,

@@ -11,7 +11,9 @@ import numpy as np
 def generate_ou_signal(tau, sigma, mean, duration, dt=0.025,
                        seed=100000, plotFig=False,
                        invert_output=True, cutoff=1E-9,
-                       verbose=False):
+                       verbose=False,
+                       ramp_offset=0, ramp_mult=0, ramp_dur=None
+                       ):
     """
     Generate an Ornstein-Uhlenbeck process with given correlation time,
     standard deviation and mean value.
@@ -24,13 +26,15 @@ def generate_ou_signal(tau, sigma, mean, duration, dt=0.025,
     invert_output: return signal or 1/signal
     cutoff: lower cutoff value
     verbose: print debug info flag
+    ramp_offset, ramp_mult, ramp_dur - initial ramp to suppress transients
     """
 
     # Create a default RNG, currently based on ACG
     rng = h.Random(seed)
 
     #print('generate_ou_signal(): create tvec and svec', flush=True)
-    tvec = h.Vector(np.linspace(0, duration, int(duration / dt)))
+    tvec_np = np.linspace(0, duration, int(duration / dt))
+    tvec = h.Vector(tvec_np)
     ntstep = len(tvec)  # total number of timesteps
     svec = h.Vector(ntstep, 0)  # stim vector
 
@@ -54,9 +58,18 @@ def generate_ou_signal(tau, sigma, mean, duration, dt=0.025,
     #print(f'generate_ou_signal(): add the mean (type={type(mean)})', flush=True)
     svec.add(mean)
 
+    svec_np = np.array(svec, dtype=np.float64)
+
+    # Initial ramp
+    if ramp_dur is not None:
+        tmask = tvec_np < ramp_dur
+        ramp_len = np.sum(tmask)
+        ramp_off_vec = np.linspace(ramp_offset, 0, ramp_len)
+        ramp_mult_vec = np.linspace(ramp_mult, 1, ramp_len)
+        svec_np[tmask] = svec_np[tmask] * ramp_mult_vec + ramp_off_vec
+
     # Remove small and negative values from the noise
     # (clamp to a small positive number smin)
-    svec_np = np.array(svec, dtype=np.float64)
     if cutoff:
         #print('generate_ou_signal(): cutoff', flush=True)
         mask_neg = (svec_np < cutoff)
@@ -95,6 +108,10 @@ def add_noise_gclamp(sim):
     vecs_dict = {}
     OUFlags = {}
 
+    ramp_dur = sim.cfg.ou_ramp_dur if hasattr(sim.cfg, 'ou_ramp_dur') else None
+    ramp_offset = sim.cfg.ou_ramp_offset if hasattr(sim.cfg, 'ou_ramp_offset') else 0
+    ramp_mult = sim.cfg.ou_ramp_mult if hasattr(sim.cfg, 'ou_ramp_mult') else 0
+
     # Generate OU signal(s)
     #print(f'add_noise_gclamp(): create OU inputs (dt={sim.cfg.dt})', flush=True)
     for cell_ind, cell in enumerate(sim.net.cells):
@@ -117,7 +134,10 @@ def add_noise_gclamp(sim):
                     duration=stim['dur1'],
                     dt=sim.cfg.dt,
                     seed=cell_seed,
-                    plotFig=False
+                    plotFig=False,
+                    ramp_offset=ramp_offset,
+                    ramp_mult=ramp_mult,
+                    ramp_dur=ramp_dur
                 )
 
                 if (cell_ind == 0) and (stim_ind == 0):
@@ -157,11 +177,15 @@ def add_noise_iclamp(sim):
     vecs_dict = {}
     #print('add_noise_iclamp(): create OU inputs '
     #      f'(dt={sim.cfg.dt}, ou_tau={sim.cfg.ou_tau})')
+    
+    ramp_dur = sim.cfg.ou_ramp_dur if hasattr(sim.cfg, 'ou_ramp_dur') else None
+    ramp_offset = sim.cfg.ou_ramp_offset if hasattr(sim.cfg, 'ou_ramp_offset') else 0
+    ramp_mult = sim.cfg.ou_ramp_mult if hasattr(sim.cfg, 'ou_ramp_mult') else 0
 
     for cell_ind, cell in enumerate(sim.net.cells):
 
         vecs_dict.update({cell_ind: {'tvecs': {}, 'svecs': {}}})
-        cell_seed = sim.cfg.seeds['stim']+ cell.gid
+        cell_seed = sim.cfg.seeds['stim'] + cell.gid
 
         for stim_ind, stim in enumerate(cell.stims):
             if 'NoiseOU' in stim['label']:
@@ -177,7 +201,10 @@ def add_noise_iclamp(sim):
                     seed=cell_seed,
                     invert_output=False,
                     cutoff=None,   # don't prune negative values
-                    plotFig=False
+                    plotFig=False,
+                    ramp_offset=ramp_offset,
+                    ramp_mult=ramp_mult,
+                    ramp_dur=ramp_dur
                 )
 
                 vecs_dict[cell_ind]['tvecs'].update({stim_ind: tvec})
