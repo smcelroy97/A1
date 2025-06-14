@@ -8,7 +8,7 @@ dirpath_self = Path(__file__).resolve().parent
 def apply_exp_cfg(cfg):
 
     # Duration
-    cfg.duration = 5 * 1e3
+    cfg.duration = 15 * 1e3
 
     # Subnet parameters
     cfg.subnet_build_flag = 1
@@ -16,7 +16,8 @@ def apply_exp_cfg(cfg):
         'pops_active': ['IT5B', 'PT5B', 'CT5B', 'PV5B'],
         #'conns_frozen': 'all',
         'conns_frozen': [],
-        'fpath_frozen_rates': str(dirpath_self / 'frozen_rates.csv')
+        'fpath_frozen_rates': str(dirpath_self / 'frozen_rates.csv'),
+        'duplicate_active_pops': False
     }
 
     # Weight multiplier

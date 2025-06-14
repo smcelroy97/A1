@@ -1,0 +1,296 @@
+import argparse
+import json
+import os
+from pathlib import Path
+
+import matplotlib
+matplotlib.use('Agg')  # to avoid graphics error on servers
+import numpy as np
+import pandas as pd
+
+from netpyne.batchtools import comm, specs
+from netpyne import sim
+
+import background_stim_new as bs
+from create_base_cfg import create_base_cfg
+from create_net_params import create_net_params
+from load_module import load_module
+
+from subnet_tuner import SubnetDesc, SubnetParamBuilder2
+
+from collect_cell_gids import _collect_cell_gids
+
+#import analysis.ou_tuning.data_proc_utils as proc_utils
+#import analysis.ou_tuning.netpyne_res_parse_utils as parse_utils
+
+
+def setdminID(sim, lpop):
+    # Setup min, max ID and dnumc for each population in lpop
+    # Gather cell tags; see https://github.com/Neurosim-lab/netpyne/blob/development/netpyne/sim/gather.py
+    alltags = sim._gatherAllCellTags()
+    dGIDs = {pop: [] for pop in lpop}
+    for tinds in range(len(alltags)):
+        if alltags[tinds]['pop'] in lpop:
+            dGIDs[alltags[tinds]['pop']].append(tinds)
+    sim.simData['dminID'] = {pop: np.amin(
+        dGIDs[pop]) for pop in lpop if len(dGIDs[pop]) > 0}
+    sim.simData['dmaxID'] = {pop: np.amax(
+        dGIDs[pop]) for pop in lpop if len(dGIDs[pop]) > 0}
+    sim.simData['dnumc'] = {pop: np.amax(
+        dGIDs[pop]) - np.amin(dGIDs[pop]) for pop in lpop if len(dGIDs[pop]) > 0}
+
+def setCochCellLocationsX(cfg, netParams, pop, sz, scale):
+    # Set the cell positions on a line
+    if pop not in sim.net.pops:
+        return
+    offset = sim.simData['dminID'][pop]
+    ncellinrange = 0  # number of cochlear cells with center frequency in frequency range represented by this model
+    sidx = -1
+    for idx, cf in enumerate(netParams.cf):
+        if cf >= cfg.cochThalFreqRange[0] and cf <= cfg.cochThalFreqRange[1]:
+            if sidx == -1:
+                sidx = idx  # start index
+            ncellinrange += 1
+    if sidx > -1:
+        offset += sidx
+    for c in sim.net.cells:
+        if c.gid in sim.net.pops[pop].cellGids:
+            cf = netParams.cf[c.gid-sim.simData['dminID'][pop]]
+            if cf >= cfg.cochThalFreqRange[0] and cf <= cfg.cochThalFreqRange[1]:
+                c.tags['x'] = cellx = (
+                    scale * (cf - cfg.cochThalFreqRange[0]) /
+                    (cfg.cochThalFreqRange[1] - cfg.cochThalFreqRange[0])
+                )
+                # make sure these values consistent
+                c.tags['xnorm'] = cellx / netParams.sizeX
+            else:
+                # put it outside range for core
+                c.tags['x'] = cellx = 100000000
+                # make sure these values consistent
+                c.tags['xnorm'] = cellx / netParams.sizeX
+            c.updateShape()
+
+
+# Folder names for experiment configs and results (relative to this script)
+DIRNAME_EXP_CONFIGS = 'exp_configs'
+DIRNAME_EXP_RESULTS = 'exp_results'    # without batchtools
+
+# Take batch flag from command line arguments, default to False
+parser = argparse.ArgumentParser(description="Run experiment script.")
+parser.add_argument('--batch', action='store_true',
+                    help="Run in batch mode.")
+parser.add_argument('--name', type=str,
+                    help="Experiment name (required if not in batch mode).")
+args, _ = parser.parse_known_args()
+is_batch = args.batch
+
+if not args.batch and args.name is None:
+    raise ValueError("Either --name or --batch is requred")
+
+need_run = True
+
+# Experiment name (define the folder name in exp_configs and exp_results)
+if not is_batch:
+    exp_name = args.name
+
+#exp_name = 'subnet/single/single_g_ou_subnet_wmult_0.02_som4_ire'
+#os.chdir('/ddn/niknovikov19/repo/A1_OUinp')
+
+dirpath_self = Path(__file__).resolve().parent
+
+if is_batch:
+    # Get simLabel from batchtools to identify exp_name,
+    # which is then used to generate the path to exp_cfg.py
+    exp_name = specs.mappings['simLabel'][:-6]  # cut away job id
+    print(f'>>>> EXP_NAME: {exp_name}', flush=True)
+
+# Import experiment-specific config and batch py-files
+dirpath_exp_cfg = dirpath_self / DIRNAME_EXP_CONFIGS / exp_name
+fpath_exp_cfg = dirpath_exp_cfg / 'exp_cfg.py'
+fpath_exp_batch = dirpath_exp_cfg / 'batch_params.py'
+#print(f'Experiment config: {fpath_exp_cfg}')
+cfg_mod = load_module(fpath_exp_cfg)
+if is_batch:
+    batch_mod = load_module(fpath_exp_batch)
+
+# Initialize config object, common for every experiment of the model
+cfg = create_base_cfg()
+
+# Apply experiment-specific config modifications
+cfg_mod.apply_exp_cfg(cfg)
+
+if not is_batch:
+    # Automatically set the experiment name in config
+    cfg.simLabel = exp_name.split('/')[-1]   # remove subfolders if any
+    cfg.saveFolder = str(dirpath_self / DIRNAME_EXP_RESULTS / exp_name)
+
+# Update config by batchtools (if applicable)
+cfg.update_cfg()
+
+comm.initialize()
+
+""" if comm.is_host():
+    fpath_cfg = "{}/{}_cfg.json".format(cfg.saveFolder, cfg.simLabel)
+    fpath_cfg_2 = "{}/{}_cfg_2.json".format(cfg.saveFolder, cfg.simLabel)
+    print(f'Saving to {fpath_cfg}', flush=True)
+    cfg.save(fpath_cfg)
+    #with open(fpath_cfg_2, 'w') as fid:
+    #    json.dump(cfg.__dict__, fid, indent=4) """
+
+# Apply experiment-specific post-update config modifications
+# (derive other params from the ones set by batchtools in update_cfg)
+if is_batch and hasattr(batch_mod, 'post_update'):
+    batch_mod.post_update(cfg)
+
+# Create netParams based on the config
+netParams = create_net_params(cfg)
+
+# Convert to a subnetwork with some pops. frozen, if needed
+if hasattr(cfg, 'subnet_build_flag') and cfg.subnet_build_flag:
+    desc = SubnetDesc()
+    desc.pops_active = cfg.subnet_params['pops_active']
+    desc.conns_frozen = cfg.subnet_params['conns_frozen']
+
+    if 'duplicate_active_pops' in cfg.subnet_params:
+        desc.duplicate_active_pops = cfg.subnet_params['duplicate_active_pops']
+    else:
+        desc.duplicate_active_pops = False
+
+    # Set firing rates of the frozen pops.
+    df = pd.read_csv(dirpath_exp_cfg / 'frozen_rates.csv')
+    pop_names = df['pop_name'].tolist()
+    frozen_rates = df.set_index('pop_name')['target_rate'].to_dict()
+    if 'target_cv' in df.columns:
+        frozen_cvs = df.set_index('pop_name')['target_cv'].to_dict()
+    else:
+        frozen_cvs = {pop: 1.0 for pop in pop_names}
+    for pop in pop_names:
+        desc.inp_surrogates[pop] = {
+            'type': 'irregular',
+            'rate': frozen_rates[pop],
+            'noise': frozen_cvs[pop]
+        }
+    
+    # Build subnet
+    subnet_builder = SubnetParamBuilder2()
+    par_dict = netParams.__dict__
+    par_sub = subnet_builder.build(par_dict, desc)
+    netParams = specs.NetParams(par_sub)
+
+# Create a folder for the results
+os.makedirs(cfg.saveFolder, exist_ok=True)
+
+comm.initialize()
+
+# Save cfg and netParams into the output folder
+#print('SAVE CFG AND NETPARAMS', flush=True)
+if comm.is_host():
+    fpath_cfg = "{}/{}_cfg.json".format(cfg.saveFolder, cfg.simLabel)
+    print(f'Saving to {fpath_cfg}', flush=True)
+    cfg.save(fpath_cfg)
+    netParams.save('{}/{}_netParams.json'.format(cfg.saveFolder, cfg.simLabel))
+#print('SAVING DONE', flush=True)
+
+if need_run:
+    # Initialize
+    sim.initialize(simConfig=cfg, netParams=netParams)
+
+    # Create populations
+    sim.net.createPops()
+
+    # Create cells
+    sim.net.createCells()
+
+    # Collect cells and pops
+    sim.net.allCells = [cell.__getstate__() for cell in sim.net.cells]
+    sim.net.allPops = {label: pop.__getstate__()
+                       for label, pop in sim.net.pops.items()}
+
+    # Set min/max cell gid for each population
+    setdminID(sim, cfg.allpops)
+
+    # Set cell locations for cochlear cells
+    if cfg.cochlearThalInput:
+        setCochCellLocationsX(
+            cfg,
+            netParams,
+            'cochlea',
+            netParams.popParams['cochlea']['numCells'],
+            cfg.sizeX
+        )
+
+    # Create connections and external inputs
+    sim.net.connectCells()      # create connections between cells based on params
+    #print('Adding stims...', flush=True)
+    sim.net.addStims() 			# add network stimulation
+
+    # Add OU current or conductance input to each Cell
+    if sim.cfg.add_ou_current:
+        sim, vecs_dict = bs.add_noise_iclamp(sim)
+    if sim.cfg.add_ou_conductance:
+        #print('Adding OU conductance...', flush=True)
+        sim, vecs_dict, OUFlags = bs.add_noise_gclamp(sim)
+    
+    # Setup variables to record for each cell (spikes, V traces, etc)
+    sim.setupRecording()
+
+    import warnings
+    warnings.simplefilter('once')
+
+    # Extract min/max cell gid for every pop. across ranks into sim._pop_gid_range
+    _collect_cell_gids()
+    
+    # Run initial time segment with active conns. replaced by surrogate inputs
+    if comm.is_host():
+        print('Run the initial segment with all surrogate inputs...', flush=True)     
+    subnet_builder.switch_active_conns(turn_on=False, net=sim.net)
+    T = sim.cfg.duration
+    sim.cfg.duration = 2000
+    sim.runSim()
+
+    # Run the rest of simulation with active conns turned on
+    if comm.is_host():
+        print('Run the rest of simulation with active conns...', flush=True)     
+    #subnet_builder.switch_active_conns(turn_on=True, net=sim.net)
+    sim.cfg.duration = T
+    sim.run.postRun() #stopTime=T)
+
+    # Gather sim results
+    sim.gatherData()
+
+    # Gather OUFlags
+    if sim.cfg.add_ou_conductance:
+        allOUFlags = sim.pc.py_allgather(OUFlags)
+        combinedOUFlags = {}
+        for flags in allOUFlags:
+            combinedOUFlags.update(flags)
+        sim.OUFlags = combinedOUFlags
+
+    # Save and plot the result
+    sim.saveData()
+    sim.analysis.plotData()    # plot spike raster etc
+
+    #import time
+    #time.sleep(10)
+
+# Finalize
+if comm.is_host():
+    netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
+    print('transmitting data...')
+    inputs = specs.get_mappings()
+    avgRates = sim.analysis.popAvgRates(
+        tranges=[cfg.duration - 1000, cfg.duration],
+        show=False
+    )
+    
+    fpath_res = '{}/{}_result.json'.format(cfg.saveFolder, cfg.simLabel)
+    with open(fpath_res, 'w') as fid:
+        json.dump({'rates': avgRates}, fid, indent=4)
+
+    avgRates['loss'] = 700
+    out_json = json.dumps({**inputs, **avgRates})
+    comm.send(out_json)
+    comm.close()
+    """ out_json = json.dumps({'loss': 0})
+    comm.send(out_json)
+    comm.close() """

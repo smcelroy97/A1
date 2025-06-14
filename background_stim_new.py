@@ -140,10 +140,10 @@ def add_noise_gclamp(sim):
                     ramp_dur=ramp_dur
                 )
 
-                if (cell_ind == 0) and (stim_ind == 0):
+                """ if (cell_ind == 0) and (stim_ind == 0):
                     print(f'mean = {mean}')
                     print(f'sigma = {sigma}')
-                    print(f'duration = {stim["dur1"]}')
+                    print(f'duration = {stim["dur1"]}') """
 
                 if any(val < 0.0 for val in svec):
                     raise ValueError('Negative values in the conductance signal are not allowed')
@@ -165,8 +165,8 @@ def add_noise_gclamp(sim):
                     stim['hObj']._ref_rs,
                     vecs_dict[cell_ind]['tvecs'][stim_ind]
                 )
-                if (cell_ind == 0) and (stim_ind == 0):
-                    print('play()')
+                #if (cell_ind == 0) and (stim_ind == 0):
+                #    print('play()')
 
     return sim, vecs_dict, OUFlags
 
