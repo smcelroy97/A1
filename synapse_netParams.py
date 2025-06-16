@@ -286,21 +286,22 @@ for post in preWeights:
                     cell_type = next(k for k in netParams.cellParams if k[:2] == post[:2])
                     secs = netParams.cellParams[cell_type]['secs']
                 else:
-                    secs = ['soma']
+                    cell_type = 'RE_reduced'
+                    secs = netParams.cellParams[cell_type]['secs']
 
-            sec_delay = 0
+            sec_delay = -3000
             for section in secs.items():
                 num_secs = range(1, len(secs))
                 sec_name = section[0]
                 if sec_name != 'axon':
-                    sec_delay += 1500
+                    sec_delay += 5000
 
-                netParams.connParams[stimName + ' ' + post + '_' + sec] = {
+                netParams.connParams[stimName + '_' + post + '_' + sec_name] = {
                     'preConds': {'pop': stimName},
                     'postConds': {'pop': post},
-                    'sec': section,
+                    'sec': sec_name,
                     'synMech': synMech,
                     'weight': preWeights[post],
                     'synsPerConn': 1,
-                    'delay': 0.5
+                    'delay': sec_delay
                     }

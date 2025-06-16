@@ -10,7 +10,7 @@ params = {
 
 
 # use batch_shell_config if running directly on the machine
-shell_config = {'command': 'mpiexec -np 4 nrniv -python -mpi init.py'}
+shell_config = {'command': 'mpiexec -np 6 nrniv -python -mpi init.py'}
 
 # use batch_sge_config if running on Downstate HPC or other SGE systems
 sge_config = {
@@ -33,7 +33,7 @@ slurm_config = {
 
 
 run_config = sge_config
-search(job_type = 'sge',
+search(job_type = 'sh',
        comm_type = 'socket',
        label = label,
        params = params,

@@ -41,9 +41,8 @@ class addStim():
             for n in range(1, ntstep):
                 svec.x[n] = svec[n - 1] * mu + noise[n]  # signal [uS]
 
-
         svec = svec.add(mean)  # shift signal by mean value [uS]
-        # svec = h.Vector([1 / x for x in svec])
+        svec = h.Vector([1 / x for x in svec])
 
         if plotFig:
             import matplotlib.pyplot as plt

@@ -65,7 +65,7 @@ cfg.TIpops = ['IRE', 'IREM', 'TI', 'TIM']
 
 cfg.pops_active = False
 
-cfg.prePop = 'PV4'
+cfg.prePop = 'IRE'
 
 if cfg.pops_active:
     cfg.allpops = cfg.pops_active
