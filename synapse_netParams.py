@@ -211,7 +211,7 @@ for post in preWeights:
                 num_secs = range(1, len(secs))
                 sec_name = section[0]
                 if sec_name != 'axon':
-                    sec_delay += 4000
+                    sec_delay += 5000
 
                     netParams.connParams[stimName + '_' + post + '_' + sec_name] = {
                         'preConds': {'pop': stimName},
@@ -255,7 +255,7 @@ for post in preWeights:
                 num_secs = range(1, len(secs))
                 sec_name = section[0]
                 if sec_name != 'axon':
-                    sec_delay += 4000
+                    sec_delay += 5000
 
                     netParams.connParams[stimName + '_' + post + '_' + sec_name] = {
                         'preConds': {'pop': stimName},
