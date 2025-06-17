@@ -201,7 +201,7 @@ for post in preWeights:
                 else:
                     synMechWeightFactor = cfg.synWeightFractionEI
             elif post in TEpops+TIpops:
-                cell_type = next(k for k in netParams.cellParams if k[:3] == post[:3])
+                cell_type = next(k for k in netParams.cellParams if k[:1] == post[:1])
                 secs = netParams.cellParams[cell_type]['secs']
                 synMech = ESynMech
                 synWeightFactor = cfg.synWeightFractionEE
@@ -255,7 +255,7 @@ for post in preWeights:
                 num_secs = range(1, len(secs))
                 sec_name = section[0]
                 if sec_name != 'axon':
-                    sec_delay += 1500
+                    sec_delay += 2000
 
                     netParams.connParams[stimName + '_' + post + '_' + sec_name] = {
                         'preConds': {'pop': stimName},
@@ -271,7 +271,7 @@ for post in preWeights:
             if prePop in TEpops:
                 synMech = ESynMech
                 synWeightFactor = cfg.synWeightFractionEE
-                cell_type = next(k for k in netParams.cellParams if k[:3] == post[:3])
+                cell_type = next(k for k in netParams.cellParams if k[:1] == post[:1])
                 secs = netParams.cellParams[cell_type]['secs']
             elif post in TEpops:
                 synMech = ThalIESynMech

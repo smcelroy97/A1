@@ -52,12 +52,12 @@ cfg.allCorticalPops = ['NGF1', 'IT2', 'SOM2', 'PV2', 'VIP2', 'NGF2', 'IT3', 'SOM
 cfg.Epops = ['IT2', 'IT3', 'ITP4', 'ITS4', 'IT5A', 'CT5A', 'IT5B', 'CT5B' , 'PT5B', 'IT6', 'CT6']  # all layers
 
 cfg.Ipops = ['NGF1',                            # L1
-        'PV2', 'SOM2', 'VIP2', 'NGF2',      # L2
-        'PV3', 'SOM3', 'VIP3', 'NGF3',      # L3
-        'PV4', 'SOM4', 'VIP4', 'NGF4',      # L4
-        'PV5A', 'SOM5A', 'VIP5A', 'NGF5A',  # L5A
-        'PV5B', 'SOM5B', 'VIP5B', 'NGF5B',  # L5B
-        'PV6', 'SOM6', 'VIP6', 'NGF6']      # L6
+             'PV2', 'SOM2', 'VIP2', 'NGF2',      # L2
+             'PV3', 'SOM3', 'VIP3', 'NGF3',      # L3
+             'PV4', 'SOM4', 'VIP4', 'NGF4',      # L4
+             'PV5A', 'SOM5A', 'VIP5A', 'NGF5A',  # L5A
+             'PV5B', 'SOM5B', 'VIP5B', 'NGF5B',  # L5B
+             'PV6', 'SOM6', 'VIP6', 'NGF6']      # L6
 
 cfg.TEpops = ['TC', 'TCM', 'HTC']
 
@@ -65,7 +65,7 @@ cfg.TIpops = ['IRE', 'IREM', 'TI', 'TIM']
 
 cfg.pops_active = False
 
-cfg.prePop = 'IRE'
+cfg.prePop = 'HTC'
 
 if cfg.pops_active:
     cfg.allpops = cfg.pops_active
@@ -101,8 +101,8 @@ cfg.addNoiseIClamp = False
 # Analysis and plotting
 # ------------------------------------------------------------------------------
 
-# cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig': False, 'orderInverse': True, # 'figSize': (25, 25),
-#                               'markerSize': 50}   # Plot a raster
+cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig': False, 'orderInverse': True, # 'figSize': (25, 25),
+                              'markerSize': 50}   # Plot a raster
 
 # cfg.analysis['plotConn'] = {'includePre': cfg.allpops, 'includePost': ['TC'], 'feature': 'strength',
 #                             'saveFig': True, 'showFig': False, 'figSize': (25, 25)}  # Plot conn matrix

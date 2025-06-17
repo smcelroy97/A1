@@ -1,6 +1,6 @@
 import pickle
 import os
-import matplotlib; matplotlib.use('macosx')
+import matplotlib
 from matplotlib import pyplot as plt
 
 batch_dir = '../simOutput/PSPTest/'
@@ -32,7 +32,7 @@ for file in os.listdir(batch_dir):
                 trace = sim_results['simData']['V_soma']['cell_' + str(pop_traces[pop]['gid'])]
                 sec['trace'] = trace[start:end]
 
-            plt.figure()
-            for sec, item in pop_traces[pop]['secs'].items():
-                plt.plot(item['trace'])
-                plt.savefig('testPSP_' + str(pop) + '.png')
+            # plt.figure()
+            # for sec, item in pop_traces[pop]['secs'].items():
+            #     plt.plot(item['trace'])
+            #     plt.savefig('testPSP_' + str(pop) + '.png')

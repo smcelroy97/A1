@@ -58,8 +58,7 @@ for cell in sim.net.cells:
             if cell.tags['pop'] not in plotPops:
                 plotPops.append(cell.tags['pop'])
 
-sim.saveDataInNodes()
-sim.gatherDataFromFiles()
+sim.gatherData()
 sim.saveData()
 sim.analysis.plotData()    # plot spike raster etc
 
