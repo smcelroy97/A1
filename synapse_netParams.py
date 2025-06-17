@@ -211,7 +211,7 @@ for post in preWeights:
                 num_secs = range(1, len(secs))
                 sec_name = section[0]
                 if sec_name != 'axon':
-                    sec_delay += 1500
+                    sec_delay += 4000
 
                     netParams.connParams[stimName + '_' + post + '_' + sec_name] = {
                         'preConds': {'pop': stimName},
@@ -255,7 +255,7 @@ for post in preWeights:
                 num_secs = range(1, len(secs))
                 sec_name = section[0]
                 if sec_name != 'axon':
-                    sec_delay += 2000
+                    sec_delay += 4000
 
                     netParams.connParams[stimName + '_' + post + '_' + sec_name] = {
                         'preConds': {'pop': stimName},
@@ -289,7 +289,7 @@ for post in preWeights:
                     cell_type = 'RE_reduced'
                     secs = netParams.cellParams[cell_type]['secs']
 
-            sec_delay = -3000
+            sec_delay = 0
             for section in secs.items():
                 num_secs = range(1, len(secs))
                 sec_name = section[0]

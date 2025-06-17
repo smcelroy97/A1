@@ -42,4 +42,4 @@ search(job_type='sge',
        metric='loss',
        mode='min',
        algorithm="variant_generator",
-       max_concurrent=40)
+       max_concurrent=10)
