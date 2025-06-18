@@ -20,7 +20,7 @@ params = {
     'ou_std': 0.0063
 }
 
-pop_vis = 'PV4'
+pop_vis = 'ITS4'
 
 # Time limits for spike and voltage selection
 t_limits = (2, 10)   # in seconds
@@ -31,13 +31,15 @@ time_win = (-10, 500)   # in ms
 
 
 # Get path to the data by job params
-batch_res_mgr = BatchResultManager(dirpath_base)
-fpath_sim_res = batch_res_mgr.job_data_fpath_by_params(params)
-print(fpath_sim_res)
+# batch_res_mgr = BatchResultManager(dirpath_base)
+# fpath_sim_res = batch_res_mgr.job_data_fpath_by_params(params)
+# print(fpath_sim_res)
 
-# Load sim result
-with open(fpath_sim_res, 'rb') as fid:
-    sim_res = pickle.load(fid)
+for fpath_sim_res in dirpath_base.rglob("*_data.pkl"):
+
+    # Load sim result
+    with open(fpath_sim_res, 'rb') as fid:
+        sim_res = pickle.load(fid)
 
 # Extract spikes
 cell_spikes = parse_utils.get_pop_spikes(
@@ -51,6 +53,12 @@ ncells = len(cell_spikes)
 
 # Extract voltages
 V_data = parse_utils.get_voltages_xr(sim_res, t_limits_ms)[pop_vis]
+
+ik_data = sim_res['simData']['ik_soma']
+
+ica_data = sim_res['simData']['ik_soma']
+
+ina_data = sim_res['simData']['ina_soma']
 
 # Filter spikes to include only those corresponding to recorded cell gids
 pop_cell_gids_all = parse_utils.get_pop_cell_gids(sim_res, pop_vis)

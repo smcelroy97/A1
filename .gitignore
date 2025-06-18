@@ -31,3 +31,5 @@ submit_analysis_local.sh
 analysis/ou_tuning/workflow_local.py
 analysis/ou_tuning/*.ipynb
 batchtools_csv/
+*.tar.gz
+OLD/
