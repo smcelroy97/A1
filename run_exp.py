@@ -18,6 +18,8 @@ from load_module import load_module
 
 from subnet_tuner import SubnetDesc, SubnetParamBuilder2
 
+from collect_cell_gids import _collect_cell_gids
+
 #import analysis.ou_tuning.data_proc_utils as proc_utils
 #import analysis.ou_tuning.netpyne_res_parse_utils as parse_utils
 
@@ -153,6 +155,9 @@ if hasattr(cfg, 'subnet_build_flag') and cfg.subnet_build_flag:
     df = pd.read_csv(dirpath_exp_cfg / 'frozen_rates.csv')
     pop_names = df['pop_name'].tolist()
     frozen_rates = df.set_index('pop_name')['target_rate'].to_dict()
+    if 'frozen_rates_custom' in cfg.subnet_params:
+        for pop, r in cfg.subnet_params['frozen_rates_custom'].items():
+            frozen_rates[pop] = r
     if 'target_cv' in df.columns:
         frozen_cvs = df.set_index('pop_name')['target_cv'].to_dict()
     else:
@@ -216,6 +221,12 @@ if need_run:
     sim.net.connectCells()      # create connections between cells based on params
     #print('Adding stims...', flush=True)
     sim.net.addStims() 			# add network stimulation
+
+    import warnings
+    warnings.simplefilter('once')
+
+    # Extract min/max cell gid for every pop. across ranks into sim._pop_gid_range
+    _collect_cell_gids()
 
     # Add OU current or conductance input to each Cell
     if sim.cfg.add_ou_current:

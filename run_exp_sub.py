@@ -224,6 +224,12 @@ if need_run:
     #print('Adding stims...', flush=True)
     sim.net.addStims() 			# add network stimulation
 
+    import warnings
+    warnings.simplefilter('once')
+
+    # Extract min/max cell gid for every pop. across ranks into sim._pop_gid_range
+    _collect_cell_gids()
+
     # Add OU current or conductance input to each Cell
     if sim.cfg.add_ou_current:
         sim, vecs_dict = bs.add_noise_iclamp(sim)
@@ -233,12 +239,6 @@ if need_run:
     
     # Setup variables to record for each cell (spikes, V traces, etc)
     sim.setupRecording()
-
-    import warnings
-    warnings.simplefilter('once')
-
-    # Extract min/max cell gid for every pop. across ranks into sim._pop_gid_range
-    _collect_cell_gids()
     
     # Run initial time segment with active conns. replaced by surrogate inputs
     if comm.is_host():
@@ -251,7 +251,7 @@ if need_run:
     # Run the rest of simulation with active conns turned on
     if comm.is_host():
         print('Run the rest of simulation with active conns...', flush=True)     
-    #subnet_builder.switch_active_conns(turn_on=True, net=sim.net)
+    subnet_builder.switch_active_conns(turn_on=True, net=sim.net)
     sim.cfg.duration = T
     sim.run.postRun() #stopTime=T)
 

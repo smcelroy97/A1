@@ -8,14 +8,14 @@ dirpath_self = Path(__file__).resolve().parent
 def apply_exp_cfg(cfg):
 
     # Duration
-    cfg.duration = 10 * 1e3
+    cfg.duration = 5 * 1e3
 
     # Subnet parameters
     cfg.subnet_build_flag = 1
     cfg.subnet_params = {
         'pops_active': ['IT5B'],
-        #'conns_frozen': 'all',
-        'conns_frozen': [],
+        'conns_frozen': 'all',
+        #'conns_frozen': [],
         'fpath_frozen_rates': str(dirpath_self / 'frozen_rates.csv'),
         #'duplicate_active_pops': True
         'duplicate_active_pops': False
@@ -31,12 +31,20 @@ def apply_exp_cfg(cfg):
     cfg.ou_tau = 2
     with open(dirpath_self / 'ou_inputs.json', 'r') as fid:
         cfg.ou_pop_inputs = json.load(fid)
+    mu = 0.0155
+    cfg.ou_pop_inputs['IT5B'] = {
+        'ou_mean': mu,
+        'ou_std': (mu + 0.01) * 0.2
+    }
     
     # Initial OU ramp
-    cfg.ou_ramp_dur = None
-    #cfg.ou_ramp_dur = 500
-    cfg.ou_ramp_offset = -1
+    cfg.ou_ramp_t0 = 2000
+    #cfg.ou_ramp_dur = None
+    cfg.ou_ramp_dur = 1000
+    cfg.ou_ramp_offset = 0.7
     cfg.ou_ramp_mult = 1
+    #cfg.ou_ramp_type = 'up_down'
+    cfg.ou_ramp_type = 'up'
 
     # Time range for rate and CV calculation
     #cfg.analysis['plotSpikeStats']['timeRange'] = [cfg.duration - 1000, cfg.duration]
@@ -44,7 +52,7 @@ def apply_exp_cfg(cfg):
 
     # Record voltage traces
     #cells_rec = list(range(70, 100))
-    cells_rec = list(range(10))
+    cells_rec = list(range(5))
     ncells_rec = len(cells_rec)
     pops_active = cfg.subnet_params['pops_active']
     cfg.recordCells = [(pop, cells_rec) for pop in pops_active]

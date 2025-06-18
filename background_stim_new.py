@@ -12,7 +12,7 @@ def generate_ou_signal(tau, sigma, mean, duration, dt=0.025,
                        seed=100000, plotFig=False,
                        invert_output=True, cutoff=1E-9,
                        verbose=False,
-                       ramp_offset=0, ramp_mult=0, ramp_dur=None
+                       ramp_par=None,
                        ):
     """
     Generate an Ornstein-Uhlenbeck process with given correlation time,
@@ -60,12 +60,30 @@ def generate_ou_signal(tau, sigma, mean, duration, dt=0.025,
 
     svec_np = np.array(svec, dtype=np.float64)
 
-    # Initial ramp
-    if ramp_dur is not None:
-        tmask = tvec_np < ramp_dur
+    # Ramp
+    if (ramp_par is not None) and (ramp_par['dur'] is not None):
+        t0, T = ramp_par['t0'], ramp_par['dur']
+        tmask = (t0 <= tvec_np) & (tvec_np <= (t0 + T))
         ramp_len = np.sum(tmask)
-        ramp_off_vec = np.linspace(ramp_offset, 0, ramp_len)
-        ramp_mult_vec = np.linspace(ramp_mult, 1, ramp_len)
+        if ramp_par['type'] == 'down':
+            ramp_off_vec = np.linspace(ramp_par['offset'], 0, ramp_len)
+            ramp_mult_vec = np.linspace(ramp_par['mult'], 1, ramp_len)
+        elif ramp_par['type'] == 'up':
+            ramp_off_vec = np.linspace(0, ramp_par['offset'], ramp_len)
+            ramp_mult_vec = np.linspace(1, ramp_par['mult'], ramp_len)
+        elif ramp_par['type'] == 'up_down':
+            len1 = ramp_len // 2
+            len2 = ramp_len - len1
+            ramp_off_vec = np.concatenate((
+                np.linspace(0, ramp_par['offset'], len1),
+                np.linspace(ramp_par['offset'], 0, len2)
+            ))
+            ramp_mult_vec = np.concatenate((
+                np.linspace(1, ramp_par['mult'], len1),
+                np.linspace(ramp_par['mult'], 1, len2)
+            ))
+        else:
+            raise ValueError('Unknown ramp type')
         svec_np[tmask] = svec_np[tmask] * ramp_mult_vec + ramp_off_vec
 
     # Remove small and negative values from the noise
@@ -111,6 +129,7 @@ def add_noise_gclamp(sim):
     ramp_dur = sim.cfg.ou_ramp_dur if hasattr(sim.cfg, 'ou_ramp_dur') else None
     ramp_offset = sim.cfg.ou_ramp_offset if hasattr(sim.cfg, 'ou_ramp_offset') else 0
     ramp_mult = sim.cfg.ou_ramp_mult if hasattr(sim.cfg, 'ou_ramp_mult') else 0
+    raise NotImplementedError('Ramp not supported for g OU')
 
     # Generate OU signal(s)
     #print(f'add_noise_gclamp(): create OU inputs (dt={sim.cfg.dt})', flush=True)
@@ -135,9 +154,9 @@ def add_noise_gclamp(sim):
                     dt=sim.cfg.dt,
                     seed=cell_seed,
                     plotFig=False,
-                    ramp_offset=ramp_offset,
-                    ramp_mult=ramp_mult,
-                    ramp_dur=ramp_dur
+                    #ramp_offset=ramp_offset,
+                    #ramp_mult=ramp_mult,
+                    #ramp_dur=ramp_dur
                 )
 
                 """ if (cell_ind == 0) and (stim_ind == 0):
@@ -178,9 +197,13 @@ def add_noise_iclamp(sim):
     #print('add_noise_iclamp(): create OU inputs '
     #      f'(dt={sim.cfg.dt}, ou_tau={sim.cfg.ou_tau})')
     
-    ramp_dur = sim.cfg.ou_ramp_dur if hasattr(sim.cfg, 'ou_ramp_dur') else None
-    ramp_offset = sim.cfg.ou_ramp_offset if hasattr(sim.cfg, 'ou_ramp_offset') else 0
-    ramp_mult = sim.cfg.ou_ramp_mult if hasattr(sim.cfg, 'ou_ramp_mult') else 0
+    ramp_par = {
+        't0': sim.cfg.ou_ramp_t0 if hasattr(sim.cfg, 'ou_ramp_t0') else 0,
+        'dur': sim.cfg.ou_ramp_dur if hasattr(sim.cfg, 'ou_ramp_dur') else None,
+        'offset': sim.cfg.ou_ramp_offset if hasattr(sim.cfg, 'ou_ramp_offset') else 0,
+        'mult': sim.cfg.ou_ramp_mult if hasattr(sim.cfg, 'ou_ramp_mult') else 0,
+        'type': sim.cfg.ou_ramp_type if hasattr(sim.cfg, 'ou_ramp_type') else 'down'
+    }
 
     for cell_ind, cell in enumerate(sim.net.cells):
 
@@ -189,8 +212,19 @@ def add_noise_iclamp(sim):
 
         for stim_ind, stim in enumerate(cell.stims):
             if 'NoiseOU' in stim['label']:
-                mean = sim.net.params.NoiseOUParams[cell.tags['pop']]['mean']
-                sigma = sim.net.params.NoiseOUParams[cell.tags['pop']]['sigma']
+                pop = cell.tags['pop']
+                mean = sim.net.params.NoiseOUParams[pop]['mean']
+                sigma = sim.net.params.NoiseOUParams[pop]['sigma']
+
+                # Relative cell "position" in the pop (0 to 1)
+                pop_gids = sim._pop_gid_range[pop]
+                #print(f'GIDS: {pop_gids}')
+                cell_pos = (cell.gid - pop_gids[0]) / (pop_gids[1] - pop_gids[0])
+
+                if not np.isscalar(mean):
+                    mean = mean[0] + cell_pos * (mean[1] - mean[0])
+                if not np.isscalar(sigma):
+                    sigma = sigma[0] + cell_pos * (sigma[1] - sigma[0])
 
                 tvec, svec = generate_ou_signal(
                     tau=sim.cfg.ou_tau,
@@ -202,9 +236,7 @@ def add_noise_iclamp(sim):
                     invert_output=False,
                     cutoff=None,   # don't prune negative values
                     plotFig=False,
-                    ramp_offset=ramp_offset,
-                    ramp_mult=ramp_mult,
-                    ramp_dur=ramp_dur
+                    ramp_par=ramp_par
                 )
 
                 vecs_dict[cell_ind]['tvecs'].update({stim_ind: tvec})
