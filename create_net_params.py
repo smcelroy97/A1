@@ -1,6 +1,8 @@
 import json
 import pickle
 
+import numpy as np
+
 from netpyne.batchtools import specs
 
 
@@ -845,9 +847,15 @@ def create_net_params(cfg):
         with open('data/inputResistances.json', 'rb') as f:
             inpRes = json.load(f)
         
-        print('create_net_params()')
-        print(f'\tcfg.add_ou_current = {cfg.add_ou_current}')
-        print(f'\tcfg.add_ou_conductance = {cfg.add_ou_conductance}')
+        #print('create_net_params()')
+        #print(f'\tcfg.add_ou_current = {cfg.add_ou_current}')
+        #print(f'\tcfg.add_ou_conductance = {cfg.add_ou_conductance}')
+
+        def _multiply(x, y):
+            if np.isscalar(x):
+                return x * y
+            else:
+                return [x_ * y for x_ in x]
         
         netParams.NoiseOUParams = {}
         
@@ -855,11 +863,11 @@ def create_net_params(cfg):
                         
             # Set OU parameters: common or per population
             if cfg.ou_common:
-                ou_amp = cfg.OUamp / 100
-                ou_std = cfg.OUstd / 100
+                ou_amp = _multiply(cfg.OUamp, 0.01)
+                ou_std = _multiply(cfg.OUstd, 0.01)
             else:
-                ou_amp = cfg.ou_pop_inputs[pop]['ou_mean'] / 100
-                ou_std = cfg.ou_pop_inputs[pop]['ou_std'] / 100
+                ou_amp = _multiply(cfg.ou_pop_inputs[pop]['ou_mean'], 0.01)
+                ou_std = _multiply(cfg.ou_pop_inputs[pop]['ou_std'], 0.01)
             
             # Reference value (ou_amp and ou_sigma are defined as percentage of it)
             if cfg.add_ou_conductance:
@@ -867,13 +875,13 @@ def create_net_params(cfg):
             elif cfg.add_ou_current:
                 K = 70 / inpRes[pop]   # arbitrary multiplier (70 mV), for unit consistency
 
-            mean = ou_amp * K
-            sigma = ou_std * K
+            mean = _multiply(ou_amp, K)
+            sigma = _multiply(ou_std, K)
 
-            print(f'\tou_amp = {ou_amp}')
-            print(f'\tou_std = {ou_std}')
-            print(f'\tmean = {mean}')
-            print(f'\tsigma = {sigma}')
+            #print(f'\tou_amp = {ou_amp}')
+            #print(f'\tou_std = {ou_std}')
+            #print(f'\tmean = {mean}')
+            #print(f'\tsigma = {sigma}')
             
             # print('pop is: '  + pop + ' Input resistance is: ' + str(inpRes[pop]) + ' input conductance is: ' + str(Gin) + '   g0 is:  ' + str(g0))
             netParams.NoiseOUParams[pop] = {
@@ -897,8 +905,8 @@ def create_net_params(cfg):
             else:
                 duration = cfg.ou_noise_duration
             
-            print(f'\tduration = {duration}')
-            print(f'\tmech = {mech}')
+            #print(f'\tduration = {duration}')
+            #print(f'\tmech = {mech}')
 
             for pop in cfg.allpops:
                 netParams.stimSourceParams[f'NoiseOU_source_{pop}'] = {

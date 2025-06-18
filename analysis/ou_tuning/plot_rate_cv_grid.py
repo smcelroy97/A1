@@ -3,10 +3,86 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
+import xarray as xr
 
 from read_batch_res_table import read_batch_res_table
 from xr_utils import interpolate_to_xr, plot_xr, plot_xr_contour
 
+
+def _get_slice_endpoints(
+        ou_mean_vals: np.ndarray,
+        ou_std_vals: np.ndarray,
+        ou_std_mean_ratio: float,
+        ou_std_intercept
+        ) -> list[tuple[float, float]]:
+    rect_min_x, rect_max_x = ou_mean_vals.min(), ou_mean_vals.max()
+    rect_min_y, rect_max_y = ou_std_vals.min(), ou_std_vals.max()
+
+    # Line equation: ou_std = ou_mean * ou_std_mean_ratio + ou_std_intercept
+    def line_y(x):
+        return x * ou_std_mean_ratio + ou_std_intercept
+
+    def line_x(y):
+        return (y - ou_std_intercept) / ou_std_mean_ratio
+
+    # Calculate intersections
+    intersections = []
+
+    # Check intersection with left edge (x = rect_min_x)
+    y = line_y(rect_min_x)
+    if rect_min_y <= y <= rect_max_y:
+        intersections.append((rect_min_x, y))
+
+    # Check intersection with right edge (x = rect_max_x)
+    y = line_y(rect_max_x)
+    if rect_min_y <= y <= rect_max_y:
+        intersections.append((rect_max_x, y))
+
+    # Check intersection with bottom edge (y = rect_min_y)
+    x = line_x(rect_min_y)
+    if rect_min_x <= x <= rect_max_x:
+        intersections.append((x, rect_min_y))
+
+    # Check intersection with top edge (y = rect_max_y)
+    x = line_x(rect_max_y)
+    if rect_min_x <= x <= rect_max_x:
+        intersections.append((x, rect_max_y))
+
+    # Return the pair of intersection points
+    return intersections[:2]
+
+def _generate_slices(
+        ou_mean_vals: np.ndarray,
+        ou_std_vals: np.ndarray,
+        nslices: int | None = None,     # num. ou_std==const slices to plot
+        slice_d: float | None = None,   # relative margin between 1-st slice and min. ou_std
+        slices: list[tuple[float, float]] | None = None  # list of (std_mean_ratio, std_intercept) tuples
+        ) -> list[list[tuple[float, float]]]:   # list of point pairs
+    if slices is not None:
+        return [_get_slice_endpoints(ou_mean_vals, ou_std_vals, *slice)
+                for slice in slices]
+    else:
+        d = (ou_std_vals.max() - ou_std_vals.min()) * slice_d
+        ou_std_slices = np.linspace(
+            ou_std_vals.min() + d, ou_std_vals.max() - d, nslices)
+        return [[(ou_mean_vals.min(), ou_std_slice), (ou_mean_vals.max(), ou_std_slice)]
+                for ou_std_slice in ou_std_slices]
+
+def _get_xr_slice(
+        Z: xr.DataArray,   # xarray with dims (ou_mean, ou_std)
+        slice_pt1: tuple[float, float],  # (ou_mean, ou_std)
+        slice_pt2: tuple[float, float],  # (ou_mean, ou_std)
+        num_points: int = 100
+        ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Get a 1D slice of the 2D xarray along the line between two points."""
+    x1, y1 = slice_pt1
+    x2, y2 = slice_pt2
+    x_vals = np.linspace(x1, x2, num_points)
+    y_vals = np.linspace(y1, y2, num_points)
+    slice_values = Z.interp(ou_mean=xr.DataArray(x_vals, dims="points"),
+                            ou_std=xr.DataArray(y_vals, dims="points"),
+                            method="linear").values
+    return x_vals, y_vals, slice_values
 
 def plot_rate_cv_grid(
         dirpath_exp: str | Path,
@@ -15,7 +91,8 @@ def plot_rate_cv_grid(
         slice_d: float = 0.1,   # relative margin between 1-st slice and min. ou_std
         show_grid: bool = True,
         show_r_cv_contours: bool = False,
-        dirname_out: str = 'plots'
+        dirname_out: str = 'plots',
+        slices: list[tuple[float, float]] | None = None  # list of (std_mean_ratio, std_intercept) tuples
         ) -> None:
 
     # Read and parse batch result table
@@ -41,10 +118,11 @@ def plot_rate_cv_grid(
                 coord_names=('ou_mean', 'ou_std')
             )
 
-    # 1D slices of 2D data with ou_std==const
-    d = (ou_std.max() - ou_std.min()) * slice_d
-    ou_std_slices = np.linspace(
-        ou_std.min() + d, ou_std.max() - d, nslices)
+    # 1D slices of 2D data
+    slice_pts = _generate_slices(
+        ou_mean, ou_std,
+        nslices=nslices, slice_d=slice_d, slices=slices
+    )
 
     # Coordinates multiplier for visualization
     xmult, ymult = 100, 100
@@ -85,20 +163,21 @@ def plot_rate_cv_grid(
             plot_xr(Z, xmult=xmult, ymult=xmult, margin=margin)
             if show_grid:
                 plt.plot(ou_mean, ou_std, 'k.', markersize=1)
-            for ou_std_slice in ou_std_slices:
-                plt.plot([ou_mean.min(), ou_mean.max()],
-                        [ou_std_slice * ymult] * 2,
-                        '--', linewidth=2)
+            for slice_endpoints in slice_pts:
+                (x1, y1), (x2, y2) = slice_endpoints
+                plt.plot([x1 * xmult, x2 * xmult],
+                         [y1 * ymult, y2 * ymult],
+                         '--', linewidth=2)
             plt.title(f'{data_type}, {pop}')
             if n == ny - 1:
                 plt.xlabel(f'ou_mean * {xmult}')
             
             # 1D slices: value vs. ou_mean (ou_std==const)
             plt.subplot(2, 3, n * nx + 3)
-            for ou_std_slice in ou_std_slices:
-                zz = Z.sel(ou_std=ou_std_slice, method='nearest')
-                plt.plot(zz.coords['ou_mean'], zz.values)
-            plt.title(f'{data_type} slices (ou_std=const), {pop}')
+            for slice_endpoints in slice_pts:
+                ou_mean_, _, slice_values = _get_xr_slice(Z, *slice_endpoints, num_points=npoints)
+                plt.plot(ou_mean_ * xmult, slice_values, '-', linewidth=2)
+            plt.title(f'{data_type} slices, {pop}')
             if n == ny - 1:
                 plt.xlabel(f'ou_mean * {xmult}')
             plt.ylabel(data_type)

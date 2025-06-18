@@ -33,7 +33,7 @@ def create_base_cfg():
     cfg.cache_efficient = True
     # cfg.printRunTime = 0.1  			## specified above
     cfg.oneSynPerNetcon = False
-    cfg.includeParamsLabel = False
+    cfg.includeParamsLabel = True
     # cfg.printPopAvgRates = [1000, 2000]  # "printPopAvgRates": [[1500,1750],[1750,2000],[2000,2250],[2250,2500]]
     cfg.validateNetParams = False
 
