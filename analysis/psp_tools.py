@@ -13,6 +13,8 @@ for file in os.listdir(batch_dir):
 
         pop_traces = {}
         for pop in sim_results['net']['params']['popParams']:
+            if '_stim' in pop:
+                continue
             pop_traces[pop] = {}
             pop_traces[pop]['secs'] = {}
             for conn in sim_results['net']['params']['connParams'].values():
