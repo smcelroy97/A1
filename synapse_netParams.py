@@ -296,12 +296,12 @@ for post in preWeights:
                 if sec_name != 'axon':
                     sec_delay += 5000
 
-                netParams.connParams[stimName + '_' + post + '_' + sec_name] = {
-                    'preConds': {'pop': stimName},
-                    'postConds': {'pop': post},
-                    'sec': sec_name,
-                    'synMech': synMech,
-                    'weight': preWeights[post],
-                    'synsPerConn': 1,
-                    'delay': sec_delay
+                    netParams.connParams[stimName + '_' + post + '_' + sec_name] = {
+                        'preConds': {'pop': stimName},
+                        'postConds': {'pop': post},
+                        'sec': sec_name,
+                        'synMech': synMech,
+                        'weight': preWeights[post],
+                        'synsPerConn': 1,
+                        'delay': sec_delay
                     }
