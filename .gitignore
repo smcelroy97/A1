@@ -8,3 +8,5 @@ x86_64/
 *.xml
 *DS_Store
 *_local.sh
+*.pkl
+*params.json

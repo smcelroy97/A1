@@ -4,7 +4,7 @@ import matplotlib
 from matplotlib import pyplot as plt
 import numpy as np
 
-batch_dir = '../simOutput/v45_batch23/'
+batch_dir = '../simOutput/PSPTest/'
 
 for file in os.listdir(batch_dir):
     if file.endswith('.pkl'):
@@ -12,52 +12,65 @@ for file in os.listdir(batch_dir):
             sim_results = pickle.load(f)
 
         pop_traces = {}
+        psp_amps = {}
+
+        # Extract pop, cell type, and sections
         for pop in sim_results['net']['params']['popParams']:
             if '_stim' in pop:
                 continue
             pop_traces[pop] = {}
             pop_traces[pop]['secs'] = {}
+
+            # Get the section specific delays
             for conn in sim_results['net']['params']['connParams'].values():
                 if pop == conn['postConds']['pop']:
                     pop_traces[pop]['secs'][conn['sec']] = {}
                     pop_traces[pop]['secs'][conn['sec']]['delay'] = conn['delay']
 
+            # Extract gid for pop (for singe cell batch)
             for cell in sim_results['net']['cells']:
                 if cell['tags']['pop'] == pop:
                     pop_traces[pop]['gid'] = cell['gid']
                     break
 
+            # Based on the section delay, extract the slice of the somatic trace
+            window_ms = 1500  # ms before and after stimulus
             for sec in pop_traces[pop]['secs'].values():
-                window_size = int(1500 / sim_results['simConfig']['dt'])
+                window_size = int(window_ms / sim_results['simConfig']['dt'])
                 stim_idx = int(sec['delay'] / sim_results['simConfig']['dt'])
                 start = stim_idx - window_size
                 end = stim_idx + window_size
                 trace = sim_results['simData']['V_soma']['cell_' + str(pop_traces[pop]['gid'])]
                 sec['trace'] = trace[start:end]
 
-        window_ms = 1500  # ms before and after stimulus
+        # Set up plotting for all sec traces and psps
         prePop = sim_results['simConfig']['prePop']
         for pop, pop_data in pop_traces.items():
             pop_dir = os.path.join(batch_dir, f'plots/{pop}_plots/{prePop}->{pop}')
             os.makedirs(pop_dir, exist_ok=True)
-
             traces = []
             times = None
+            psp_amps[pop] = {}
+            baseline_window = 50  # Baseline period for psp amplitude
 
             for sec_name, sec_data in pop_data['secs'].items():
                 delay = sec_data['delay']
                 trace = sec_data['trace']
                 dt = sim_results['simConfig']['dt']
-                window_size = int(window_ms / dt)
-                # The trace is already windowed in your code, so use it directly
-                trace_window = trace
+                baseline = np.mean(trace[:baseline_window])
+                if prePop in sim_results['simConfig']['Epops'] + sim_results['simConfig']['TEpops']:
+                    peak = np.max(trace[baseline_window:])
+                else:
+                    peak = np.min(trace[baseline_window:])
+                amplitude = peak - baseline
+                psp_amps[pop][sec_name] = amplitude
                 if times is None:
-                    times = np.linspace(-window_ms, window_ms, len(trace_window))
-                traces.append(trace_window)
+                    times = np.linspace(-window_ms, window_ms, len(trace))
+                traces.append(trace)
 
-                prePop = sim_results['simConfig']['prePop']
+                # Individual sec traces
                 plt.figure()
-                plt.plot(times, trace_window)
+                plt.plot(times, trace)
                 plt.title(f'{prePop} -> {pop}: {sec_name}')
                 plt.xlabel('Time (ms)')
                 plt.ylabel('V (mV)')
@@ -79,4 +92,28 @@ for file in os.listdir(batch_dir):
                 plt.ylabel('V (mV)')
                 plt.legend()
                 plt.savefig(os.path.join(pop_dir, 'all_traces_with_average.png'))
+                plt.close()
+
+
+        for pop in psp_amps:
+            pop_dir = os.path.join(batch_dir, f'plots/{pop}_plots/{prePop}->{pop}')
+            os.makedirs(pop_dir, exist_ok=True)
+
+            if len(psp_amps[pop]) > 1:
+                # 1. Size summary PSP
+                plt.figure()
+                plt.boxplot(list(psp_amps[pop].values()))
+                plt.title('PSP Amplitudes Across Sections')
+                plt.ylabel('Amplitude (mV)')
+                plt.savefig(os.path.join(pop_dir, f'psp_amplitudes_summary.png'))
+                plt.close()
+
+                # 2. Section vs. soma comparison PSP
+                soma_amp = psp_amps[pop].get('soma', None)
+                other_amps = [amp for sec, amp in psp_amps[pop].items() if sec != 'soma']
+                plt.figure()
+                plt.bar(['soma', 'other'], [soma_amp, np.mean(other_amps)])
+                plt.title('Soma vs. Other Section PSP Amplitudes')
+                plt.ylabel('Amplitude (mV)')
+                plt.savefig(os.path.join(pop_dir, f'soma_vs_secs_psp.png'))
                 plt.close()

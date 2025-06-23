@@ -267,27 +267,53 @@ for post in preWeights:
                         'delay': sec_delay
                     }
 
-        else:
+        elif prePop in TEpops + TIpops:
             if prePop in TEpops:
                 synMech = ESynMech
-                synWeightFactor = cfg.synWeightFractionEE
-                cell_type = next(k for k in netParams.cellParams if k[:1] == post[:1])
-                secs = netParams.cellParams[cell_type]['secs']
-            elif post in TEpops:
-                synMech = ThalIESynMech
-                synWeightFactor = cfg.synWeightFractionThalIE
-                cell_type = next(k for k in netParams.cellParams if k[:1] == post[:1])
-                secs = netParams.cellParams[cell_type]['secs']
-            else:
-                synMech = ThalIISynMech
-                synWeightFactor = cfg.synWeightFractionThalII
-                if post == 'TI' or post == 'TIM':
-                    synMech = ThalIESynMech
+                if post in TEpops:
+                    synWeightFactor = cfg.synWeightFractionEE
+                    if post == 'TC' or 'TCM':
+                        cell_type = 'TC_reduced'
+                        secs = netParams.cellParams[cell_type]['secs']
+                    if post == 'HTC':
+                        cell_type = 'HTC_reduced'
+                        secs = netParams.cellParams[cell_type]['secs']
+                if post in TIpops:
+                    if post == 'TI' or post == 'TIM':
+                        synMech = ThalIESynMech
+                        cell_type = 'TI_reduced'
+                        secs = netParams.cellParams[cell_type]['secs']
+                    else:
+                        cell_type = 'RE_reduced'
+                        secs = netParams.cellParams[cell_type]['secs']
+                if post in Epops:
+                    cell_type = next(k for k in netParams.cellParams if k[:3] == post[:3])
+                    secs = netParams.cellParams[cell_type]['secs']
+                if post in Ipops:
                     cell_type = next(k for k in netParams.cellParams if k[:2] == post[:2])
                     secs = netParams.cellParams[cell_type]['secs']
+
+            elif prePop in TIpops:
+                if post in TEpops:
+                    synMech = ThalIESynMech
+                    synWeightFactor = cfg.synWeightFractionThalIE
+                    if post == 'TC' or 'TCM':
+                        cell_type = 'TC_reduced'
+                        secs = netParams.cellParams[cell_type]['secs']
+                    if post == 'HTC':
+                        cell_type = 'HTC_reduced'
+                        secs = netParams.cellParams[cell_type]['secs']
                 else:
-                    cell_type = 'RE_reduced'
-                    secs = netParams.cellParams[cell_type]['secs']
+                    synMech = ThalIISynMech
+                    synWeightFactor = cfg.synWeightFractionThalII
+                    if post == 'TI' or post == 'TIM':
+                        synMech = ThalIESynMech
+                        cell_type = 'TI_reduced'
+                        secs = netParams.cellParams[cell_type]['secs']
+
+                    else:
+                        cell_type = 'RE_reduced'
+                        secs = netParams.cellParams[cell_type]['secs']
 
             sec_delay = 0
             for section in secs.items():
