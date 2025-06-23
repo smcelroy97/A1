@@ -1,7 +1,8 @@
 from netpyne.batchtools import specs
-import pickle, json
-netParams = specs.NetParams()   # object of class NetParams to store the network parameters
+import pickle
+import json
 from synapse_cfg import cfg
+netParams = specs.NetParams()   # object of class NetParams to store the network parameters
 
 pops = cfg.allpops
 TEpops = ['TC', 'TCM', 'HTC']
@@ -31,7 +32,7 @@ ThalamicCoreLambda = 50.0
 # ------------------------------------------------------------------------------
 ## List of E and I pops to use later on
 Epops = ['IT2', 'IT3', 'ITP4', 'ITS4',
-         'IT5A', 'CT5A', 'IT5B', 'CT5B' ,
+         'IT5A', 'CT5A', 'IT5B', 'CT5B',
          'PT5B', 'IT6', 'CT6']  # all layers
 
 Ipops = ['NGF1',                            # L1
@@ -42,6 +43,8 @@ Ipops = ['NGF1',                            # L1
          'PV5B', 'SOM5B', 'VIP5B', 'NGF5B',  # L5B
          'PV6', 'SOM6', 'VIP6', 'NGF6']      # L6
 
+Etypes = ['IT', 'ITS4', 'PT', 'CT']
+Itypes = ['PV', 'SOM', 'VIP', 'NGF']
 
 cellModels = ['HH_reduced', 'HH_full']  # List of cell models
 
@@ -60,10 +63,10 @@ layerGroups = {
 ## Load cell rules previously saved using netpyne format (DOES NOT INCLUDE VIP, NGF and spiny stellate)
 ## include conditions ('conds') for each cellRule
 cellParamLabels = ['IT2_reduced', 'IT3_reduced', 'ITP4_reduced', 'ITS4_reduced',
-                    'IT5A_reduced', 'CT5A_reduced', 'IT5B_reduced',
-                    'PT5B_reduced', 'CT5B_reduced', 'IT6_reduced', 'CT6_reduced',
-                    'PV_reduced', 'SOM_reduced', 'VIP_reduced', 'NGF_reduced',
-                    'RE_reduced', 'TC_reduced', 'HTC_reduced', 'TI_reduced']  # , 'TI_reduced']
+                   'IT5A_reduced', 'CT5A_reduced', 'IT5B_reduced',
+                   'PT5B_reduced', 'CT5B_reduced', 'IT6_reduced', 'CT6_reduced',
+                   'PV_reduced', 'SOM_reduced', 'VIP_reduced', 'NGF_reduced',
+                   'RE_reduced', 'TC_reduced', 'HTC_reduced', 'TI_reduced']  # , 'TI_reduced']
 
 for ruleLabel in cellParamLabels:
     netParams.loadCellParamsRule(label=ruleLabel, fileName='cells/' + ruleLabel + '_cellParams.json')  # Load cellParams for each of the above cell subtype
@@ -73,8 +76,9 @@ for ruleLabel in cellParamLabels:
 # ------------------------------------------------------------------------------
 
 ## load densities
-with open('cells/cellDensity.pkl', 'rb') as fileObj: density = pickle.load(fileObj)['density']
-density = {k: [x * cfg.scaleDensity for x in v] for k,v in density.items()} # Scale densities
+with open('cells/cellDensity.pkl', 'rb') as fileObj:
+    density = pickle.load(fileObj)['density']
+density = {k: [x * cfg.scaleDensity for x in v] for k, v in density.items()}  # Scale densities
 
 ### Stim Pop
 # create custom list of spike times
@@ -83,7 +87,7 @@ spkTimes = [0]
 netParams.popParams[stimName] = {'cellModel': 'VecStim', 'numCells': 1, 'spkTimes': spkTimes}  # VecStim with spike times
 
 ### LAYER 1:
-netParams.popParams['NGF1'] = {'cellType': 'NGF', 'cellModel': 'HH_reduced','ynormRange': layer['1'],   'density': density[('A1','nonVIP')][0]}
+netParams.popParams['NGF1'] = {'cellType': 'NGF', 'cellModel': 'HH_reduced', 'ynormRange': layer['1'],   'density': density[('A1', 'nonVIP')][0]}
 
 ## LAYER 2:
 netParams.popParams['IT2'] =     {'cellType': 'IT',  'cellModel': 'HH_reduced',  'ynormRange': layer['2'],   'density': density[('A1','E')][1]}     # cfg.cellmod for 'cellModel' in M1 netParams.py
@@ -168,7 +172,8 @@ ThalIESynMech = ['GABAASlow','GABAB']
 ThalIISynMech = ['GABAASlow']
 
 
-with open('conn/conn.pkl', 'rb') as fileObj: connData = pickle.load(fileObj)
+with open('conn/conn.pkl', 'rb') as fileObj:
+    connData = pickle.load(fileObj)
 pmat = connData['pmat']
 lmat = connData['lmat']
 wmat = connData['wmat']
@@ -185,13 +190,19 @@ netParams.popParams = pop_params_new
 
 for post in preWeights:
     if post in netParams.popParams:
+        scaleFactor = 1.0
+        cellTypeGain = 1.0
         if prePop in Epops:
             synMech = ESynMech
             if post in Epops:
+                gain = cfg.EEGain
+                popGain = cfg.EEPopGain[post]
                 synMechWeightFactor = cfg.synWeightFractionEE
                 cell_type = next(k for k in netParams.cellParams if k[:3] == post[:3])
                 secs = netParams.cellParams[cell_type]['secs']
             elif post in Ipops:
+                popGain = cfg.EIPopGain[post]
+                gain = cfg.EIGain
                 cell_type = next(k for k in netParams.cellParams if k[:2] == post[:2])
                 secs = netParams.cellParams[cell_type]['secs']
                 if 'NGF' in post:
@@ -200,78 +211,13 @@ for post in preWeights:
                     synMechWeightFactor = cfg.synWeightFractionEI_CustomCort
                 else:
                     synMechWeightFactor = cfg.synWeightFractionEI
+
             elif post in TEpops+TIpops:
-                cell_type = next(k for k in netParams.cellParams if k[:1] == post[:1])
-                secs = netParams.cellParams[cell_type]['secs']
                 synMech = ESynMech
-                synWeightFactor = cfg.synWeightFractionEE
-
-            sec_delay = 0
-            for section in secs.items():
-                num_secs = range(1, len(secs))
-                sec_name = section[0]
-                if sec_name != 'axon':
-                    sec_delay += 5000
-
-                    netParams.connParams[stimName + '_' + post + '_' + sec_name] = {
-                        'preConds': {'pop': stimName},
-                        'postConds': {'pop': post},
-                        'sec': sec_name,
-                        'synMech': synMech,
-                        'weight': preWeights[post],
-                        'synsPerConn': 1,
-                        'delay': sec_delay
-                    }
-
-        elif prePop in Ipops:
-            if 'PV' in prePop:
-                synMech = PVSynMech
-            if 'VIP' in prePop:
-                synMech = VIPSynMech
-            if post in Ipops:
-                synMechWeightFactor = cfg.synWeightFractionII
-                cell_type = next(k for k in netParams.cellParams if k[:2] == post[:2])
-                secs = netParams.cellParams[cell_type]['secs']
-                if 'SOM' in prePop:
-                    synMech = SOMISynMech
-                    synWeightFactor = cfg.synWeightFractionSOMI
-                elif 'NGF' in prePop:
-                    synMech = NGFISynMech
-                    synWeightFactor = cfg.synWeightFractionNGFI
-            if post in Epops:
-                synMechWeightFactor = cfg.synWeightFractionIE
-                cell_type = next(k for k in netParams.cellParams if k[:3] == post[:3])
-                secs = netParams.cellParams[cell_type]['secs']
-                if 'SOM' in prePop:
-                    synMech = SOMESynMech
-                    synWeightFactor = cfg.synWeightFractionSOME
-                elif 'NGF' in prePop:
-                    synMech = NGFESynMech
-                    synWeightFactor = cfg.synWeightFractionNGFE
-
-
-            sec_delay = 0
-            for section in secs.items():
-                num_secs = range(1, len(secs))
-                sec_name = section[0]
-                if sec_name != 'axon':
-                    sec_delay += 5000
-
-                    netParams.connParams[stimName + '_' + post + '_' + sec_name] = {
-                        'preConds': {'pop': stimName},
-                        'postConds': {'pop': post},
-                        'sec': sec_name,
-                        'synMech': synMech,
-                        'weight': preWeights[post],
-                        'synsPerConn': 1,
-                        'delay': sec_delay
-                    }
-
-        elif prePop in TEpops + TIpops:
-            if prePop in TEpops:
-                synMech = ESynMech
+                synMechWeightFactor = cfg.synWeightFractionEE
                 if post in TEpops:
-                    synWeightFactor = cfg.synWeightFractionEE
+                    synMechWeightFactor = cfg.synWeightFractionEE
+                    gain = cfg.corticoThalamicGain
                     if post == 'TC' or 'TCM':
                         cell_type = 'TC_reduced'
                         secs = netParams.cellParams[cell_type]['secs']
@@ -279,6 +225,103 @@ for post in preWeights:
                         cell_type = 'HTC_reduced'
                         secs = netParams.cellParams[cell_type]['secs']
                 if post in TIpops:
+                    gain = cfg.CTGainThalI
+                    if post == 'TI' or post == 'TIM':
+                        synMech = ThalIESynMech
+                        cell_type = 'TI_reduced'
+                        secs = netParams.cellParams[cell_type]['secs']
+                    else:
+                        cell_type = 'RE_reduced'
+                        secs = netParams.cellParams[cell_type]['secs']
+
+            sec_delay = 0
+            for section in secs.items():
+                num_secs = range(1, len(secs))
+                sec_name = section[0]
+                if not cfg.add_gain:
+                    gain = 1.0
+                    scaleFactor = 1.0
+                    popGain = 1.0
+                if sec_name != 'axon':
+                    sec_delay += 5000
+                    netParams.connParams[stimName + '_' + post + '_' + sec_name] = {
+                        'preConds': {'pop': stimName},
+                        'postConds': {'pop': post},
+                        'sec': sec_name,
+                        'synMech': synMech,
+                        'weight': preWeights[post] * gain * popGain * scaleFactor,
+                        'synMechWeightFactor': synMechWeightFactor,
+                        'synsPerConn': 1,
+                        'delay': sec_delay
+                    }
+
+        elif prePop in Ipops:
+            gain = 1.0
+            if 'PV' in prePop:
+                synMech = PVSynMech
+            if 'VIP' in prePop:
+                synMech = VIPSynMech
+            if post in Ipops:
+                synMechWeightFactor = cfg.synWeightFractionII
+                gain = cfg.IIGain
+                cell_type = next(k for k in netParams.cellParams if k[:2] == post[:2])
+                secs = netParams.cellParams[cell_type]['secs']
+                if 'SOM' in prePop:
+                    synMech = SOMISynMech
+                    synMechWeightFactor = cfg.synWeightFractionSOMI
+                elif 'NGF' in prePop:
+                    synMech = NGFISynMech
+                    synMechWeightFactor = cfg.synWeightFractionNGFI
+            if post in Epops:
+                synMechWeightFactor = cfg.synWeightFractionIE
+                gain = cfg.IEGain
+                cell_type = next(k for k in netParams.cellParams if k[:3] == post[:3])
+                secs = netParams.cellParams[cell_type]['secs']
+                if 'SOM' in prePop:
+                    synMech = SOMESynMech
+                    synMechWeightFactor = cfg.synWeightFractionSOME
+                elif 'NGF' in prePop:
+                    synMech = NGFESynMech
+                    synMechWeightFactor = cfg.synWeightFractionNGFE
+
+            sec_delay = 0
+            for section in secs.items():
+                num_secs = range(1, len(secs))
+                sec_name = section[0]
+                if not cfg.add_gain:
+                    gain = 1.0
+                    scaleFactor = 1.0
+                    popGain = 1.0
+                if sec_name != 'axon':
+                    sec_delay += 5000
+
+                    netParams.connParams[stimName + '_' + post + '_' + sec_name] = {
+                        'preConds': {'pop': stimName},
+                        'postConds': {'pop': post},
+                        'sec': sec_name,
+                        'synMech': synMech,
+                        'weight': preWeights[post] * gain,
+                        'synMechWeightFactor': synMechWeightFactor,
+                        'synsPerConn': 1,
+                        'delay': sec_delay
+                    }
+
+        elif prePop in TEpops + TIpops:
+            gain = 1.0
+            scaleFactor = 1.0
+            if prePop in TEpops:
+                synMech = ESynMech
+                synMechWeightFactor = cfg.synWeightFractionEE
+                if post in TEpops:
+                    gain = cfg.intraThalamicGain * cfg.intraThalamicEEGain
+                    if post == 'TC' or 'TCM':
+                        cell_type = 'TC_reduced'
+                        secs = netParams.cellParams[cell_type]['secs']
+                    if post == 'HTC':
+                        cell_type = 'HTC_reduced'
+                        secs = netParams.cellParams[cell_type]['secs']
+                if post in TIpops:
+                    gain = cfg.intraThalamicGain * cfg.intraThalamicEIGain
                     if post == 'TI' or post == 'TIM':
                         synMech = ThalIESynMech
                         cell_type = 'TI_reduced'
@@ -287,16 +330,25 @@ for post in preWeights:
                         cell_type = 'RE_reduced'
                         secs = netParams.cellParams[cell_type]['secs']
                 if post in Epops:
+                    gain = cfg.thalamoCorticalGain
                     cell_type = next(k for k in netParams.cellParams if k[:3] == post[:3])
                     secs = netParams.cellParams[cell_type]['secs']
+                    if post == 'ITP4' or 'ITS4':
+                        scaleFactor = cfg.thalL4E
                 if post in Ipops:
+                    gain = cfg.thalamoCorticalGain
                     cell_type = next(k for k in netParams.cellParams if k[:2] == post[:2])
                     secs = netParams.cellParams[cell_type]['secs']
+                    if post == 'PV4':
+                        scaleFactor = cfg.thalL4PV
+                    if post == 'SOM4':
+                        scaleFactor = cfg.thalL4SOM
 
             elif prePop in TIpops:
                 if post in TEpops:
                     synMech = ThalIESynMech
-                    synWeightFactor = cfg.synWeightFractionThalIE
+                    synMechWeightFactor = cfg.synWeightFractionThalIE
+                    gain = cfg.intrathalamicGain * cfg.intraThalamicIE
                     if post == 'TC' or 'TCM':
                         cell_type = 'TC_reduced'
                         secs = netParams.cellParams[cell_type]['secs']
@@ -305,12 +357,12 @@ for post in preWeights:
                         secs = netParams.cellParams[cell_type]['secs']
                 else:
                     synMech = ThalIISynMech
-                    synWeightFactor = cfg.synWeightFractionThalII
+                    synMechWeightFactor = cfg.synWeightFractionThalII
+                    gain = cfg.intrathalamicGain
                     if post == 'TI' or post == 'TIM':
                         synMech = ThalIESynMech
                         cell_type = 'TI_reduced'
                         secs = netParams.cellParams[cell_type]['secs']
-
                     else:
                         cell_type = 'RE_reduced'
                         secs = netParams.cellParams[cell_type]['secs']
@@ -319,6 +371,10 @@ for post in preWeights:
             for section in secs.items():
                 num_secs = range(1, len(secs))
                 sec_name = section[0]
+                if not cfg.add_gain:
+                    gain = 1.0
+                    scaleFactor = 1.0
+                    popGain = 1.0
                 if sec_name != 'axon':
                     sec_delay += 5000
 
@@ -327,7 +383,8 @@ for post in preWeights:
                         'postConds': {'pop': post},
                         'sec': sec_name,
                         'synMech': synMech,
-                        'weight': preWeights[post],
+                        'weight': preWeights[post] * gain * scaleFactor,
+                        'synMechWeightFactor': synMechWeightFactor,
                         'synsPerConn': 1,
                         'delay': sec_delay
                     }
