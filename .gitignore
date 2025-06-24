@@ -1,6 +1,7 @@
 __pycache__/
 x86_64/
 .idea/
+ray/
 *.mat
 *.png
 *.pyc
@@ -10,3 +11,5 @@ x86_64/
 *_local.sh
 *.pkl
 *params.json
+*.run
+simOutput/

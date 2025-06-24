@@ -348,7 +348,7 @@ for post in preWeights:
                 if post in TEpops:
                     synMech = ThalIESynMech
                     synMechWeightFactor = cfg.synWeightFractionThalIE
-                    gain = cfg.intrathalamicGain * cfg.intraThalamicIE
+                    gain = cfg.intraThalamicGain * cfg.intraThalamicIE
                     if post == 'TC' or 'TCM':
                         cell_type = 'TC_reduced'
                         secs = netParams.cellParams[cell_type]['secs']
@@ -358,7 +358,7 @@ for post in preWeights:
                 else:
                     synMech = ThalIISynMech
                     synMechWeightFactor = cfg.synWeightFractionThalII
-                    gain = cfg.intrathalamicGain
+                    gain = cfg.intraThalamicGain
                     if post == 'TI' or post == 'TIM':
                         synMech = ThalIESynMech
                         cell_type = 'TI_reduced'

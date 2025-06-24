@@ -4,7 +4,7 @@ import matplotlib
 from matplotlib import pyplot as plt
 import numpy as np
 
-batch_dir = '../simOutput/PSPTest/'
+batch_dir = '../simOutput/v45_batch23/'
 
 for file in os.listdir(batch_dir):
     if file.endswith('.pkl'):
