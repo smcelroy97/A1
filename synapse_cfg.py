@@ -96,7 +96,7 @@ cfg.gatherOnlySimData = False
 cfg.saveCellSecs = False
 cfg.saveCellConns = True
 cfg.addNoiseIClamp = False
-cfg.add_gain = False
+cfg.add_gain = True
 # ------------------------------------------------------------------------------
 # Analysis and plotting
 # ------------------------------------------------------------------------------
