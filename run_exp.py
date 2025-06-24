@@ -81,6 +81,8 @@ parser.add_argument('--batch', action='store_true',
                     help="Run in batch mode.")
 parser.add_argument('--name', type=str,
                     help="Experiment name (required if not in batch mode).")
+parser.add_argument('--subdir', type=str,
+                    help="Subfolder where the exp is located")
 args, _ = parser.parse_known_args()
 is_batch = args.batch
 
@@ -93,9 +95,6 @@ need_run = True
 if not is_batch:
     exp_name = args.name
 
-#exp_name = 'subnet/single/single_g_ou_subnet_wmult_0.02_som4_ire'
-#os.chdir('/ddn/niknovikov19/repo/A1_OUinp')
-
 dirpath_self = Path(__file__).resolve().parent
 
 if is_batch:
@@ -105,7 +104,10 @@ if is_batch:
     print(f'>>>> EXP_NAME: {exp_name}', flush=True)
 
 # Import experiment-specific config and batch py-files
-dirpath_exp_cfg = dirpath_self / DIRNAME_EXP_CONFIGS / exp_name
+dirpath_exp_cfg = dirpath_self / DIRNAME_EXP_CONFIGS
+if args.subdir is not None:
+    dirpath_exp_cfg /= args.subdir
+dirpath_exp_cfg /= exp_name
 fpath_exp_cfg = dirpath_exp_cfg / 'exp_cfg.py'
 fpath_exp_batch = dirpath_exp_cfg / 'batch_params.py'
 #print(f'Experiment config: {fpath_exp_cfg}')
@@ -144,6 +146,10 @@ if is_batch and hasattr(batch_mod, 'post_update'):
 
 # Create netParams based on the config
 netParams = create_net_params(cfg)
+
+# Experiment-specific modification of netParams
+if hasattr(cfg_mod, 'modify_net_params'):
+    cfg_mod.modify_net_params(cfg, netParams) 
 
 # Convert to a subnetwork with some pops. frozen, if needed
 if hasattr(cfg, 'subnet_build_flag') and cfg.subnet_build_flag:
@@ -235,9 +241,18 @@ if need_run:
         #print('Adding OU conductance...', flush=True)
         sim, vecs_dict, OUFlags = bs.add_noise_gclamp(sim)
 
+    sim.setupRecording()       # setup variables to record for each cell (spikes, V traces, etc)
+    
+    """ # Print ik mechs
+    if comm.is_host():
+        hobj = sim.net.cells[0].secs['soma']['hObj']
+        seg  = hobj(0.5)
+        #print([name for name in dir(seg) if "ik" in name])
+        print([name for name in dir(seg.kBK)])
+        #print([name for name in seg.__dict__]) """
+
     # Run
     print('Runing...', flush=True)
-    sim.setupRecording()       # setup variables to record for each cell (spikes, V traces, etc)
     sim.runSim()               # run parallel Neuron simulation
     sim.gatherData()
 
@@ -266,9 +281,14 @@ if comm.is_host():
         show=False
     )
     
+    # Save average firint rates to a separate json file
     fpath_res = '{}/{}_result.json'.format(cfg.saveFolder, cfg.simLabel)
     with open(fpath_res, 'w') as fid:
         json.dump({'rates': avgRates}, fid, indent=4)
+    
+    # Experiment-specific result processing
+    if hasattr(cfg_mod, 'post_run'):
+        cfg_mod.post_run(sim) 
 
     avgRates['loss'] = 700
     out_json = json.dumps({**inputs, **avgRates})
