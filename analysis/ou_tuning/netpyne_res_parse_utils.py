@@ -3,6 +3,7 @@ Low-level functions to extract data from a NetPyNE simulation result.
 
 """
 
+import os
 from typing import Dict, List, Tuple
 
 import numpy as np
@@ -189,3 +190,53 @@ def get_voltages_xr(
         )
 
     return V_data
+
+
+def prepare_sim_result(sim) -> Dict:
+    """Create sim_result from sim object, same format as in pkl. """
+    
+    # gather() should be called already
+
+    if sim.rank != 0:
+        return {}
+
+    include = sim.cfg.saveDataInclude
+    dataSave = {}
+    net = {}
+    synMechStringFuncs = None
+    cellParamStringFuncs = None
+
+    dataSave['netpyne_version'] = sim.version(show=False)
+    dataSave['netpyne_changeset'] = sim.gitChangeset(show=False)
+
+    if getattr(sim.net.params, 'version', None):
+        dataSave['netParams_version'] = sim.net.params.version
+    if 'netParams' in include:
+        # exclude from dataSave but keep in synMechParams later, for integrity
+        cellParamStringFuncs = sim.net.params.__dict__.pop('_cellParamStringFuncs', None)
+        synMechStringFuncs = sim.net.params.__dict__.pop('_synMechStringFuncs', None)
+        sim.net.params.__dict__.pop('_labelid', None)
+        net['params'] = sim.replaceFuncObj(sim.net.params.__dict__)
+    if 'net' in include:
+        include.extend(['netPops', 'netCells'])
+    if 'netCells' in include and hasattr(sim.net, 'allCells'):
+        net['cells'] = sim.net.allCells
+    if 'netPops' in include and hasattr(sim.net, 'allPops'):
+        net['pops'] = sim.net.allPops
+    if net:
+        dataSave['net'] = net
+    if 'simConfig' in include:
+        dataSave['simConfig'] = sim.cfg.__dict__
+    if 'simData' in include:
+        if 'LFP' in sim.allSimData:
+            sim.allSimData['LFP'] = sim.allSimData['LFP'].tolist()
+            if hasattr(sim.net, 'recXElectrode'):
+                dataSave['net']['recXElectrode'] = sim.net.recXElectrode
+        dataSave['simData'] = sim.allSimData
+
+    if synMechStringFuncs:
+        sim.net.params._synMechStringFuncs = synMechStringFuncs
+    if cellParamStringFuncs:
+        sim.net.params._cellParamStringFuncs = cellParamStringFuncs
+
+    return dataSave
