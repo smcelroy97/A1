@@ -4,6 +4,10 @@ import matplotlib
 from matplotlib import pyplot as plt
 import numpy as np
 import csv
+from mpi4py import MPI
+
+comm = MPI.COMM_WORLD
+rank = comm.Get_rank()
 
 save_csv = 1
 plot_psp_secs = 0
@@ -62,10 +66,9 @@ for file in os.listdir(batch_dir):
                 amplitude = peak - baseline
                 sec['psp'] = amplitude
 
-
-if save_csv:
+if save_csv and rank == 0:
     with open(f'{batch_dir}pop_psps.csv', 'w', newline='') as csvfile:
-        fieldnames = ['pop', 'prePop_pop', 'sec', 'delay', 'gid', 'psp']
+        fieldnames = ['pop', 'prePop', 'sec', 'delay', 'gid', 'psp']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
         for pop, prePop_dict in pop_psps.items():
@@ -74,7 +77,7 @@ if save_csv:
                 for sec, sec_data in data['secs'].items():
                     writer.writerow({
                         'pop': pop,
-                        'prePop_pop': prePop_pop,
+                        'prePop': prePop_pop,
                         'sec': sec,
                         'delay': sec_data.get('delay', None),
                         'gid': gid,
