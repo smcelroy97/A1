@@ -5,11 +5,11 @@ from matplotlib import pyplot as plt
 import numpy as np
 import csv
 
-save_csv = 0
+save_csv = 1
 plot_psp_secs = 0
 plot_avg_vs_secs = 0
-plot_psp_matrix = 1
-plot_psp_box
+plot_psp_matrix = 0
+plot_psp_box = 0
 
 batch_dir = '../simOutput/PSPTest/'
 
@@ -64,7 +64,7 @@ for file in os.listdir(batch_dir):
 
 
 if save_csv:
-    with open('pop_psps.csv', 'w', newline='') as csvfile:
+    with open(f'{batch_dir}pop_psps.csv', 'w', newline='') as csvfile:
         fieldnames = ['pop', 'prePop_pop', 'sec', 'delay', 'gid', 'psp']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
