@@ -75,6 +75,7 @@ cfg.recordTraces = {'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'}
                     # 'g_NMDA': {'sec':'soma', 'loc':0.5, 'synMech':'NMDA', 'var':'g'},
                     # 'g_GABAB': {'sec':'soma', 'loc':0.5, 'synMech':'GABAB', 'var':'g'}
 }
+
 cfg.recordStim = False  # Seen in M1 cfg.py
 cfg.recordTime = True  # SEen in M1 cfg.py
 cfg.recordStep = 0.05  # Step size (in ms) to save data -- value from M1 cfg.py
@@ -136,6 +137,7 @@ cfg.weightNormThreshold = 5.0  # maximum weight normalization factor with respec
 cfg.weightNormScaling = {'NGF_reduced': 1.0, 'ITS4_reduced': 1.0}
 cfg.ihGbar = 1.0
 cfg.KgbarFactor = 1.0
+
 # ------------------------------------------------------------------------------
 # Synapses
 # ------------------------------------------------------------------------------
@@ -165,8 +167,6 @@ cfg.synWeightFractionThalIE = [0.9, 0.2]
 cfg.synWeightFractionThalII = [1.0, 0.0]
 cfg.synWeightFractionThalCtxII = [1.0]
 cfg.synWeightFractionThalCtxIE = [1.0, 0.0]
-
-
 
 cfg.EEGain = 1.31667
 cfg.EIGain = 1.6313576020869256
