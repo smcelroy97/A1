@@ -1,4 +1,5 @@
-from typing import List, Tuple
+import itertools
+from typing import Iterator, List, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -89,3 +90,22 @@ def interpolate_to_xr(
         coords=[(coord_names[1], yy_out),
                 (coord_names[0], xx_out)]
     )
+
+def iter_xr_slices_along_dims(
+        X: xr.DataArray | xr.Dataset,
+        dims: str | list[str]
+        ) -> Iterator[tuple[dict, xr.DataArray | xr.Dataset]]:
+    
+    # Normalize to a list
+    dims_to_keep = [dims] if isinstance(dims, str) else list(dims)
+
+    # Find all dims that must be fixed
+    other_dims = [dim for dim in X.dims if dim not in dims_to_keep]
+
+    # Get coordinate arrays for each of those dims
+    coord_lists = [X.coords[dim].values for dim in other_dims]
+
+    # Iterate the cartesian product of all other-dim coords
+    for coord_vals in itertools.product(*coord_lists):
+        cc = dict(zip(other_dims, coord_vals))
+        yield (cc, X.sel(**cc, drop=True))
