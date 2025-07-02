@@ -6,7 +6,7 @@ import numpy as np
 import csv
 from mpi4py import MPI
 
-batch_dir = '../simOutput/PSPTest/'
+batch_dir = 'simOutput/v45_batch24/'
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
@@ -148,8 +148,9 @@ def strip_traces(d):
     for pop in d:
         for prePop in d[pop]:
             for sec in d[pop][prePop]['secs']:
-                if 'trace' in d[pop][prePop]['secs'][sec]:
-                    del d[pop][prePop]['secs'][sec]['trace']
+                if sec != 'mean':
+                    if 'trace' in d[pop][prePop]['secs'][sec]:
+                        del d[pop][prePop]['secs'][sec]['trace']
 
 
 strip_traces(pop_psps)
@@ -167,18 +168,15 @@ if save_csv and rank == 0:
             merged_pop_psps[pop].update(prePop_dict)
 
     with open(f'{batch_dir}pop_psps.csv', 'w', newline='') as csvfile:
-        fieldnames = ['pop', 'prePop', 'sec', 'delay', 'gid', 'psp']
+        fieldnames = ['pop', 'prePop', 'gid', 'psp']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
         for pop, prePop_dict in merged_pop_psps.items():  # <-- use merged_pop_psps here
             for prePop, data in prePop_dict.items():
                 gid = data.get('gid', None)
-                for sec, sec_data in data['secs'].items():
-                    writer.writerow({
-                        'pop': pop,
-                        'prePop': prePop,
-                        'sec': sec,
-                        'delay': sec_data.get('delay', None),
-                        'gid': gid,
-                        'psp': sec_data.get('psp', None)
-                    })
+                writer.writerow({
+                    'pop': pop,
+                    'prePop': prePop,
+                    'gid': gid,
+                    'psp': data['secs']['mean']
+                })
