@@ -66,7 +66,18 @@ for file in os.listdir(batch_dir):
                 amplitude = peak - baseline
                 sec['psp'] = amplitude
 
+# Gather all pop_psps dicts to rank 0
+all_pop_psps = comm.gather(pop_psps, root=0)
+
 if save_csv and rank == 0:
+    # Merge all dictionaries
+    merged_pop_psps = {}
+    for d in all_pop_psps:
+        for pop, prePop_dict in d.items():
+            if pop not in merged_pop_psps:
+                merged_pop_psps[pop] = {}
+            merged_pop_psps[pop].update(prePop_dict)
+
     with open(f'{batch_dir}pop_psps.csv', 'w', newline='') as csvfile:
         fieldnames = ['pop', 'prePop', 'sec', 'delay', 'gid', 'psp']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
