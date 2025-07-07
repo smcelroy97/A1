@@ -5,8 +5,9 @@ from matplotlib import pyplot as plt
 import numpy as np
 import csv
 from mpi4py import MPI
+import pickle
 
-batch_dir = 'simOutput/v45_batch24/'
+batch_dir = '../simOutput/v45_batch24/'
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
@@ -76,6 +77,7 @@ for file in my_files:
             sec['psp'] = amplitude
             sec_amps.append(amplitude)
         pop_psps[pop][prePop]['secs']['mean'] = np.mean(sec_amps)
+        pop_psps[pop][prePop]['wmat_val'] = wmat[prePop][pop]
 
 
 if plot_psp_secs:
@@ -178,5 +180,6 @@ if save_csv and rank == 0:
                     'pop': pop,
                     'prePop': prePop,
                     'gid': gid,
-                    'psp': data['secs']['mean']
+                    'psp': data['secs']['mean'],
+                    'wmat_val': data['wmat_val']
                 })
