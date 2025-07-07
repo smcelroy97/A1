@@ -24,6 +24,10 @@ plot_avg_vs_secs = 0
 plot_psp_matrix = 0
 plot_psp_box = 0
 
+with open('../conn/conn.pkl', 'rb') as f:
+    conn_data = pickle.load(f)
+
+wmat = conn_data['wmat']
 
 pop_psps = {}
 psp_amps = {}
