@@ -41,6 +41,11 @@ for file in my_files:
             continue
         pop_psps[pop] = {}
         pop_psps[pop][prePop] = {}
+        if prePop in sim_results['simConfig']['Epops'] + sim_results['simConfig']['TEpops']:
+            pop_psps[pop][prePop]['syn_type'] = 'E'
+        else:
+            pop_psps[pop][prePop]['syn_type'] = 'I'
+
         pop_psps[pop][prePop]['secs'] = {}
 
         # Get the section specific delays
@@ -69,11 +74,8 @@ for file in my_files:
             sec['trace'] = trace[start:end]
 
             baseline_mv = np.mean(trace[:baseline_window])
-            if prePop in sim_results['simConfig']['Epops'] + sim_results['simConfig']['TEpops']:
-                peak = np.max(trace[baseline_window:])
-            else:
-                peak = np.min(trace[baseline_window:])
-            amplitude = peak - baseline
+            distances = np.abs(trace - baseline_mv)
+            amplitude = np.max(distances)
             sec['psp'] = amplitude
             sec_amps.append(amplitude)
         pop_psps[pop][prePop]['secs']['mean'] = np.mean(sec_amps)
@@ -170,7 +172,7 @@ if save_csv and rank == 0:
             merged_pop_psps[pop].update(prePop_dict)
 
     with open(f'{batch_dir}pop_psps.csv', 'w', newline='') as csvfile:
-        fieldnames = ['pop', 'prePop', 'gid', 'psp']
+        fieldnames = ['pop', 'prePop', 'syn_type', 'psp', wmat_val]
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
         for pop, prePop_dict in merged_pop_psps.items():  # <-- use merged_pop_psps here
@@ -179,7 +181,7 @@ if save_csv and rank == 0:
                 writer.writerow({
                     'pop': pop,
                     'prePop': prePop,
-                    'gid': gid,
+                    'syn_type': data['syn_type'],
                     'psp': data['secs']['mean'],
                     'wmat_val': data['wmat_val']
                 })
