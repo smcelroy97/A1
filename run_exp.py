@@ -281,7 +281,7 @@ if comm.is_host():
         show=False
     )
     
-    # Save average firint rates to a separate json file
+    # Save average firing rates to a separate json file
     fpath_res = '{}/{}_result.json'.format(cfg.saveFolder, cfg.simLabel)
     with open(fpath_res, 'w') as fid:
         json.dump({'rates': avgRates}, fid, indent=4)

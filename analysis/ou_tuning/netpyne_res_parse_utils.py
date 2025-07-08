@@ -143,7 +143,7 @@ def get_net_spikes(sim_result, pop_names=None, combine_cells=True,
 def get_voltages(sim_result, t_limits=None):
     pop_names = get_pop_names(sim_result)
 
-    # full time vector + mask
+    # Full time vector + mask
     tvec = np.array(sim_result['simData']['t'])
     if t_limits is not None:
         mask = (tvec >= t_limits[0]) & (tvec <= t_limits[1])
@@ -151,27 +151,24 @@ def get_voltages(sim_result, t_limits=None):
     else:
         mask = np.ones_like(tvec, bool)
 
-    # 1) map gid → V_vec[mask]
+    # Map gid -> V_vec[mask]
     V_map = {}
     for cell_name, V_vec in sim_result['simData']['V_soma'].items():
         gid = int(cell_name.split('_')[-1])
         V_map[gid] = np.array(V_vec)[mask]
 
-    # 2) for each pop, gather & sort gids, then stack
-    V_data = {}
-    pop_gids = {pop: [] for pop in pop_names}
-    for gid, cell in enumerate(sim_result['net']['cells']):
-        pop = cell['tags']['pop']
-        pop_gids[pop].append(gid)
+    # Get cell gids for each pop
+    pop_gids = {pop: get_pop_cell_gids(sim_result, pop)
+                for pop in pop_names}
 
+    # Stack into array shape (pop_sz, nsamples)
+    V_data = {}
     for pop in pop_names:
         gids = sorted(pop_gids[pop])
-        # stack into array shape (n_cells_in_pop, n_timepoints)
-        V_data[pop] = np.stack([V_map[gid] for gid in gids], axis=0)
+        vv = [V_map[gid] for gid in gids if gid in V_map]
+        V_data[pop] = np.stack(vv, axis=0)
 
     return V_data, tvec
-
-
 
 # =============================================================================
 # def get_pop_cell_rates(sim_result, pop_name, t0=0, tmax=None):

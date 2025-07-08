@@ -67,6 +67,8 @@ def extract_batch_params_to_xr(
 def _get_fpath_by_templ(dirpath: Path, fname_templ: str) -> str:
     files = list(dirpath.glob(fname_templ))
     if len(files) != 1:
+        print(f'Path for search: {str(dirpath)}')
+        print(f'Name template: {fname_templ}')
         raise RuntimeError('Should be exactly one filename match')
     return files[0]
 
