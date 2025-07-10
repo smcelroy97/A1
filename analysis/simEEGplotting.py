@@ -12,8 +12,9 @@ from lfpykit.eegmegcalc import NYHeadModel
 
 stim_on = 2000  # Define onset of stimulus if necessary
 calcEEG = {'start': 2800, 'stop': 4000}
-filter = {'lowCut':2, 'hiCut': 12}
-plotERP = {'useFilter': True}
+calcMEG = {'start': 2800, 'stop': 4000}
+# filter = {'lowCut':2, 'hiCut': 12}
+# plotERP = {'useFilter': True}
 # plotSpectrogram = {'useFilter': False}
 # plotPSD = {'useFilter': True}
 # plotRaster = {'timeRange': [0, 2000]}
@@ -21,8 +22,8 @@ plotERP = {'useFilter': True}
 # plotMUA = {'stimDur': 1000}
 
 # calcEEG = False
-# filter = False
-# plotERP = False
+filter = False
+plotERP = False
 plotSpectrogram = False
 plotPSD = False
 plotRaster = False
@@ -30,7 +31,7 @@ PSDSpect = False
 plotMUA = False
 
 
-batch = 'ASSR_grid_0226'  # Name of batch for fig saving
+batch = 'v45_batch22'  # Name of batch for fig saving
 
 # Load sim EEG data
 base_dir = '/Users/scoot/A1ProjData/A1_sim_data/' + batch + '/'  # Define dir from saved data dir
@@ -53,7 +54,7 @@ for file in os.listdir(base_dir):
 
 
         if calcEEG:
-            stim_data, stim_window = simPlotting.calculateEEG(
+            stim_eeg, stim_window = simPlotting.calculateEEG(
                     sim   = sim,
                     start = calcEEG['start'],
                     end   = calcEEG['stop']
@@ -61,6 +62,17 @@ for file in os.listdir(base_dir):
 
             offsetStart = calcEEG['start'] - stim_on
             endWindow = calcEEG['stop'] - stim_on
+            t = np.arange(offsetStart, endWindow, 0.05) # Time vector starting at t=0 instead of timeRange[0]
+
+        if calcMEG:
+            stim_meg, stim_window = simPlotting.calculateMEG(
+                    sim   = sim,
+                    start = calcMEG['start'],
+                    end   = calcMEG['stop']
+                )  # Calculate EEG signal at one electode (currently set to 'Cz')
+
+            offsetStart = calcMEG['start'] - stim_on
+            endWindow = calcMEG['stop'] - stim_on
             t = np.arange(offsetStart, endWindow, 0.05) # Time vector starting at t=0 instead of timeRange[0]
 
         # Filter EEG data

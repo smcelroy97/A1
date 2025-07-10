@@ -22,7 +22,7 @@ cfg = specs.SimConfig()
 # ------------------------------------------------------------------------------
 # Run parameters
 # ------------------------------------------------------------------------------
-cfg.duration = 6500  # Duration of the sim, in ms
+cfg.duration = 3500  # Duration of the sim, in ms
 cfg.dt = 0.025   # 0.025  # Internal Integration Time Step
 cfg.verbose = 0  # Show detailed messages
 cfg.progressBar = 0  # even more detailed message
@@ -69,15 +69,15 @@ cfg.TEpops = ['TC', 'TCM', 'HTC']
 
 cfg.TIpops = ['IRE', 'IREM', 'TI', 'TIM']
 
-cfg.pops_active = ['IT2']
+cfg.pops_active = False # ['IT2', 'ITP4', 'ITS4', 'PV4', 'VIP4', 'NGF4', 'IRE', 'IREM', 'TI', 'TIM']
 
 if cfg.pops_active:
     cfg.allpops = cfg.pops_active
 
 # Dict with traces to record -- taken from M1 cfg.py
-cfg.recordTraces = {'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'}
-                    # 'g_NMDA': {'sec':'soma', 'loc':0.5, 'synMech':'NMDA', 'var':'g'},
-                    # 'g_GABAB': {'sec':'soma', 'loc':0.5, 'synMech':'GABAB', 'var':'g'}
+cfg.recordTraces = {'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'},
+                    # 'g_NMDA': {'sec': 'soma', 'loc': 0.5, 'synMech': 'NMDA', 'var': 'g'},
+                    'i_GABAB': {'sec': 'soma', 'loc': 0.5, 'synMech': 'GABAB', 'var': 'i'}
                     }
 
 cfg.recordStim = False  # Seen in M1 cfg.py
@@ -88,10 +88,10 @@ cfg.recordLFP =[[100, y, 100] for y in range(0, 2000, 100)]
 cfg.recordDipole = True
 
 # ------------------------------------------------------------------------------
-# Saving
+# Savingx
 # ------------------------------------------------------------------------------
 
-cfg.simLabel = 'EpopsOUcurrent'
+cfg.simLabel = 'GABABTrace_test'
 cfg.saveFolder = 'simOutput/' + cfg.simLabel  # Set file output name
 cfg.savePickle = True  # Save pkl file
 cfg.saveJson = False  # Save json file
@@ -106,7 +106,7 @@ cfg.saveCellConns = False
 # ------------------------------------------------------------------------------
 
 cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig': False, 'orderInverse': True, 'figSize': (25, 25),
-                              'markerSize': 1}   # Plot a raster
+                              'markerSize': 1, 'oneFigPer': 'trace'}   # Plot a raster
 
 # cfg.analysis['plotSpikeStats'] = {'stats' : ['isicv'], 'saveFig' : True}
 
@@ -178,7 +178,7 @@ for key, value in cfgLoad.items():
     setattr(cfg, key, value)
 
 # These values taken from M1 cfg (https://github.com/Neurosim-lab/netpyne/bflob/development/examples/M1detailed/cfg.py)
-cfg.singleCellPops = True
+cfg.singleCellPops = False
 cfg.reducedPop = False  # insert number to declare specific number of populations, if going for full model set to False
 cfg.singlePop = 'IT2'
 cfg.removeWeightNorm = False
@@ -307,7 +307,7 @@ cfg.BkgCtxIGain = 0.8285714285714285
 
 cfg.NGF6bkgGain = 1.0
 
-cfg.cochlearThalInput = False
+cfg.cochlearThalInput = True
 # parameters to generate realistic  auditory thalamic inputs using Brian Hears
 
 
@@ -335,7 +335,7 @@ cfg.addIClamp = {
     'injectionInterval': 3000,
     'injectionDuration': 1000,
     'injectionAmplitudes': np.linspace(0.0, 0.6, 13),
-    'holdingCurrent': True,
+    'holdingCurrent': False,
     'includePops': ['IRE', 'IREM', 'TI', 'TIM', 'TC', 'TCM', 'HTC',
                     'SOM2', 'VIP2', 'SOM3', 'VIP3', 'SOM4', 'VIP4',
                     'SOM5A', 'VIP5A', 'SOM5B', 'VIP5B', 'SOM6', 'VIP6',
@@ -352,8 +352,8 @@ cfg.addNoiseIClamp = 0
 # ------------------------------------------------------------------------------
 
 cfg.addNoiseConductance = 0
-cfg.OUamp = -0.05  # 200 # 0.05
-cfg.OUstd = 1.5
+cfg.OUamp = 0.5 # 200 # 0.05
+cfg.OUstd = 0.05
 cfg.NoiseConductanceDur = cfg.duration
 
 # ------------------------------------------------------------------------------

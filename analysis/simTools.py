@@ -1,4 +1,5 @@
 from lfpykit.eegmegcalc import NYHeadModel
+from lfpykit.eegmegcalc import SphericallySymmetricVolCondMEG
 from scipy import signal
 from scipy.signal import butter, filtfilt
 from netpyne.support.morlet import MorletSpec, index2ms
@@ -12,6 +13,8 @@ from    matplotlib  import  pyplot  as plt
 #    Funcitons for analysis, code to use found in simEEGplotting.py     #
 #########################################################################
 class simPlotting:
+
+    @staticmethod
     def calculateEEG(
             sim,
             start,
@@ -36,13 +39,37 @@ class simPlotting:
 
         # Calculate EEG
         eeg = M @ p * 1e9
-        goodchan = eeg[48, :]
+        single_chan = eeg[48, :]
         # goodchan = eeg[38]
 
         onset = int(start / 0.05)
         offset = int(end / 0.05)
-        return goodchan, t
+        return single_chan, t
 
+    @staticmethod
+    def calculateMEG(sim, start, end):
+
+        timeRange = [start, end]
+        timeSteps = [int(timeRange[0] / 0.05), int(timeRange[1] / 0.05)]
+        t = np.arange(timeRange[0], timeRange[1], 0.05)
+
+        p = sim.allSimData['dipoleSum'].T # tangential current dipole (nAµm)
+        p = p[:, timeSteps[0]: timeSteps[1]]
+        r_p = np.array([0, 0, 90000])  # dipole location (µm)
+        r = np.array([[0, 0, 92000]])  # measurement location (µm)
+        m = SphericallySymmetricVolCondMEG(r=r)
+
+        M = m.get_transformation_matrix(r_p=r_p)
+
+        H = M @ p
+
+        for sensor_idx in range(H.shape[0]):
+            B_magnitude = np.linalg.norm(H[sensor_idx], axis=0)  # shape: (num_timepoints,)
+            print('balls')
+
+        return B_magnitude, t
+
+    @staticmethod
     def filterEEG(
             EEG,
             lowcut,
@@ -58,6 +85,7 @@ class simPlotting:
         filtered_signal = filtfilt(b, a, EEG)
         return filtered_signal
 
+    @staticmethod
     def plotERP(
             data,
             time,
@@ -74,6 +102,7 @@ class simPlotting:
         plt.savefig(save_dir + '_ERP.png')
         print('saved')
 
+    @staticmethod
     def plot_spectrogram(
             data,
             time,
@@ -123,7 +152,7 @@ class simPlotting:
             )
         plt.savefig(save_dir + '_EEGspect.png')
 
-
+    @staticmethod
     def plot_PSD(
             data,
             save_dir,
@@ -162,7 +191,7 @@ class simPlotting:
         plt.plot(F, signal)
         plt.savefig(save_dir + '_PSD.png')
 
-
+    @staticmethod
     def plotPSDSpectrogram(
             sim,
             save_dir,
@@ -254,6 +283,7 @@ class simPlotting:
             plt.tight_layout()
             plt.savefig(save_dir + '_CSDPSDspect.png')
 
+    @staticmethod
     def plotMUApops(
             sim,
             bin_start_times,
@@ -306,6 +336,7 @@ class simPlotting:
         plt.legend(fontsize = 30)
         plt.savefig(save_dir + '_MUA.png')
 
+    @staticmethod
     def plotMeanTraces(sim, cellsPerPop, plotPops, plotFig = True):
         record_pops = [(pop, list(np.arange(0, cellsPerPop))) for pop in plotPops]
         meanV = {}
@@ -343,6 +374,7 @@ class simPlotting:
 
         return meanV
 
+    @staticmethod
     def plotOUheatMap(
             df_path,                    # Data of interest
             save_dir,                   # Path to save figs

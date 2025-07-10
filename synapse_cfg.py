@@ -16,9 +16,7 @@ cfg.sizeX = 5.0  # 400 - This may change depending on electrode radius
 cfg.sizeZ = 200.0
 cfg.scaleDensity = 1.0  # Should be 1.0 unless need lower cell density for test simulation or visualization
 
-
-
-cfg.duration = 30000  # Duration of the sim, in ms
+cfg.duration = 500  # Duration of the sim, in ms
 cfg.dt = 0.05  # Internal Integration Time Step
 cfg.verbose = 0  # Show detailed messages
 cfg.progressBar = 0  # even more detailed message
@@ -250,6 +248,12 @@ cfg.L4L4E = 1.0
 # L3 -> L4 Inhib pops
 cfg.L3L4PV = 1.0
 cfg.L3L4SOM = 1.0
+
+
+cfg.addIClamp = {
+    'holdingCurrent': True,
+    'target_v': -70
+}
 
 cfg.tune = {}
 cfg.update_cfg()
