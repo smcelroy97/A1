@@ -45,7 +45,7 @@ def setdminID (sim, lpop):
   sim.simData['dmaxID'] = {pop:np.amax(dGIDs[pop]) for pop in lpop if len(dGIDs[pop])>0}
   sim.simData['dnumc'] = {pop:np.amax(dGIDs[pop])-np.amin(dGIDs[pop]) for pop in lpop if len(dGIDs[pop])>0}
 
-setdminID(sim, cfg.allpops)
+setdminID(sim, sim.net.pops)
 
 def setCochCellLocationsX (pop, sz, scale):
   # set the cell positions on a line
