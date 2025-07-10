@@ -35,10 +35,11 @@ psp_amps = {}
 
 for file in my_files:
     with open(batch_dir + file, 'rb') as f:
+        print(f'Loading {file}...')
         sim_results = pickle.load(f)
 
     prePop = sim_results['simConfig']['prePop']
-    print(prePop)
+
     # Extract pop, cell type, and sections
     for pop in sim_results['net']['params']['popParams']:
         if '_stim' in pop:
@@ -88,6 +89,7 @@ for file in my_files:
 
 if plot_psp_secs:
     # Set up plotting for all sec traces and psps
+    print('Plotting individual section traces...')
     for pop, prePop_dict in pop_psps.items():
         for prePop, data in prePop_dict.items():
             pop_dir = os.path.join(batch_dir, f'plots/{pop}_plots/{prePop}->{pop}')
@@ -110,6 +112,7 @@ if plot_psp_secs:
                 plt.close()
 
 if plot_avg_vs_secs:
+    print('Plotting average trace and section traces...')
     for pop, prePop_dict in pop_psps.items():
         for prePop, data in prePop_dict.items():
             pop_dir = os.path.join(batch_dir, f'plots/{pop}_plots/{prePop}->{pop}')
@@ -138,6 +141,7 @@ if plot_avg_vs_secs:
             plt.close()
 
 if plot_psp_box:
+    print('Plotting psp box plot')
     for pop, prePop_dict in pop_psps.items():
         for prePop, data in prePop_dict.items():
             pop_dir = os.path.join(batch_dir, f'plots/{pop}_plots/{prePop}->{pop}')
@@ -167,6 +171,7 @@ strip_traces(pop_psps)
 all_pop_psps = comm.gather(pop_psps, root=0)
 
 if save_csv and rank == 0:
+    print('Exporting csv data to .csv...')
     # Merge all dictionaries
     merged_pop_psps = {}
     for d in all_pop_psps:
@@ -176,7 +181,7 @@ if save_csv and rank == 0:
             merged_pop_psps[pop].update(prePop_dict)
 
     with open(f'{batch_dir}pop_psps.csv', 'w', newline='') as csvfile:
-        fieldnames = ['pop', 'prePop', 'syn_type', 'psp', wmat_val]
+        fieldnames = ['pop', 'prePop', 'syn_type', 'psp', 'wmat_val']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
         for pop, prePop_dict in merged_pop_psps.items():  # <-- use merged_pop_psps here
