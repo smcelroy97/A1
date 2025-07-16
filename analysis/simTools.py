@@ -562,8 +562,8 @@ class CellAnalysis:
     def calculate_input_res(start_baseline, V_soma, inj_delay, inj_dur, inj_amp):
 
         end_injection = inj_delay + inj_dur
-        baseline_v = np.mean(V_soma[int(start_baseline):int(inj_delay)])
-        steady_v = V_soma[int(1500/0.05)]
+        baseline_v = np.mean(V_soma[int(start_baseline):int(inj_delay-10000)])
+        steady_v = V_soma[int(1700/0.05)]
         delta_v = steady_v - baseline_v  # mV
         r_in = abs(delta_v) / abs(inj_amp)
         return r_in
@@ -577,7 +577,7 @@ if __name__ == "__main__":
 
     inj_amp = sim_results['simConfig']['addIClamp']['holdingAmp']
     inj_dur = sim_results['simConfig']['addIClamp']['hold_duration']/sim_results['simConfig']['recordStep']
-    start_baseline = 500/sim_results['simConfig']['recordStep']
+    start_baseline = 50/sim_results['simConfig']['recordStep']
     inj_delay = sim_results['simConfig']['addIClamp']['hold_delay']/sim_results['simConfig']['recordStep']
 
     pop_traces = {}
