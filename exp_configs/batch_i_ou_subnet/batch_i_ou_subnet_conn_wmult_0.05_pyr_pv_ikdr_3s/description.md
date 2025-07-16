@@ -1,7 +1,0 @@
-Use OU inputs that provide the target firing rates, obtained from a disconnected surrogate model.
-
-This experiment probes various sets of active pops. with connections between them turned on. Other pops. are surrogate. The goal is to determine where things go wrong between the fully unconnected surrogate model and the fully connected model.
-
-In this version of the experiment, among the cortical pops., only PYR and PV are probed as active. SOM/VIP/NGF are always surrogate.
-
-Conductance of K_DR channels is increased to avoid cell-level multistability.
