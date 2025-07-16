@@ -83,6 +83,8 @@ parser.add_argument('--name', type=str,
                     help="Experiment name (required if not in batch mode).")
 parser.add_argument('--subdir', type=str,
                     help="Subfolder where the exp is located")
+parser.add_argument('--par', type=str,
+                    help="Arbitrary param")
 args, _ = parser.parse_known_args()
 is_batch = args.batch
 
@@ -119,7 +121,10 @@ if is_batch:
 cfg = create_base_cfg()
 
 # Apply experiment-specific config modifications
-cfg_mod.apply_exp_cfg(cfg)
+if args.par is None:
+    cfg_mod.apply_exp_cfg(cfg)
+else:
+    cfg_mod.apply_exp_cfg(cfg, args.par)
 
 if not is_batch:
     # Automatically set the experiment name in config

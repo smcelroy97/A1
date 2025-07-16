@@ -81,6 +81,10 @@ parser.add_argument('--batch', action='store_true',
                     help="Run in batch mode.")
 parser.add_argument('--name', type=str,
                     help="Experiment name (required if not in batch mode).")
+parser.add_argument('--subdir', type=str,
+                    help="Subfolder where the exp is located")
+parser.add_argument('--par', type=str,
+                    help="Arbitrary param")
 args, _ = parser.parse_known_args()
 is_batch = args.batch
 
@@ -105,7 +109,10 @@ if is_batch:
     print(f'>>>> EXP_NAME: {exp_name}', flush=True)
 
 # Import experiment-specific config and batch py-files
-dirpath_exp_cfg = dirpath_self / DIRNAME_EXP_CONFIGS / exp_name
+dirpath_exp_cfg = dirpath_self / DIRNAME_EXP_CONFIGS
+if args.subdir is not None:
+    dirpath_exp_cfg /= args.subdir
+dirpath_exp_cfg /= exp_name
 fpath_exp_cfg = dirpath_exp_cfg / 'exp_cfg.py'
 fpath_exp_batch = dirpath_exp_cfg / 'batch_params.py'
 #print(f'Experiment config: {fpath_exp_cfg}')
@@ -117,7 +124,7 @@ if is_batch:
 cfg = create_base_cfg()
 
 # Apply experiment-specific config modifications
-cfg_mod.apply_exp_cfg(cfg)
+cfg_mod.apply_exp_cfg(cfg, args.par)
 
 if not is_batch:
     # Automatically set the experiment name in config
@@ -144,6 +151,10 @@ if is_batch and hasattr(batch_mod, 'post_update'):
 
 # Create netParams based on the config
 netParams = create_net_params(cfg)
+
+# Experiment-specific modification of netParams
+if hasattr(cfg_mod, 'modify_net_params'):
+    cfg_mod.modify_net_params(cfg, netParams)
 
 # Convert to a subnetwork with some pops. frozen, if needed
 if hasattr(cfg, 'subnet_build_flag') and cfg.subnet_build_flag:
@@ -240,18 +251,22 @@ if need_run:
     # Setup variables to record for each cell (spikes, V traces, etc)
     sim.setupRecording()
     
-    # Run initial time segment with active conns. replaced by surrogate inputs
+    # Run initial time segment
     if comm.is_host():
-        print('Run the initial segment with all surrogate inputs...', flush=True)     
-    subnet_builder.switch_active_conns(turn_on=False, net=sim.net)
+        print('Run the initial segment...', flush=True)     
+    subnet_builder.switch_active_conns(
+        turn_on=False, net=sim.net)   # active conns. replaced by surrogate inputs
+        #turn_on=True, net=sim.net)   # active conns turned on
     T = sim.cfg.duration
-    sim.cfg.duration = 2000
+    sim.cfg.duration = 3000
     sim.runSim()
 
-    # Run the rest of simulation with active conns turned on
+    # Run the rest of simulation
     if comm.is_host():
-        print('Run the rest of simulation with active conns...', flush=True)     
-    subnet_builder.switch_active_conns(turn_on=True, net=sim.net)
+        print('Run the rest of simulation...', flush=True)     
+    subnet_builder.switch_active_conns(
+        turn_on=True, net=sim.net)   # active conns turned on
+        #turn_on=False, net=sim.net)   # active conns. replaced by surrogate inputs
     sim.cfg.duration = T
     sim.run.postRun() #stopTime=T)
 
@@ -283,9 +298,14 @@ if comm.is_host():
         show=False
     )
     
+    # Save average firing rates to a separate json file
     fpath_res = '{}/{}_result.json'.format(cfg.saveFolder, cfg.simLabel)
     with open(fpath_res, 'w') as fid:
         json.dump({'rates': avgRates}, fid, indent=4)
+    
+    # Experiment-specific result processing
+    if hasattr(cfg_mod, 'post_run'):
+        cfg_mod.post_run(sim) 
 
     avgRates['loss'] = 700
     out_json = json.dumps({**inputs, **avgRates})

@@ -28,7 +28,7 @@ def apply_exp_cfg(cfg):
     # Turn on/off bkg inputs
     cfg.addBkgConn = 1
 
-    cfg.pop_main = 'IT3'
+    cfg.pop_main = 'PV3'
 
     # Populations to use
     cfg.pops_active = [cfg.pop_main]
@@ -47,14 +47,14 @@ def apply_exp_cfg(cfg):
     cfg.ou_common = 1    # all pops receive the same OU input
     cfg.ou_noise_duration = cfg.duration
     cfg.ou_tau = 2
-    cfg.OUamp = [-0.02, 0.1]
+    cfg.OUamp = [0, 0.03]
     cfg.oustd_lin = (0.002, 0.2)
     cfg.OUstd = [np.maximum(0, cfg.oustd_lin[0] + cfg.oustd_lin[1] * x)
                  for x in cfg.OUamp]
 
     # NetStim inputs
-    cfg.bkg_r = 200
-    cfg.bkg_w = 2
+    cfg.bkg_r = 75
+    cfg.bkg_w = 0.5
     cfg.bkg_spike_inputs = {pop: {'r': cfg.bkg_r, 'w': cfg.bkg_w}
                             for pop in cfg.pops_active}
     
@@ -86,20 +86,23 @@ def apply_exp_cfg(cfg):
 
     # OU ramp
     #cfg.ou_ramp_dur = None
-    cfg.ou_ramp_dur = 1000
+    #cfg.ou_ramp_dur = 1000
+    cfg.ou_ramp_dur = 200
     cfg.ou_ramp_t0 = 3500
-    cfg.ou_ramp_offset = 1.5
+    cfg.ou_ramp_offset = -10
     cfg.ou_ramp_mult = 0
     cfg.ou_ramp_type = 'up'
 
-    cfg.gkdr_mult = 1.5
+    
+    cfg.gkdr_mult = None
     cfg.mech_changes = {}
+    """ cfg.gkdr_mult = 1.5
     for pop in cfg.pops_active:
         cfg.mech_changes[f'gkdr_{pop}'] = {
             'pop': f'{pop}_reduced', 'sec': 'all',
             'mech': 'kdr', 'par': 'gbar',
             'mult': cfg.gkdr_mult, 'add': 0
-        }
+        } """
 
 
 def modify_net_params(cfg, params):
@@ -150,11 +153,13 @@ def post_run(sim):
     
     # Generate filename postfix with param values
     pop = cfg.pop_main
+    gkdr_str = (f'_gkdr_mult_{cfg.gkdr_mult}'
+                if cfg.gkdr_mult is not None else '')
     postfix = (
         f'{pop}_bkg_{int(cfg.addBkgConn)}'
         f'_ramp_{cfg.ou_ramp_offset:.02f}_{cfg.ou_ramp_mult}'
-        f'_rx_{cfg.bkg_r}_wx_{cfg.bkg_w:.02f}'
-        f'_gkdr_mult_{cfg.gkdr_mult}'
+        f'_rx_{cfg.bkg_r}_wx_{cfg.bkg_w:.02f}' +
+        gkdr_str +
         f'_oustd_{cfg.oustd_lin[0] * 100}_{cfg.oustd_lin[1]}'
     )
 

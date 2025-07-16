@@ -3,11 +3,13 @@ import os
 from pathlib import Path
 import shutil
 
+import numpy as np
+
 
 dirpath_self = Path(__file__).resolve().parent
 
 
-def apply_exp_cfg(cfg):
+def apply_exp_cfg(cfg, par=None):
 
     # Duration
     cfg.duration = 10 * 1e3
@@ -16,9 +18,11 @@ def apply_exp_cfg(cfg):
     cfg.subnet_build_flag = 1
     cfg.subnet_params = {
         'pops_active': [],   # will be set in batch_params.py
-        'conns_frozen': [],
+        #'conns_frozen': [],
+        'conns_frozen': [('ITP4', 'ITP4'), ('ITS4', 'ITS4')],
         #'conns_frozen': 'all',
-        'fpath_frozen_rates': str(dirpath_self / 'frozen_rates.csv')
+        'fpath_frozen_rates': str(dirpath_self / 'frozen_rates.csv'),
+        #'duplicate_active_pops': 1
     }
     cfg.pop_group_active = ''   # batch parameter
 
@@ -38,6 +42,19 @@ def apply_exp_cfg(cfg):
     #cfg.analysis['plotSpikeStats']['timeRange'] = [cfg.duration - 1000, cfg.duration]
     cfg.analysis['plotSpikeStats'] = False
 
+    # Record voltage traces
+    """ cfg.recordCells = [('PV3', list(np.arange(10)))]
+    cfg.recordTraces = {
+        'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'}
+    }
+    cfg.recordStep = 0.1
+    cfg.analysis['plotTraces'] = {
+        'include': cfg.recordCells,
+        'timeRange': [0, cfg.duration],
+        'oneFigPer': 'cell', 'overlay': False,
+        'saveFig': True, 'showFig': False, 'figSize': (18, 12)
+    } """
+
     gkdr_mults = {'IT2': 1.5, 'IT3': 1.5, 'ITP4': 3, 'IT5A': 3, 'IT5B': 3,
                   'CT5A': 3, 'CT5B': 3, 'IT6': 3, 'CT6': 3}
     cfg.mech_changes = {}
@@ -51,10 +68,11 @@ def apply_exp_cfg(cfg):
     # Initial OU ramp
     cfg.ou_ramp_dur = 1000
     cfg.ou_ramp_offset = -1
+    #cfg.ou_ramp_offset = 0
     cfg.ou_ramp_mult = 1
 
     # Experiment subname
-    exp_name_sub = '5_IT_PV'
+    exp_name_sub = '2D'
     if cfg.subnet_params['conns_frozen'] == 'all':
         exp_name_sub += '_unconn'
     if cfg.ou_ramp_offset == 0:
@@ -94,7 +112,7 @@ def post_run(sim):
     dirpath_res = Path(cfg.saveFolder)
     dirpath_res_sub = dirpath_res / cfg.exp_name_sub
     os.makedirs(dirpath_res_sub, exist_ok=True)
-    dirnames_sub = ['rasters', 'results', 'cfg']
+    dirnames_sub = ['rasters', 'results', 'cfg', 'traces']
     for dirname in dirnames_sub:
         os.makedirs(dirpath_res_sub / dirname, exist_ok=True)
 
@@ -113,3 +131,9 @@ def post_run(sim):
     fpath_old = dirpath_res / f'{exp_name}_cfg.json'
     fpath_new = dirpath_res_sub / 'cfg' / f'cfg_{postfix}.json'
     shutil.copy(fpath_old, fpath_new)
+
+    # Move traces to a subfolder
+    trace_files = list(dirpath_res.glob("*_traces*"))
+    for fpath_old in trace_files:
+        fpath_new = dirpath_res_sub / 'traces' / fpath_old.name
+        fpath_old.rename(fpath_new)
