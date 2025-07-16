@@ -556,6 +556,40 @@ class editNet:
         print(str(pctL6) + '% of TC Conns are from CT6')
 
 
+class CellAnalysis:
+
+    @staticmethod
+    def calculate_input_res(start_baseline, V_soma, inj_delay, inj_dur, inj_amp):
+
+        end_injection = inj_delay + inj_dur
+        baseline_v = np.mean(V_soma[int(start_baseline):int(inj_delay)])
+        steady_v = V_soma[int(1500/0.05)]
+        delta_v = steady_v - baseline_v  # mV
+        r_in = abs(delta_v) / abs(inj_amp)
+        return r_in
+
+
+if __name__ == "__main__":
+    import pickle
+
+    with open('../simOutput/input_res_0/input_res_0_data.pkl', 'rb') as f:
+        sim_results = pickle.load(f)
+
+    inj_amp = sim_results['simConfig']['addIClamp']['holdingAmp']
+    inj_dur = sim_results['simConfig']['addIClamp']['hold_duration']/sim_results['simConfig']['recordStep']
+    start_baseline = 500/sim_results['simConfig']['recordStep']
+    inj_delay = sim_results['simConfig']['addIClamp']['hold_delay']/sim_results['simConfig']['recordStep']
+
+    pop_traces = {}
+    for cell in sim_results['net']['cells']:
+        for idx, trace in enumerate(sim_results['simData']['V_soma']):
+            if idx == cell.gid:
+                pop_traces[cell['tags']['pop']] = sim_results['simData']['V_soma'][trace]
+
+    pop_rins = {}
+    for pop in pop_traces:
+        pop_rins[pop] = CellAnalysis.calculate_input_res(start_baseline, pop_traces[pop], inj_delay, inj_dur, inj_amp)
+
 ################## Scrap for resampling if needed later ##################################################
 '''
 # num_samples = len(stim_data)

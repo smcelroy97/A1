@@ -95,7 +95,7 @@ cfg.gatherOnlySimData = False
 cfg.saveCellSecs = False
 cfg.saveCellConns = True
 cfg.addNoiseIClamp = False
-cfg.add_gain = True
+cfg.add_gain = False
 # ------------------------------------------------------------------------------
 # Analysis and plotting
 # ------------------------------------------------------------------------------
@@ -248,12 +248,6 @@ cfg.L4L4E = 1.0
 # L3 -> L4 Inhib pops
 cfg.L3L4PV = 1.0
 cfg.L3L4SOM = 1.0
-
-
-cfg.addIClamp = {
-    'holdingCurrent': True,
-    'target_v': -70
-}
 
 cfg.tune = {}
 cfg.update_cfg()

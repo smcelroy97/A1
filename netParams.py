@@ -358,6 +358,7 @@ def wireCortex():
 
 
 if cfg.addConn and cfg.wireCortex:
+    print('wiring ctx')
     wireCortex()
 
 # ------------------------------------------------------------------------------
@@ -407,7 +408,7 @@ def wireThal():
                     'preConds': {'pop': pre},
                     'postConds': {'pop': post},
                     'synMech': syn,
-                    'probability': prob,
+                    'probability': 100,
                     'weight': wmat[pre][post] * gain,
                     'synMechWeightFactor': synWeightFactor,
                     'delay': 'defaultDelay+dist_3D/propVelocity',
@@ -416,6 +417,7 @@ def wireThal():
 
 
 if cfg.addConn and cfg.addIntraThalamicConn:
+    print('adding intrathal')
     wireThal()
 
 
@@ -793,31 +795,32 @@ if cfg.addIClamp:
                     'loc': 0.5
                 }
 
-if cfg.addIClamp['holdingCurrent']:
-    for pop in cfg.addIClamp['includePops']:
-        key = f'IClamp_holding_{pop}'
+    if cfg.addIClamp['holdingCurrent']:
+        for pop in cfg.addIClamp['includePops']:
+            key = f'IClamp_holding_{pop}'
 
-        netParams.stimSourceParams[key] = {
-            'type': 'IClamp',
-            'delay': 0,
-            'dur': cfg.duration,
-            'amp': cfg.addIClamp['holdingAmp']
-        }
+            netParams.stimSourceParams[key] = {
+                'type': 'IClamp',
+                'delay': cfg.addIClamp['hold_delay'],
+                'dur': cfg.addIClamp['hold_duration'],
+                'amp': cfg.addIClamp['holdingAmp']
+            }
 
-        netParams.stimTargetParams[key] = {
-            'source': key,
-            'conds': {'pop': pop},
-            'sec': 'soma',
-            'loc': 0.5
-        }
+            netParams.stimTargetParams[key] = {
+                'source': key,
+                'conds': {'pop': pop},
+                'sec': 'soma',
+                'loc': 0.5
+            }
 
 if cfg.addNoiseConductance:
     with open('data/inputResistances.json', 'rb') as f:
+    # with open('simOutput/input_res_0/input_res_vals.json', 'rb') as f:
         inpRes = json.load(f)
 
     netParams.NoiseConductanceParams = {}
     for pop in cfg.allpops:
-        Gin = 1 / (inpRes[pop]*1000)
+        Gin = 1 / inpRes[pop]
         g0 = (cfg.OUamp / 100) * Gin
         sigma = (cfg.OUstd / 100) * Gin
         # print('pop is: '  + pop + ' Input resistance is: ' + str(inpRes[pop]) + ' input conductance is: ' + str(Gin) + '   g0 is:  ' + str(g0))

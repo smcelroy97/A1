@@ -38,7 +38,7 @@ cfg.cache_efficient = True
 # cfg.printRunTime = 0.1  			## specified above
 cfg.oneSynPerNetcon = False
 cfg.includeParamsLabel = False
-# cfg.printPopAvgRates = [1000, 2000]  # "printPopAvgRates": [[1500,1750],[1750,2000],[2000,2250],[2250,2500]]
+cfg.printPopAvgRates = [0, cfg.duration]  # "printPopAvgRates": [[1500,1750],[1750,2000],[2000,2250],[2250,2500]]
 cfg.validateNetParams = False
 
 # ------------------------------------------------------------------------------
@@ -47,7 +47,7 @@ cfg.validateNetParams = False
 cfg.allpops = ['NGF1', 'IT2', 'SOM2', 'PV2', 'VIP2', 'NGF2', 'IT3', 'SOM3', 'PV3', 'VIP3', 'NGF3', 'ITP4', 'ITS4',
                'SOM4', 'PV4', 'VIP4', 'NGF4', 'IT5A', 'CT5A', 'SOM5A', 'PV5A', 'VIP5A', 'NGF5A', 'IT5B', 'CT5B', 'PT5B',
                'SOM5B', 'PV5B', 'VIP5B', 'NGF5B', 'IT6', 'CT6', 'SOM6', 'PV6', 'VIP6', 'NGF6', 'TC', 'TCM', 'HTC',
-               'IRE', 'IREM', 'TI', 'TIM', 'cochlea']
+               'IRE', 'IREM', 'TI', 'TIM']
 
 cfg.allCorticalPops = ['NGF1', 'IT2', 'SOM2', 'PV2', 'VIP2', 'NGF2', 'IT3', 'SOM3', 'PV3', 'VIP3', 'NGF3', 'ITP4',
                        'ITS4', 'SOM4', 'PV4', 'VIP4', 'NGF4', 'IT5A', 'CT5A', 'SOM5A', 'PV5A', 'VIP5A', 'NGF5A', 'IT5B',
@@ -69,7 +69,7 @@ cfg.TEpops = ['TC', 'TCM', 'HTC']
 
 cfg.TIpops = ['IRE', 'IREM', 'TI', 'TIM']
 
-cfg.pops_active = False # ['IT2', 'ITP4', 'ITS4', 'PV4', 'VIP4', 'NGF4', 'IRE', 'IREM', 'TI', 'TIM']
+cfg.pops_active = False # cfg.allThalPops
 
 if cfg.pops_active:
     cfg.allpops = cfg.pops_active
@@ -84,14 +84,14 @@ cfg.recordStim = False  # Seen in M1 cfg.py
 cfg.recordTime = True  # SEen in M1 cfg.py
 cfg.recordStep = 0.05  # St ep size (in ms) to save data -- value from M1 cfg.py
 
-cfg.recordLFP =[[100, y, 100] for y in range(0, 2000, 100)]
-cfg.recordDipole = True
+# cfg.recordLFP =[[100, y, 100] for y in range(0, 2000, 100)]
+# cfg.recordDipole = True
 
 # ------------------------------------------------------------------------------
 # Savingx
 # ------------------------------------------------------------------------------
 
-cfg.simLabel = 'GABABTrace_test'
+cfg.simLabel = 'old_rin_vals'
 cfg.saveFolder = 'simOutput/' + cfg.simLabel  # Set file output name
 cfg.savePickle = True  # Save pkl file
 cfg.saveJson = False  # Save json file
@@ -178,9 +178,9 @@ for key, value in cfgLoad.items():
     setattr(cfg, key, value)
 
 # These values taken from M1 cfg (https://github.com/Neurosim-lab/netpyne/bflob/development/examples/M1detailed/cfg.py)
-cfg.singleCellPops = False
+cfg.singleCellPops = True
 cfg.reducedPop = False  # insert number to declare specific number of populations, if going for full model set to False
-cfg.singlePop = 'IT2'
+cfg.singlePop = ''
 cfg.removeWeightNorm = False
 cfg.scale = 1.0  # Is this what should be used?
 cfg.sizeY = 2000.0  # 1350.0 in M1_detailed # should this be set to 2000 since that is the full height of the column?
@@ -193,7 +193,7 @@ cfg.scaleDensity = 1.0  # Should be 1.0 unless need lower cell density for test 
 # ------------------------------------------------------------------------------
 
 # Cortical
-cfg.addConn = 1.0
+cfg.addConn = 0
 cfg.addSubConn = 1.0
 cfg.wireCortex = 1.0
 
@@ -294,7 +294,7 @@ cfg.seeds = {'conn': 23451, 'stim': 1, 'loc': 1}
 # ------------------------------------------------------------------------------
 # Background inputs
 # ------------------------------------------------------------------------------
-cfg.addBkgConn = 1.0
+cfg.addBkgConn = 0
 cfg.noiseBkg = 1.0  # firing rate random noise
 cfg.delayBkg = 5.0  # (ms)
 cfg.startBkg = 0  # start at 0 ms
@@ -307,7 +307,7 @@ cfg.BkgCtxIGain = 0.8285714285714285
 
 cfg.NGF6bkgGain = 1.0
 
-cfg.cochlearThalInput = True
+cfg.cochlearThalInput = False
 # parameters to generate realistic  auditory thalamic inputs using Brian Hears
 
 
@@ -336,12 +336,10 @@ cfg.addIClamp = {
     'injectionDuration': 1000,
     'injectionAmplitudes': np.linspace(0.0, 0.6, 13),
     'holdingCurrent': False,
-    'includePops': ['IRE', 'IREM', 'TI', 'TIM', 'TC', 'TCM', 'HTC',
-                    'SOM2', 'VIP2', 'SOM3', 'VIP3', 'SOM4', 'VIP4',
-                    'SOM5A', 'VIP5A', 'SOM5B', 'VIP5B', 'SOM6', 'VIP6',
-                    'TC', 'TCM', 'HTC'],
-    'holdingAmp': -0.0575
-
+    'includePops': [cfg.allpops],
+    'holdingAmp': -0.075,
+    'hold_duration': 1000,
+    'hold_delay' : 1000
 }
 
 cfg.addNoiseIClamp = 0
@@ -351,9 +349,9 @@ cfg.addNoiseIClamp = 0
 # Background conductance inputs
 # ------------------------------------------------------------------------------
 
-cfg.addNoiseConductance = 0
-cfg.OUamp = 0.5 # 200 # 0.05
-cfg.OUstd = 0.05
+cfg.addNoiseConductance = True
+cfg.OUamp = 40
+cfg.OUstd = 10
 cfg.NoiseConductanceDur = cfg.duration
 
 # ------------------------------------------------------------------------------

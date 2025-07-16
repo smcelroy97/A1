@@ -377,7 +377,6 @@ for post in preWeights:
                     popGain = 1.0
                 if sec_name != 'axon':
                     sec_delay += 5000
-
                     netParams.connParams[stimName + '_' + post + '_' + sec_name] = {
                         'preConds': {'pop': stimName},
                         'postConds': {'pop': post},
@@ -388,32 +387,3 @@ for post in preWeights:
                         'synsPerConn': 1,
                         'delay': sec_delay
                     }
-
-if cfg.addIClamp['holdingCurrent']:
-
-    with open('data/inputResistances.json', 'rb') as f:
-        rin_dict = json.load(f)
-
-    with open('data/rmpPops.json', 'rb') as f:
-        rmp_dict = json.load(f)
-
-
-    for pop in cfg.allpops:
-        key = f'IClamp_holding_{pop}'
-
-        rin = rin_dict[pop]
-        i_hold = ((cfg.addIClamp['target_v']-(-80))/rin)
-
-        netParams.stimSourceParams[key] = {
-            'type': 'IClamp',
-            'delay': 0,
-            'dur': cfg.duration,
-            'amp': i_hold
-        }
-
-        netParams.stimTargetParams[key] = {
-            'source': key,
-            'conds': {'pop': pop},
-            'sec': 'soma',
-            'loc': 0.5
-        }

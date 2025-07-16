@@ -47,57 +47,77 @@ if sim.cfg.addNoiseIClamp:
   sim, vecs_dict = BS.addStim.addNoiseIClamp(sim)
 
 sim.setupRecording()              			# setup variables to record for each cell (spikes, V traces, etc)
-# sim.runSim()                                    # run parallel Neuron simulation
-#
-# trace_analysis = {}
-#
-# plotPops = []
-# for cell in sim.net.cells:
-#     for conn in cell.conns:
-#         if conn['weight'] >0:
-#             if cell.tags['pop'] not in plotPops:
-#                 plotPops.append(cell.tags['pop'])
-#
-# sim.gatherData()
-# sim.saveData()
-# sim.analysis.plotData()    # plot spike raster etc
-#
-#
-#
-#
-# basemV = {}
-# amp = {}
-# peak = {}
-#
-# for pop in trace_analysis:
-#     basemV[pop] = trace_analysis[pop][0]
-#     if cfg.prePop in cfg.Epops + cfg.TEpops:
-#         peak_idx = np.array(trace_analysis[pop]).argmax()
-#     else:
-#         peak_idx = np.array(trace_analysis[pop]).argmin()
-#     peak[pop] = trace_analysis[pop][peak_idx]
-#     amp[pop]  = peak[pop] - basemV[pop]
-#
-#
-# dummy = [1,2,3]
-# # Terminate batch process
-# if comm.is_host():
-#   netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
-#   print('transmitting data...')
-#   inputs = specs.get_mappings()
-#   # results = sim.analysis.popAvgRates(show=False)
-#   # results['loss'] = results[cfg.prePop + '_stim']
-#   results = amp
-#   # for pop in trace_analysis:
-#   #   results[pop]['basemV'] = basemV[pop]
-#   #   results[pop]['peak'] = peak[pop]
-#   #   results[pop]['amp'] = amp[pop]
-#   results['loss'] = 700
-#   out_json = json.dumps({**inputs, **results})
-#
-#   print(out_json)
-#
-#   comm.send(out_json)
-#   comm.close()
-#
-# sim.close()
+
+
+# For each cell:
+with open('data/input_res_vals.json', 'rb') as f:
+    rin_vals = json.load(f)
+
+with open('data/rmp_pops_no_input.json', 'rb') as f:
+    rmp_vals = json.load(f)
+
+target_mv = -75
+
+for popName1 in cfg.allpops:
+    rin = rin_vals[popName1]
+    v_init = rmp_vals[popName1]
+    holding_current = (target_mv - v_init) / rin
+
+    netParams.stimSourceParams['Input_'+popName1] = {'type': 'IClamp', 'del': 0, 'dur': cfg.duration, 'amp': holding_current}
+    netParams.stimTargetParams['Input->'+popName1] = {'source': 'Input_'+popName1, 'sec': 'soma', 'loc': 0.5, 'conds': {'pop':popName1}}
+
+
+sim.runSim()                                    # run parallel Neuron simulation
+
+trace_analysis = {}
+
+plotPops = []
+for cell in sim.net.cells:
+    for conn in cell.conns:
+        if conn['weight'] >0:
+            if cell.tags['pop'] not in plotPops:
+                plotPops.append(cell.tags['pop'])
+
+sim.gatherData()
+sim.saveData()
+sim.analysis.plotData()    # plot spike raster etc
+
+
+
+
+basemV = {}
+amp = {}
+peak = {}
+
+for pop in trace_analysis:
+    basemV[pop] = trace_analysis[pop][0]
+    if cfg.prePop in cfg.Epops + cfg.TEpops:
+        peak_idx = np.array(trace_analysis[pop]).argmax()
+    else:
+        peak_idx = np.array(trace_analysis[pop]).argmin()
+    peak[pop] = trace_analysis[pop][peak_idx]
+    amp[pop]  = peak[pop] - basemV[pop]
+
+
+dummy = [1,2,3]
+# Terminate batch process
+if comm.is_host():
+  netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
+  print('transmitting data...')
+  inputs = specs.get_mappings()
+  # results = sim.analysis.popAvgRates(show=False)
+  # results['loss'] = results[cfg.prePop + '_stim']
+  results = amp
+  # for pop in trace_analysis:
+  #   results[pop]['basemV'] = basemV[pop]
+  #   results[pop]['peak'] = peak[pop]
+  #   results[pop]['amp'] = amp[pop]
+  results['loss'] = 700
+  out_json = json.dumps({**inputs, **results})
+
+  print(out_json)
+
+  comm.send(out_json)
+  comm.close()
+
+sim.close()
