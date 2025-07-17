@@ -7,7 +7,7 @@ import csv
 from mpi4py import MPI
 import pickle
 
-batch_dir = '../simOutput/v45_batch24/'
+batch_dir = '../simOutput/v45_batch25/'
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
@@ -97,6 +97,8 @@ if plot_psp_secs:
             traces = []
             times = None
             for sec_name, sec_data in data['secs'].items():
+                print(sec_name)
+                print(prePop)
                 trace = sec_data['trace']
                 dt = sim_results['simConfig']['dt']
                 if times is None:

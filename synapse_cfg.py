@@ -16,7 +16,7 @@ cfg.sizeX = 5.0  # 400 - This may change depending on electrode radius
 cfg.sizeZ = 200.0
 cfg.scaleDensity = 1.0  # Should be 1.0 unless need lower cell density for test simulation or visualization
 
-cfg.duration = 500  # Duration of the sim, in ms
+cfg.duration = 30000  # Duration of the sim, in ms
 cfg.dt = 0.05  # Internal Integration Time Step
 cfg.verbose = 0  # Show detailed messages
 cfg.progressBar = 0  # even more detailed message
@@ -95,7 +95,7 @@ cfg.gatherOnlySimData = False
 cfg.saveCellSecs = False
 cfg.saveCellConns = True
 cfg.addNoiseIClamp = False
-cfg.add_gain = False
+cfg.add_gain = True
 # ------------------------------------------------------------------------------
 # Analysis and plotting
 # ------------------------------------------------------------------------------

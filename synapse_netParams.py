@@ -387,3 +387,21 @@ for post in preWeights:
                         'synsPerConn': 1,
                         'delay': sec_delay
                     }
+# For each cell:
+with open('data/input_res_vals.json', 'rb') as f:
+    rin_vals = json.load(f)
+
+with open('data/rmp_pops_no_input.json', 'rb') as f:
+    rmp_vals = json.load(f)
+
+target_mv = -75
+
+for popName1 in cfg.allpops:
+    rin = rin_vals[popName1]
+    v_init = rmp_vals[popName1]
+    holding_current = (target_mv - v_init) / rin
+
+    netParams.stimSourceParams['Input_'+popName1] = {'type': 'IClamp', 'del': 0, 'dur': cfg.duration, 'amp': holding_current}
+    netParams.stimTargetParams['Input->'+popName1] = {'source': 'Input_'+popName1, 'sec': 'soma', 'loc': 0.5, 'conds': {'pop':popName1}}
+
+
