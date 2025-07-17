@@ -4,12 +4,15 @@ cfg.py
 Simulation configuration for A1 model (using NetPyNE)
 This file has sim configs as well as specification for parameterized values in netParams.py
 
-Contributors: ericaygriffith@gmail.com, salvadordura@gmail.com, samnemo@gmail.com
+Contributors: @gmail.com
 """
+
 from netpyne.batchtools import specs
 import pickle
 import json
 import numpy as np
+
+## cfg
 
 cfg = specs.SimConfig()
 
@@ -22,11 +25,12 @@ cfg = specs.SimConfig()
 # ------------------------------------------------------------------------------
 # Run parameters
 # ------------------------------------------------------------------------------
-cfg.duration = 3500  # Duration of the sim, in ms
+cfg.duration = 5000  # Duration of the sim, in ms
 cfg.dt = 0.025   # 0.025  # Internal Integration Time Step
-cfg.verbose = 0  # Show detailed messages
-cfg.progressBar = 0  # even more detailed message
-cfg.hParams['celsius'] = 37
+cfg.seeds = {'cell': 4322, 'conn': 4322, 'stim': 4322, 'loc': 4322}
+cfg.hParams = {'celsius': 34, 'v_init': -65}
+cfg.verbose = False  # Show detailed messages
+cfg.progressBar = False  # even more detailed message
 cfg.createNEURONObj = 1
 cfg.createPyStruct = 1
 cfg.printRunTime = 0.1
@@ -38,7 +42,7 @@ cfg.cache_efficient = True
 # cfg.printRunTime = 0.1  			## specified above
 cfg.oneSynPerNetcon = False
 cfg.includeParamsLabel = False
-cfg.printPopAvgRates = [0, cfg.duration]  # "printPopAvgRates": [[1500,1750],[1750,2000],[2000,2250],[2250,2500]]
+cfg.printPopAvgRates = [1000, 5000]  # "printPopAvgRates": [[1500,1750],[1750,2000],[2000,2250],[2250,2500]]
 cfg.validateNetParams = False
 
 # ------------------------------------------------------------------------------
@@ -46,8 +50,8 @@ cfg.validateNetParams = False
 # ------------------------------------------------------------------------------
 cfg.allpops = ['NGF1', 'IT2', 'SOM2', 'PV2', 'VIP2', 'NGF2', 'IT3', 'SOM3', 'PV3', 'VIP3', 'NGF3', 'ITP4', 'ITS4',
                'SOM4', 'PV4', 'VIP4', 'NGF4', 'IT5A', 'CT5A', 'SOM5A', 'PV5A', 'VIP5A', 'NGF5A', 'IT5B', 'CT5B', 'PT5B',
-               'SOM5B', 'PV5B', 'VIP5B', 'NGF5B', 'IT6', 'CT6', 'SOM6', 'PV6', 'VIP6', 'NGF6', 'TC', 'TCM', 'HTC',
-               'IRE', 'IREM', 'TI', 'TIM']
+               'SOM5B', 'PV5B', 'VIP5B', 'NGF5B', 'IT6', 'CT6', 'SOM6', 'PV6', 'VIP6', 'NGF6',
+               'IRE', 'IREM', 'TI', 'TIM', 'cochlea']
 
 cfg.allCorticalPops = ['NGF1', 'IT2', 'SOM2', 'PV2', 'VIP2', 'NGF2', 'IT3', 'SOM3', 'PV3', 'VIP3', 'NGF3', 'ITP4',
                        'ITS4', 'SOM4', 'PV4', 'VIP4', 'NGF4', 'IT5A', 'CT5A', 'SOM5A', 'PV5A', 'VIP5A', 'NGF5A', 'IT5B',
@@ -69,7 +73,7 @@ cfg.TEpops = ['TC', 'TCM', 'HTC']
 
 cfg.TIpops = ['IRE', 'IREM', 'TI', 'TIM']
 
-cfg.pops_active = False # cfg.allThalPops
+cfg.pops_active = False # ['IT2', 'ITP4', 'ITS4', 'PV4', 'VIP4', 'NGF4', 'IRE', 'IREM', 'TI', 'TIM']
 
 if cfg.pops_active:
     cfg.allpops = cfg.pops_active
@@ -77,21 +81,19 @@ if cfg.pops_active:
 # Dict with traces to record -- taken from M1 cfg.py
 cfg.recordTraces = {'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'},
                     # 'g_NMDA': {'sec': 'soma', 'loc': 0.5, 'synMech': 'NMDA', 'var': 'g'},
-                    'i_GABAB': {'sec': 'soma', 'loc': 0.5, 'synMech': 'GABAB', 'var': 'i'}
+                    # 'i_GABAB': {'sec': 'soma', 'loc': 0.5, 'synMech': 'GABAB', 'var': 'i'}
                     }
 
 cfg.recordStim = False  # Seen in M1 cfg.py
 cfg.recordTime = True  # SEen in M1 cfg.py
 cfg.recordStep = 0.05  # St ep size (in ms) to save data -- value from M1 cfg.py
 
-# cfg.recordLFP =[[100, y, 100] for y in range(0, 2000, 100)]
-# cfg.recordDipole = True
 
 # ------------------------------------------------------------------------------
 # Savingx
 # ------------------------------------------------------------------------------
 
-cfg.simLabel = 'old_rin_vals'
+cfg.simLabel = 'New_fb_test'
 cfg.saveFolder = 'simOutput/' + cfg.simLabel  # Set file output name
 cfg.savePickle = True  # Save pkl file
 cfg.saveJson = False  # Save json file
@@ -105,95 +107,40 @@ cfg.saveCellConns = False
 # Analysis and plotting
 # ------------------------------------------------------------------------------
 
-cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig': False, 'orderInverse': True, 'figSize': (25, 25),
-                              'markerSize': 1, 'oneFigPer': 'trace'}   # Plot a raster
+cfg.analysis['plotRaster'] = {'include': cfg.allCorticalPops, 'timeRange': [0, cfg.duration], 'saveFig': True, 'showFig': False, 'orderInverse': True, 'figSize': (24, 12), 'popRates': False,
+                              'markerSize': 4}   # Plot a raster
 
-# cfg.analysis['plotSpikeStats'] = {'stats' : ['isicv'], 'saveFig' : True}
-
-# cfg.analysis['plotTraces'] = {'include': cfg.allpops, 'timeRange': [0, cfg.duration],
-# 'oneFigPer': 'cell', 'overlay': True, 'saveFig': False, 'showFig': False, 'figSize':(12,8)}
-
-
-def setplotTraces(ncell=50, linclude=cfg.allpops, timeRange=cfg.duration):
-    pops = []
-    for pop in linclude:
-        for i in range(ncell):
-            pops.append((pop, i))
-    cfg.analysis['plotTraces'] = {'include': linclude, 'timeRange': timeRange, 'oneFigPer': 'trace', 'overlay': True, 'saveFig': False, 'showFig': False, 'figSize': (12, 8)}
-
-
-setplotTraces(ncell=1, timeRange=[1750, 3000])
-
-layer_bounds = {'L1': 100, 'L2': 160, 'L3': 950, 'L4': 1250, 'L5A': 1334, 'L5B': 1550, 'L6': 2000}
-
-
-# ------------------------------------------------------------------------------
-
-cfg.weightNormThreshold = 5.0  # maximum weight normalization factor with respect to the soma
-cfg.weightNormScaling = {'NGF_reduced': 1.0, 'ITS4_reduced': 1.0}
-cfg.ihGbar = 1.0
-cfg.KgbarFactor = 1.0
-
-# ------------------------------------------------------------------------------
-# Synapses
-# ------------------------------------------------------------------------------
-
-
-# General Synaptic Parameters
-cfg.synWeightFractionEE = [0.5, 0.5]  # E->E AMPA to NMDA ratio
-cfg.synWeightFractionEI = [0.5, 0.5]  # E->I AMPA to NMDA ratio
-cfg.synWeightFractionIE = [0.9, 0.1]
-cfg.synWeightFractionII = [1.0]
-
-cfg.synWeightFractionEI_CustomCort = [0.5, 0.5]  # E->I AMPA to NMDA ratio custom for cortex NMDA manipulation
-
-# SST Synapses
-cfg.synWeightFractionSOME = [0.9, 0.2]  # SOM -> E GABAASlow to GABAB ratio
-cfg.synWeightFractionSOMI = [0.9, 0.1]  # SOM -> I GABAASlow to GABAB ratio
-
-# NGF synapses
-cfg.synWeightFractionNGF = [0.5, 0.9]  # NGF GABAA to GABAB ratio
-cfg.synWeightFractionNGFE = [0.5, 1.0]
-cfg.synWeightFractionNGFI = [1.0]
-cfg.synWeightFractionENGF = [0.834, 0.166]  # NGF AMPA to NMDA ratio
-
-cfg.useHScale = False
-
-# Thalamic Synaptic Parameters
-cfg.synWeightFractionThalIE = [0.9, 0.2]
-cfg.synWeightFractionThalII = [1.0, 0.0]
-cfg.synWeightFractionThalCtxII = [1.0]
-cfg.synWeightFractionThalCtxIE = [1.0, 0.0]
+cfg.analysis['plotTraces'] = {'include': cfg.allCorticalPops, 'timeRange': [0, cfg.duration], 'oneFigPer': 'trace', 'overlay': True, 'saveFig': False, 'showFig': False, 'figSize':(12,6)}
 
 # ------------------------------------------------------------------------------
 # Network
 # ------------------------------------------------------------------------------
 
 # Insert params from previous tuning
-# Insert params from previous tuning
-with open('data/initCfg.json', 'rb') as f:
-    cfgLoad = json.load(f)
+# with open('data/initCfg.json', 'rb') as f:
+#     cfgLoad = json.load(f)
 
-for key, value in cfgLoad.items():
-    setattr(cfg, key, value)
+# for key, value in cfgLoad.items():
+#     setattr(cfg, key, value)
 
 # These values taken from M1 cfg (https://github.com/Neurosim-lab/netpyne/bflob/development/examples/M1detailed/cfg.py)
+
 cfg.singleCellPops = True
-cfg.reducedPop = False  # insert number to declare specific number of populations, if going for full model set to False
-cfg.singlePop = ''
-cfg.removeWeightNorm = False
+
+
 cfg.scale = 1.0  # Is this what should be used?
 cfg.sizeY = 2000.0  # 1350.0 in M1_detailed # should this be set to 2000 since that is the full height of the column?
 cfg.sizeX = 200.0  # 400 - This may change depending on electrode radius
 cfg.sizeZ = 200.0
 cfg.scaleDensity = 1.0  # Should be 1.0 unless need lower cell density for test simulation or visualization
 
+
 # ------------------------------------------------------------------------------
 # Connectivity
 # ------------------------------------------------------------------------------
 
 # Cortical
-cfg.addConn = 0
+cfg.addConn = 1.0
 cfg.addSubConn = 1.0
 cfg.wireCortex = 1.0
 
@@ -290,74 +237,11 @@ with open('conn/conn.pkl', 'rb') as fileObj:
     connData = pickle.load(fileObj)
 cfg.wmat = connData['wmat']
 
-cfg.seeds = {'conn': 23451, 'stim': 1, 'loc': 1}
 # ------------------------------------------------------------------------------
-# Background inputs
-# ------------------------------------------------------------------------------
-cfg.addBkgConn = 0
-cfg.noiseBkg = 1.0  # firing rate random noise
-cfg.delayBkg = 5.0  # (ms)
-cfg.startBkg = 0  # start at 0 ms
-cfg.rateBkg = {'exc': 40, 'inh': 40}
-
-cfg.EbkgThalamicGain = 1.04528
-cfg.IbkgThalamicGain = 0.485714
-cfg.BkgCtxEGain = 1.4285714285714286
-cfg.BkgCtxIGain = 0.8285714285714285
-
-cfg.NGF6bkgGain = 1.0
-
-cfg.cochlearThalInput = False
-# parameters to generate realistic  auditory thalamic inputs using Brian Hears
-
-
-if cfg.cochlearThalInput:
-    cfg.cochlearThalInput = {"lonset": [0], "numCenterFreqs": 100, "freqRange": [125, 20000], "loudnessScale": 1,
-                             "lfnwave": ["wav/9kHzClick_624ISI_2sDelay_6.5s.wav"]}
-    cfg.cochlearThalInput['probECore'] = cfg.cochThalprobECore
-    cfg.cochlearThalInput['weightECore'] = cfg.cochThalweightECore
-    cfg.cochlearThalInput['probICore'] = cfg.cochThalprobICore
-    cfg.cochlearThalInput['weightICore'] = cfg.cochThalweightICore
-    cfg.cochlearThalInput['weightEMatrix'] = cfg.cochthalweightEMatrix
-    cfg.cochlearThalInput['weightIMatrix'] = cfg.cochthalweightIMatrix
-    cfg.cochlearThalInput['probEMatrix'] = cfg.cochThalprobEMatrix
-    cfg.cochlearThalInput['probIMatrix'] = cfg.cochThalprobIMatrix
-    cfg.cochlearThalInput['MatrixCoreFactor'] = cfg.cochThalMatrixCoreFactor
-
-# ------------------------------------------------------------------------------
-# Current inputs
-# ------------------------------------------------------------------------------
-# The way this is set up now is to make F-I curves for each population but can be used for other purposes
-# Just needs to be modified for the specific use
-cfg.addIClamp = {
-    'FIcurve': False,
-    'numInjections': 13,
-    'injectionInterval': 3000,
-    'injectionDuration': 1000,
-    'injectionAmplitudes': np.linspace(0.0, 0.6, 13),
-    'holdingCurrent': False,
-    'includePops': [cfg.allpops],
-    'holdingAmp': -0.075,
-    'hold_duration': 1000,
-    'hold_delay' : 1000
-}
-
-cfg.addNoiseIClamp = 0
-
-
-# ------------------------------------------------------------------------------
-# Background conductance inputs
+# background
 # ------------------------------------------------------------------------------
 
-cfg.addNoiseConductance = True
-cfg.OUamp = 40
-cfg.OUstd = 10
-cfg.NoiseConductanceDur = cfg.duration
-
-# ------------------------------------------------------------------------------
-# NetStim inputs
-# ------------------------------------------------------------------------------
-cfg.addNetStim = 0
+cfg.background_Exc = 50.0  # = synperNeuronStimE[post]
 
 cfg.tune = {}
 cfg.update_cfg()

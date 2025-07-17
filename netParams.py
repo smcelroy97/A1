@@ -3,21 +3,25 @@ netParams.py
 
 High-level specifications for A1 network model using NetPyNE
 
-Contributors: ericaygriffith@gmail.com, salvadordura@gmail.com, samnemo@gmail.com , & Christoph Metzner
+Contributors: @gmail.com,
 """
 
 from cfg import cfg
 from netpyne.batchtools import specs
 import pickle
 import json
-
 netParams = specs.NetParams()  # object of class NetParams to store the network parameters
+
+try:
+    from __main__ import cfg  # import SimConfig object with params from parent module
+except:
+    from cfg import cfg
 
 # ------------------------------------------------------------------------------
 # VERSION
 # ------------------------------------------------------------------------------
 
-netParams.version = 45
+netParams.version = 0
 
 # ------------------------------------------------------------------------------
 #
@@ -71,8 +75,9 @@ layerGroups = {
 cellParamLabels = ['IT2_reduced', 'IT3_reduced', 'ITP4_reduced', 'ITS4_reduced',
                    'IT5A_reduced', 'CT5A_reduced', 'IT5B_reduced', 'PT5B_reduced',
                    'CT5B_reduced', 'IT6_reduced', 'CT6_reduced', 'PV_reduced',
-                   'SOM_reduced', 'VIP_reduced', 'NGF_reduced', 'RE_reduced',
-                   'TC_reduced', 'HTC_reduced', 'TI_reduced']
+                   'SOM_reduced', 'VIP_reduced', 'NGF_reduced',
+                #    'RE_reduced', 'TC_reduced', 'HTC_reduced', 'TI_reduced',
+                   ]
 
 for ruleLabel in cellParamLabels:
     netParams.loadCellParamsRule(label=ruleLabel, fileName='cells/' + ruleLabel + '_cellParams.json')  # Load cellParams for each of the above cell subtype
@@ -137,23 +142,19 @@ netParams.popParams['VIP6'] = {'cellType': 'VIP', 'cellModel': 'HH_reduced', 'yn
 netParams.popParams['NGF6'] = {'cellType': 'NGF', 'cellModel': 'HH_reduced', 'ynormRange': layer['6'], 'density': density[('A1', 'nonVIP')][5]}
 
 ### THALAMIC POPULATIONS (from prev model)
-thalDensity = density[('A1', 'PV')][2] * 1.25  # temporary estimate (from prev model)
+# thalDensity = density[('A1', 'PV')][2] * 1.25  # temporary estimate (from prev model)
 
-netParams.popParams['TC'] = {'cellType': 'TC', 'cellModel': 'HH_reduced', 'ynormRange': layer['thal'], 'density': 0.75 * thalDensity}
-netParams.popParams['TCM'] = {'cellType': 'TC', 'cellModel': 'HH_reduced', 'ynormRange': layer['thal'], 'density': thalDensity}
-netParams.popParams['HTC'] = {'cellType': 'HTC', 'cellModel': 'HH_reduced', 'ynormRange': layer['thal'], 'density': 0.25 * thalDensity}
-netParams.popParams['IRE'] = {'cellType': 'RE', 'cellModel': 'HH_reduced', 'ynormRange': layer['thal'], 'density': thalDensity}
-netParams.popParams['IREM'] = {'cellType': 'RE', 'cellModel': 'HH_reduced', 'ynormRange': layer['thal'], 'density': thalDensity}
-netParams.popParams['TI'] = {'cellType': 'TI', 'cellModel': 'HH_reduced', 'ynormRange': layer['thal'], 'density': 0.33 * thalDensity}  # Winer & Larue 1996; Huang et al 1999
-netParams.popParams['TIM'] = {'cellType': 'TI', 'cellModel': 'HH_reduced', 'ynormRange': layer['thal'], 'density': 0.33 * thalDensity}  # Winer & Larue 1996; Huang et al 1999
+# netParams.popParams['TC'] = {'cellType': 'TC', 'cellModel': 'HH_reduced', 'ynormRange': layer['thal'], 'density': 0.75 * thalDensity}
+# netParams.popParams['TCM'] = {'cellType': 'TC', 'cellModel': 'HH_reduced', 'ynormRange': layer['thal'], 'density': thalDensity}
+# netParams.popParams['HTC'] = {'cellType': 'HTC', 'cellModel': 'HH_reduced', 'ynormRange': layer['thal'], 'density': 0.25 * thalDensity}
+# netParams.popParams['IRE'] = {'cellType': 'RE', 'cellModel': 'HH_reduced', 'ynormRange': layer['thal'], 'density': thalDensity}
+# netParams.popParams['IREM'] = {'cellType': 'RE', 'cellModel': 'HH_reduced', 'ynormRange': layer['thal'], 'density': thalDensity}
+# netParams.popParams['TI'] = {'cellType': 'TI', 'cellModel': 'HH_reduced', 'ynormRange': layer['thal'], 'density': 0.33 * thalDensity}  # Winer & Larue 1996; Huang et al 1999
+# netParams.popParams['TIM'] = {'cellType': 'TI', 'cellModel': 'HH_reduced', 'ynormRange': layer['thal'], 'density': 0.33 * thalDensity}  # Winer & Larue 1996; Huang et al 1999
 
 if cfg.singleCellPops:
     for pop in netParams.popParams.values():
         pop['numCells'] = 1
-
-if cfg.reducedPop:
-    for pop in netParams.popParams.values():
-        pop['numCells'] = cfg.reducedPop
 
 ## List of E and I pops to use later on
 Epops = ['IT2', 'IT3', 'ITP4', 'ITS4', 'IT5A', 'CT5A', 'IT5B', 'CT5B', 'PT5B', 'IT6', 'CT6']  # all layers
@@ -165,15 +166,6 @@ Ipops = ['NGF1',  # L1
          'PV5A', 'SOM5A', 'VIP5A', 'NGF5A',  # L5A
          'PV5B', 'SOM5B', 'VIP5B', 'NGF5B',  # L5B
          'PV6', 'SOM6', 'VIP6', 'NGF6']  # L6
-
-if hasattr(cfg, 'pops_active') and cfg.pops_active:
-    pop_params_new = {}
-    for pop in cfg.pops_active:
-        if pop in netParams.popParams:
-            pop_params_new[pop] = netParams.popParams[pop]
-        else:
-            print(f"Warning: pop '{pop}' not found in netParams.popParams")
-    netParams.popParams = pop_params_new
 
 # ------------------------------------------------------------------------------
 # Synaptic mechanism parameters
@@ -198,746 +190,178 @@ NGFISynMech = ['GABAA']
 ThalIESynMech = ['GABAASlow', 'GABAB']
 ThalIISynMech = ['GABAASlow']
 
-# ------------------------------------------------------------------------------
-# Local connectivity parameters
-# ------------------------------------------------------------------------------
 
-## load data from conn pre-processing file
-with open('conn/conn.pkl', 'rb') as fileObj:
-    connData = pickle.load(fileObj)
-pmat = connData['pmat']
-lmat = connData['lmat']
-wmat = connData['wmat']
-bins = connData['bins']
-connDataSource = connData['connDataSource']
+#------------------------------------------------------------------------------
+# IClamp inputs
+#------------------------------------------------------------------------------
+
+resting_potential = {}
+resting_potential['NGF1'] = -62.60
+resting_potential['IT2'] = -85.77
+resting_potential['SOM2'] = -64.88
+resting_potential['PV2'] = -74.05
+resting_potential['VIP2'] = -70.10
+resting_potential['NGF2'] = -62.60
+resting_potential['IT3'] = -85.67
+resting_potential['SOM3'] = -64.88
+resting_potential['PV3'] = -74.05
+resting_potential['VIP3'] = -70.10
+resting_potential['NGF3'] = -62.60
+resting_potential['ITP4'] = -85.86
+resting_potential['ITS4'] = -85.39
+resting_potential['SOM4'] = -64.88
+resting_potential['PV4'] = -74.05
+resting_potential['VIP4'] = -70.10
+resting_potential['NGF4'] = -62.60
+resting_potential['IT5A'] = -81.19
+resting_potential['CT5A'] = -86.04
+resting_potential['SOM5A'] = -64.88
+resting_potential['PV5A'] = -74.05
+resting_potential['VIP5A'] = -70.10
+resting_potential['NGF5A'] = -62.60
+resting_potential['IT5B'] = -81.14
+resting_potential['CT5B'] = -86.04
+resting_potential['PT5B'] = -80.43
+resting_potential['SOM5B'] = -64.88
+resting_potential['PV5B'] = -74.05
+resting_potential['VIP5B'] = -70.10
+resting_potential['NGF5B'] = -62.60
+resting_potential['IT6'] = -80.50
+resting_potential['CT6'] = -86.04
+resting_potential['SOM6'] = -64.88
+resting_potential['PV6'] = -74.05
+resting_potential['VIP6'] = -70.10
+resting_potential['NGF6'] = -62.60
+
+input_resistance = {}
+input_resistance['NGF1'] = 396.75
+input_resistance['IT2'] = 87.13
+input_resistance['SOM2'] = 234.53
+input_resistance['PV2'] = 140.53
+input_resistance['VIP2'] = 227.55
+input_resistance['NGF2'] = 396.75
+input_resistance['IT3'] = 75.96
+input_resistance['SOM3'] = 234.53
+input_resistance['PV3'] = 140.53
+input_resistance['VIP3'] = 227.55
+input_resistance['NGF3'] = 396.75
+input_resistance['ITP4'] = 76.21
+input_resistance['ITS4'] = 197.72
+input_resistance['SOM4'] = 234.53
+input_resistance['PV4'] = 140.53
+input_resistance['VIP4'] = 227.55
+input_resistance['NGF4'] = 396.75
+input_resistance['IT5A'] = 115.39
+input_resistance['CT5A'] = 57.61
+input_resistance['SOM5A'] = 234.53
+input_resistance['PV5A'] = 140.53
+input_resistance['VIP5A'] = 227.55
+input_resistance['NGF5A'] = 396.75
+input_resistance['IT5B'] = 107.41
+input_resistance['CT5B'] = 57.61
+input_resistance['PT5B'] = 71.29
+input_resistance['SOM5B'] = 234.53
+input_resistance['PV5B'] = 140.53
+input_resistance['VIP5B'] = 227.55
+input_resistance['NGF5B'] = 396.75
+input_resistance['IT6'] = 111.44
+input_resistance['CT6'] = 57.61
+input_resistance['SOM6'] = 234.53
+input_resistance['PV6'] = 140.53
+input_resistance['VIP6'] = 227.55
+input_resistance['NGF6'] = 396.75
+
+#------------------------------------------------------------------------------
+# IClamp
+#------------------------------------------------------------------------------
+print("%s \t %s \t %s \t %s" % ("popName","resting_potential","input_resistance","holding_current"))
+for popName1 in cfg.Ipops + cfg.Epops:
+
+    holding_current1 = (-75.0 - resting_potential[popName1])/input_resistance[popName1]
+
+    print("%s \t %20.3f \t %20.3f \t %20.3f" % (popName1,resting_potential[popName1],input_resistance[popName1],holding_current1))
+
+
+    netParams.stimSourceParams['Input_'+popName1] = {'type': 'IClamp', 'del': 0.0, 'dur': 10000.0, 'amp': holding_current1}
+    netParams.stimTargetParams['Input->'+popName1] = {'source': 'Input_'+popName1, 'sec':'soma_0', 'loc': 0.5, 'conds': {'pop':popName1}}
+
+#------------------------------------------------------------------------------
+# NetStim inputs to simulate Spontaneous synapses + background in A1 neurons - data from "   "
+#------------------------------------------------------------------------------
+SourcesNumber = 5 # for each post Mtype - sec distribution
+
+synperNeuronStimI = {}
+synperNeuronStimE = {}
+GsynStimI = {}
+GsynStimE = {}
+
+for post in cfg.Ipops + cfg.Epops:
+    GsynStimI[post] = 3.0  # PSP = - 1.0 mv if Vrest = - 75 mV
+    GsynStimE[post] = 0.45 # PSP = + 1.0 mv if Vrest = - 75 mV
+
+    synperNeuronStimI[post] = 10 # Exc/Inh
+    synperNeuronStimE[post] = 50 # [1000:10000]
+
+cfg.addStimSynS1 = True
+cfg.rateStimI = 5.0  # Hz
+cfg.rateStimE = 1.0  # Hz
+
+if cfg.addStimSynS1:
+    for post in cfg.Ipops + cfg.Epops:
+
+        synperNeuron = synperNeuronStimI[post]
+        ratespontaneous = cfg.rateStimI
+        for qSnum in range(SourcesNumber):
+            ratesdifferentiation = (0.8 + 0.4*qSnum/(SourcesNumber-1)) * (synperNeuron*ratespontaneous)/SourcesNumber
+            netParams.stimSourceParams['StimSynS1_S_all_INH->' + post + '_' + str(qSnum)] = {'type': 'NetStim', 'rate': ratesdifferentiation, 'noise': 1.0, 'start': qSnum*50.0, 'number': 1e9}
+
+        synperNeuron = synperNeuronStimE[post]
+        ratespontaneous = cfg.rateStimE
+        for qSnum in range(SourcesNumber):
+            ratesdifferentiation = (0.8 + 0.4*qSnum/(SourcesNumber-1)) * (synperNeuron*ratespontaneous)/SourcesNumber
+            # netParams.stimSourceParams['StimSynS1_S_all_EXC->' + post + '_' + str(qSnum)] = {'type': 'NetStim', 'rate': ratesdifferentiation, 'noise': 1.0, 'start': qSnum*50.0, 'number': 1e9}
+            netParams.stimSourceParams['StimSynS1_S_all_EXC->' + post + '_' + str(qSnum)] = {'type': 'NetStim', 'rate': (0.8 + 0.4*qSnum/(SourcesNumber-1)) * (cfg.background_Exc*ratespontaneous)/SourcesNumber, 'noise': 1.0, 'start': qSnum*50.0, 'number': 1e9}
+
+    #------------------------------------------------------------------------------
+    for post in cfg.Epops:
+        for qSnum in range(SourcesNumber):
+            netParams.stimTargetParams['StimSynS1_T_all_EXC->' + post + '_' + str(qSnum)] = {
+                'source': 'StimSynS1_S_all_EXC->' + post + '_' + str(qSnum),
+                'conds':  {'pop': [post]},
+                'synMech': 'AMPA',
+                'sec': 'all',  # soma not inclued in S1 model
+                'weight': GsynStimE[post],
+                'delay': 0.1}
+
+    for post in cfg.Ipops:
+        for qSnum in range(SourcesNumber):
+            netParams.stimTargetParams['StimSynS1_T_all_EXC->' + post + '_' + str(qSnum)] = {
+                'source': 'StimSynS1_S_all_EXC->' + post + '_' + str(qSnum),
+                'synMech': 'AMPA',
+                'conds':  {'pop': [post]},
+                'sec': 'all',
+                'weight': GsynStimE[post],
+                'delay': 0.1}
+
+    for post in cfg.Epops+cfg.Ipops:
+        for qSnum in range(SourcesNumber):
+            netParams.stimTargetParams['StimSynS1_T_all_INH->' + post + '_' + str(qSnum)] = {
+                'source': 'StimSynS1_S_all_INH->' + post + '_' + str(qSnum),
+                'conds':  {'pop': [post]},
+                'synMech': 'GABAA',
+                'sec': 'all',
+                'weight': GsynStimI[post],
+                'delay': 0.1}
 
-wmat = cfg.wmat
 
-layerGainLabels = ['1', '2', '3', '4', '5A', '5B', '6']
 
 
-def wireCortex():
-    # ------------------------------------------------------------------------------
-    ## E -> E
-    if cfg.EEGain > 0.0:
-        for pre in Epops:
-            for post in Epops:
-                for l in layerGainLabels:  # used to tune each layer group independently
-                    scaleFactor = 1.0
-                    if connDataSource['E->E/I'] in ['Allen_V1', 'Allen_custom']:
-                        prob = '%f * exp(-dist_2D/%f)' % (pmat[pre][post], lmat[pre][post])
-                    else:
-                        prob = pmat[pre][post]
-                    if post == 'CT6':
-                        scaleFactor = cfg.CT6ScaleFactor
-                    if pre == 'ITS4' or pre == 'ITP4':
-                        if post == 'IT3':
-                            scaleFactor = cfg.L4L3E  # 25
-                        if post == 'ITP4' or post == 'ITS4':
-                            scaleFactor = cfg.L4L4E
 
-                    netParams.connParams['EE_' + pre + '_' + post + '_' + l] = {
-                        'preConds': {'pop': pre},
-                        'postConds': {'pop': post, 'ynorm': layer[l]},
-                        'synMech': ESynMech,
-                        'probability': prob,
-                        'weight': wmat[pre][post] * cfg.EEGain * cfg.EELayerGain[l] * cfg.EEPopGain[post] * scaleFactor,
-                        'synMechWeightFactor': cfg.synWeightFractionEE,
-                        'delay': 'defaultDelay+dist_3D/propVelocity',
-                        'synsPerConn': 1,
-                        'sec': 'dend_all'}
-    # ------------------------------------------------------------------------------
-    ## E -> I       ## MODIFIED FOR NMDAR MANIPULATION!!
-    if cfg.EIGain > 0.0:
-        for pre in Epops:
-            for post in Ipops:
-                for postType in Itypes:
-                    if postType in post:  # only create rule if celltype matches pop
-                        for l in layerGainLabels:  # used to tune each layer group independently
-                            scaleFactor = 1.0
-                            if connDataSource['E->E/I'] in ['Allen_V1', 'Allen_custom']:
-                                prob = '%f * exp(-dist_2D/%f)' % (pmat[pre][post], lmat[pre][post])
-                            else:
-                                prob = pmat[pre][post]
-                            if 'NGF' in post:
-                                synWeightFactor = cfg.synWeightFractionENGF
-                            elif 'PV' in post:
-                                synWeightFactor = cfg.synWeightFractionEI_CustomCort
-                            else:
-                                synWeightFactor = cfg.synWeightFractionEI  # cfg.synWeightFractionEI_CustomCort  #cfg.synWeightFractionEI
-                            if 'NGF1' in post:
-                                scaleFactor = cfg.ENGF1
-                            if pre == 'IT3':
-                                if post == 'IT3':
-                                    scaleFactor = cfg.L3L3scaleFactor
-                                if post == 'PV4':
-                                    scaleFactor = cfg.L3L4PV
-                                elif post == 'SOM4':
-                                    scaleFactor = cfg.L3L4SOM
-                            if pre == 'ITS4' or pre == 'ITP4':
-                                if post == 'PV3':
-                                    scaleFactor = cfg.L4L3PV  # 25
-                                elif post == 'SOM3':
-                                    scaleFactor = cfg.L4L3SOM
-                                elif post == 'NGF3':
-                                    scaleFactor = cfg.L4L3NGF  # 25
-                                elif post == 'VIP3':
-                                    scaleFactor = cfg.L4L3VIP  # 25
-                            netParams.connParams['EI_' + pre + '_' + post + '_' + postType + '_' + l] = {
-                                'preConds': {'pop': pre},
-                                'postConds': {'pop': post, 'cellType': postType, 'ynorm': layer[l]},
-                                'synMech': ESynMech,
-                                'probability': prob,
-                                'weight': wmat[pre][post] * cfg.EIGain * cfg.EICellTypeGain[postType] * cfg.EILayerGain[
-                                    l] * cfg.EIPopGain[post] * scaleFactor,
-                                'synMechWeightFactor': synWeightFactor,
-                                'delay': 'defaultDelay+dist_3D/propVelocity',
-                                'synsPerConn': 1,
-                                'sec': 'proximal'}
-    # cfg.NMDARfactor * wmat[pre][post] * cfg.EIGain * cfg.EICellTypeGain[postType] * cfg.EILayerGain[l]]
-    # ------------------------------------------------------------------------------
-    ## I -> E
-    if cfg.IEGain > 0.0:
-        if connDataSource['I->E/I'] == 'Allen_custom':
-            for pre in Ipops:
-                for preType in Itypes:
-                    if preType in pre:  # only create rule if celltype matches pop
-                        for post in Epops:
-                            for l in layerGainLabels:  # used to tune each layer group independently
-                                prob = '%f * exp(-dist_2D/%f)' % (pmat[pre][post], lmat[pre][post])
-                                synWeightFactor = cfg.synWeightFractionIE
-                                if 'SOM' in pre:
-                                    synMech = SOMESynMech
-                                    synWeightFactor = cfg.synWeightFractionSOME
-                                elif 'PV' in pre:
-                                    synMech = PVSynMech
-                                elif 'VIP' in pre:
-                                    synMech = VIPSynMech
-                                elif 'NGF' in pre:
-                                    synMech = NGFESynMech
-                                    synWeightFactor = cfg.synWeightFractionNGFE
-                                netParams.connParams['IE_' + pre + '_' + preType + '_' + post + '_' + l] = {
-                                    'preConds': {'pop': pre},
-                                    'postConds': {'pop': post, 'ynorm': layer[l]},
-                                    'synMech': synMech,
-                                    'probability': prob,
-                                    'weight': wmat[pre][post] * cfg.IEGain * cfg.IECellTypeGain[preType] * cfg.IELayerGain[l],
-                                    'synMechWeightFactor': synWeightFactor,
-                                    'delay': 'defaultDelay+dist_3D/propVelocity',
-                                    'synsPerConn': 1,
-                                    'sec': 'proximal'}
-    # ------------------------------------------------------------------------------
-    ## I -> I
-    if cfg.IIGain > 0.0:
-        if connDataSource['I->E/I'] == 'Allen_custom':
-            for pre in Ipops:
-                for post in Ipops:
-                    for l in layerGainLabels:
-                        prob = '%f * exp(-dist_2D/%f)' % (pmat[pre][post], lmat[pre][post])
-                        synWeightFactor = cfg.synWeightFractionII
-                        if 'SOM' in pre:
-                            synMech = SOMISynMech
-                            synWeightFactor = cfg.synWeightFractionSOMI
-                        elif 'PV' in pre:
-                            synMech = PVSynMech
-                        elif 'VIP' in pre:
-                            synMech = VIPSynMech
-                        elif 'NGF' in pre:
-                            synMech = NGFISynMech
-                            synWeightFactor = cfg.synWeightFractionNGFI
-                        netParams.connParams['II_' + pre + '_' + post + '_' + l] = {
-                            'preConds': {'pop': pre},
-                            'postConds': {'pop': post, 'ynorm': layer[l]},
-                            'synMech': synMech,
-                            'probability': prob,
-                            'weight': wmat[pre][post] * cfg.IIGain * cfg.IILayerGain[l],
-                            'synMechWeightFactor': synWeightFactor,
-                            'delay': 'defaultDelay+dist_3D/propVelocity',
-                            'synsPerConn': 1,
-                            'sec': 'proximal'}
-
-
-if cfg.addConn and cfg.wireCortex:
-    print('wiring ctx')
-    wireCortex()
-
-# ------------------------------------------------------------------------------
-# Thalamic connectivity parameters
-# ------------------------------------------------------------------------------
-
-
-# ------------------------------------------------------------------------------
-## Intrathalamic
-
-TEpops = ['TC', 'TCM', 'HTC']
-TIpops = ['IRE', 'IREM', 'TI', 'TIM']
-
-
-def IsThalamicCore(ct):
-    return ct == 'TC' or ct == 'HTC' or ct == 'IRE' or ct == 'TI'
-
-
-def wireThal():
-    # set intrathalamic connections
-    for pre in TEpops + TIpops:
-        for post in TEpops + TIpops:
-            gain = cfg.intraThalamicGain
-            if post in pmat[pre]:
-                # for syns use ESynMech, ThalIESynMech and ThalIISynMech
-                if pre in TEpops:  # E->E/I
-                    syn = ESynMech
-                    synWeightFactor = cfg.synWeightFractionEE
-                    if post in TEpops:
-                        gain *= cfg.intraThalamicEEGain
-                    else:
-                        gain = cfg.intraThalamicEIGain
-                elif post in TEpops:  # I->E
-                    syn = ThalIESynMech
-                    synWeightFactor = cfg.synWeightFractionThalIE
-                    gain *= cfg.intraThalamicIEGain
-                else:  # I->I
-                    syn = ThalIISynMech
-                    synWeightFactor = cfg.synWeightFractionThalII
-                    gain *= cfg.intraThalamicIIGain
-                # use spatially dependent wiring between thalamic core excitatory neurons
-                if (pre == 'TC' and (post == 'TC' or post == 'HTC')) or (pre == 'HTC' and (post == 'TC' or post == 'HTC')):
-                    prob = '%f * exp(-dist_x/%f)' % (pmat[pre][post], ThalamicCoreLambda)
-                else:
-                    prob = pmat[pre][post]
-                netParams.connParams['ITh_' + pre + '_' + post] = {
-                    'preConds': {'pop': pre},
-                    'postConds': {'pop': post},
-                    'synMech': syn,
-                    'probability': 100,
-                    'weight': wmat[pre][post] * gain,
-                    'synMechWeightFactor': synWeightFactor,
-                    'delay': 'defaultDelay+dist_3D/propVelocity',
-                    'synsPerConn': 1,
-                    'sec': 'soma'}
-
-
-if cfg.addConn and cfg.addIntraThalamicConn:
-    print('adding intrathal')
-    wireThal()
-
-
-# ------------------------------------------------------------------------------
-## Corticothalamic
-
-
-def connectCortexToThal():
-    for pre in Epops:
-        for post in TEpops + TIpops:
-            if post in pmat[pre]:
-                if IsThalamicCore(post):  # use spatially dependent wiring for thalamic core
-                    prob = '%f * exp(-dist_x/%f)' % (pmat[pre][post], ThalamicCoreLambda)
-                else:
-                    prob = pmat[pre][post]
-                if post in TIpops:
-                    CTGain = cfg.CTGainThalI
-                else:
-                    CTGain = cfg.corticoThalamicGain
-                netParams.connParams['CxTh_' + pre + '_' + post] = {
-                    'preConds': {'pop': pre},
-                    'postConds': {'pop': post},
-                    'synMech': ESynMech,
-                    'probability': prob,
-                    'weight': wmat[pre][post] * CTGain,
-                    'synMechWeightFactor': cfg.synWeightFractionEE,
-                    'delay': 'defaultDelay+dist_3D/propVelocity',
-                    'synsPerConn': 1,
-                    'sec': 'soma'}
-
-
-if cfg.addConn and cfg.addCorticoThalamicConn:
-    connectCortexToThal()
-
-
-# ------------------------------------------------------------------------------
-## Thalamocortical - this was added from Christoph Metzner's branch
-
-
-def connectThalToCortex():
-    # thalamocortical connections, some params added from Christoph Metzner's branch
-    for pre in TEpops + TIpops:
-        for post in Epops + Ipops:
-            scaleFactor = 1.0
-            if post in pmat[pre]:
-                if IsThalamicCore(pre):  # use spatially dependent wiring for thalamic core
-                    # NB: should check if this is ok
-                    prob = '%f * exp(-dist_x/%f)' % (pmat[pre][post], ThalamicCoreLambda)
-                else:
-                    # NB: check what the 2D inverse distance based on. lmat from conn/conn.pkl
-                    prob = '%f * exp(-dist_2D/%f)' % (pmat[pre][post], lmat[pre][post])
-                # for syns use ESynMech, SOMESynMech and SOMISynMech
-                if pre in TEpops:  # E->E/I
-                    if post == 'PV4':
-                        syn = ESynMech
-                        synWeightFactor = cfg.synWeightFractionEE
-                        scaleFactor = cfg.thalL4PV  # 25
-                    elif post == 'SOM4':
-                        syn = ESynMech
-                        synWeightFactor = cfg.synWeightFractionEE
-                        scaleFactor = cfg.thalL4SOM
-                    elif post == 'ITS4':
-                        syn = ESynMech
-                        synWeightFactor = cfg.synWeightFractionEE
-                        scaleFactor = cfg.thalL4E  # 25
-                    elif post == 'ITP4':
-                        syn = ESynMech
-                        synWeightFactor = cfg.synWeightFractionEE
-                        scaleFactor = cfg.thalL4E  # 25
-                    elif post == 'NGF4':
-                        syn = ESynMech
-                        synWeightFactor = cfg.synWeightFractionEE
-                        scaleFactor = cfg.thalL4NGF  # 25
-                    elif post == 'VIP4':
-                        syn = ESynMech
-                        synWeightFactor = cfg.synWeightFractionEE
-                        scaleFactor = cfg.thalL4VIP  # 25
-                    elif post == 'NGF1':
-                        syn = ESynMech
-                        synWeightFactor = cfg.synWeightFractionEE
-                        scaleFactor = cfg.thalL1NGF  # 25
-                    else:
-                        syn = ESynMech
-                        synWeightFactor = cfg.synWeightFractionEE
-                elif post in Epops:  # I->E
-                    syn = ThalIESynMech
-                    synWeightFactor = cfg.synWeightFractionThalCtxIE
-                else:  # I->I
-                    syn = ThalIISynMech
-                    synWeightFactor = cfg.synWeightFractionThalCtxII
-
-                netParams.connParams['ThCx_' + pre + '_' + post] = {
-                    'preConds': {'pop': pre},
-                    'postConds': {'pop': post},
-                    'synMech': syn,
-                    'probability': prob,
-                    'weight': wmat[pre][post] * cfg.thalamoCorticalGain * scaleFactor,
-                    'synMechWeightFactor': synWeightFactor,
-                    'delay': 'defaultDelay+dist_3D/propVelocity',
-                    'synsPerConn': 1,
-                    'sec': 'soma'}
-
-
-if cfg.addConn and cfg.addThalamoCorticalConn:
-    connectThalToCortex()
-
-
-# ------------------------------------------------------------------------------
-# Subcellular connectivity (synaptic distributions)
-# ------------------------------------------------------------------------------
-
-# Set target sections (somatodendritic distribution of synapses)
-# From Billeh 2019 (Allen V1) (fig 4F) and Tremblay 2016 (fig 3)
-
-# ------------------------------------------------------------------------------
-# Subcellular connectivity (synaptic distributions)
-# ------------------------------------------------------------------------------
-# Set target sections (somatodendritic distribution of synapses)
-# From Billeh 2019 (Allen V1) (fig 4F) and Tremblay 2016 (fig 3)
-
-
-def addSubConn():
-    # ------------------------------------------------------------------------------
-    # E -> E2/3,4: soma,dendrites <200um
-    netParams.subConnParams['E->E2,3,4'] = {
-        'preConds': {'cellType': ['IT', 'ITS4', 'PT', 'CT']},
-        'postConds': {'pops': ['IT2', 'IT3', 'ITP4', 'ITS4']},
-        'sec': 'proximal',
-        'groupSynMechs': ESynMech,
-        'density': 'uniform'}
-    # ------------------------------------------------------------------------------
-    # E -> E5,6: soma,dendrites (all)
-    netParams.subConnParams['E->E5,6'] = {
-        'preConds': {'cellType': ['IT', 'ITS4', 'PT', 'CT']},
-        'postConds': {'pop': ['IT5A', 'CT5A', 'IT5B', 'PT5B', 'CT5B', 'IT6', 'CT6']},
-        'sec': 'all',
-        'groupSynMechs': ESynMech,
-        'density': 'uniform'}
-    # ------------------------------------------------------------------------------
-    # E -> I: soma, dendrite (all)
-    netParams.subConnParams['E->I'] = {
-        'preConds': {'cellType': ['IT', 'ITS4', 'PT', 'CT']},
-        'postConds': {'cellType': ['PV', 'SOM', 'NGF', 'VIP']},
-        'sec': 'all',
-        'groupSynMechs': ESynMech,
-        'density': 'uniform'}
-    # ------------------------------------------------------------------------------
-    # NGF1 -> E: apic_tuft
-    netParams.subConnParams['NGF1->E'] = {
-        'preConds': {'pop': ['NGF1']},
-        'postConds': {'cellType': ['IT', 'ITS4', 'PT', 'CT']},
-        'sec': 'apic_tuft',
-        'groupSynMechs': NGFESynMech,
-        'density': 'uniform'}
-    # ------------------------------------------------------------------------------
-    # NGF2,3,4 -> E2,3,4: apic_trunk
-    netParams.subConnParams['NGF2,3,4->E2,3,4'] = {
-        'preConds': {'pop': ['NGF2', 'NGF3', 'NGF4']},
-        'postConds': {'pop': ['IT2', 'IT3', 'ITP4', 'ITS4']},
-        'sec': 'apic_trunk',
-        'groupSynMechs': NGFESynMech,
-        'density': 'uniform'}
-    # ------------------------------------------------------------------------------
-    # NGF2,3,4 -> E5,6: apic_uppertrunk
-    netParams.subConnParams['NGF2,3,4->E5,6'] = {
-        'preConds': {'pop': ['NGF2', 'NGF3', 'NGF4']},
-        'postConds': {'pop': ['IT5A', 'CT5A', 'IT5B', 'PT5B', 'CT5B', 'IT6', 'CT6']},
-        'sec': 'apic_uppertrunk',
-        'groupSynMechs': NGFESynMech,
-        'density': 'uniform'}
-    # ------------------------------------------------------------------------------
-    # NGF5,6 -> E5,6: apic_lowerrunk
-    netParams.subConnParams['NGF5,6->E5,6'] = {
-        'preConds': {'pop': ['NGF5A', 'NGF5B', 'NGF6']},
-        'postConds': {'pop': ['IT5A', 'CT5A', 'IT5B', 'PT5B', 'CT5B', 'IT6', 'CT6']},
-        'sec': 'apic_lowertrunk',
-        'groupSynMechs': NGFESynMech,
-        'density': 'uniform'}
-    # ------------------------------------------------------------------------------
-    #  SOM -> E: all_dend (not close to soma)
-    netParams.subConnParams['SOM->E'] = {
-        'preConds': {'cellType': ['SOM']},
-        'postConds': {'cellType': ['IT', 'ITS4', 'PT', 'CT']},
-        'sec': 'dend_all',
-        'groupSynMechs': SOMESynMech,
-        'density': 'uniform'}
-    # ------------------------------------------------------------------------------
-    #  PV -> E: proximal
-    netParams.subConnParams['PV->E'] = {
-        'preConds': {'cellType': ['PV']},
-        'postConds': {'cellType': ['IT', 'ITS4', 'PT', 'CT']},
-        'sec': 'proximal',
-        'groupSynMechs': PVSynMech,
-        'density': 'uniform'}
-    # ------------------------------------------------------------------------------
-    #  TC -> E: proximal
-    netParams.subConnParams['TC->E'] = {
-        'preConds': {'cellType': ['TC', 'HTC']},
-        'postConds': {'cellType': ['IT', 'ITS4', 'PT', 'CT']},
-        'sec': 'proximal',
-        'groupSynMechs': ESynMech,
-        'density': 'uniform'}
-    # ------------------------------------------------------------------------------
-    #  TCM -> E: apical
-    netParams.subConnParams['TCM->E'] = {
-        'preConds': {'cellType': ['TCM']},
-        'postConds': {'cellType': ['IT', 'ITS4', 'PT', 'CT']},
-        'sec': 'apic',
-        'groupSynMechs': ESynMech,
-        'density': 'uniform'}
-
-
-if cfg.addSubConn:
-    addSubConn()
-
-# ------------------------------------------------------------------------------
-# Background inputs
-# ------------------------------------------------------------------------------
-if cfg.addBkgConn:
-    # add bkg sources for E and I cells
-    netParams.stimSourceParams['excBkg'] = {
-        'type': 'NetStim',
-        'start': cfg.startBkg,
-        'rate': cfg.rateBkg['exc'],
-        'noise': cfg.noiseBkg,
-        'number': 1e9}
-    netParams.stimSourceParams['inhBkg'] = {
-        'type': 'NetStim',
-        'start': cfg.startBkg,
-        'rate': cfg.rateBkg['inh'],
-        'noise': cfg.noiseBkg,
-        'number': 1e9}
-
-    # excBkg/I -> thalamus + cortex
-    with open('cells/bkgWeightPops.json', 'r') as f:
-        weightBkg = json.load(f)
-    pops = list(cfg.allpops)
-    if 'cochlea' in pops:
-        pops.remove('cochlea')
-
-    for pop in ['TC', 'TCM', 'HTC']:
-        weightBkg[pop] *= cfg.EbkgThalamicGain
-
-    for pop in ['IRE', 'IREM', 'TI', 'TIM']:
-        weightBkg[pop] *= cfg.IbkgThalamicGain
-
-    for pop in ['NGF6']:
-        weightBkg[pop] *= cfg.NGF6bkgGain
-
-    for pop in ['IT2', 'IT3', 'ITP4', 'ITS4', 'IT5A', 'CT5A', 'IT5B', 'PT5B', 'CT5B', 'IT6', 'CT6']:
-        weightBkg[pop] *= cfg.BkgCtxEGain
-
-    for pop in ['NGF1', 'SOM2', 'PV2', 'VIP2', 'NGF2', 'SOM3', 'PV3', 'VIP3', 'NGF3', 'SOM4', 'PV4', 'VIP4', 'NGF4',
-                'SOM5A', 'PV5A', 'VIP5A', 'NGF5A', 'SOM5B', 'PV5B', 'VIP5B', 'NGF5B', 'SOM6', 'PV6', 'VIP6', 'NGF6']:
-        weightBkg[pop] *= cfg.BkgCtxIGain
-
-    for pop in pops:
-        netParams.stimTargetParams['excBkg->' + pop] = {
-            'source': 'excBkg',
-            'conds': {'pop': pop},
-            'sec': 'apic',
-            'loc': 0.5,
-            'synMech': ESynMech,
-            'weight': weightBkg[pop],
-            'synMechWeightFactor': cfg.synWeightFractionEE,
-            'delay': cfg.delayBkg}
-
-        netParams.stimTargetParams['inhBkg->' + pop] = {
-            'source': 'inhBkg',
-            'conds': {'pop': pop},
-            'sec': 'proximal',
-            'loc': 0.5,
-            'synMech': 'GABAA',
-            'weight': weightBkg[pop],
-            'delay': cfg.delayBkg}
-
-def prob2conv(prob, npre):
-    # probability to convergence; prob is connection probability, npre is number of presynaptic neurons
-    return int(0.5 + prob * npre)
-
-
-# cochlea -> thal
-def connectCochleaToThal():
-    prob = '%f * exp(-dist_x/%f)' % (cfg.cochlearThalInput['probECore'], ThalamicCoreLambda)
-    netParams.connParams['cochlea->ThalECore'] = {
-        'preConds': {'pop': 'cochlea'},
-        'postConds': {'pop': ['TC', 'HTC']},
-        'sec': 'soma',
-        'loc': 0.5,
-        'synMech': ESynMech,
-        'probability': prob,
-        'weight': cfg.cochlearThalInput['weightECore'],
-        'synMechWeightFactor': cfg.synWeightFractionEE,
-        'delay': cfg.delayBkg}
-    prob = '%f * exp(-dist_x/%f)' % (cfg.cochlearThalInput['probICore'], ThalamicCoreLambda)
-    netParams.connParams['cochlea->ThalICore'] = {
-        'preConds': {'pop': 'cochlea'},
-        'postConds': {'pop': ['TI']},  # 'IRE',
-        'sec': 'soma',
-        'loc': 0.5,
-        'synMech': ESynMech,
-        'probability': prob,
-        'weight': cfg.cochlearThalInput['weightICore'],
-        'synMechWeightFactor': cfg.synWeightFractionEI,
-        'delay': cfg.delayBkg}
-    # cochlea -> Thal Matrix
-    netParams.connParams['cochlea->ThalEMatrix'] = {
-        'preConds': {'pop': 'cochlea'},
-        'postConds': {'pop': 'TCM'},
-        'sec': 'soma',
-        'loc': 0.5,
-        'synMech': ESynMech,
-        'convergence': prob2conv(cfg.cochlearThalInput['probEMatrix'], numCochlearCells),
-        'weight': cfg.cochlearThalInput['weightEMatrix'],
-        'synMechWeightFactor': cfg.synWeightFractionEE,
-        'delay': cfg.delayBkg}
-    netParams.connParams['cochlea->ThalIMatrix'] = {
-        'preConds': {'pop': 'cochlea'},
-        'postConds': {'pop': ['TIM']},  # 'IREM',
-        'sec': 'soma',
-        'loc': 0.5,
-        'synMech': ESynMech,
-        'convergence': prob2conv(cfg.cochlearThalInput['probIMatrix'], numCochlearCells),
-        'weight': cfg.cochlearThalInput['weightIMatrix'],
-        'synMechWeightFactor': cfg.synWeightFractionEI,
-        'delay': cfg.delayBkg}
-
-
-if cfg.cochlearThalInput:
-    from input import cochlearSpikes
-
-    dcoch = cochlearSpikes(freqRange=cfg.cochlearThalInput['freqRange'],
-                           numCenterFreqs=cfg.cochlearThalInput['numCenterFreqs'],
-                           loudnessScale=cfg.cochlearThalInput['loudnessScale'],
-                           lfnwave=cfg.cochlearThalInput['lfnwave'],
-                           lonset=cfg.cochlearThalInput['lonset'])
-    cochlearSpkTimes = dcoch['spkT']
-    cochlearCenterFreqs = dcoch['cf']
-    netParams.cf = dcoch['cf']
-    numCochlearCells = len(cochlearCenterFreqs)
-    netParams.popParams['cochlea'] = {
-        'cellModel': 'VecStim',
-        'numCells': numCochlearCells,
-        'spkTimes': cochlearSpkTimes,
-        'ynormRange': layer['cochlear']}
-
-    connectCochleaToThal()
-
-# ------------------------------------------------------------------------------
-# Current inputs (IClamp)
-# ------------------------------------------------------------------------------
-
-
-if cfg.addIClamp:
-    if cfg.addIClamp['FIcurve']:
-        for i in range(cfg.addIClamp['numInjections']):
-            start_time = i * cfg.addIClamp['injectionInterval']
-            amp = cfg.addIClamp['injectionAmplitudes'][i]
-            key = f'IClamp_{i}'
-
-            # Add stim source
-            netParams.stimSourceParams[key] = {
-                'type': 'IClamp',
-                'delay': start_time,
-                'dur': cfg.addIClamp['injectionDuration'],
-                'amp': amp
-            }
-
-            # Connect stim source to all cells
-            for pop in cfg.allpops:
-                netParams.stimTargetParams[f'{key}_{pop}'] = {
-                    'source': key,
-                    'conds': {'pop': pop},
-                    'sec': 'soma',  # Assuming you want to inject current into the soma
-                    'loc': 0.5
-                }
-
-    if cfg.addIClamp['holdingCurrent']:
-        for pop in cfg.addIClamp['includePops']:
-            key = f'IClamp_holding_{pop}'
-
-            netParams.stimSourceParams[key] = {
-                'type': 'IClamp',
-                'delay': cfg.addIClamp['hold_delay'],
-                'dur': cfg.addIClamp['hold_duration'],
-                'amp': cfg.addIClamp['holdingAmp']
-            }
-
-            netParams.stimTargetParams[key] = {
-                'source': key,
-                'conds': {'pop': pop},
-                'sec': 'soma',
-                'loc': 0.5
-            }
-
-if cfg.addNoiseConductance:
-    with open('data/inputResistances.json', 'rb') as f:
-    # with open('simOutput/input_res_0/input_res_vals.json', 'rb') as f:
-        inpRes = json.load(f)
-
-    netParams.NoiseConductanceParams = {}
-    for pop in cfg.allpops:
-        Gin = 1 / inpRes[pop]
-        g0 = (cfg.OUamp / 100) * Gin
-        sigma = (cfg.OUstd / 100) * Gin
-        # print('pop is: '  + pop + ' Input resistance is: ' + str(inpRes[pop]) + ' input conductance is: ' + str(Gin) + '   g0 is:  ' + str(g0))
-        netParams.NoiseConductanceParams[pop] = {
-            'g0': g0,
-            'sigma': sigma
-        }
-
-        for pop in cfg.allpops:
-            netParams.stimSourceParams['NoiseSEClamp_source_' + pop] = {
-                'type': 'ConductanceSource',
-                'dur1': cfg.NoiseConductanceDur,
-                'amp1': 0  # rmpPops[pop] #abs(rmpPops[pop] * 0.18)
-            }
-            netParams.stimTargetParams['NoiseSEClamp_target_' + pop] = {
-                'source': 'NoiseSEClamp_source_' + pop,
-                'sec': 'soma',
-                'loc': 0.5,
-                'conds': {'pop': pop}
-            }
-
-if cfg.addNoiseIClamp:
-    with open('data/inputResistances.json', 'rb') as f:
-        inpRes = json.load(f)
-
-    netParams.NoiseIClampParams = {}
-    for pop in cfg.allpops:
-        Gin = 1 / inpRes[pop]
-        g0 = (cfg.OUamp / 100) * Gin
-        sigma = (cfg.OUstd / 100) * Gin
-        # print('pop is: '  + pop + ' Input resistance is: ' + str(inpRes[pop]) + ' input conductance is: ' + str(Gin) + '   g0 is:  ' + str(g0))
-        netParams.NoiseIClampParams[pop] = {
-            'g0': g0,
-            'sigma': sigma
-        }
-
-    for pop in cfg.allpops:
-        netParams.stimSourceParams['NoiseIClamp_source_' + pop] = {
-            'type': 'IClamp',
-            'dur': cfg.NoiseConductanceDur,
-            'amp': 0  # rmpPops[pop] #abs(rmpPops[pop] * 0.18)
-        }
-        netParams.stimTargetParams['NoiseIClamp_target_' + pop] = {
-            'source': 'NoiseIClamp_source_' + pop,
-            'sec': 'soma',
-            'loc': 0.5,
-            'conds': {'pop': pop}
-        }
-
-# ------------------------------------------------------------------------------
-# NetStim inputs (to simulate short external stimuli; not bkg)
-# ------------------------------------------------------------------------------
-if cfg.addNetStim:
-    for key in [k for k in dir(cfg) if k.startswith('NetStim')]:
-        params = getattr(cfg, key, None)
-        [pop, ynorm, sec, loc, synMech, synMechWeightFactor, start, interval, noise, number, weight, delay] = \
-            [params[s] for s in ['pop', 'ynorm', 'sec', 'loc', 'synMech', 'synMechWeightFactor', 'start', 'interval', 'noise', 'number', 'weight', 'delay']]
-        netParams.stimSourceParams[key] = {'type': 'NetStim', 'start': start, 'interval': interval, 'noise': noise, 'number': number}
-
-        if not isinstance(pop, list):
-            pop = [pop]
-
-        for eachPop in pop:
-            # connect stim source to target
-
-            netParams.stimTargetParams[key + '_' + eachPop] = {
-                'source': key,
-                'conds': {'pop': eachPop, 'ynorm': ynorm},
-                'sec': sec,
-                'loc': loc,
-                'synMech': synMech,
-                'weight': weight,
-                'synMechWeightFactor': synMechWeightFactor,
-                'delay': delay}
 
 # ------------------------------------------------------------------------------
 # Description
 # ------------------------------------------------------------------------------
 
 netParams.description = """
-v7 - Added template for connectivity
-v8 - Added cell types
-v9 - Added local connectivity
-v10 - Added thalamic populations from prev model
-v11 - Added thalamic conn from prev model
-v12 - Added CT cells to L5B
-v13 - Added CT cells to L5A
-v14 - Fixed L5A & L5B E cell densities + added CT5A & CT5B to 'Epops'
-v15 - Added cortical and thalamic conn to CT5A and CT5B 
-v16 - Updated multiple cell types
-v17 - Changed NGF -> I prob from strong (1.0) to weak (0.35)
-v18 - Fixed bug in VIP cell morphology
-v19 - Added in 2-compartment thalamic interneuron model 
-v20 - Added TI conn and updated thal pop
-v21 - Added exc+inh bkg inputs specific to each cell type
-v22 - Made exc+inh bkg inputs specific to each pop; automated calculation
-v23 - IE/II specific layer gains and simplified code (assume 'Allen_custom')
-v24 - Fixed bug in IE/II specific layer gains
-v25 - Fixed subconnparams TC->E and NGF1->E; made IC input deterministic
-v26 - Changed NGF AMPA:NMDA ratio 
-v27 - Split thalamic interneurons into core and matrix (TI and TIM)
-v28 - Set recurrent TC->TC conn to 0
-v29 - Added EI specific layer gains
-v30 - Added EE specific layer gains; and split combined L1-3 gains into L1,L2,L3
-v31 - Added EI postsyn-cell-type specific gains; update ITS4 and NGF
-v32 - Added IE presyn-cell-type specific gains
-v33 - Fixed bug in matrix thalamocortical conn (were very low)
-v34 - Added missing conn from cortex to matrix thalamus IREM and TIM
-v35 - Parametrize L5B PT Ih and exc cell K+ conductance (to simulate NA/ACh modulation) 
-v36 - Looped speech stimulus capability added for cfg.ICThalInput
-v37 - Adding in code to modulate t-type calcium conductances in thalamic and cortical cells
-v38 - Adding in code to modulate NMDA synaptic weight from E --> I populations 
-v39 - Changed E --> I cfg.NMDARfactor such that weight is not a list, but instead a single value 
-v40 - added parameterizations from Christoph Metzner for localizing the large L1 sink
-v41 - modifying cochlea to Thal -> A1 for tonotopic gradient, adding functions
-v42 - Changed inhibitory receptor ratios for GABAB and NGF as well as altering the cochlear -> thalamic connections (prob and wieght)
-v43 - Updated intrathalamic IE and EI parameters to create a more gradual reduction in TC cell mV over the course of stims 
-v44 - Increased EEGain and decreased IEGain to increase the evoked activity in cortical pops
-v45 - Updated background -> Ctx E and Ctx I pops and Bkg - > Thalamic E pops
+v0 - 
 """

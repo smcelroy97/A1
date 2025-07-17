@@ -1,11 +1,11 @@
 from netpyne.batchtools.search import search
 import numpy as np
 
-label = 'v45_batch22'
+label = 'v45_batch27'
 
 # params for search
 params = {
-    'addSubConn': [0, 1]
+    'background_Exc': np.linspace(100,10000,200)
 }
 
 
