@@ -7,7 +7,7 @@ import csv
 from mpi4py import MPI
 import pickle
 
-batch_dir = '../simOutput/v45_batch25/'
+batch_dir = '../simOutput/PSPTest/'
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
@@ -20,7 +20,7 @@ my_files = files[rank::comm.Get_size()]
 
 save_csv = 1
 plot_psp_secs = 0
-plot_avg_vs_secs = 0
+plot_avg_vs_secs = 1
 plot_psp_matrix = 0
 plot_psp_box = 0
 
@@ -65,22 +65,31 @@ for file in my_files:
                 pop_psps[pop][prePop]['gid'] = cell['gid']
                 break
 
-        # Based on the section delay, extract the slice of the somatic trace
-        baseline = 50
-        post_stim = 1500  # ms after stimulus
+        baseline_ms = 50  # ms before stim
+        post_stim_ms = 500  # ms after stim to look for PSP
+        dt = sim_results['simConfig']['dt']
         sec_amps = []
-        for sec in pop_psps[pop][prePop]['secs'].values():
-            post_window = int(post_stim / sim_results['simConfig']['dt'])
-            baseline_window = int(post_stim / sim_results['simConfig']['dt'])
-            stim_idx = int(sec['delay'] / sim_results['simConfig']['dt'])
-            start = stim_idx - baseline_window
-            end = stim_idx + post_window
-            trace = sim_results['simData']['V_soma']['cell_' + str(pop_psps[pop][prePop]['gid'])]
-            sec['trace'] = trace[start:end]
 
-            baseline_mv = np.mean(trace[:baseline_window])
-            distances = np.abs(trace - baseline_mv)
-            amplitude = np.max(distances)
+        baseline_window = int(baseline_ms / dt)
+        post_window = int(post_stim_ms / dt)
+
+        for sec in pop_psps[pop][prePop]['secs'].values():
+            stim_idx = int(sec['delay'] / dt)
+            trace = sim_results['simData']['V_soma']['cell_' + str(pop_psps[pop][prePop]['gid'])]
+            # Indices for baseline and post-stimulus
+            start_baseline = max(0, stim_idx - baseline_window)
+            end_baseline = stim_idx
+            start_post = stim_idx
+            end_post = min(len(trace), stim_idx + post_window)
+            # Store the trace window (baseline + post)
+            sec['trace'] = trace[start_baseline:end_post]
+            # Baseline from pre-stimulus
+            baseline_mv = np.mean(trace[start_baseline:end_baseline])
+            # Amplitude: largest signed deviation in post-stimulus window
+            post_trace = trace[start_post:end_post]
+            max_dev = np.max(post_trace - baseline_mv)
+            min_dev = np.min(post_trace - baseline_mv)
+            amplitude = max_dev if abs(max_dev) >= abs(min_dev) else min_dev
             sec['psp'] = amplitude
             sec_amps.append(amplitude)
         pop_psps[pop][prePop]['secs']['mean'] = np.mean(sec_amps)
@@ -97,8 +106,8 @@ if plot_psp_secs:
             traces = []
             times = None
             for sec_name, sec_data in data['secs'].items():
-                print(sec_name)
-                print(prePop)
+                if sec_name == 'mean':
+                    continue
                 trace = sec_data['trace']
                 dt = sim_results['simConfig']['dt']
                 if times is None:
@@ -122,6 +131,8 @@ if plot_avg_vs_secs:
             traces = []
             times = None
             for sec_name, sec_data in data['secs'].items():
+                if sec_name == 'mean':
+                    continue
                 trace = sec_data['trace']
                 dt = sim_results['simConfig']['dt']
                 if times is None:

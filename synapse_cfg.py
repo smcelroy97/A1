@@ -63,7 +63,7 @@ cfg.TIpops = ['IRE', 'IREM', 'TI', 'TIM']
 
 cfg.pops_active = False
 
-cfg.prePop = 'HTC'
+cfg.prePop = 'IT3'
 
 if cfg.pops_active:
     cfg.allpops = cfg.pops_active
@@ -85,7 +85,7 @@ cfg.recordDipole = False
 # Saving
 # ------------------------------------------------------------------------------
 
-cfg.simLabel = 'PSPTest'
+cfg.simLabel = 'PSPTest_noGain'
 cfg.saveFolder = 'simOutput/' + cfg.simLabel  # Set file output name
 cfg.savePickle = True  # Save pkl file
 cfg.saveJson = False  # Save json file
@@ -95,7 +95,7 @@ cfg.gatherOnlySimData = False
 cfg.saveCellSecs = False
 cfg.saveCellConns = True
 cfg.addNoiseIClamp = False
-cfg.add_gain = True
+cfg.add_gain = False
 # ------------------------------------------------------------------------------
 # Analysis and plotting
 # ------------------------------------------------------------------------------
