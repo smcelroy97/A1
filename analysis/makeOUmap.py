@@ -1,5 +1,6 @@
 from mpi4py import MPI
 import pickle
+import json
 import pandas as pd
 import numpy as np
 from netpyne import sim
@@ -10,7 +11,7 @@ import spike_utils
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
-batch = 'v45_batch18'
+batch = 'v45_batch27'
 
 # Directory containing simulation data
 sim_dir = "simOutput/" + batch + "/"
@@ -57,8 +58,8 @@ for file in files_per_rank[rank]:
 
     rate_dict, isicv_dict = compute_metrics(simResults)
 
-    rate_dicts.append((simResults['simConfig']['OUstd'], simResults['simConfig']['OUamp'], rate_dict))
-    isicv_dicts.append((simResults['simConfig']['OUstd'], simResults['simConfig']['OUamp'], isicv_dict))
+    rate_dicts.append((simResults['simConfig']['L3L4PV'], rate_dict))
+    isicv_dicts.append((simResults['simConfig']['L3L4PV'], isicv_dict))
 
 # Gather results
 all_rate_dicts = comm.gather(rate_dicts, root=0)
@@ -70,32 +71,21 @@ if rank == 0:
 
     # Organizing rate and ISICV into dictionaries
     for d_list in all_rate_dicts:
-        for OUstd, OUamp, d in d_list:
+        for syn_num, d in d_list:
             for pop, val in d.items():
                 if pop not in final_rate_dict:
                     final_rate_dict[pop] = {}
-                final_rate_dict[pop][(OUstd, OUamp)] = val
+                final_rate_dict[pop][syn_num] = val
 
     for d_list in all_isicv_dicts:
-        for OUstd, OUamp, d in d_list:
+        for syn_num, d in d_list:
             for pop, val in d.items():
                 if pop not in final_isicv_dict:
                     final_isicv_dict[pop] = {}
-                final_isicv_dict[pop][(OUstd, OUamp)] = val
+                final_isicv_dict[pop][syn_num] = val
 
-    # Convert dictionaries to structured DataFrames
-    for pop in final_rate_dict:
-        df = pd.DataFrame.from_dict(final_rate_dict[pop], orient='index')
-        df.index = pd.MultiIndex.from_tuples(df.index, names=['OUstd', 'OUamp'])
-        final_rate_dict[pop] = df.unstack(level=1).droplevel(0, axis=1)  # Make OUstd the rows, OUamp the columns
+    with open(sim_dir + 'rate_dict.pkl', 'w') as file:
+        json.dump(final_rate_dict, file)
 
-    for pop in final_isicv_dict:
-        df = pd.DataFrame.from_dict(final_isicv_dict[pop], orient='index')
-        df.index = pd.MultiIndex.from_tuples(df.index, names=['OUstd', 'OUamp'])
-        final_isicv_dict[pop] = df.unstack(level=1).droplevel(0, axis=1)  # Make OUstd the rows, OUamp the columns
-
-    # Save results
-    with open("OUmapping_" + batch + ".pkl", "wb") as f:
-        pickle.dump({"rate": final_rate_dict, "isicv": final_isicv_dict}, f)
-
-    print("Final results saved as OUmapping_" + batch + ".pkl")
+    with open(sim_dir + 'isicv_dict.pkl', 'w') as file:
+        json.dump(final_isicv_dict, file)
