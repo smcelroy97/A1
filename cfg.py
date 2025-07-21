@@ -91,7 +91,7 @@ cfg.recordStep = 0.05  # St ep size (in ms) to save data -- value from M1 cfg.py
 # Savingx
 # ------------------------------------------------------------------------------
 
-cfg.simLabel = 'old_rin_vals'
+cfg.simLabel = 'e1_i5_0'
 cfg.saveFolder = 'simOutput/' + cfg.simLabel  # Set file output name
 cfg.savePickle = True  # Save pkl file
 cfg.saveJson = False  # Save json file
@@ -193,7 +193,7 @@ cfg.scaleDensity = 1.0  # Should be 1.0 unless need lower cell density for test 
 # ------------------------------------------------------------------------------
 
 # Cortical
-cfg.addConn = 0
+cfg.addConn = 1.0
 cfg.addSubConn = 1.0
 cfg.wireCortex = 1.0
 
@@ -232,9 +232,9 @@ cfg.EICellTypeGain = {'PV': 1.0, 'SOM': 1.0, 'VIP': 1.0,
 cfg.IECellTypeGain = {'PV': 1.0, 'SOM': 1.0, 'VIP': 1.0, 'NGF': 1.0}
 
 # Thalamic
-cfg.addIntraThalamicConn = 1.0
-cfg.addCorticoThalamicConn = 1.0
-cfg.addThalamoCorticalConn = 1.0
+cfg.addIntraThalamicConn = 0
+cfg.addCorticoThalamicConn = 0
+cfg.addThalamoCorticalConn = 0
 
 cfg.thalamoCorticalGain = 1.0
 cfg.intraThalamicGain = 1.0

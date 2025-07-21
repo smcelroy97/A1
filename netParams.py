@@ -636,63 +636,98 @@ if cfg.addSubConn:
 # ------------------------------------------------------------------------------
 # Background inputs
 # ------------------------------------------------------------------------------
+
+with open('data/bkg_rate_dict.json', 'rb') as f:
+    bkg_rates = json.load(f)
+
+desired_rates = {'E': 1.0, 'I': 5.0}
+
+nearest_syns = {}
+for pop in bkg_rates:
+    rates = bkg_rates[pop]  # dict: syn_num (as str) → firing_rate
+    if pop in cfg.Epops:
+        target_rate = desired_rates['E']
+    else:
+        target_rate = desired_rates['I']
+
+    # Find syn_num with firing rate closest to target
+    best_syn = min(rates, key=lambda syn: abs(rates[syn] - target_rate))
+    nearest_syns[pop] = float(best_syn)
+
+SourcesNumber = 5  # for each post Mtype - sec distribution
+
+synperNeuronStimI = {}
+synperNeuronStimE = {}
+GsynStimI = {}
+GsynStimE = {}
+
+for post in cfg.Ipops + cfg.Epops:
+    GsynStimI[post] = 3.0  # PSP = - 1.0 mv if Vrest = - 75 mV
+    GsynStimE[post] = 0.45  # PSP = + 1.0 mv if Vrest = - 75 mV
+
+    synperNeuronStimI[post] = 10  # Exc/Inh
+    synperNeuronStimE[post] = 50  # [1000:10000]
+
+cfg.rateStimI = 5.0  # Hz
+cfg.rateStimE = 1.0  # Hz
+
 if cfg.addBkgConn:
-    # add bkg sources for E and I cells
-    netParams.stimSourceParams['excBkg'] = {
-        'type': 'NetStim',
-        'start': cfg.startBkg,
-        'rate': cfg.rateBkg['exc'],
-        'noise': cfg.noiseBkg,
-        'number': 1e9}
-    netParams.stimSourceParams['inhBkg'] = {
-        'type': 'NetStim',
-        'start': cfg.startBkg,
-        'rate': cfg.rateBkg['inh'],
-        'noise': cfg.noiseBkg,
-        'number': 1e9}
+    for post in cfg.Ipops + cfg.Epops:
 
-    # excBkg/I -> thalamus + cortex
-    with open('cells/bkgWeightPops.json', 'r') as f:
-        weightBkg = json.load(f)
-    pops = list(cfg.allpops)
-    if 'cochlea' in pops:
-        pops.remove('cochlea')
+        synperNeuron = synperNeuronStimI[post]
+        ratespontaneous = cfg.rateStimI
+        for qSnum in range(SourcesNumber):
+            ratesdifferentiation = (0.8 + 0.4*qSnum/(SourcesNumber-1)) * (synperNeuron*ratespontaneous)/SourcesNumber
+            netParams.stimSourceParams['StimSynS1_S_all_INH->' + post + '_' + str(qSnum)] = \
+                {'type': 'NetStim',
+                 'rate': ratesdifferentiation,
+                 'noise': 1.0,
+                 'start': qSnum*50.0,
+                 'number': 1e9}
 
-    for pop in ['TC', 'TCM', 'HTC']:
-        weightBkg[pop] *= cfg.EbkgThalamicGain
+        synperNeuron = synperNeuronStimE[post]
+        ratespontaneous = cfg.rateStimE
+        for qSnum in range(SourcesNumber):
+            ratesdifferentiation = (0.8 + 0.4*qSnum/(SourcesNumber-1)) * (synperNeuron*ratespontaneous)/SourcesNumber
+            # netParams.stimSourceParams['StimSynS1_S_all_EXC->' + post + '_' + str(qSnum)] = {'type': 'NetStim', 'rate': ratesdifferentiation, 'noise': 1.0, 'start': qSnum*50.0, 'number': 1e9}
+            netParams.stimSourceParams['StimSynS1_S_all_EXC->' + post + '_' + str(qSnum)] = \
+                {'type': 'NetStim',
+                 'rate': (0.8 + 0.4*qSnum/(SourcesNumber-1)) * (cfg.background_Exc*ratespontaneous)/SourcesNumber,
+                 'noise': 1.0,
+                 'start': qSnum*50.0,
+                 'number': 1e9}
 
-    for pop in ['IRE', 'IREM', 'TI', 'TIM']:
-        weightBkg[pop] *= cfg.IbkgThalamicGain
+    # ------------------------------------------------------------------------------
+    for post in cfg.Epops:
+        for qSnum in range(SourcesNumber):
+            netParams.stimTargetParams['StimSynS1_T_all_EXC->' + post + '_' + str(qSnum)] = {
+                'source': 'StimSynS1_S_all_EXC->' + post + '_' + str(qSnum),
+                'conds':  {'pop': [post]},
+                'synMech': 'AMPA',
+                'sec': 'all',  # soma not inclued in S1 model
+                'weight': GsynStimE[post],
+                'delay': 0.1}
 
-    for pop in ['NGF6']:
-        weightBkg[pop] *= cfg.NGF6bkgGain
+    for post in cfg.Ipops:
+        for qSnum in range(SourcesNumber):
+            netParams.stimTargetParams['StimSynS1_T_all_EXC->' + post + '_' + str(qSnum)] = {
+                'source': 'StimSynS1_S_all_EXC->' + post + '_' + str(qSnum),
+                'synMech': 'AMPA',
+                'conds':  {'pop': [post]},
+                'sec': 'all',
+                'weight': GsynStimE[post],
+                'delay': 0.1}
 
-    for pop in ['IT2', 'IT3', 'ITP4', 'ITS4', 'IT5A', 'CT5A', 'IT5B', 'PT5B', 'CT5B', 'IT6', 'CT6']:
-        weightBkg[pop] *= cfg.BkgCtxEGain
+    for post in cfg.Epops+cfg.Ipops:
+        for qSnum in range(SourcesNumber):
+            netParams.stimTargetParams['StimSynS1_T_all_INH->' + post + '_' + str(qSnum)] = {
+                'source': 'StimSynS1_S_all_INH->' + post + '_' + str(qSnum),
+                'conds':  {'pop': [post]},
+                'synMech': 'GABAA',
+                'sec': 'all',
+                'weight': GsynStimI[post],
+                'delay': 0.1}
 
-    for pop in ['NGF1', 'SOM2', 'PV2', 'VIP2', 'NGF2', 'SOM3', 'PV3', 'VIP3', 'NGF3', 'SOM4', 'PV4', 'VIP4', 'NGF4',
-                'SOM5A', 'PV5A', 'VIP5A', 'NGF5A', 'SOM5B', 'PV5B', 'VIP5B', 'NGF5B', 'SOM6', 'PV6', 'VIP6', 'NGF6']:
-        weightBkg[pop] *= cfg.BkgCtxIGain
-
-    for pop in pops:
-        netParams.stimTargetParams['excBkg->' + pop] = {
-            'source': 'excBkg',
-            'conds': {'pop': pop},
-            'sec': 'apic',
-            'loc': 0.5,
-            'synMech': ESynMech,
-            'weight': weightBkg[pop],
-            'synMechWeightFactor': cfg.synWeightFractionEE,
-            'delay': cfg.delayBkg}
-
-        netParams.stimTargetParams['inhBkg->' + pop] = {
-            'source': 'inhBkg',
-            'conds': {'pop': pop},
-            'sec': 'proximal',
-            'loc': 0.5,
-            'synMech': 'GABAA',
-            'weight': weightBkg[pop],
-            'delay': cfg.delayBkg}
 
 def prob2conv(prob, npre):
     # probability to convergence; prob is connection probability, npre is number of presynaptic neurons
