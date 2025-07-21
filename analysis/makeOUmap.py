@@ -20,7 +20,7 @@ files_per_rank = np.array_split(all_files, size)
 
 
 # Helper function to compute firing rate and ISICV
-def compute_metrics(simResults, trange = [2000, 3000]):
+def compute_metrics(simResults, trange = [4000, 5000]):
 
     rate_dict = {}
     isicv_dict = {}
@@ -58,8 +58,8 @@ for file in files_per_rank[rank]:
 
     rate_dict, isicv_dict = compute_metrics(simResults)
 
-    rate_dicts.append((simResults['simConfig']['L3L4PV'], rate_dict))
-    isicv_dicts.append((simResults['simConfig']['L3L4PV'], isicv_dict))
+    rate_dicts.append((simResults['simConfig']['background_Exc'], rate_dict))
+    isicv_dicts.append((simResults['simConfig']['background_Exc'], isicv_dict))
 
 # Gather results
 all_rate_dicts = comm.gather(rate_dicts, root=0)
@@ -84,8 +84,8 @@ if rank == 0:
                     final_isicv_dict[pop] = {}
                 final_isicv_dict[pop][syn_num] = val
 
-    with open(sim_dir + 'rate_dict.pkl', 'w') as file:
-        json.dump(final_rate_dict, file)
+    with open(sim_dir + 'rate_dict.json', 'w') as file:
+        json.dump(final_rate_dict, file, indent=2)
 
-    with open(sim_dir + 'isicv_dict.pkl', 'w') as file:
-        json.dump(final_isicv_dict, file)
+    with open(sim_dir + 'isicv_dict.json', 'w') as file:
+        json.dump(final_isicv_dict, file, indent=2)
