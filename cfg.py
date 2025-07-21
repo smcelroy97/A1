@@ -349,7 +349,7 @@ cfg.addNoiseIClamp = 0
 # Background conductance inputs
 # ------------------------------------------------------------------------------
 
-cfg.addNoiseConductance = True
+cfg.addNoiseConductance = False
 cfg.OUamp = 40
 cfg.OUstd = 10
 cfg.NoiseConductanceDur = cfg.duration

@@ -801,52 +801,138 @@ if cfg.cochlearThalInput:
 
     connectCochleaToThal()
 
+resting_potential = {}
+resting_potential['NGF1'] = -62.60
+resting_potential['IT2'] = -85.77
+resting_potential['SOM2'] = -64.88
+resting_potential['PV2'] = -74.05
+resting_potential['VIP2'] = -70.10
+resting_potential['NGF2'] = -62.60
+resting_potential['IT3'] = -85.67
+resting_potential['SOM3'] = -64.88
+resting_potential['PV3'] = -74.05
+resting_potential['VIP3'] = -70.10
+resting_potential['NGF3'] = -62.60
+resting_potential['ITP4'] = -85.86
+resting_potential['ITS4'] = -85.39
+resting_potential['SOM4'] = -64.88
+resting_potential['PV4'] = -74.05
+resting_potential['VIP4'] = -70.10
+resting_potential['NGF4'] = -62.60
+resting_potential['IT5A'] = -81.19
+resting_potential['CT5A'] = -86.04
+resting_potential['SOM5A'] = -64.88
+resting_potential['PV5A'] = -74.05
+resting_potential['VIP5A'] = -70.10
+resting_potential['NGF5A'] = -62.60
+resting_potential['IT5B'] = -81.14
+resting_potential['CT5B'] = -86.04
+resting_potential['PT5B'] = -80.43
+resting_potential['SOM5B'] = -64.88
+resting_potential['PV5B'] = -74.05
+resting_potential['VIP5B'] = -70.10
+resting_potential['NGF5B'] = -62.60
+resting_potential['IT6'] = -80.50
+resting_potential['CT6'] = -86.04
+resting_potential['SOM6'] = -64.88
+resting_potential['PV6'] = -74.05
+resting_potential['VIP6'] = -70.10
+resting_potential['NGF6'] = -62.60
+
+input_resistance = {}
+input_resistance['NGF1'] = 396.75
+input_resistance['IT2'] = 87.13
+input_resistance['SOM2'] = 234.53
+input_resistance['PV2'] = 140.53
+input_resistance['VIP2'] = 227.55
+input_resistance['NGF2'] = 396.75
+input_resistance['IT3'] = 75.96
+input_resistance['SOM3'] = 234.53
+input_resistance['PV3'] = 140.53
+input_resistance['VIP3'] = 227.55
+input_resistance['NGF3'] = 396.75
+input_resistance['ITP4'] = 76.21
+input_resistance['ITS4'] = 197.72
+input_resistance['SOM4'] = 234.53
+input_resistance['PV4'] = 140.53
+input_resistance['VIP4'] = 227.55
+input_resistance['NGF4'] = 396.75
+input_resistance['IT5A'] = 115.39
+input_resistance['CT5A'] = 57.61
+input_resistance['SOM5A'] = 234.53
+input_resistance['PV5A'] = 140.53
+input_resistance['VIP5A'] = 227.55
+input_resistance['NGF5A'] = 396.75
+input_resistance['IT5B'] = 107.41
+input_resistance['CT5B'] = 57.61
+input_resistance['PT5B'] = 71.29
+input_resistance['SOM5B'] = 234.53
+input_resistance['PV5B'] = 140.53
+input_resistance['VIP5B'] = 227.55
+input_resistance['NGF5B'] = 396.75
+input_resistance['IT6'] = 111.44
+input_resistance['CT6'] = 57.61
+input_resistance['SOM6'] = 234.53
+input_resistance['PV6'] = 140.53
+input_resistance['VIP6'] = 227.55
+input_resistance['NGF6'] = 396.75
+
 # ------------------------------------------------------------------------------
-# Current inputs (IClamp)
+# IClamp
 # ------------------------------------------------------------------------------
+print("%s \t %s \t %s \t %s" % ("popName","resting_potential","input_resistance","holding_current"))
+for popName in cfg.Ipops + cfg.Epops:
+
+    holding_current = (-75.0 - resting_potential[popName])/input_resistance[popName]
+
+    print("%s \t %20.3f \t %20.3f \t %20.3f" % (popName,resting_potential[popName],input_resistance[popName1],holding_current1))
 
 
-if cfg.addIClamp:
-    if cfg.addIClamp['FIcurve']:
-        for i in range(cfg.addIClamp['numInjections']):
-            start_time = i * cfg.addIClamp['injectionInterval']
-            amp = cfg.addIClamp['injectionAmplitudes'][i]
-            key = f'IClamp_{i}'
+    netParams.stimSourceParams['Input_'+popName1] = {'type': 'IClamp', 'del': 0.0, 'dur': 10000.0, 'amp': holding_current}
+    netParams.stimTargetParams['Input->'+popName1] = {'source': 'Input_'+popName, 'sec':'soma_0', 'loc': 0.5, 'conds': {'pop':popName}}
 
-            # Add stim source
-            netParams.stimSourceParams[key] = {
-                'type': 'IClamp',
-                'delay': start_time,
-                'dur': cfg.addIClamp['injectionDuration'],
-                'amp': amp
-            }
 
-            # Connect stim source to all cells
-            for pop in cfg.allpops:
-                netParams.stimTargetParams[f'{key}_{pop}'] = {
-                    'source': key,
-                    'conds': {'pop': pop},
-                    'sec': 'soma',  # Assuming you want to inject current into the soma
-                    'loc': 0.5
-                }
-
-    if cfg.addIClamp['holdingCurrent']:
-        for pop in cfg.addIClamp['includePops']:
-            key = f'IClamp_holding_{pop}'
-
-            netParams.stimSourceParams[key] = {
-                'type': 'IClamp',
-                'delay': cfg.addIClamp['hold_delay'],
-                'dur': cfg.addIClamp['hold_duration'],
-                'amp': cfg.addIClamp['holdingAmp']
-            }
-
-            netParams.stimTargetParams[key] = {
-                'source': key,
-                'conds': {'pop': pop},
-                'sec': 'soma',
-                'loc': 0.5
-            }
+# if cfg.addIClamp:
+#     if cfg.addIClamp['FIcurve']:
+#         for i in range(cfg.addIClamp['numInjections']):
+#             start_time = i * cfg.addIClamp['injectionInterval']
+#             amp = cfg.addIClamp['injectionAmplitudes'][i]
+#             key = f'IClamp_{i}'
+#
+#             # Add stim source
+#             netParams.stimSourceParams[key] = {
+#                 'type': 'IClamp',
+#                 'delay': start_time,
+#                 'dur': cfg.addIClamp['injectionDuration'],
+#                 'amp': amp
+#             }
+#
+#             # Connect stim source to all cells
+#             for pop in cfg.allpops:
+#                 netParams.stimTargetParams[f'{key}_{pop}'] = {
+#                     'source': key,
+#                     'conds': {'pop': pop},
+#                     'sec': 'soma',  # Assuming you want to inject current into the soma
+#                     'loc': 0.5
+#                 }
+#
+#     if cfg.addIClamp['holdingCurrent']:
+#         for pop in cfg.addIClamp['includePops']:
+#             key = f'IClamp_holding_{pop}'
+#
+#             netParams.stimSourceParams[key] = {
+#                 'type': 'IClamp',
+#                 'delay': cfg.addIClamp['hold_delay'],
+#                 'dur': cfg.addIClamp['hold_duration'],
+#                 'amp': cfg.addIClamp['holdingAmp']
+#             }
+#
+#             netParams.stimTargetParams[key] = {
+#                 'source': key,
+#                 'conds': {'pop': pop},
+#                 'sec': 'soma',
+#                 'loc': 0.5
+#             }
 
 if cfg.addNoiseConductance:
     with open('data/inputResistances.json', 'rb') as f:
