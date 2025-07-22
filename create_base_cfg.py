@@ -202,7 +202,7 @@ def create_base_cfg():
     cfg.wireCortex = 1.0
 
     # Global weight multiplier
-    cfg.wmult = 0.01
+    cfg.wmult = 1.0
 
     # cfg.EEGain = 0.75
     # cfg.EIGain = 1.5
