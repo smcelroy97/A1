@@ -69,14 +69,17 @@ def setCochCellLocationsX (pop, sz, scale):
         c.tags['xnorm'] = cellx / netParams.sizeX # make sure these values consistent
       c.updateShape()
 
-if cfg.cochlearThalInput: setCochCellLocationsX(
-  'cochlea',
-  netParams.popParams['cochlea']['numCells'],
-  cfg.sizeX
-)
-
+# if cfg.cochlearThalInput: setCochCellLocationsX(
+#   'cochlea',
+#   netParams.popParams['cochlea']['numCells'],
+#   cfg.sizeX
+# )
+print('making conns')
 sim.net.connectCells()      # create connections between cells based on params
+print('Conns made')
 sim.net.addStims() 			# add network stimulation
+
+print('stims added')
 
 ##########################################
 # - Adding OU Noise Stims for each Cell -#
@@ -94,6 +97,7 @@ if sim.cfg.addNoiseIClamp:
 
 
 sim.setupRecording()       # setup variables to record for each cell (spikes, V traces, etc)
+print('run sim begin')
 sim.runSim()               # run parallel Neuron simulation
 sim.gatherData()
 

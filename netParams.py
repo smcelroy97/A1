@@ -692,7 +692,7 @@ if cfg.addBkgConn:
             # netParams.stimSourceParams['StimSynS1_S_all_EXC->' + post + '_' + str(qSnum)] = {'type': 'NetStim', 'rate': ratesdifferentiation, 'noise': 1.0, 'start': qSnum*50.0, 'number': 1e9}
             netParams.stimSourceParams['StimSynS1_S_all_EXC->' + post + '_' + str(qSnum)] = \
                 {'type': 'NetStim',
-                 'rate': (0.8 + 0.4*qSnum/(SourcesNumber-1)) * (cfg.background_Exc*ratespontaneous)/SourcesNumber,
+                 'rate': (0.8 + 0.4*qSnum/(SourcesNumber-1)) * (nearest_syns[post]*ratespontaneous)/SourcesNumber,
                  'noise': 1.0,
                  'start': qSnum*50.0,
                  'number': 1e9}
@@ -734,72 +734,72 @@ def prob2conv(prob, npre):
     return int(0.5 + prob * npre)
 
 
-# cochlea -> thal
-def connectCochleaToThal():
-    prob = '%f * exp(-dist_x/%f)' % (cfg.cochlearThalInput['probECore'], ThalamicCoreLambda)
-    netParams.connParams['cochlea->ThalECore'] = {
-        'preConds': {'pop': 'cochlea'},
-        'postConds': {'pop': ['TC', 'HTC']},
-        'sec': 'soma',
-        'loc': 0.5,
-        'synMech': ESynMech,
-        'probability': prob,
-        'weight': cfg.cochlearThalInput['weightECore'],
-        'synMechWeightFactor': cfg.synWeightFractionEE,
-        'delay': cfg.delayBkg}
-    prob = '%f * exp(-dist_x/%f)' % (cfg.cochlearThalInput['probICore'], ThalamicCoreLambda)
-    netParams.connParams['cochlea->ThalICore'] = {
-        'preConds': {'pop': 'cochlea'},
-        'postConds': {'pop': ['TI']},  # 'IRE',
-        'sec': 'soma',
-        'loc': 0.5,
-        'synMech': ESynMech,
-        'probability': prob,
-        'weight': cfg.cochlearThalInput['weightICore'],
-        'synMechWeightFactor': cfg.synWeightFractionEI,
-        'delay': cfg.delayBkg}
-    # cochlea -> Thal Matrix
-    netParams.connParams['cochlea->ThalEMatrix'] = {
-        'preConds': {'pop': 'cochlea'},
-        'postConds': {'pop': 'TCM'},
-        'sec': 'soma',
-        'loc': 0.5,
-        'synMech': ESynMech,
-        'convergence': prob2conv(cfg.cochlearThalInput['probEMatrix'], numCochlearCells),
-        'weight': cfg.cochlearThalInput['weightEMatrix'],
-        'synMechWeightFactor': cfg.synWeightFractionEE,
-        'delay': cfg.delayBkg}
-    netParams.connParams['cochlea->ThalIMatrix'] = {
-        'preConds': {'pop': 'cochlea'},
-        'postConds': {'pop': ['TIM']},  # 'IREM',
-        'sec': 'soma',
-        'loc': 0.5,
-        'synMech': ESynMech,
-        'convergence': prob2conv(cfg.cochlearThalInput['probIMatrix'], numCochlearCells),
-        'weight': cfg.cochlearThalInput['weightIMatrix'],
-        'synMechWeightFactor': cfg.synWeightFractionEI,
-        'delay': cfg.delayBkg}
+# # cochlea -> thal
+# def connectCochleaToThal():
+#     prob = '%f * exp(-dist_x/%f)' % (cfg.cochlearThalInput['probECore'], ThalamicCoreLambda)
+#     netParams.connParams['cochlea->ThalECore'] = {
+#         'preConds': {'pop': 'cochlea'},
+#         'postConds': {'pop': ['TC', 'HTC']},
+#         'sec': 'soma',
+#         'loc': 0.5,
+#         'synMech': ESynMech,
+#         'probability': prob,
+#         'weight': cfg.cochlearThalInput['weightECore'],
+#         'synMechWeightFactor': cfg.synWeightFractionEE,
+#         'delay': cfg.delayBkg}
+#     prob = '%f * exp(-dist_x/%f)' % (cfg.cochlearThalInput['probICore'], ThalamicCoreLambda)
+#     netParams.connParams['cochlea->ThalICore'] = {
+#         'preConds': {'pop': 'cochlea'},
+#         'postConds': {'pop': ['TI']},  # 'IRE',
+#         'sec': 'soma',
+#         'loc': 0.5,
+#         'synMech': ESynMech,
+#         'probability': prob,
+#         'weight': cfg.cochlearThalInput['weightICore'],
+#         'synMechWeightFactor': cfg.synWeightFractionEI,
+#         'delay': cfg.delayBkg}
+#     # cochlea -> Thal Matrix
+#     netParams.connParams['cochlea->ThalEMatrix'] = {
+#         'preConds': {'pop': 'cochlea'},
+#         'postConds': {'pop': 'TCM'},
+#         'sec': 'soma',
+#         'loc': 0.5,
+#         'synMech': ESynMech,
+#         'convergence': prob2conv(cfg.cochlearThalInput['probEMatrix'], numCochlearCells),
+#         'weight': cfg.cochlearThalInput['weightEMatrix'],
+#         'synMechWeightFactor': cfg.synWeightFractionEE,
+#         'delay': cfg.delayBkg}
+#     netParams.connParams['cochlea->ThalIMatrix'] = {
+#         'preConds': {'pop': 'cochlea'},
+#         'postConds': {'pop': ['TIM']},  # 'IREM',
+#         'sec': 'soma',
+#         'loc': 0.5,
+#         'synMech': ESynMech,
+#         'convergence': prob2conv(cfg.cochlearThalInput['probIMatrix'], numCochlearCells),
+#         'weight': cfg.cochlearThalInput['weightIMatrix'],
+#         'synMechWeightFactor': cfg.synWeightFractionEI,
+#         'delay': cfg.delayBkg}
 
 
-if cfg.cochlearThalInput:
-    from input import cochlearSpikes
+# if cfg.cochlearThalInput:
+#     from input import cochlearSpikes
 
-    dcoch = cochlearSpikes(freqRange=cfg.cochlearThalInput['freqRange'],
-                           numCenterFreqs=cfg.cochlearThalInput['numCenterFreqs'],
-                           loudnessScale=cfg.cochlearThalInput['loudnessScale'],
-                           lfnwave=cfg.cochlearThalInput['lfnwave'],
-                           lonset=cfg.cochlearThalInput['lonset'])
-    cochlearSpkTimes = dcoch['spkT']
-    cochlearCenterFreqs = dcoch['cf']
-    netParams.cf = dcoch['cf']
-    numCochlearCells = len(cochlearCenterFreqs)
-    netParams.popParams['cochlea'] = {
-        'cellModel': 'VecStim',
-        'numCells': numCochlearCells,
-        'spkTimes': cochlearSpkTimes,
-        'ynormRange': layer['cochlear']}
+#     dcoch = cochlearSpikes(freqRange=cfg.cochlearThalInput['freqRange'],
+#                            numCenterFreqs=cfg.cochlearThalInput['numCenterFreqs'],
+#                            loudnessScale=cfg.cochlearThalInput['loudnessScale'],
+#                            lfnwave=cfg.cochlearThalInput['lfnwave'],
+#                            lonset=cfg.cochlearThalInput['lonset'])
+#     cochlearSpkTimes = dcoch['spkT']
+#     cochlearCenterFreqs = dcoch['cf']
+#     netParams.cf = dcoch['cf']
+#     numCochlearCells = len(cochlearCenterFreqs)
+#     netParams.popParams['cochlea'] = {
+#         'cellModel': 'VecStim',
+#         'numCells': numCochlearCells,
+#         'spkTimes': cochlearSpkTimes,
+#         'ynormRange': layer['cochlear']}
 
-    connectCochleaToThal()
+#     connectCochleaToThal()
 
 resting_potential = {}
 resting_potential['NGF1'] = -62.60
@@ -885,11 +885,21 @@ for popName in cfg.Ipops + cfg.Epops:
 
     holding_current = (-75.0 - resting_potential[popName])/input_resistance[popName]
 
-    print("%s \t %20.3f \t %20.3f \t %20.3f" % (popName,resting_potential[popName],input_resistance[popName1],holding_current1))
+    print("%s \t %20.3f \t %20.3f \t %20.3f" % (popName,resting_potential[popName],input_resistance[popName],holding_current))
 
 
-    netParams.stimSourceParams['Input_'+popName1] = {'type': 'IClamp', 'del': 0.0, 'dur': 10000.0, 'amp': holding_current}
-    netParams.stimTargetParams['Input->'+popName1] = {'source': 'Input_'+popName, 'sec':'soma_0', 'loc': 0.5, 'conds': {'pop':popName}}
+    netParams.stimSourceParams['Input_'+popName] = {
+        'type': 'IClamp', 
+        'del': 0.0, 
+        'dur': cfg.duration, 
+        'amp': holding_current}
+        
+    netParams.stimTargetParams['Input->'+popName] = {
+        'source': 
+        'Input_'+popName, 
+        'sec':'soma', 
+        'loc': 0.5, 
+        'conds': {'pop':popName}}
 
 
 # if cfg.addIClamp:
@@ -934,88 +944,88 @@ for popName in cfg.Ipops + cfg.Epops:
 #                 'loc': 0.5
 #             }
 
-if cfg.addNoiseConductance:
-    with open('data/inputResistances.json', 'rb') as f:
-    # with open('simOutput/input_res_0/input_res_vals.json', 'rb') as f:
-        inpRes = json.load(f)
+# if cfg.addNoiseConductance:
+#     with open('data/inputResistances.json', 'rb') as f:
+#     # with open('simOutput/input_res_0/input_res_vals.json', 'rb') as f:
+#         inpRes = json.load(f)
 
-    netParams.NoiseConductanceParams = {}
-    for pop in cfg.allpops:
-        Gin = 1 / inpRes[pop]
-        g0 = (cfg.OUamp / 100) * Gin
-        sigma = (cfg.OUstd / 100) * Gin
-        # print('pop is: '  + pop + ' Input resistance is: ' + str(inpRes[pop]) + ' input conductance is: ' + str(Gin) + '   g0 is:  ' + str(g0))
-        netParams.NoiseConductanceParams[pop] = {
-            'g0': g0,
-            'sigma': sigma
-        }
+#     netParams.NoiseConductanceParams = {}
+#     for pop in cfg.allpops:
+#         Gin = 1 / inpRes[pop]
+#         g0 = (cfg.OUamp / 100) * Gin
+#         sigma = (cfg.OUstd / 100) * Gin
+#         # print('pop is: '  + pop + ' Input resistance is: ' + str(inpRes[pop]) + ' input conductance is: ' + str(Gin) + '   g0 is:  ' + str(g0))
+#         netParams.NoiseConductanceParams[pop] = {
+#             'g0': g0,
+#             'sigma': sigma
+#         }
 
-        for pop in cfg.allpops:
-            netParams.stimSourceParams['NoiseSEClamp_source_' + pop] = {
-                'type': 'ConductanceSource',
-                'dur1': cfg.NoiseConductanceDur,
-                'amp1': 0  # rmpPops[pop] #abs(rmpPops[pop] * 0.18)
-            }
-            netParams.stimTargetParams['NoiseSEClamp_target_' + pop] = {
-                'source': 'NoiseSEClamp_source_' + pop,
-                'sec': 'soma',
-                'loc': 0.5,
-                'conds': {'pop': pop}
-            }
+#         for pop in cfg.allpops:
+#             netParams.stimSourceParams['NoiseSEClamp_source_' + pop] = {
+#                 'type': 'ConductanceSource',
+#                 'dur1': cfg.NoiseConductanceDur,
+#                 'amp1': 0  # rmpPops[pop] #abs(rmpPops[pop] * 0.18)
+#             }
+#             netParams.stimTargetParams['NoiseSEClamp_target_' + pop] = {
+#                 'source': 'NoiseSEClamp_source_' + pop,
+#                 'sec': 'soma',
+#                 'loc': 0.5,
+#                 'conds': {'pop': pop}
+#             }
 
-if cfg.addNoiseIClamp:
-    with open('data/inputResistances.json', 'rb') as f:
-        inpRes = json.load(f)
+# if cfg.addNoiseIClamp:
+#     with open('data/inputResistances.json', 'rb') as f:
+#         inpRes = json.load(f)
 
-    netParams.NoiseIClampParams = {}
-    for pop in cfg.allpops:
-        Gin = 1 / inpRes[pop]
-        g0 = (cfg.OUamp / 100) * Gin
-        sigma = (cfg.OUstd / 100) * Gin
-        # print('pop is: '  + pop + ' Input resistance is: ' + str(inpRes[pop]) + ' input conductance is: ' + str(Gin) + '   g0 is:  ' + str(g0))
-        netParams.NoiseIClampParams[pop] = {
-            'g0': g0,
-            'sigma': sigma
-        }
+#     netParams.NoiseIClampParams = {}
+#     for pop in cfg.allpops:
+#         Gin = 1 / inpRes[pop]
+#         g0 = (cfg.OUamp / 100) * Gin
+#         sigma = (cfg.OUstd / 100) * Gin
+#         # print('pop is: '  + pop + ' Input resistance is: ' + str(inpRes[pop]) + ' input conductance is: ' + str(Gin) + '   g0 is:  ' + str(g0))
+#         netParams.NoiseIClampParams[pop] = {
+#             'g0': g0,
+#             'sigma': sigma
+#         }
 
-    for pop in cfg.allpops:
-        netParams.stimSourceParams['NoiseIClamp_source_' + pop] = {
-            'type': 'IClamp',
-            'dur': cfg.NoiseConductanceDur,
-            'amp': 0  # rmpPops[pop] #abs(rmpPops[pop] * 0.18)
-        }
-        netParams.stimTargetParams['NoiseIClamp_target_' + pop] = {
-            'source': 'NoiseIClamp_source_' + pop,
-            'sec': 'soma',
-            'loc': 0.5,
-            'conds': {'pop': pop}
-        }
+#     for pop in cfg.allpops:
+#         netParams.stimSourceParams['NoiseIClamp_source_' + pop] = {
+#             'type': 'IClamp',
+#             'dur': cfg.NoiseConductanceDur,
+#             'amp': 0  # rmpPops[pop] #abs(rmpPops[pop] * 0.18)
+#         }
+#         netParams.stimTargetParams['NoiseIClamp_target_' + pop] = {
+#             'source': 'NoiseIClamp_source_' + pop,
+#             'sec': 'soma',
+#             'loc': 0.5,
+#             'conds': {'pop': pop}
+#         }
 
 # ------------------------------------------------------------------------------
 # NetStim inputs (to simulate short external stimuli; not bkg)
 # ------------------------------------------------------------------------------
-if cfg.addNetStim:
-    for key in [k for k in dir(cfg) if k.startswith('NetStim')]:
-        params = getattr(cfg, key, None)
-        [pop, ynorm, sec, loc, synMech, synMechWeightFactor, start, interval, noise, number, weight, delay] = \
-            [params[s] for s in ['pop', 'ynorm', 'sec', 'loc', 'synMech', 'synMechWeightFactor', 'start', 'interval', 'noise', 'number', 'weight', 'delay']]
-        netParams.stimSourceParams[key] = {'type': 'NetStim', 'start': start, 'interval': interval, 'noise': noise, 'number': number}
+# if cfg.addNetStim:
+#     for key in [k for k in dir(cfg) if k.startswith('NetStim')]:
+#         params = getattr(cfg, key, None)
+#         [pop, ynorm, sec, loc, synMech, synMechWeightFactor, start, interval, noise, number, weight, delay] = \
+#             [params[s] for s in ['pop', 'ynorm', 'sec', 'loc', 'synMech', 'synMechWeightFactor', 'start', 'interval', 'noise', 'number', 'weight', 'delay']]
+#         netParams.stimSourceParams[key] = {'type': 'NetStim', 'start': start, 'interval': interval, 'noise': noise, 'number': number}
 
-        if not isinstance(pop, list):
-            pop = [pop]
+#         if not isinstance(pop, list):
+#             pop = [pop]
 
-        for eachPop in pop:
-            # connect stim source to target
+#         for eachPop in pop:
+#             # connect stim source to target
 
-            netParams.stimTargetParams[key + '_' + eachPop] = {
-                'source': key,
-                'conds': {'pop': eachPop, 'ynorm': ynorm},
-                'sec': sec,
-                'loc': loc,
-                'synMech': synMech,
-                'weight': weight,
-                'synMechWeightFactor': synMechWeightFactor,
-                'delay': delay}
+#             netParams.stimTargetParams[key + '_' + eachPop] = {
+#                 'source': key,
+#                 'conds': {'pop': eachPop, 'ynorm': ynorm},
+#                 'sec': sec,
+#                 'loc': loc,
+#                 'synMech': synMech,
+#                 'weight': weight,
+#                 'synMechWeightFactor': synMechWeightFactor,
+#                 'delay': delay}
 
 # ------------------------------------------------------------------------------
 # Description

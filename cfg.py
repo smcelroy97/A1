@@ -22,8 +22,8 @@ cfg = specs.SimConfig()
 # ------------------------------------------------------------------------------
 # Run parameters
 # ------------------------------------------------------------------------------
-cfg.duration = 3500  # Duration of the sim, in ms
-cfg.dt = 0.025   # 0.025  # Internal Integration Time Step
+cfg.duration = 2500  # Duration of the sim, in ms
+cfg.dt = 0.05   # 0.025  # Internal Integration Time Step
 cfg.verbose = 0  # Show detailed messages
 cfg.progressBar = 0  # even more detailed message
 cfg.hParams['celsius'] = 37
@@ -75,9 +75,9 @@ if cfg.pops_active:
     cfg.allpops = cfg.pops_active
 
 # Dict with traces to record -- taken from M1 cfg.py
-cfg.recordTraces = {'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'},
+cfg.recordTraces = {'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'}
                     # 'g_NMDA': {'sec': 'soma', 'loc': 0.5, 'synMech': 'NMDA', 'var': 'g'},
-                    'i_GABAB': {'sec': 'soma', 'loc': 0.5, 'synMech': 'GABAB', 'var': 'i'}
+                    # 'i_GABAB': {'sec': 'soma', 'loc': 0.5, 'synMech': 'GABAB', 'var': 'i'}
                     }
 
 cfg.recordStim = False  # Seen in M1 cfg.py
@@ -88,14 +88,14 @@ cfg.recordStep = 0.05  # St ep size (in ms) to save data -- value from M1 cfg.py
 # cfg.recordDipole = True
 
 # ------------------------------------------------------------------------------
-# Savingx
+# Saving
 # ------------------------------------------------------------------------------
 
 cfg.simLabel = 'e1_i5_0'
 cfg.saveFolder = 'simOutput/' + cfg.simLabel  # Set file output name
 cfg.savePickle = True  # Save pkl file
 cfg.saveJson = False  # Save json file
-cfg.saveDataInclude = ['simData', 'simConfig', 'net', 'netParams',  'netCells', 'netPops']
+cfg.saveDataInclude = ['simData', 'simConfig', 'net', 'netParams', 'netPops']
 cfg.backupCfgFile = None
 cfg.gatherOnlySimData = False
 cfg.saveCellSecs = False
@@ -178,7 +178,7 @@ for key, value in cfgLoad.items():
     setattr(cfg, key, value)
 
 # These values taken from M1 cfg (https://github.com/Neurosim-lab/netpyne/bflob/development/examples/M1detailed/cfg.py)
-cfg.singleCellPops = True
+cfg.singleCellPops = False
 cfg.reducedPop = False  # insert number to declare specific number of populations, if going for full model set to False
 cfg.singlePop = ''
 cfg.removeWeightNorm = False
@@ -294,7 +294,7 @@ cfg.seeds = {'conn': 23451, 'stim': 1, 'loc': 1}
 # ------------------------------------------------------------------------------
 # Background inputs
 # ------------------------------------------------------------------------------
-cfg.addBkgConn = 0
+cfg.addBkgConn = 1.0
 cfg.noiseBkg = 1.0  # firing rate random noise
 cfg.delayBkg = 5.0  # (ms)
 cfg.startBkg = 0  # start at 0 ms
