@@ -2,9 +2,9 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-wo_gain = pd.read_csv('../simOutput/PSPTest_noGain/pop_psps.csv')
+wo_gain = pd.read_csv('../simOutput/v45_batch25/pop_psps.csv')
 
-w_gain = pd.read_csv('../simOutput/PSPTest/pop_psps.csv')
+w_gain = pd.read_csv('../simOutput/v45_batch26/pop_psps.csv')
 
 
 merged = pd.merge(

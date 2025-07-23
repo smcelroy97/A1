@@ -39,7 +39,7 @@ cfg.cache_efficient = True
 cfg.oneSynPerNetcon = False
 cfg.includeParamsLabel = False
 cfg.printPopAvgRates = [0, cfg.duration]  # "printPopAvgRates": [[1500,1750],[1750,2000],[2000,2250],[2250,2500]]
-cfg.validateNetParams = False
+cfg.validateNetParams = True
 
 # ------------------------------------------------------------------------------
 # Recording
@@ -84,8 +84,8 @@ cfg.recordStim = False  # Seen in M1 cfg.py
 cfg.recordTime = True  # SEen in M1 cfg.py
 cfg.recordStep = 0.05  # St ep size (in ms) to save data -- value from M1 cfg.py
 
-# cfg.recordLFP =[[100, y, 100] for y in range(0, 2000, 100)]
-# cfg.recordDipole = True
+cfg.recordLFP = False  #  [[100, y, 100] for y in range(0, 2000, 100)]
+cfg.recordDipole = False
 
 # ------------------------------------------------------------------------------
 # Saving
@@ -106,7 +106,7 @@ cfg.saveCellConns = False
 # ------------------------------------------------------------------------------
 
 cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig': False, 'orderInverse': True, 'figSize': (25, 25),
-                              'markerSize': 1, 'oneFigPer': 'trace'}   # Plot a raster
+                              'markerSize': 1}   # Plot a raster
 
 # cfg.analysis['plotSpikeStats'] = {'stats' : ['isicv'], 'saveFig' : True}
 
@@ -178,7 +178,7 @@ for key, value in cfgLoad.items():
     setattr(cfg, key, value)
 
 # These values taken from M1 cfg (https://github.com/Neurosim-lab/netpyne/bflob/development/examples/M1detailed/cfg.py)
-cfg.singleCellPops = False
+cfg.singleCellPops = True
 cfg.reducedPop = False  # insert number to declare specific number of populations, if going for full model set to False
 cfg.singlePop = ''
 cfg.removeWeightNorm = False
@@ -299,6 +299,8 @@ cfg.noiseBkg = 1.0  # firing rate random noise
 cfg.delayBkg = 5.0  # (ms)
 cfg.startBkg = 0  # start at 0 ms
 cfg.rateBkg = {'exc': 40, 'inh': 40}
+cfg.rateStimI = 5.0  # Hz
+cfg.rateStimE = 1.0  # Hz
 
 cfg.EbkgThalamicGain = 1.04528
 cfg.IbkgThalamicGain = 0.485714

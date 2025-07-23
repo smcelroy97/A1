@@ -33,7 +33,7 @@ slurm_config = {
 
 
 run_config = sge_config
-search(job_type = 'sh',
+search(job_type = 'sge',
        comm_type = 'socket',
        label = label,
        params = params,
