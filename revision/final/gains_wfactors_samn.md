@@ -1,0 +1,80 @@
+
+- **Legend**
+    - "l" is the Layer of the synapse location: ['1', '2', '3', '4', '5A', '5B', '6']
+    - "dconf" is loaded from 'data/v34_batch25/trial_2142/trial_2142_cfg.json'
+
+- **Cortex**
+    - **Epops -> Epops**
+        - Weight multipliers:
+            - cfg.EEGain
+            - cfg.EELayerGain[l]   (l is the layer of synapse location)
+            - cfg.EEPopGain[post]
+            - scaleFactor
+                - ITS4|ITP4->IT3: cfg.L4L3E
+                - 1
+        - synMechWeightFactor: cfg.synWeightFractionEE
+    - **Epops -> Ipops**
+        - Weight multipliers:
+            - cfg.EIGain
+            - cfg.EILayerGain[l]
+            - cfg.EIPopGain[post]
+            - cfg.EICellTypeGain[postType]
+            - scaleFactor
+                - E->NGF: cfg.ENGF1
+                - ITS4|ITP4->PV3: cfg.L4L3PV
+                - ITS4|ITP4->SOM3: cfg.L4L3SOM
+                - ITS4|ITP4->NGF3: cfg.L4L3NGF
+                - ITS4|ITP4->VIP3: cfg.L4L3VIP
+                - 1
+        - synMechWeightFactor
+            - E->NGF: cfg.synWeightFractionENGF   
+            - E->PV: cfg.synWeightFractionEI_CustomCort
+            - cfg.synWeightFractionEI
+    - **Ipops -> Epops**
+        - Weight multipliers:
+            - cfg.IEGain
+            - cfg.IELayerGain[l]
+            - cfg.IECellTypeGain[preType]
+        - synMechWeightFactor:
+            - SOM->E: cfg.synWeightFractionSOM['E']
+            - NGF->E: cfg.synWeightFractionNGF['E']
+            - cfg.synWeightFractionIE
+    - **Ipops -> Ipops**
+        - Weight multipliers:
+            - cfg.IIGain
+            - cfg.IILayerGain[l]
+        - synMechWeightFactor:
+            - SOM->I: cfg.synWeightFractionSOM['I']
+            - NGF->I: cfg.synWeightFractionNGF['I']
+            - cfg.synWeightFractionII
+
+- **Thalamus**
+    - **ThalE -> Thal(E|I)**
+        - Weight multipliers:
+            - cfg.intraThalamicGain
+            - dconf['net']['intraThalamic(Core)E(E|I)Gain']  (from sim.json)
+        - synMechWeightFactor
+            - cfg.synWeightFractionEE
+                (should alo use synWeightFractionEI? equal, anyway)
+    - **ThalI -> Thal(E|I)**
+        - Weight multipliers:
+            - cfg.intraThalamicGain
+            - dconf['net']['intraThalamic(Core)I(E|I)Gain']
+        - synMechWeightFactor
+            - dconf['syn']['synWeightFractionThal']['Thal']['I']['E|I']
+    - **Cortex -> Thal**
+        - Weight multipliers:
+            - cfg.corticoThalamicGain
+        - synMechWeightFactor
+            - cfg.synWeightFractionEE
+    - **Thal -> Cortex**
+        - Weight multipliers:
+            - cfg.thalamoCorticalGain
+            - scaleFactor
+                - ThalE -> L4: cfg.thalL4(PV|SOM|E|NGF)
+                - ThalE -> NGF1: cfg.thalL1NGF
+                - 1
+        - synMechWeightFactor
+            - ThalE -> Cortex: cfg.synWeightFractionEE
+                (should alo use synWeightFractionEI? equal, anyway)
+            - ThalI -> Cortex: cfg.synWeightFractionThal['Ctx']['I']['E|I'] 

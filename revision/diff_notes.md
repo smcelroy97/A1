@@ -3,6 +3,7 @@
 with open('data/v34_batch25/trial_2142/trial_2142_cfg.json', 'rb') as f:
 	cfgLoad = json.load(f)['simConfig']
 
+
 - **cells/**
 	- HTC_reduced_cellParams.json
 		"cal": {"gcalbar": 0.001 -> 0.002}
@@ -16,6 +17,7 @@ with open('data/v34_batch25/trial_2142/trial_2142_cfg.json', 'rb') as f:
 		"ittc": {"gmax": 0.02 -> 0.2}
 	- sTC.py
 		self.soma.gcalbar_cal = 0.00
+
 
 - **cfg.json**
 	- Gains
@@ -40,11 +42,11 @@ with open('data/v34_batch25/trial_2142/trial_2142_cfg.json', 'rb') as f:
 			EILayerGain
 			IELayerGain   
 			IILayerGain
-			EICellTypeGain 
-			IECellTypeGain
+			EICellTypeGain  (from cfgLoad <- trial.json)
+			IECellTypeGain  (from cfgLoad <- trial.json)
 			EbkgThalamicGain
 			IbkgThalamicGain  
-			intraThalamicGain
+			intraThalamicGain  (from cfgLoad <- trial.json)
 			thalamoCorticalGain  
 	- WeightFractions:
 		- Removed
@@ -64,7 +66,7 @@ with open('data/v34_batch25/trial_2142/trial_2142_cfg.json', 'rb') as f:
 	- popParams['ITS4']['cellType']
 		Old: ITS4
 		New: IT
-	- wmat
+	- wmat  (from cfgLoad <- trial.json)
 		IT2->PV2
 		IT2->SOM2
 		IT2->SOM3
@@ -84,6 +86,8 @@ with open('data/v34_batch25/trial_2142/trial_2142_cfg.json', 'rb') as f:
 		VIP3->SOM2
 		VIP3->SOM3
 
+
+
 - **netParams** (not from cfg; directly from dconf=sim.json or hardcoded in sim.py)
 	- Distance-dependent thalamic connectivity (lambda=50)
 		Old: [TC, HTC]
@@ -93,12 +97,12 @@ with open('data/v34_batch25/trial_2142/trial_2142_cfg.json', 'rb') as f:
 			- GABABCtx for "SOM|NGF->..." conn and "SOM|NGF->E" subConn
 			- GABABThal for "IThal->Thal"
 		- synMechWeightFactor 
-			- IThal->EThal 
+			- ThalI -> ThalE
 				Old: [0.9, 0.2] (synWeightFractionThalIE)
 				New: [0.9, 0.4] (from sim.json: dconf['syn']['synWeightFractionThal']['Thal']['I']['E'])
 	- Gains
 		- Thal->Thal
-	!		From dconf['net']['intraThalamic(Core)(E|I)(E|I)Gain'] -- same as the one removed from cfg?
+	## !		From dconf['net']['intraThalamic(Core)(E|I)(E|I)Gain'] -- same as the one removed from cfg?
 
 
 

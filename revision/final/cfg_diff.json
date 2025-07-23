@@ -1,0 +1,362 @@
+{
+    "type_changes": {
+        "root['simConfig']['noiseBkg']": {
+            "old_type": "<class 'int'>",
+            "new_type": "<class 'float'>",
+            "old_value": 0,
+            "new_value": 1.0
+        },
+        "root['simConfig']['synWeightFractionNGF']": {
+            "old_type": "<class 'list'>",
+            "new_type": "<class 'dict'>",
+            "old_value": [
+                0.5,
+                0.9
+            ],
+            "new_value": {
+                "E": [
+                    0.5,
+                    1.0
+                ],
+                "I": [
+                    1.0
+                ]
+            }
+        }
+    },
+    "dictionary_item_added": {
+        "Syn":
+            "root['simConfig']['AMPATau2Factor']",
+        "WeightFractions":
+            "root['simConfig']['synWeightFractionSOM']",
+        "Misc": [
+            "root['simConfig']['ICThalInput']",
+            "root['simConfig']['ICThalMatrixCoreFactor']",
+            "root['simConfig']['ICThalprobECore']",
+            "root['simConfig']['ICThalprobEMatrix']",
+            "root['simConfig']['ICThalprobICore']",
+            "root['simConfig']['ICThalprobIMatrix']",
+            "root['simConfig']['ICThalweightECore']",
+            "root['simConfig']['ICThalweightICore']",
+            "root['simConfig']['cochThalweightEMatrix']",
+            "root['simConfig']['cochThalweightIMatrix']",
+            "root['simConfig']['addRIClamp']",
+            "root['simConfig']['seeds']['cell']"
+        ]        
+    },
+    "dictionary_item_removed": {
+        "Misc": [
+            "root['simConfig']['Epops']",
+            "root['simConfig']['Ipops']",
+            "root['simConfig']['TEpops']",
+            "root['simConfig']['TIpops']",
+            "root['simConfig']['ITS4Type']",
+            "root['simConfig']['numInjections']",
+            "root['simConfig']['reducedPop']",
+            "root['simConfig']['wireCortex']",
+            "root['simConfig']['injectionAmplitudes']",
+            "root['simConfig']['injectionDuration']",
+            "root['simConfig']['injectionInterval']"
+        ],
+        "Cochlea": [
+            "root['simConfig']['cochThalMatrixCoreFactor']",
+            "root['simConfig']['cochthalweightEMatrix']",
+            "root['simConfig']['cochthalweightIMatrix']"
+        ],
+        "WeightFractions": [
+            "root['simConfig']['synWeightFractionNGFE']",
+            "root['simConfig']['synWeightFractionNGFI']",
+            "root['simConfig']['synWeightFractionSOME']",
+            "root['simConfig']['synWeightFractionSOMI']",
+            "root['simConfig']['synWeightFractionThalCtxIE']",
+            "root['simConfig']['synWeightFractionThalCtxII']",
+            "root['simConfig']['synWeightFractionThalIE']",
+            "root['simConfig']['synWeightFractionThalII']"
+        ],
+        "Gains": [
+            "root['simConfig']['BkgCtxEGain']",
+            "root['simConfig']['BkgCtxIGain']",
+            "root['simConfig']['CT6ScaleFactor']",
+            "root['simConfig']['CTGainThalI']",            
+            "root['simConfig']['L3L3scaleFactor']",
+            "root['simConfig']['L3L4PV']",
+            "root['simConfig']['L3L4SOM']",
+            "root['simConfig']['L4L4E']",
+            "root['simConfig']['NGF6bkgGain']",            
+            "root['simConfig']['intraThalamicEEGain']",
+            "root['simConfig']['intraThalamicEIGain']",
+            "root['simConfig']['intraThalamicIEGain']",
+            "root['simConfig']['intraThalamicIIGain']"
+        ]
+    },
+    "values_changed": {
+        "Gains" : {
+            "root['simConfig']['EEGain']": {
+                "new_value": 1.1,
+                "old_value": 1.31667
+            },
+            "root['simConfig']['EELayerGain']['2']": {
+                "new_value": 1.1392556114489,
+                "old_value": 1.0
+            },
+            "root['simConfig']['EELayerGain']['3']": {
+                "new_value": 0.2627680775261009,
+                "old_value": 1.0
+            },
+            "root['simConfig']['EELayerGain']['4']": {
+                "new_value": 0.7953549349740079,
+                "old_value": 1.0
+            },
+            "root['simConfig']['EELayerGain']['5A']": {
+                "new_value": 1.107062263790829,
+                "old_value": 1.0
+            },
+            "root['simConfig']['EELayerGain']['5B']": {
+                "new_value": 0.1873673565713772,
+                "old_value": 1.0
+            },
+            "root['simConfig']['EELayerGain']['6']": {
+                "new_value": 0.6,
+                "old_value": 1.0
+            },
+            "root['simConfig']['EICellTypeGain']['NGF']": {
+                "new_value": 2.7521920026073357,
+                "old_value": 1.0
+            },
+            "root['simConfig']['EICellTypeGain']['PV']": {
+                "new_value": 0.6152864472687144,
+                "old_value": 1.0
+            },
+            "root['simConfig']['EICellTypeGain']['SOM']": {
+                "new_value": 0.35116819915031644,
+                "old_value": 1.0
+            },
+            "root['simConfig']['EICellTypeGain']['VIP']": {
+                "new_value": 1.1218458257976713,
+                "old_value": 1.0
+            },
+            "root['simConfig']['EILayerGain']['1']": {
+                "new_value": 0.827750821266419,
+                "old_value": 1.0
+            },
+            "root['simConfig']['EILayerGain']['2']": {
+                "new_value": 0.8309591864633213,
+                "old_value": 1.0
+            },
+            "root['simConfig']['EILayerGain']['3']": {
+                "new_value": 0.2606080713427127,
+                "old_value": 1.0
+            },
+            "root['simConfig']['EILayerGain']['4']": {
+                "new_value": 0.7,
+                "old_value": 1.0
+            },
+            "root['simConfig']['EILayerGain']['5A']": {
+                "new_value": 0.9777414771947963,
+                "old_value": 1.0
+            },
+            "root['simConfig']['EILayerGain']['5B']": {
+                "new_value": 1.2194384057226428,
+                "old_value": 1.0
+            },
+            "root['simConfig']['EILayerGain']['6']": {
+                "new_value": 2.661195004653538,
+                "old_value": 1.0
+            },
+            "root['simConfig']['EbkgThalamicGain']": {
+                "new_value": 0.392,
+                "old_value": 1.04528
+            },
+            "root['simConfig']['IECellTypeGain']['NGF']": {
+                "new_value": 0.11567059244128475,
+                "old_value": 1.0
+            },
+            "root['simConfig']['IECellTypeGain']['PV']": {
+                "new_value": 2.9493206673798475,
+                "old_value": 1.0
+            },
+            "root['simConfig']['IECellTypeGain']['SOM']": {
+                "new_value": 0.13986148108703275,
+                "old_value": 1.0
+            },
+            "root['simConfig']['IECellTypeGain']['VIP']": {
+                "new_value": 0.10888755736754395,
+                "old_value": 1.0
+            },
+            "root['simConfig']['IEGain']": {
+                "new_value": 2.06,
+                "old_value": 0.6
+            },
+            "root['simConfig']['IELayerGain']['2']": {
+                "new_value": 0.8766937284048854,
+                "old_value": 1.0
+            },
+            "root['simConfig']['IELayerGain']['3']": {
+                "new_value": 0.5609281169449685,
+                "old_value": 1.0
+            },
+            "root['simConfig']['IELayerGain']['4']": {
+                "new_value": 1.870729555191084,
+                "old_value": 1.0
+            },
+            "root['simConfig']['IELayerGain']['5A']": {
+                "new_value": 3.566320604507868,
+                "old_value": 1.0
+            },
+            "root['simConfig']['IELayerGain']['5B']": {
+                "new_value": 0.7695785463331726,
+                "old_value": 1.0
+            },
+            "root['simConfig']['IELayerGain']['6']": {
+                "new_value": 4.9,
+                "old_value": 1.0
+            },
+            "root['simConfig']['IILayerGain']['1']": {
+                "new_value": 1.1305254604890966,
+                "old_value": 1.0
+            },
+            "root['simConfig']['IILayerGain']['2']": {
+                "new_value": 1.1428945741399408,
+                "old_value": 1.0
+            },
+            "root['simConfig']['IILayerGain']['3']": {
+                "new_value": 0.2896903197397815,
+                "old_value": 1.0
+            },
+            "root['simConfig']['IILayerGain']['4']": {
+                "new_value": 1.08,
+                "old_value": 1.0
+            },
+            "root['simConfig']['IILayerGain']['5A']": {
+                "new_value": 0.5982384402236298,
+                "old_value": 1.0
+            },
+            "root['simConfig']['IILayerGain']['5B']": {
+                "new_value": 0.879452953038821,
+                "old_value": 1.0
+            },
+            "root['simConfig']['IILayerGain']['6']": {
+                "new_value": 0.4784462642417754,
+                "old_value": 1.0
+            },
+            "root['simConfig']['IbkgThalamicGain']": {
+                "new_value": 1.96,
+                "old_value": 0.485714
+            },
+            "root['simConfig']['intraThalamicGain']": {
+            "new_value": 0.9843624229766335,
+            "old_value": 1.0
+            },
+            "root['simConfig']['thalamoCorticalGain']": {
+                "new_value": 3.0,
+                "old_value": 1.0
+            }
+        },
+        "Cochlea": {
+            "root['simConfig']['cochThalprobECore']": {
+                "new_value": 0.9,
+                "old_value": 0.3
+            },
+            "root['simConfig']['cochThalprobEMatrix']": {
+                "new_value": 0.1125,
+                "old_value": 0.0375
+            },
+            "root['simConfig']['cochThalprobICore']": {
+                "new_value": 0.45,
+                "old_value": 0.15
+            },
+            "root['simConfig']['cochThalprobIMatrix']": {
+                "new_value": 0.0028,
+                "old_value": 0.009375
+            }
+        },
+        "Misc": {
+            "root['simConfig']['addBkgConn']": {
+                "new_value": 1,
+                "old_value": 0
+            },
+            "root['simConfig']['includeParamsLabel']": {
+                "new_value": false,
+                "old_value": true
+            },
+            "root['simConfig']['seeds']['conn']": {
+                "new_value": 1,
+                "old_value": 23451
+            }
+        },
+        "Wmat": {
+            "root['simConfig']['wmat']['IT2']['PV2']": {
+                "new_value": 8.951360272675535,
+                "old_value": 1.49
+            },
+            "root['simConfig']['wmat']['IT2']['SOM2']": {
+                "new_value": 4.520338243396906,
+                "old_value": 0.86
+            },
+            "root['simConfig']['wmat']['IT2']['SOM3']": {
+                "new_value": 0.9220741405216772,
+                "old_value": 0.86
+            },
+            "root['simConfig']['wmat']['IT3']['PV2']": {
+                "new_value": 0.6989862127767753,
+                "old_value": 1.49
+            },
+            "root['simConfig']['wmat']['IT3']['SOM2']": {
+                "new_value": 3.8731196931987526,
+                "old_value": 0.86
+            },
+            "root['simConfig']['wmat']['IT3']['SOM3']": {
+                "new_value": 1.4156398498100407,
+                "old_value": 0.86
+            },
+            "root['simConfig']['wmat']['PV2']['PV2']": {
+                "new_value": 1.476120562888286,
+                "old_value": 0.68
+            },
+            "root['simConfig']['wmat']['PV2']['VIP2']": {
+                "new_value": 1.8592590688026305,
+                "old_value": 0.68
+            },
+            "root['simConfig']['wmat']['PV3']['PV2']": {
+                "new_value": 1.703406777034413,
+                "old_value": 0.68
+            },
+            "root['simConfig']['wmat']['PV3']['VIP2']": {
+                "new_value": 2.8377031724278408,
+                "old_value": 0.68
+            },
+            "root['simConfig']['wmat']['SOM2']['PV2']": {
+                "new_value": 0.9773321735067029,
+                "old_value": 0.5
+            },
+            "root['simConfig']['wmat']['SOM2']['VIP2']": {
+                "new_value": 0.980900842035586,
+                "old_value": 0.5
+            },
+            "root['simConfig']['wmat']['SOM3']['PV2']": {
+                "new_value": 0.6697938366970796,
+                "old_value": 0.5
+            },
+            "root['simConfig']['wmat']['SOM3']['VIP2']": {
+                "new_value": 0.6718419974445727,
+                "old_value": 0.5
+            },
+            "root['simConfig']['wmat']['VIP2']['SOM2']": {
+                "new_value": 1.3075445452738272,
+                "old_value": 0.42
+            },
+            "root['simConfig']['wmat']['VIP2']['SOM3']": {
+                "new_value": 0.32658155477852474,
+                "old_value": 0.42
+            },
+            "root['simConfig']['wmat']['VIP3']['SOM2']": {
+                "new_value": 0.09027632023388031,
+                "old_value": 0.42
+            },
+            "root['simConfig']['wmat']['VIP3']['SOM3']": {
+                "new_value": 0.23496685079121124,
+                "old_value": 0.42
+            }
+        }
+    }
+}
