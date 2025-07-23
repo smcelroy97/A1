@@ -1,18 +1,17 @@
 #!/bin/bash
-#----------------------------------------------------
-# Slurm job script
-#   for TACC Stampede2 SKX nodes
-#
-#----------------------------------------------------
+#SBATCH --job-name=testrun
+#SBATCH -A TG-MED240050
+#SBATCH -t 2:30:00
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=64
+#SBATCH -o simOutput/single.run
+#SBATCH -e simOutput/single.err
+#SBATCH --mail-user=scott.mcelroy@downstate.edu
+#SBATCH --mail-type=end
 
-#SBATCH -J NoCxThal0617         # Job name
-#SBATCH -o NoCxThal0617.o%j       # Name of stdout output file
-#SBATCH -e NoCxThal0617.e%j       # Name of stderr error file
-#SBATCH -A TG-IBN140002			# Project ID (this is our current account)
-#SBATCH -p skx-dev                      # Queue (partition) name
-#SBATCH -N 4               # Total # of nodes (must be 1 for serial)
-#SBATCH -n 192               # Total # of mpi tasks (should be 1 for serial)
-#SBATCH -t 00:40:00        # Run time (hh:mm:ss)
-#SBATCH --mail-user=[YOUR EMAIL ADDRESS]
-#SBATCH --mail-type=all    # Send email at begin and end of job
-ibrun --npernode=48 nrniv -python -mpi init.py
+#SBATCH --mem=126G
+#SBATCH --export=ALL
+#SBATCH --partition=compute
+source ~/.bashrc
+cd /home/smcelroy/expanse/A1
+mpirun -n 64 nrniv -python -mpi init.py simConfig=data/ANsynapseReduction1113A/ANsynapseReduction1113A_0_0_0_cfg.json netParams=data/ANsynapseReduction1113A/ANsynapseReduction1113A_netParams.py
