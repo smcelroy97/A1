@@ -2,6 +2,7 @@ __pycache__/
 x86_64/
 .idea/
 ray/
+simOutput/
 *.mat
 *.png
 *.pyc
@@ -12,4 +13,5 @@ ray/
 *.pkl
 *params.json
 *.run
-simOutput/
+*.out
+*.ipynb

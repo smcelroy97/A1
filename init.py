@@ -14,7 +14,7 @@ MPI usage:
 
 Contributors: ericaygriffith@gmail.com, salvadordura@gmail.com
 """
-from netpyne.batchtools import specs, comm
+from netpyne import specs
 import matplotlib; matplotlib.use('Agg')  # to avoid graphics error in servers
 from matplotlib import pyplot as plt
 from input import cochlearInputSpikes
@@ -25,7 +25,6 @@ import numpy as np
 import BackgroundStim as BS
 import json
 import os
-comm.initialize()
 
 sim.initialize(simConfig = cfg, netParams = netParams)  		# create network object and set cfg and net params
 sim.net.createPops()               			# instantiate network populations
@@ -69,11 +68,11 @@ def setCochCellLocationsX (pop, sz, scale):
         c.tags['xnorm'] = cellx / netParams.sizeX # make sure these values consistent
       c.updateShape()
 
-# if cfg.cochlearThalInput: setCochCellLocationsX(
-#   'cochlea',
-#   netParams.popParams['cochlea']['numCells'],
-#   cfg.sizeX
-# )
+if cfg.cochlearThalInput: setCochCellLocationsX(
+  'cochlea',
+  netParams.popParams['cochlea']['numCells'],
+  cfg.sizeX
+)
 print('making conns')
 sim.net.connectCells()      # create connections between cells based on params
 print('Conns made')
@@ -101,31 +100,9 @@ print('run sim begin')
 sim.runSim()               # run parallel Neuron simulation
 sim.gatherData()
 
-if sim.cfg.addNoiseConductance:
-  allOUFlags = sim.pc.py_allgather(OUFlags)
-  combinedOUFlags = {}
-  for flags in allOUFlags:
-    combinedOUFlags.update(flags)
-  sim.OUFlags = combinedOUFlags
 
 sim.saveData()
 sim.analysis.plotData()    # plot spike raster etc
 
 simPlotting.plotMeanTraces(sim, cellsPerPop = 1, plotPops = sim.cfg.allpops)
 
-# Terminate batch process
-if comm.is_host():
-  if comm.rank == 0:
-    netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
-    print('transmitting data...')
-    inputs = specs.get_mappings()
-    avgRates = sim.analysis.popAvgRates(tranges=[cfg.duration - 1000, cfg.duration], show=False)
-    avgRates['loss'] = 700
-    out_json = json.dumps({**inputs, **avgRates})
-
-    # figs, spikesDict = sim.analysis.plotSpikeStats(stats=['isicv'], timeRange=[2000, 3000], saveFig=False, showFig=False, show=False)
-
-    comm.send(out_json)
-    comm.close()
-
-sim.close()

@@ -6,7 +6,7 @@ This file has sim configs as well as specification for parameterized values in n
 
 Contributors: ericaygriffith@gmail.com, salvadordura@gmail.com, samnemo@gmail.com
 """
-from netpyne.batchtools import specs
+from netpyne import specs
 import pickle
 import json
 import numpy as np
@@ -22,7 +22,7 @@ cfg = specs.SimConfig()
 # ------------------------------------------------------------------------------
 # Run parameters
 # ------------------------------------------------------------------------------
-cfg.duration = 2500  # Duration of the sim, in ms
+cfg.duration = 500  # Duration of the sim, in ms
 cfg.dt = 0.05   # 0.025  # Internal Integration Time Step
 cfg.verbose = 0  # Show detailed messages
 cfg.progressBar = 0  # even more detailed message
@@ -35,7 +35,6 @@ cfg.connRandomSecFromList = False  # set to false for reproducibility
 cfg.cvode_active = False
 cfg.cvode_atol = 1e-6
 cfg.cache_efficient = True
-# cfg.printRunTime = 0.1  			## specified above
 cfg.oneSynPerNetcon = False
 cfg.includeParamsLabel = False
 cfg.printPopAvgRates = [0, cfg.duration]  # "printPopAvgRates": [[1500,1750],[1750,2000],[2000,2250],[2250,2500]]
@@ -362,4 +361,3 @@ cfg.NoiseConductanceDur = cfg.duration
 cfg.addNetStim = 0
 
 cfg.tune = {}
-cfg.update_cfg()
