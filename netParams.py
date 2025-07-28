@@ -640,7 +640,7 @@ if cfg.addSubConn:
 with open('data/bkg_rate_dict.json', 'rb') as f:
     bkg_rates = json.load(f)
 
-desired_rates = {'E': 1.0, 'I': 5.0}
+desired_rates = {'E': 5.0, 'I': 5.0}
 
 nearest_syns = {}
 for pop in bkg_rates:
@@ -687,7 +687,6 @@ if cfg.addBkgConn:
         ratespontaneous = cfg.rateStimE
         for qSnum in range(SourcesNumber):
             ratesdifferentiation = (0.8 + 0.4*qSnum/(SourcesNumber-1)) * (synperNeuron*ratespontaneous)/SourcesNumber
-            # netParams.stimSourceParams['StimSynS1_S_all_EXC->' + post + '_' + str(qSnum)] = {'type': 'NetStim', 'rate': ratesdifferentiation, 'noise': 1.0, 'start': qSnum*50.0, 'number': 1e9}
             netParams.stimSourceParams['StimSynS1_S_all_EXC->' + post + '_' + str(qSnum)] = \
                 {'type': 'NetStim',
                  'rate': (0.8 + 0.4*qSnum/(SourcesNumber-1)) * (nearest_syns[post]*ratespontaneous)/SourcesNumber,
