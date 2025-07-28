@@ -121,8 +121,8 @@ def setplotTraces(ncell=50, linclude=cfg.allpops, timeRange=cfg.duration):
     cfg.analysis['plotTraces'] = {'include': linclude, 'timeRange': timeRange, 'oneFigPer': 'trace', 'overlay': True, 'saveFig': False, 'showFig': False, 'figSize': (12, 8)}
 
 
-setplotTraces(ncell=1, timeRange=[1750, 3000])
-
+# setplotTraces(ncell=1, timeRange=[1750, 3000])
+0
 layer_bounds = {'L1': 100, 'L2': 160, 'L3': 950, 'L4': 1250, 'L5A': 1334, 'L5B': 1550, 'L6': 2000}
 
 

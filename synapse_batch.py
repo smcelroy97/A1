@@ -1,7 +1,7 @@
 from netpyne.batchtools.search import search
 import numpy as np
 
-label = 'v45_batch26'
+label = 'v45_batch28'
 
 params = {'prePop': ['NGF1', 'IT2', 'SOM2', 'PV2', 'VIP2', 'NGF2', 'IT3', 'SOM3', 'PV3', 'VIP3', 'NGF3', 'ITP4', 'ITS4',
                      'SOM4', 'PV4', 'VIP4', 'NGF4', 'IT5A', 'CT5A', 'SOM5A', 'PV5A', 'VIP5A', 'NGF5A', 'IT5B', 'PT5B', 'CT5B',
@@ -22,16 +22,18 @@ sge_config = {
 }
 
 slurm_config = {
-    'allocation': 'TG-IBN140002',
-    'walltime': '0:40:00',
+    'allocation': 'TG-MED240050',
+    'walltime': '5:40:00',
+    'partition': 'compute',
     'nodes': 1,
     'coresPerNode': 64,
+    'mem' : 128,
     'email': 'scott.mcelroy@downstate.edu',
-    'command': 'mpiexec -n 128 nrniv -python -mpi init.py'
+    'command': 'mpiexec -n 64 nrniv -python -mpi synapse_init.py'
 }
 
-run_config = sge_config
-search(job_type='sge',
+run_config = slurm_config
+search(job_type='ssh_slurm',
        comm_type='socket',
        label=label,
        params=params,
