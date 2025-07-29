@@ -1,5 +1,6 @@
 __pycache__/
 x86_64/
+simOutput/
 .idea/
 ray/
 *.mat
@@ -7,6 +8,9 @@ ray/
 *.pyc
 *.iml
 *.xml
+*.out
+*.run
+*.err
 *DS_Store
 *_local.sh
 *.pkl
