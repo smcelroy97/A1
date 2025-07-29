@@ -637,95 +637,95 @@ if cfg.addSubConn:
 # Background inputs
 # ------------------------------------------------------------------------------
 
-# with open('data/bkg_rate_dict.json', 'rb') as f:
-#     bkg_rates = json.load(f)
-#
-# desired_rates = {'E': 1.0, 'I': 5.0}
-#
-# nearest_syns = {}
-# for pop in bkg_rates:
-#     rates = bkg_rates[pop]  # dict: syn_num (as str) → firing_rate
-#     if pop in cfg.Epops:
-#         target_rate = desired_rates['E']
-#     else:
-#         target_rate = desired_rates['I']
-#
-#     # Find syn_num with firing rate closest to target
-#     best_syn = min(rates, key=lambda syn: abs(rates[syn] - target_rate))
-#     nearest_syns[pop] = float(best_syn)
-#
-# SourcesNumber = 5  # for each post Mtype - sec distribution
-#
-# synperNeuronStimI = {}
-# synperNeuronStimE = {}
-# GsynStimI = {}
-# GsynStimE = {}
-#
-# for post in cfg.Ipops + cfg.Epops:
-#     GsynStimI[post] = 3.0  # PSP = - 1.0 mv if Vrest = - 75 mV
-#     GsynStimE[post] = 0.45  # PSP = + 1.0 mv if Vrest = - 75 mV
-#
-#     synperNeuronStimI[post] = 10  # Exc/Inh
-#     synperNeuronStimE[post] = nearest_syns[post]
-#
-#
-# if cfg.addBkgConn:
-#     for post in cfg.Ipops + cfg.Epops:
-#
-#         synperNeuron = synperNeuronStimI[post]
-#         ratespontaneous = cfg.rateStimI
-#         for qSnum in range(SourcesNumber):
-#             ratesdifferentiation = (0.8 + 0.4*qSnum/(SourcesNumber-1)) * (synperNeuron*ratespontaneous)/SourcesNumber
-#             netParams.stimSourceParams['StimSynS1_S_all_INH->' + post + '_' + str(qSnum)] = \
-#                 {'type': 'NetStim',
-#                  'rate': ratesdifferentiation,
-#                  'noise': 1.0,
-#                  'start': qSnum*50.0,
-#                  'number': 1e9}
-#
-#         synperNeuron = synperNeuronStimE[post]
-#         ratespontaneous = cfg.rateStimE
-#         for qSnum in range(SourcesNumber):
-#             ratesdifferentiation = (0.8 + 0.4*qSnum/(SourcesNumber-1)) * (synperNeuron*ratespontaneous)/SourcesNumber
-#             # netParams.stimSourceParams['StimSynS1_S_all_EXC->' + post + '_' + str(qSnum)] = {'type': 'NetStim', 'rate': ratesdifferentiation, 'noise': 1.0, 'start': qSnum*50.0, 'number': 1e9}
-#             netParams.stimSourceParams['StimSynS1_S_all_EXC->' + post + '_' + str(qSnum)] = \
-#                 {'type': 'NetStim',
-#                  'rate': (0.8 + 0.4*qSnum/(SourcesNumber-1)) * (nearest_syns[post]*ratespontaneous)/SourcesNumber,
-#                  'noise': 1.0,
-#                  'start': qSnum*50.0,
-#                  'number': 1e9}
-#
-#     # ------------------------------------------------------------------------------
-#     for post in cfg.Epops:
-#         for qSnum in range(SourcesNumber):
-#             netParams.stimTargetParams['StimSynS1_T_all_EXC->' + post + '_' + str(qSnum)] = {
-#                 'source': 'StimSynS1_S_all_EXC->' + post + '_' + str(qSnum),
-#                 'conds':  {'pop': [post]},
-#                 'synMech': 'AMPA',
-#                 'sec': 'all',  # soma not inclued in S1 model
-#                 'weight': GsynStimE[post],
-#                 'delay': 0.1}
-#
-#     for post in cfg.Ipops:
-#         for qSnum in range(SourcesNumber):
-#             netParams.stimTargetParams['StimSynS1_T_all_EXC->' + post + '_' + str(qSnum)] = {
-#                 'source': 'StimSynS1_S_all_EXC->' + post + '_' + str(qSnum),
-#                 'synMech': 'AMPA',
-#                 'conds':  {'pop': [post]},
-#                 'sec': 'all',
-#                 'weight': GsynStimE[post],
-#                 'delay': 0.1}
-#
-#     for post in cfg.Epops+cfg.Ipops:
-#         for qSnum in range(SourcesNumber):
-#             netParams.stimTargetParams['StimSynS1_T_all_INH->' + post + '_' + str(qSnum)] = {
-#                 'source': 'StimSynS1_S_all_INH->' + post + '_' + str(qSnum),
-#                 'conds':  {'pop': [post]},
-#                 'synMech': 'GABAA',
-#                 'sec': 'all',
-#                 'weight': GsynStimI[post],
-#                 'delay': 0.1}
-#
+with open('data/bkg_rate_dict.json', 'rb') as f:
+    bkg_rates = json.load(f)
+
+desired_rates = {'E': 1.0, 'I': 5.0}
+
+nearest_syns = {}
+for pop in bkg_rates:
+    rates = bkg_rates[pop]  # dict: syn_num (as str) → firing_rate
+    if pop in cfg.Epops:
+        target_rate = desired_rates['E']
+    else:
+        target_rate = desired_rates['I']
+
+    # Find syn_num with firing rate closest to target
+    best_syn = min(rates, key=lambda syn: abs(rates[syn] - target_rate))
+    nearest_syns[pop] = float(best_syn)
+
+SourcesNumber = 5  # for each post Mtype - sec distribution
+
+synperNeuronStimI = {}
+synperNeuronStimE = {}
+GsynStimI = {}
+GsynStimE = {}
+
+for post in cfg.Ipops + cfg.Epops:
+    GsynStimI[post] = 3.0  # PSP = - 1.0 mv if Vrest = - 75 mV
+    GsynStimE[post] = 0.45  # PSP = + 1.0 mv if Vrest = - 75 mV
+
+    synperNeuronStimI[post] = 10  # Exc/Inh
+    synperNeuronStimE[post] = nearest_syns[post]
+
+
+if cfg.addBkgConn:
+    for post in cfg.Ipops + cfg.Epops:
+
+        synperNeuron = synperNeuronStimI[post]
+        ratespontaneous = cfg.rateStimI
+        for qSnum in range(SourcesNumber):
+            ratesdifferentiation = (0.8 + 0.4*qSnum/(SourcesNumber-1)) * (synperNeuron*ratespontaneous)/SourcesNumber
+            netParams.stimSourceParams['StimSyn_all_INH->' + post + '_' + str(qSnum)] = \
+                {'type': 'NetStim',
+                 'rate': ratesdifferentiation,
+                 'noise': 1.0,
+                 'start': qSnum*50.0,
+                 'number': 1e9}
+
+        synperNeuron = synperNeuronStimE[post]
+        ratespontaneous = cfg.rateStimE
+        for qSnum in range(SourcesNumber):
+            ratesdifferentiation = (0.8 + 0.4*qSnum/(SourcesNumber-1)) * (synperNeuron*ratespontaneous)/SourcesNumber
+            # netParams.stimSourceParams['StimSynS1_S_all_EXC->' + post + '_' + str(qSnum)] = {'type': 'NetStim', 'rate': ratesdifferentiation, 'noise': 1.0, 'start': qSnum*50.0, 'number': 1e9}
+            netParams.stimSourceParams['StimSyn_all_EXC->' + post + '_' + str(qSnum)] = \
+                {'type': 'NetStim',
+                 'rate': (0.8 + 0.4*qSnum/(SourcesNumber-1)) * (nearest_syns[post]*ratespontaneous)/SourcesNumber,
+                 'noise': 1.0,
+                 'start': qSnum*50.0,
+                 'number': 1e9}
+
+    # ------------------------------------------------------------------------------
+    for post in cfg.Epops:
+        for qSnum in range(SourcesNumber):
+            netParams.stimTargetParams['StimSyn_T_all_EXC->' + post + '_' + str(qSnum)] = {
+                'source': 'StimSynS1_S_all_EXC->' + post + '_' + str(qSnum),
+                'conds':  {'pop': [post]},
+                'synMech': 'AMPA',
+                'sec': 'all',  # soma not inclued in S1 model
+                'weight': GsynStimE[post],
+                'delay': 0.1}
+
+    for post in cfg.Ipops:
+        for qSnum in range(SourcesNumber):
+            netParams.stimTargetParams['StimSyn_T_all_EXC->' + post + '_' + str(qSnum)] = {
+                'source': 'StimSyn_all_EXC->' + post + '_' + str(qSnum),
+                'synMech': 'AMPA',
+                'conds':  {'pop': [post]},
+                'sec': 'all',
+                'weight': GsynStimE[post],
+                'delay': 0.1}
+
+    for post in cfg.Epops+cfg.Ipops:
+        for qSnum in range(SourcesNumber):
+            netParams.stimTargetParams['StimSyn6_T_all_INH->' + post + '_' + str(qSnum)] = {
+                'source': 'StimSyn_all_INH->' + post + '_' + str(qSnum),
+                'conds':  {'pop': [post]},
+                'synMech': 'GABAA',
+                'sec': 'all',
+                'weight': GsynStimI[post],
+                'delay': 0.1}
+
 
 def prob2conv(prob, npre):
     # probability to convergence; prob is connection probability, npre is number of presynaptic neurons

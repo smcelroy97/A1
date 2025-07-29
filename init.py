@@ -111,7 +111,7 @@ if sim.cfg.addNoiseConductance:
 sim.saveData()
 sim.analysis.plotData()    # plot spike raster etc
 
-simPlotting.plotMeanTraces(sim, cellsPerPop = 1, plotPops = sim.cfg.allpops)
+# simPlotting.plotMeanTraces(sim, cellsPerPop = 1, plotPops = sim.cfg.allpops)
 
 # Terminate batch process
 if comm.is_host():
