@@ -39,9 +39,9 @@ sim.net.allPops = {label: pop.__getstate__() for label, pop in sim.net.pops.item
 sim.net.connectCells()            			# create connections between cells based on params
 sim.net.addStims() 							# add network stimulation
 
-#########################################################################################
+# ########################################################################################
 # - Adding OU Nose Stims for each Cell
-#########################################################################################
+# ########################################################################################
 
 if sim.cfg.addNoiseIClamp:
   sim, vecs_dict = BS.addStim.addNoiseIClamp(sim)
@@ -49,75 +49,19 @@ if sim.cfg.addNoiseIClamp:
 sim.setupRecording()              			# setup variables to record for each cell (spikes, V traces, etc)
 sim.runSim()                                    # run parallel Neuron simulation
 
-trace_analysis = {}
 
-plotPops = []
-for cell in sim.net.cells:
-    for conn in cell.conns:
-        if conn['weight'] >0:
-            if cell.tags['pop'] not in plotPops:
-                plotPops.append(cell.tags['pop'])
-
-sim.saveDataInNodes()
-sim.gatherDataFromFiles()
+sim.gatherData()
 sim.saveData()
 sim.analysis.plotData()    # plot spike raster etc
 
-for pop_ind, pop in enumerate(plotPops):
-  print('\n\n', pop)
-  # sim.analysis.plotTraces(
-  figs, traces_dict = sim.analysis.plotTraces(
-    include=[pop],
-    # include=[record_pops[pop_ind]],
-    timeRange=[50, 100],
-    # overlay=True, oneFigPer='trace',
-    ylim=[-90, -40],
-    axis=True,
-    # figSize=(70, 15),
-    figSize=(25, 15),
-    # figSize=(60, 18),
-    fontSize=15,
-    saveFig=False,
-    # saveFig=sim.cfg.saveFigPath+'/'+sim.cfg.filename+'_traces_'+pop+ '.png'
-    # saveFig=sim.cfg.saveFolder + '/' + sim.cfg.simLabel + '_traces__' + pop + '.png',
-  )
-  for item in traces_dict['tracesData'][0]:
-    if 'soma' in item:
-      trace_analysis[pop] = traces_dict['tracesData'][0][item]
-
-
-basemV = {}
-amp = {}
-peak = {}
-
-for pop in trace_analysis:
-    basemV[pop] = trace_analysis[pop][0]
-    if cfg.prePop in cfg.Epops + cfg.TEpops:
-        peak_idx = np.array(trace_analysis[pop]).argmax()
-    else:
-        peak_idx = np.array(trace_analysis[pop]).argmin()
-    peak[pop] = trace_analysis[pop][peak_idx]
-    amp[pop]  = peak[pop] - basemV[pop]
-
-
-dummy = [1,2,3]
 # Terminate batch process
 if comm.is_host():
   netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
   print('transmitting data...')
   inputs = specs.get_mappings()
-  # results = sim.analysis.popAvgRates(show=False)
-  # results['loss'] = results[cfg.prePop + '_stim']
   results = amp
-  # for pop in trace_analysis:
-  #   results[pop]['basemV'] = basemV[pop]
-  #   results[pop]['peak'] = peak[pop]
-  #   results[pop]['amp'] = amp[pop]
   results['loss'] = 700
   out_json = json.dumps({**inputs, **results})
-
-  print(out_json)
-
   comm.send(out_json)
   comm.close()
 

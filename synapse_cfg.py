@@ -16,9 +16,7 @@ cfg.sizeX = 5.0  # 400 - This may change depending on electrode radius
 cfg.sizeZ = 200.0
 cfg.scaleDensity = 1.0  # Should be 1.0 unless need lower cell density for test simulation or visualization
 
-
-
-cfg.duration = 150  # Duration of the sim, in ms
+cfg.duration = 30000  # Duration of the sim, in ms
 cfg.dt = 0.05  # Internal Integration Time Step
 cfg.verbose = 0  # Show detailed messages
 cfg.progressBar = 0  # even more detailed message
@@ -52,35 +50,42 @@ cfg.allCorticalPops = ['NGF1', 'IT2', 'SOM2', 'PV2', 'VIP2', 'NGF2', 'IT3', 'SOM
 cfg.Epops = ['IT2', 'IT3', 'ITP4', 'ITS4', 'IT5A', 'CT5A', 'IT5B', 'CT5B' , 'PT5B', 'IT6', 'CT6']  # all layers
 
 cfg.Ipops = ['NGF1',                            # L1
-        'PV2', 'SOM2', 'VIP2', 'NGF2',      # L2
-        'PV3', 'SOM3', 'VIP3', 'NGF3',      # L3
-        'PV4', 'SOM4', 'VIP4', 'NGF4',      # L4
-        'PV5A', 'SOM5A', 'VIP5A', 'NGF5A',  # L5A
-        'PV5B', 'SOM5B', 'VIP5B', 'NGF5B',  # L5B
-        'PV6', 'SOM6', 'VIP6', 'NGF6']      # L6
+             'PV2', 'SOM2', 'VIP2', 'NGF2',      # L2
+             'PV3', 'SOM3', 'VIP3', 'NGF3',      # L3
+             'PV4', 'SOM4', 'VIP4', 'NGF4',      # L4
+             'PV5A', 'SOM5A', 'VIP5A', 'NGF5A',  # L5A
+             'PV5B', 'SOM5B', 'VIP5B', 'NGF5B',  # L5B
+             'PV6', 'SOM6', 'VIP6', 'NGF6']      # L6
 
 cfg.TEpops = ['TC', 'TCM', 'HTC']
 
 cfg.TIpops = ['IRE', 'IREM', 'TI', 'TIM']
 
+cfg.pops_active = False
+
+cfg.prePop = 'IT3'
+
+if cfg.pops_active:
+    cfg.allpops = cfg.pops_active
 
 # Dict with traces to record -- taken from M1 cfg.py
 cfg.recordTraces = {'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'}
                     # 'g_NMDA': {'sec':'soma', 'loc':0.5, 'synMech':'NMDA', 'var':'g'},
                     # 'g_GABAB': {'sec':'soma', 'loc':0.5, 'synMech':'GABAB', 'var':'g'}
 }
+
 cfg.recordStim = False  # Seen in M1 cfg.py
 cfg.recordTime = True  # SEen in M1 cfg.py
 cfg.recordStep = 0.05  # Step size (in ms) to save data -- value from M1 cfg.py
 
-cfg.recordLFP = [[100, y, 100] for y in range(0, 2000, 100)]
+cfg.recordLFP = False #  [[100, y, 100] for y in range(0, 2000, 100)]
 cfg.recordDipole = False
 
 # ------------------------------------------------------------------------------
 # Saving
 # ------------------------------------------------------------------------------
 
-cfg.simLabel = 'PSPTest'
+cfg.simLabel = 'PSPTest_noGain'
 cfg.saveFolder = 'simOutput/' + cfg.simLabel  # Set file output name
 cfg.savePickle = True  # Save pkl file
 cfg.saveJson = False  # Save json file
@@ -90,26 +95,28 @@ cfg.gatherOnlySimData = False
 cfg.saveCellSecs = False
 cfg.saveCellConns = True
 cfg.addNoiseIClamp = False
-
+cfg.add_gain = False
 # ------------------------------------------------------------------------------
 # Analysis and plotting
 # ------------------------------------------------------------------------------
 
-# cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig': False, 'orderInverse': True, # 'figSize': (25, 25),
-#                               'markerSize': 50}   # Plot a raster
+cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig': False, 'orderInverse': True, # 'figSize': (25, 25),
+                              'markerSize': 50}   # Plot a raster
 
 # cfg.analysis['plotConn'] = {'includePre': cfg.allpops, 'includePost': ['TC'], 'feature': 'strength',
 #                             'saveFig': True, 'showFig': False, 'figSize': (25, 25)}  # Plot conn matrix
 # 'include': [('TC', i) for i in range(40)],
 
-cfg.analysis['plotTraces'] = {'include': cfg.allpops, 'timeRange': [0, cfg.duration],
-'oneFigPer': 'trace', 'overlay': True, 'saveFig': False, 'showFig': False, 'figSize':(12,8)}
+cfg.analysis['plotTraces'] = {'include': ['all'], 'timeRange': [0, cfg.duration],
+                              'oneFigPer': 'cell', 'overlay': True, 'saveFig': True,
+                              'showFig': False, 'figSize': (12, 8)}
 
-def setplotTraces (ncell=1, linclude=[]):
-  for pop in cfg.allpops:
-    for i in range(ncell):
-      linclude.append( (pop,i) )
-  cfg.analysis['plotTraces'] = {'include': linclude, 'oneFigPer': 'trace', 'overlay': True, 'saveFig': True, 'showFig': False, 'figSize':(12,8)}
+def setplotTraces(ncell=50, linclude=cfg.allpops, timeRange=cfg.duration):
+    pops = []
+    for pop in linclude:
+        for i in range(ncell):
+            pops.append((pop, i))
+    cfg.analysis['plotTraces'] = {'include': linclude, 'timeRange': timeRange, 'oneFigPer': 'trace', 'overlay': True, 'saveFig': False, 'showFig': False, 'figSize': (12, 8)}
 
 # setplotTraces(ncell=20, linclude=['IT2'])
 
@@ -122,14 +129,13 @@ cfg.wmat = connData['wmat']
 
 cfg.seeds = {'conn': 23451, 'stim': 1, 'loc': 1}
 
-cfg.prePop = 'IT2' # population to be be used for PSP testing, the prePop is taken and the synMechs, weights, and conns are based on this pop but will be a vecStim
-
 # ------------------------------------------------------------------------------
 
 cfg.weightNormThreshold = 5.0  # maximum weight normalization factor with respect to the soma
 cfg.weightNormScaling = {'NGF_reduced': 1.0, 'ITS4_reduced': 1.0}
 cfg.ihGbar = 1.0
 cfg.KgbarFactor = 1.0
+
 # ------------------------------------------------------------------------------
 # Synapses
 # ------------------------------------------------------------------------------
@@ -159,6 +165,89 @@ cfg.synWeightFractionThalIE = [0.9, 0.2]
 cfg.synWeightFractionThalII = [1.0, 0.0]
 cfg.synWeightFractionThalCtxII = [1.0]
 cfg.synWeightFractionThalCtxIE = [1.0, 0.0]
+
+cfg.EEGain = 1.31667
+cfg.EIGain = 1.6313576020869256
+cfg.IEGain = 0.6
+cfg.IIGain = 1.4102431748127964
+
+## E/I->E/I layer weights (L1-3, L4, L5, L6)
+cfg.EELayerGain = {'1': 1.0, '2': 1.0, '3': 1.0, '4': 1.0, '5A': 1.0, '5B': 1.0, '6': 1.0}
+cfg.EILayerGain = {'1': 1.0, '2': 1.0, '3': 1.0, '4': 1.0, '5A': 1.0, '5B': 1.0, '6': 1.0}
+cfg.IELayerGain = {'1': 1.0, '2': 1.0, '3': 1.0, '4': 1.0, '5A': 1.0, '5B': 1.0, '6': 1.0}
+cfg.IILayerGain = {'1': 1.0, '2': 1.0, '3': 1.0, '4': 1.0, '5A': 1.0, '5B': 1.0, '6': 1.0}
+
+# E -> E based on postsynaptic cortical E neuron population
+cfg.EEPopGain = {"IT2": 1.3125, "IT3": 1.55, "ITP4": 1.0, "ITS4": 1.0, "IT5A": 1.05,
+                 "CT5A": 1.1500000000000001, "IT5B": 0.425, "CT5B": 1.1500000000000001,
+                 "PT5B": 1.05, "IT6": 1.05, "CT6": 1.05}  # this is from after generation 203 of optunaERP_23dec23_
+
+# gains from E -> I based on postsynaptic cortical I neuron population
+cfg.EIPopGain = {"NGF1": 1.0, "SOM2": 1.0, "PV2": 1.0, "VIP2": 1.0, "NGF2": 1.0, "SOM3": 1.0, "PV3": 1.0, "VIP3": 1.0,
+                 "NGF3": 1.0, "SOM4": 1.0, "PV4": 1.0, "VIP4": 1.0, "NGF4": 1.0, "SOM5A": 1.0, "PV5A": 1.4,
+                 "VIP5A": 1.25, "NGF5A": 0.8, "SOM5B": 1.0, "PV5B": 1.45, "VIP5B": 1.4, "NGF5B": 0.9500000000000001,
+                 "SOM6": 1.0, "PV6": 1.4, "VIP6": 1.3499999999999999, "NGF6": 0.65}
+
+## E->I by target cell type
+cfg.EICellTypeGain = {'PV': 1.0, 'SOM': 1.0, 'VIP': 1.0,
+                      'NGF': 1.0}
+
+# I->E by target cell type
+cfg.IECellTypeGain = {'PV': 1.0, 'SOM': 1.0, 'VIP': 1.0, 'NGF': 1.0}
+
+# Thalamic
+cfg.addIntraThalamicConn = 1.0
+cfg.addCorticoThalamicConn = 1.0
+cfg.addThalamoCorticalConn = 1.0
+
+cfg.thalamoCorticalGain = 1.0
+cfg.intraThalamicGain = 1.0
+cfg.corticoThalamicGain = 1.0
+cfg.CTGainThalI = 1.0
+
+cfg.intraThalamicEEGain = 1.0
+cfg.intraThalamicEIGain = 0.3
+cfg.intraThalamicIEGain = 0.1
+cfg.intraThalamicIIGain = 1.0
+
+# these params control cochlea -> Thalamus
+cfg.cochThalweightECore = 0.225  # 1.0  # 0.1125
+cfg.cochThalprobECore = 0.3
+cfg.cochThalweightICore = 0.0675
+cfg.cochThalprobICore = 0.15  # 0.5
+cfg.cochThalMatrixCoreFactor = 0.1
+cfg.cochthalweightEMatrix = 0.1125
+cfg.cochthalweightIMatrix = 0.0675
+cfg.cochThalprobEMatrix = 0.0375
+cfg.cochThalprobIMatrix = 0.009375
+cfg.cochThalFreqRange = [750, 1250]
+
+# Control the strength of thalamic inputs to different subpopulations
+cfg.thalL4PV = 0.21367245896786016
+cfg.thalL4SOM = 0.24260966747847523
+cfg.thalL4E = 2.0  # 1.9540886147587417
+
+cfg.thalL4VIP = 1.0
+cfg.thalL4NGF = 1.0
+cfg.L3L3scaleFactor = 1.0
+cfg.CT6ScaleFactor = 1.0
+
+cfg.ITS4Type = 'ITS4'
+
+cfg.thalL1NGF = 1.0
+cfg.ENGF1 = 1.0
+
+# L4 -> L3 Inhib pops
+cfg.L4L3E = 1.0
+cfg.L4L3PV = 1.0
+cfg.L4L3SOM = 1.0
+cfg.L4L3VIP = 1.0
+cfg.L4L3NGF = 1.0
+cfg.L4L4E = 1.0
+
+# L3 -> L4 Inhib pops
+cfg.L3L4PV = 1.0
+cfg.L3L4SOM = 1.0
 
 cfg.tune = {}
 cfg.update_cfg()
