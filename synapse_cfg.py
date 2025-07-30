@@ -135,6 +135,7 @@ cfg.weightNormThreshold = 5.0  # maximum weight normalization factor with respec
 cfg.weightNormScaling = {'NGF_reduced': 1.0, 'ITS4_reduced': 1.0}
 cfg.ihGbar = 1.0
 cfg.KgbarFactor = 1.0
+addBkgConn = 1
 
 # ------------------------------------------------------------------------------
 # Synapses
