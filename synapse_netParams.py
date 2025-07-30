@@ -289,7 +289,9 @@ synperNeuronStimE = {}
 GsynStimI = {}
 GsynStimE = {}
 
-for post in cfg.Ipops + cfg.Epops:
+for post in netParams.popParams:
+    if '_stim' in post:
+        continue
     GsynStimI[post] = 3.0  # PSP = - 1.0 mv if Vrest = - 75 mV
     GsynStimE[post] = 0.45  # PSP = + 1.0 mv if Vrest = - 75 mV
 
@@ -298,8 +300,9 @@ for post in cfg.Ipops + cfg.Epops:
 
 
 if cfg.addBkgConn:
-    for post in cfg.Ipops + cfg.Epops:
-
+    for post in netParams.popParams:
+        if '_stim' in post:
+            continue
         synperNeuron = synperNeuronStimI[post]
         ratespontaneous = cfg.rateStimI
         for qSnum in range(SourcesNumber):
@@ -323,27 +326,32 @@ if cfg.addBkgConn:
                  'number': 1e9}
 
     # ------------------------------------------------------------------------------
-    for post in cfg.Epops:
-        for qSnum in range(SourcesNumber):
-            netParams.stimTargetParams['StimSyn_all_EXC->' + post + '_' + str(qSnum)] = {
-                'source': 'StimSynS1_S_all_EXC->' + post + '_' + str(qSnum),
-                'conds':  {'pop': [post]},
-                'synMech': 'AMPA',
-                'sec': 'all',  # soma not inclued in S1 model
-                'weight': GsynStimE[post],
-                'delay': 0.1}
+    for post in netParams.popParams:
+        if '_stim' in post:
+            continue
+        if post in cfg.Epops:
+            for qSnum in range(SourcesNumber):
+                netParams.stimTargetParams['StimSyn_all_EXC->' + post + '_' + str(qSnum)] = {
+                    'source': 'StimSyn_all_EXC->' + post + '_' + str(qSnum),
+                    'conds': {'pop': [post]},
+                    'synMech': 'AMPA',
+                    'sec': 'all',  # soma not inclued in S1 model
+                    'weight': GsynStimE[post],
+                    'delay': 0.1}
 
-    for post in cfg.Ipops:
-        for qSnum in range(SourcesNumber):
-            netParams.stimTargetParams['StimSyn_all_EXC->' + post + '_' + str(qSnum)] = {
-                'source': 'StimSyn_all_EXC->' + post + '_' + str(qSnum),
-                'synMech': 'AMPA',
-                'conds':  {'pop': [post]},
-                'sec': 'all',
-                'weight': GsynStimE[post],
-                'delay': 0.1}
+        if post in cfg.Ipops:
+            for qSnum in range(SourcesNumber):
+                netParams.stimTargetParams['StimSyn_all_EXC->' + post + '_' + str(qSnum)] = {
+                    'source': 'StimSyn_all_EXC->' + post + '_' + str(qSnum),
+                    'synMech': 'AMPA',
+                    'conds': {'pop': [post]},
+                    'sec': 'all',
+                    'weight': GsynStimE[post],
+                    'delay': 0.1}
 
-    for post in cfg.Epops+cfg.Ipops:
+    for post in netParams.popParams:
+        if '_stim' in post:
+            continue
         for qSnum in range(SourcesNumber):
             netParams.stimTargetParams['StimSyn_all_INH->' + post + '_' + str(qSnum)] = {
                 'source': 'StimSyn_all_INH->' + post + '_' + str(qSnum),
@@ -433,20 +441,21 @@ input_resistance['NGF6'] = 396.75
 # IClamp
 # ------------------------------------------------------------------------------
 print("%s \t %s \t %s \t %s" % ("popName", "resting_potential", "input_resistance", "holding_current"))
-for popName in cfg.Ipops + cfg.Epops:
+for popName in netParams.popParams:
+    if '_stim' in popName:
+        continue
     holding_current = (-75.0 - resting_potential[popName]) / input_resistance[popName]
 
     print("%s \t %20.3f \t %20.3f \t %20.3f" % (popName, resting_potential[popName], input_resistance[popName], holding_current))
 
-    netParams.stimSourceParams['Input_' + popName] = {
+    netParams.stimSourceParams['Holding Current' + popName] = {
         'type': 'IClamp',
         'del': 0.0,
         'dur': cfg.duration,
         'amp': holding_current}
 
-    netParams.stimTargetParams['Input->' + popName] = {
-        'source':
-            'Input_' + popName,
+    netParams.stimTargetParams['Holding Current ->' + popName] = {
+        'source': 'Holding Current' + popName,
         'sec': 'soma',
         'loc': 0.5,
         'conds': {'pop': popName}}

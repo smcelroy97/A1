@@ -18,7 +18,7 @@ cfg.scaleDensity = 1.0  # Should be 1.0 unless need lower cell density for test 
 
 cfg.duration = 30000  # Duration of the sim, in ms
 cfg.dt = 0.05  # Internal Integration Time Step
-cfg.verbose = 0  # Show detailed messages
+cfg.verbose = 1  # Show detailed messages
 cfg.progressBar = 0  # even more detailed message
 cfg.hParams['celsius'] = 37
 cfg.createNEURONObj = 1
@@ -118,7 +118,8 @@ def setplotTraces(ncell=50, linclude=cfg.allpops, timeRange=cfg.duration):
             pops.append((pop, i))
     cfg.analysis['plotTraces'] = {'include': linclude, 'timeRange': timeRange, 'oneFigPer': 'trace', 'overlay': True, 'saveFig': False, 'showFig': False, 'figSize': (12, 8)}
 
-setplotTraces(ncell=1)
+
+# setplotTraces(ncell=1, timeRange=[1750, 3000])
 
 layer_bounds = {'L1': 100, 'L2': 160, 'L3': 950, 'L4': 1250, 'L5A': 1334, 'L5B': 1550, 'L6': 2000}
 
@@ -254,4 +255,4 @@ cfg.rateStimI = 5.0  # Hz
 cfg.rateStimE = 1.0  # Hz
 
 cfg.tune = {}
-cfg.update_cfg()
+cfg.update()

@@ -49,8 +49,8 @@ if sim.cfg.addNoiseIClamp:
 sim.setupRecording()              			# setup variables to record for each cell (spikes, V traces, etc)
 sim.runSim()                                    # run parallel Neuron simulation
 sim.gatherData()
-sim.saveData()
-sim.analysis.plotData()    # plot spike raster etc
+# sim.saveData()
+# sim.analysis.plotData()    # plot spike raster etc
 
 # Terminate batch process
 if comm.is_host():
