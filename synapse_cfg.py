@@ -7,7 +7,7 @@ cfg = specs.SimConfig()
 
 
 # These values taken from M1 cfg (https://github.com/Neurosim-lab/netpyne/blob/development/examples/M1detailed/cfg.py)
-cfg.singleCellPops = False
+cfg.singleCellPops = True
 cfg.singlePop = ''
 cfg.removeWeightNorm = False
 cfg.scale = 1.0  # Is this what should be used?
@@ -118,7 +118,7 @@ def setplotTraces(ncell=50, linclude=cfg.allpops, timeRange=cfg.duration):
             pops.append((pop, i))
     cfg.analysis['plotTraces'] = {'include': linclude, 'timeRange': timeRange, 'oneFigPer': 'trace', 'overlay': True, 'saveFig': False, 'showFig': False, 'figSize': (12, 8)}
 
-# setplotTraces(ncell=20, linclude=['IT2'])
+setplotTraces(ncell=1)
 
 layer_bounds = {'L1': 100, 'L2': 160, 'L3': 950, 'L4': 1250, 'L5A': 1334, 'L5B': 1550, 'L6': 2000}
 
@@ -135,7 +135,7 @@ cfg.weightNormThreshold = 5.0  # maximum weight normalization factor with respec
 cfg.weightNormScaling = {'NGF_reduced': 1.0, 'ITS4_reduced': 1.0}
 cfg.ihGbar = 1.0
 cfg.KgbarFactor = 1.0
-addBkgConn = 1
+cfg.addBkgConn = 1
 
 # ------------------------------------------------------------------------------
 # Synapses
@@ -249,6 +249,9 @@ cfg.L4L4E = 1.0
 # L3 -> L4 Inhib pops
 cfg.L3L4PV = 1.0
 cfg.L3L4SOM = 1.0
+
+cfg.rateStimI = 5.0  # Hz
+cfg.rateStimE = 1.0  # Hz
 
 cfg.tune = {}
 cfg.update_cfg()
