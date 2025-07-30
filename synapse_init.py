@@ -49,18 +49,18 @@ if sim.cfg.addNoiseIClamp:
 sim.setupRecording()              			# setup variables to record for each cell (spikes, V traces, etc)
 sim.runSim()                                    # run parallel Neuron simulation
 sim.gatherData()
-# sim.saveData()
-# sim.analysis.plotData()    # plot spike raster etc
+sim.saveData()
+sim.analysis.plotData()    # plot spike raster etc
 
 # Terminate batch process
-if comm.is_host():
+if sim.rank == 0:
   netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
   print('transmitting data...')
-  inputs = specs.get_mappings()
-  results = amp
+  inputs = cfg.get_mappings()
+  results = {'dummy':[1, 2, 3]}
   results['loss'] = 700
   out_json = json.dumps({**inputs, **results})
-  comm.send(out_json)
+  sim.send(out_json)
   comm.close()
 
 sim.close()
