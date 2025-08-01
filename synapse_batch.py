@@ -1,12 +1,11 @@
 from netpyne.batchtools.search import search
 import numpy as np
 
-label = 'v45_batch28'
+label = 'v45_batch29'
 
 params = {'prePop': ['NGF1', 'IT2', 'SOM2', 'PV2', 'VIP2', 'NGF2', 'IT3', 'SOM3', 'PV3', 'VIP3', 'NGF3', 'ITP4', 'ITS4',
                      'SOM4', 'PV4', 'VIP4', 'NGF4', 'IT5A', 'CT5A', 'SOM5A', 'PV5A', 'VIP5A', 'NGF5A', 'IT5B', 'PT5B', 'CT5B',
-                     'SOM5B', 'PV5B', 'VIP5B', 'NGF5B', 'IT6', 'CT6', 'SOM6', 'PV6', 'VIP6', 'NGF6', 'TC', 'TCM', 'HTC',
-                     'IRE', 'IREM', 'TI', 'TIM']}
+                     'SOM5B', 'PV5B', 'VIP5B', 'NGF5B', 'IT6', 'CT6', 'SOM6', 'PV6', 'VIP6', 'NGF6']}
 
 
 # use batch_shell_config if running directly on the machine
@@ -34,7 +33,7 @@ slurm_config = {
 
 run_config = sge_config
 search(job_type='sge',
-       comm_type='socket',
+       comm_type='sfs',
        label=label,
        params=params,
        output_path=str('../A1/simOutput/' + label + '/'),

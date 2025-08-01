@@ -34,7 +34,7 @@ slurm_config = {
 
 run_config = sge_config
 search(job_type = 'sge',
-       comm_type = 'socket',
+       comm_type = 'sfs',
        label = label,
        params = params,
        output_path = str('../A1/simOutput/' + label + '/'),

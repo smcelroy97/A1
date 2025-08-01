@@ -61,6 +61,5 @@ if sim.rank == 0:
   results['loss'] = 700
   out_json = json.dumps({**inputs, **results})
   sim.send(out_json)
-  comm.close()
 
 sim.close()
