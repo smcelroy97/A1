@@ -292,8 +292,8 @@ GsynStimE = {}
 for post in netParams.popParams:
     if '_stim' in post:
         continue
-    GsynStimI[post] = 3.0  # PSP = - 1.0 mv if Vrest = - 75 mV
-    GsynStimE[post] = 0.45  # PSP = + 1.0 mv if Vrest = - 75 mV
+    GsynStimI[post] = 1.5  # PSP = - 1.0 mv if Vrest = - 75 mV
+    GsynStimE[post] = 0.225  # PSP = + 1.0 mv if Vrest = - 75 mV
 
     synperNeuronStimI[post] = 10  # Exc/Inh
     synperNeuronStimE[post] = nearest_syns[post]
