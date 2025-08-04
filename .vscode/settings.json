@@ -4,5 +4,18 @@
         "plaintext": false,
         "markdown": false,
         "scminput": false
-    }
+    },
+    "python-envs.defaultEnvManager": "ms-python.python:conda",
+    "python-envs.defaultPackageManager": "ms-python.python:conda",
+    "python-envs.pythonProjects": [],
+    "folder-color.pathColors": [
+        {
+            "folderPath": "A1_OUinp\\revision\\ouinp\\",
+            "color": "foldercolorizer.color_ff6666"
+        },
+        {
+            "folderPath": "A1_OUinp\\revision\\samn\\",
+            "color": "foldercolorizer.color_66ccff"
+        }
+    ]
 }
