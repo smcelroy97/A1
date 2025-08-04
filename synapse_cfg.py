@@ -107,7 +107,7 @@ cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig'
 #                             'saveFig': True, 'showFig': False, 'figSize': (25, 25)}  # Plot conn matrix
 # 'include': [('TC', i) for i in range(40)],
 
-cfg.analysis['plotTraces'] = {'include': ['all'], 'timeRange': [0, cfg.duration],
+cfg.analysis['plotTraces'] = {'include': ['all'], 'timeRange': [995, 1200],
                               'oneFigPer': 'cell', 'overlay': True, 'saveFig': True,
                               'showFig': False, 'figSize': (12, 8)}
 

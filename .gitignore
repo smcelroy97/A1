@@ -8,6 +8,7 @@ ray/
 *.pyc
 *.iml
 *.xml
+*.csv
 *.out
 *.run
 *.err

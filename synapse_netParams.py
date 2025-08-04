@@ -217,7 +217,7 @@ for post in preWeights:
                 'synMech': synMech,
                 'weight': preWeights[post] * gain * popGain * scaleFactor,
                 'synMechWeightFactor': synMechWeightFactor,
-                'synsPerConn': 10,
+                'synsPerConn': 50,
                 'delay': 1000
             }
 
@@ -257,7 +257,7 @@ for post in preWeights:
                 'synMech': synMech,
                 'weight': preWeights[post] * gain,
                 'synMechWeightFactor': synMechWeightFactor,
-                'synsPerConn': 10,
+                'synsPerConn': 50,
                 'delay': 1000
             }
 
