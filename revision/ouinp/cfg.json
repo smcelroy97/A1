@@ -1,18 +1,15 @@
 {
     "simConfig": {
-        "BkgCtxEGain": 1.4285714285714286,
-        "BkgCtxIGain": 0.8285714285714285,
-        "CT6ScaleFactor": 1.0,
-        "CTGainThalI": 1.0,
-        "EEGain": 1.31667,
+        "AMPATau2Factor": 1.0,
+        "EEGain": 1.1,
         "EELayerGain": {
             "1": 1.0,
-            "2": 1.0,
-            "3": 1.0,
-            "4": 1.0,
-            "5A": 1.0,
-            "5B": 1.0,
-            "6": 1.0
+            "2": 1.1392556114489,
+            "3": 0.2627680775261009,
+            "4": 0.7953549349740079,
+            "5A": 1.107062263790829,
+            "5B": 0.1873673565713772,
+            "6": 0.6
         },
         "EEPopGain": {
             "CT5A": 1.1500000000000001,
@@ -28,20 +25,20 @@
             "PT5B": 1.05
         },
         "EICellTypeGain": {
-            "NGF": 1.0,
-            "PV": 1.0,
-            "SOM": 1.0,
-            "VIP": 1.0
+            "NGF": 2.7521920026073357,
+            "PV": 0.6152864472687144,
+            "SOM": 0.35116819915031644,
+            "VIP": 1.1218458257976713
         },
         "EIGain": 1.6313576020869256,
         "EILayerGain": {
-            "1": 1.0,
-            "2": 1.0,
-            "3": 1.0,
-            "4": 1.0,
-            "5A": 1.0,
-            "5B": 1.0,
-            "6": 1.0
+            "1": 0.827750821266419,
+            "2": 0.8309591864633213,
+            "3": 0.2606080713427127,
+            "4": 0.7,
+            "5A": 0.9777414771947963,
+            "5B": 1.2194384057226428,
+            "6": 2.661195004653538
         },
         "EIPopGain": {
             "NGF1": 1.0,
@@ -71,7 +68,7 @@
             "VIP6": 1.3499999999999999
         },
         "ENGF1": 1.0,
-        "EbkgThalamicGain": 1.04528,
+        "EbkgThalamicGain": 0.392,
         "Epops": [
             "IT2",
             "IT3",
@@ -85,34 +82,53 @@
             "IT6",
             "CT6"
         ],
-        "IECellTypeGain": {
-            "NGF": 1.0,
-            "PV": 1.0,
-            "SOM": 1.0,
-            "VIP": 1.0
+        "GABABCtx": {
+            "e": -105,
+            "mod": "MyExp2SynBB",
+            "tau1": 41,
+            "tau2": 642
         },
-        "IEGain": 0.6,
+        "GABABThal": {
+            "e": -105,
+            "mod": "MyExp2SynBB",
+            "tau1": 41,
+            "tau2": 642
+        },
+        "ICThalInput": false,
+        "ICThalMatrixCoreFactor": 0.1,
+        "ICThalprobECore": 0.163484173596043,
+        "ICThalprobEMatrix": 0.163484173596043,
+        "ICThalprobICore": 0.0936669688856933,
+        "ICThalprobIMatrix": 0.0936669688856933,
+        "ICThalweightECore": 0.8350476447841453,
+        "ICThalweightICore": 0.2114492149101151,
+        "IECellTypeGain": {
+            "NGF": 0.11567059244128475,
+            "PV": 2.9493206673798475,
+            "SOM": 0.13986148108703275,
+            "VIP": 0.10888755736754395
+        },
+        "IEGain": 2.06,
         "IELayerGain": {
             "1": 1.0,
-            "2": 1.0,
-            "3": 1.0,
-            "4": 1.0,
-            "5A": 1.0,
-            "5B": 1.0,
-            "6": 1.0
+            "2": 0.8766937284048854,
+            "3": 0.5609281169449685,
+            "4": 1.870729555191084,
+            "5A": 3.566320604507868,
+            "5B": 0.7695785463331726,
+            "6": 4.9
         },
         "IIGain": 1.4102431748127964,
         "IILayerGain": {
-            "1": 1.0,
-            "2": 1.0,
-            "3": 1.0,
-            "4": 1.0,
-            "5A": 1.0,
-            "5B": 1.0,
-            "6": 1.0
+            "1": 1.1305254604890966,
+            "2": 1.1428945741399408,
+            "3": 0.2896903197397815,
+            "4": 1.08,
+            "5A": 0.5982384402236298,
+            "5B": 0.879452953038821,
+            "6": 0.4784462642417754
         },
-        "ITS4Type": "ITS4",
-        "IbkgThalamicGain": 0.485714,
+        "IbkgThalamicGain": 1.96,
         "Ipops": [
             "NGF1",
             "PV2",
@@ -141,16 +157,11 @@
             "NGF6"
         ],
         "KgbarFactor": 1.0,
-        "L3L3scaleFactor": 1.0,
-        "L3L4PV": 1.0,
-        "L3L4SOM": 1.0,
         "L4L3E": 1.0,
         "L4L3NGF": 1.0,
         "L4L3PV": 1.0,
         "L4L3SOM": 1.0,
         "L4L3VIP": 1.0,
-        "L4L4E": 1.0,
-        "NGF6bkgGain": 1.0,
         "OUamp": 1.0,
         "OUstd": 0.4,
         "TEpops": [
@@ -164,15 +175,17 @@
             "TI",
             "TIM"
         ],
+        "ThalamicCoreLambda": 50.0,
         "addBkgConn": 0,
         "addConn": 1,
-        "addCorticoThalamicConn": 1.0,
+        "addCorticoThalamicConn": 1,
         "addIClamp": 0,
-        "addIntraThalamicConn": 1.0,
+        "addIntraThalamicConn": 1,
         "addNetStim": 0,
-        "addSubConn": 1.0,
+        "addRIClamp": 0,
+        "addSubConn": 1,
         "addSynMechs": true,
-        "addThalamoCorticalConn": 1.0,
+        "addThalamoCorticalConn": 1,
         "add_ou_conductance": 0,
         "add_ou_current": 0,
         "allCorticalPops": [
@@ -384,7 +397,7 @@
                 ],
                 "timeRange": [
                     1000,
-                    3000
+                    5000
                 ]
             }
         },
@@ -394,16 +407,15 @@
             750,
             1250
         ],
-        "cochThalMatrixCoreFactor": 0.1,
-        "cochThalprobECore": 0.3,
-        "cochThalprobEMatrix": 0.0375,
-        "cochThalprobICore": 0.15,
-        "cochThalprobIMatrix": 0.009375,
+        "cochThalprobECore": 0.9,
+        "cochThalprobEMatrix": 0.1125,
+        "cochThalprobICore": 0.45,
+        "cochThalprobIMatrix": 0.0028,
         "cochThalweightECore": 0.225,
+        "cochThalweightEMatrix": 0.1125,
         "cochThalweightICore": 0.0675,
+        "cochThalweightIMatrix": 0.0675,
         "cochlearThalInput": false,
-        "cochthalweightEMatrix": 0.1125,
-        "cochthalweightIMatrix": 0.0675,
         "compactConnFormat": false,
         "connRandomSecFromList": false,
         "coreneuron": false,
@@ -416,7 +428,7 @@
         "distributeSynsUniformly": true,
         "dt": 0.05,
         "dump_coreneuron_model": false,
-        "duration": 3000,
+        "duration": 5000,
         "filename": "model_output",
         "gatherOnlySimData": false,
         "gpu": false,
@@ -426,42 +438,30 @@
             "v_init": -65.0
         },
         "ihGbar": 1.0,
-        "includeParamsLabel": true,
-        "injectionAmplitudes": [
-            0.0,
-            0.049999999999999996,
-            0.09999999999999999,
-            0.15,
-            0.19999999999999998,
-            0.24999999999999997,
-            0.3,
-            0.35,
-            0.39999999999999997,
-            0.44999999999999996,
-            0.49999999999999994,
-            0.5499999999999999,
-            0.6
-        ],
-        "injectionDuration": 1000,
-        "injectionInterval": 3000,
+        "includeParamsLabel": false,
+        "intraThalamicCoreEEGain": 1.0,
+        "intraThalamicCoreEIGain": 1.5,
+        "intraThalamicCoreIEGain": 1.5,
+        "intraThalamicCoreIIGain": 1.0,
         "intraThalamicEEGain": 1.0,
-        "intraThalamicEIGain": 0.3,
-        "intraThalamicGain": 1.0,
-        "intraThalamicIEGain": 0.1,
+        "intraThalamicEIGain": 1.0,
+        "intraThalamicGain": 0.9843624229766335,
+        "intraThalamicIEGain": 1.0,
         "intraThalamicIIGain": 1.0,
         "invertedYCoord": true,
-        "noiseBkg": 0,
-        "numInjections": 13,
+        "noiseBkg": 1.0,
         "oneSynPerNetcon": false,
         "ou_common": 0,
-        "ou_noise_duration": 3000,
+        "ou_noise_duration": 5000,
         "ou_params_fpath": "",
         "ou_pop_inputs": {},
         "ou_tau": 10,
-        "printPopAvgRates": false,
+        "printPopAvgRates": [
+            0,
+            5000
+        ],
         "printRunTime": 0.1,
         "printSynsAfterRule": false,
-        "progressBar": 0,
         "pt3dRelativeToCellLocation": true,
         "rand123GlobalIndex": null,
         "random123": false,
@@ -506,7 +506,8 @@
         "scale": 1.0,
         "scaleDensity": 1.0,
         "seeds": {
-            "conn": 23451,
+            "cell": 1,
+            "conn": 1,
             "loc": 1,
             "stim": 1
         },
@@ -540,47 +541,56 @@
         "synWeightFractionII": [
             1.0
         ],
-        "synWeightFractionNGF": [
-            0.5,
-            0.9
-        ],
-        "synWeightFractionNGFE": [
-            0.5,
-            1.0
-        ],
-        "synWeightFractionNGFI": [
-            1.0
-        ],
-        "synWeightFractionSOME": [
-            0.9,
-            0.2
-        ],
-        "synWeightFractionSOMI": [
-            0.9,
-            0.1
-        ],
-        "synWeightFractionThalCtxIE": [
-            1.0,
-            0.0
-        ],
-        "synWeightFractionThalCtxII": [
-            1.0
-        ],
-        "synWeightFractionThalIE": [
-            0.9,
-            0.2
-        ],
-        "synWeightFractionThalII": [
-            1.0,
-            0.0
-        ],
+        "synWeightFractionNGF": {
+            "E": [
+                0.5,
+                1.0
+            ],
+            "I": [
+                1.0
+            ]
+        },
+        "synWeightFractionSOM": {
+            "E": [
+                0.9,
+                0.2
+            ],
+            "I": [
+                1.0
+            ]
+        },
+        "synWeightFractionThal": {
+            "Ctx": {
+                "I": {
+                    "E": [
+                        1.0,
+                        0.0
+                    ],
+                    "I": [
+                        1.0
+                    ]
+                }
+            },
+            "Thal": {
+                "I": {
+                    "E": [
+                        0.9,
+                        0.4
+                    ],
+                    "I": [
+                        1.0,
+                        0.0
+                    ]
+                }
+            }
+        },
         "thalL1NGF": 1.0,
-        "thalL4E": 2.0,
+        "thalL4E": 2,
         "thalL4NGF": 1.0,
         "thalL4PV": 0.21367245896786016,
         "thalL4SOM": 0.24260966747847523,
         "thalL4VIP": 1.0,
-        "thalamoCorticalGain": 1.0,
+        "thalamoCorticalGain": 3.0,
         "timestampFilename": false,
         "timing": true,
         "tstop": 1000.0,
@@ -594,7 +604,7 @@
             "NGF_reduced": 1.0
         },
         "weightNormThreshold": 5.0,
-        "wireCortex": 1.0,
+        "wireCortex": 1,
         "wmat": {
             "CT5A": {
                 "CT5A": 0.75,
