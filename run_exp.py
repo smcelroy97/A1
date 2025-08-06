@@ -243,7 +243,6 @@ if need_run:
     if sim.cfg.add_ou_current:
         sim, vecs_dict = bs.add_noise_iclamp(sim)
     if sim.cfg.add_ou_conductance:
-        #print('Adding OU conductance...', flush=True)
         sim, vecs_dict, OUFlags = bs.add_noise_gclamp(sim)
 
     sim.setupRecording()       # setup variables to record for each cell (spikes, V traces, etc)
