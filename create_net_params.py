@@ -687,7 +687,6 @@ def create_net_params(cfg):
         if cfg.ICThalInput:
             # load file with IC output rates
             from scipy.io import loadmat
-            import numpy as np
 
             data = loadmat(cfg.ICThalInput['file'])
             fs = data['RsFs'][0][0]

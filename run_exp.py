@@ -163,7 +163,10 @@ if hasattr(cfg, 'subnet_build_flag') and cfg.subnet_build_flag:
     desc.conns_frozen = cfg.subnet_params['conns_frozen']
 
     # Set firing rates of the frozen pops.
-    df = pd.read_csv(dirpath_exp_cfg / 'frozen_rates.csv')
+    if 'fpath_frozen_rates' in cfg.subnet_params:
+        df = pd.read_csv(cfg.subnet_params['fpath_frozen_rates'])
+    else:
+        df = pd.read_csv(dirpath_exp_cfg / 'frozen_rates.csv')
     pop_names = df['pop_name'].tolist()
     frozen_rates = df.set_index('pop_name')['target_rate'].to_dict()
     if 'frozen_rates_custom' in cfg.subnet_params:

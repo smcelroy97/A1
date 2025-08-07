@@ -13,12 +13,12 @@ def apply_exp_cfg(cfg):
     cfg.duration = 3 * 1e3
 
     # Populations to use
-    cfg.pops_active = ['IT2', 'PV2']
+    pops_active = ['IT2', 'PV2']
 
     # Subnet parameters
     cfg.subnet_build_flag = 1
     cfg.subnet_params = {
-        'pops_active': cfg.pops_active,   
+        'pops_active': pops_active,   
         'conns_frozen': 'all',   # all inputs are surrogate, no recurrent connections
         'fpath_frozen_rates': str(dirpath_self / 'target_state_1.csv'),   # surrogate input
     }
@@ -41,13 +41,12 @@ def apply_exp_cfg(cfg):
     with open(dirpath_self / 'mech_changes_1.json', 'r') as fid:
         cfg.mech_changes = json.load(fid)
 
-    cfg.allpops = cfg.pops_active
     if 'plotRaster' in cfg.analysis:
-        cfg.analysis['plotRaster']['include'] = cfg.pops_active
+        cfg.analysis['plotRaster']['include'] = pops_active
     if 'plotSpikeStats' in cfg.analysis:
-        cfg.analysis['plotSpikeStats']['include'] = cfg.pops_active
+        cfg.analysis['plotSpikeStats']['include'] = pops_active
     if 'plotTraces' in cfg.analysis:
-        cfg.analysis['plotTraces']['include'] = cfg.pops_active
+        cfg.analysis['plotTraces']['include'] = pops_active
     
     # Time range for rate and CV calculation
     cfg.analysis['plotSpikeStats']['timeRange'] = [cfg.duration - 1000, cfg.duration]
