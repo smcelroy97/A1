@@ -39,3 +39,4 @@ exp_results/**/*.nc
 !exp_results/single*/**/ir_avg/*
 !exp_results/batch*/**/combined/**
 *.bak
+!analysis/OLD

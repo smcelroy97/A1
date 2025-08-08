@@ -1,13 +1,17 @@
 import json
+import os
 from pathlib import Path
+import shutil
 import sys
 
 dirpath_repo_root = Path(__file__).resolve().parents[3]
 dirpath_self = Path(__file__).resolve().parent
 sys.path.append(str(dirpath_repo_root))
-#sys.path.append(str(dirpath_self))
+sys.path.append(str(dirpath_self))
 
 from analysis.ou_tuning import sim_res_proc_utils as proc
+
+from batch_params import BATCH_PARAMS
 
 
 def apply_exp_cfg(cfg):
@@ -16,7 +20,7 @@ def apply_exp_cfg(cfg):
     cfg.duration = 5 * 1e3
 
     # Populations to use
-    pops_active = ['IT2', 'PV2']
+    pops_active = ['IT2']
 
     # Subnet parameters
     cfg.subnet_build_flag = 1
@@ -37,8 +41,6 @@ def apply_exp_cfg(cfg):
     cfg.ou_common = 0
     cfg.ou_noise_duration = cfg.duration
     cfg.ou_tau = 10
-    with open(dirpath_self / 'ou_inputs.json', 'r') as fid:
-        cfg.ou_pop_inputs = json.load(fid)
 
     # Cell mechanisms to modify
     with open(dirpath_self / 'mech_changes_1.json', 'r') as fid:
@@ -52,8 +54,8 @@ def apply_exp_cfg(cfg):
         cfg.analysis['plotTraces']['include'] = pops_active
     
     # Time range for rate and CV calculation
-    cfg.analysis['plotSpikeStats']['timeRange'] = [cfg.duration - 1000, cfg.duration]
-    #cfg.analysis['plotSpikeStats'] = False
+    #cfg.analysis['plotSpikeStats']['timeRange'] = [cfg.duration - 1000, cfg.duration]
+    cfg.analysis['plotSpikeStats'] = False
 
     # Record voltage traces
     ncells_rec = 4
@@ -88,11 +90,52 @@ def post_run(sim):
     """Called in the end of a job (after runnig and saving). """
 
     cfg = sim.cfg
+    exp_name = cfg.simLabel
 
-    # Calculate rate and CV for each pop., save the result to json
+    # Generate filename postfix with param values
+    exp_id = exp_name.split('_')[-1]
+    pop = 'IT2'
+    ou_info = cfg.ou_pop_inputs[pop]
+    postfix = (f'{exp_id}_'
+               f'mean_{(100 * ou_info["ou_mean"]):.02f}_'
+               f'std_{(100 * ou_info["ou_std"]):.02f}')
+
+    # For output saving
+    exp_name_sub = (
+        f'exp_npts_{BATCH_PARAMS["num_ou_points"]}_'
+        f'std0_{(100 * BATCH_PARAMS["ou_std_intercept"]):.01f}_'
+        f'kstd_{(100 * BATCH_PARAMS["ou_std_mean_ratio"]):.01f}'
+    )
+
+    # Create subfolders to put the results
+    dirpath_res = Path(cfg.saveFolder)
+    dirpath_res_sub = dirpath_res / exp_name_sub
+    os.makedirs(dirpath_res_sub, exist_ok=True)
+    dirnames_sub = ['rasters', 'results', 'cfg', 'traces']
+    for dirname in dirnames_sub:
+        os.makedirs(dirpath_res_sub / dirname, exist_ok=True)
+
+    # Rename raster and move it to a subfolder
+    fpath_old = dirpath_res / f'{exp_name}_raster.png'
+    fpath_new = dirpath_res_sub / 'rasters' / f'raster_{postfix}.png'
+    if fpath_old.exists():
+        fpath_old.rename(fpath_new)
+
+    # Rename config file and copy it to a subfolder
+    fpath_old = dirpath_res / f'{exp_name}_cfg.json'
+    fpath_new = dirpath_res_sub / 'cfg' / f'cfg_{postfix}.json'
+    shutil.copy(fpath_old, fpath_new)
+
+    # Save rates, CVs, and voltage stats to a json file
     t_limits = (2, cfg.duration / 1000)
-    nspikes_min = 3
-    res = proc.calc_rates_and_cvs(sim, t_limits, nspikes_min)
-    fpath_res = '{}/{}_result_2.json'.format(cfg.saveFolder, cfg.simLabel)
+    res = proc.calc_rates_and_cvs(sim, t_limits, nspikes_min=3)
+    res |= proc.calc_v_stats(sim, t_limits, med_win=0.05)
+    fpath_res = dirpath_res_sub / 'results' / f'result_{postfix}.json'
     with open(fpath_res, 'w') as fid:
         json.dump(res, fid, indent=4)
+    
+    # Rename traces file and move it to a subfolder
+    fpath_old = dirpath_res / f'{exp_name}_traces.png'
+    fpath_new = dirpath_res_sub / 'traces' / f'traces_{postfix}.png'
+    if fpath_old.exists():
+        fpath_old.rename(fpath_new)

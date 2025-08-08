@@ -969,8 +969,12 @@ def create_net_params(cfg):
                 ou_amp = _multiply(cfg.OUamp, 0.01)
                 ou_std = _multiply(cfg.OUstd, 0.01)
             else:
-                ou_amp = _multiply(cfg.ou_pop_inputs[pop]['ou_mean'], 0.01)
-                ou_std = _multiply(cfg.ou_pop_inputs[pop]['ou_std'], 0.01)
+                if pop in cfg.ou_pop_inputs:
+                    ou_amp = _multiply(cfg.ou_pop_inputs[pop]['ou_mean'], 0.01)
+                    ou_std = _multiply(cfg.ou_pop_inputs[pop]['ou_std'], 0.01)
+                else:
+                    ou_amp = 0
+                    ou_std = 0
             
             # Reference value (ou_amp and ou_sigma are defined as percentage of it)
             if cfg.add_ou_conductance:

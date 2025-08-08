@@ -13,6 +13,22 @@ def calc_pop_rate(
         time_limits: Tuple[float],
         ncells: int = 1
         ) -> float | List[float]:
+    """Calculate population firing rate.
+
+    pop_spikes is a list of spike trains.
+    - If pop_spikes contains 1 element:
+        - ncells == 1:
+            Treat pop_spikes as a spike train from one cell
+        - ncells > 1:
+            Treat pop_spikes as a combined spike train from many cells.
+            The rate will be normalized by ncells.
+    - If pop_spikes contains many elements:
+        Each element is treaed as a single-cell spike train.
+        ncells should be 1.
+    
+    """
+    if (len(pop_spikes) > 1) and (ncells != 1):
+        raise ValueError('If pop_spikes contains many elements, ncells should be 1')
     rates = []
     T = time_limits[1] - time_limits[0]
     for spike_times in pop_spikes:
@@ -44,6 +60,11 @@ def calc_pop_cv(
         nspikes_min: int = 3,   # min. number of spikes to compute CV for a cell
         avg_result: bool = True
         ) -> float | List[float]:
+    """Calculate population CV.
+
+    pop_spikes is a list of spike trains, per cells.
+
+    """
     cvs = []
     T = time_limits[1] - time_limits[0]
     for spike_times in pop_spikes:

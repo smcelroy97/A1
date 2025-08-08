@@ -283,6 +283,7 @@ if comm.is_host():
     netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
     print('transmitting data...')
     inputs = specs.get_mappings()
+    
     avgRates = sim.analysis.popAvgRates(
         tranges=[cfg.duration - 1000, cfg.duration],
         show=False

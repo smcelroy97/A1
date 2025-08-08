@@ -75,6 +75,9 @@ def get_net_size(sim_result) -> Dict[str, int]:
 def get_sim_duration(sim_result):
     return sim_result['simConfig']['duration'] / 1000
 
+def get_timestep(sim_result):
+    return sim_result['simConfig']['dt'] / 1000
+
 def get_pop_spikes(sim_result, pop_name, combine_cells=True,
                    t0=0, tmax=None, subtract_t0=True, ms=False,
                    ndigits=6) -> List[np.ndarray]:
@@ -184,6 +187,7 @@ def get_voltages(sim_result, t_limits=None):
 def get_voltages_xr(
         sim_result: Dict,
         t_limits: Tuple[float, float] | None = None,
+        ms: bool = True
         ) -> Dict[str, xr.Dataset]:
     """Returns a dict: {pop: Vmat (cells x time)}. """
 
@@ -191,6 +195,8 @@ def get_voltages_xr(
 
     # Time bins and limits
     tvec = np.array(sim_result['simData']['t'])
+    if not ms:
+        tvec /= 1000
     if t_limits is not None:
         tmask = (tvec >= t_limits[0]) & (tvec <= t_limits[1])
         tvec = tvec[tmask]
@@ -206,10 +212,14 @@ def get_voltages_xr(
         V_data[pop].append(np.array(V_vec)[tmask])
         cell_gids[pop].append(gid)
 
+
     # Convert to xarray
-    for pop in pop_names:
+    for pop, V_ in V_data.items():
+        if len(V_) == 0:
+            V_data[pop] = None
+            continue
         V_data[pop] = xr.DataArray(
-            np.array(V_data[pop]),
+            np.array(V_),
             dims=['cell_gid', 'time'],
             coords={
                 'cell_gid': cell_gids[pop],
