@@ -50,7 +50,7 @@ def calc_v_stats(
     # Extract voltage traces
     V = utils.get_voltages_xr(sim_result, t_limits, ms=False)
     # Calculate voltage stats
-    res = {'v_med_min': {}, 'v_med_max': {},
+    res = {'v_med_min': {}, 'v_med_max': {}, 'v_med_avg': {},
            't_limits_v': t_limits, 'med_win': med_win}
     dt = utils.get_timestep(sim_result)
     for pop, Vmat in V.items():
@@ -59,4 +59,5 @@ def calc_v_stats(
         Vmed = median_filter(Vmat.values, size=(1, int(med_win / dt)))
         res['v_med_min'][pop] = Vmed.ravel().min()
         res['v_med_max'][pop] = Vmed.ravel().max()
+        res['v_med_avg'][pop] = Vmed.ravel().mean()
     return res

@@ -1,5 +1,5 @@
 import itertools
-from typing import Iterator, List, Tuple
+from typing import Any, Iterator, List, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -40,7 +40,7 @@ def plot_xr_contour(
         style: str = '-',
         xmult: int = 1,
         ymult: int = 1
-        ) -> None:
+        ) -> Any:
 
     def fmt_func(x):
         if x == int(x): return f'{name}={int(x)}'
@@ -53,8 +53,10 @@ def plot_xr_contour(
         x, y, Z.values, linestyles=style,
         levels=levels, colors=colors
     )
-    plt.clabel(contours, inline=True, fontsize=8, 
-               fmt=fmt_func, rightside_up=True)
+    if len(name):
+        plt.clabel(contours, inline=True, fontsize=8, 
+                fmt=fmt_func, rightside_up=True)
+    return contours
 
 def interpolate_to_xr(
         data_coords: List[Tuple[float, float]],  # (x, y),
