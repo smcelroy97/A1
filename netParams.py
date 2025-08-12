@@ -303,12 +303,14 @@ def wireCortex():
                 for preType in Itypes:
                     if preType in pre:  # only create rule if celltype matches pop
                         for post in Epops:
+                            gabab_factor = 1.0
                             for l in layerGainLabels:  # used to tune each layer group independently
                                 prob = '%f * exp(-dist_2D/%f)' % (pmat[pre][post], lmat[pre][post])
                                 synWeightFactor = cfg.synWeightFractionIE
                                 if 'SOM' in pre:
                                     synMech = SOMESynMech
                                     synWeightFactor = cfg.synWeightFractionSOME
+                                    gabab_factor = cfg.gabab_factor
                                 elif 'PV' in pre:
                                     synMech = PVSynMech
                                 elif 'VIP' in pre:
@@ -316,12 +318,13 @@ def wireCortex():
                                 elif 'NGF' in pre:
                                     synMech = NGFESynMech
                                     synWeightFactor = cfg.synWeightFractionNGFE
+                                    gabab_factor = cfg.gabab_factor
                                 netParams.connParams['IE_' + pre + '_' + preType + '_' + post + '_' + l] = {
                                     'preConds': {'pop': pre},
                                     'postConds': {'pop': post, 'ynorm': layer[l]},
                                     'synMech': synMech,
                                     'probability': prob,
-                                    'weight': wmat[pre][post] * cfg.IEGain * cfg.IECellTypeGain[preType] * cfg.IELayerGain[l],
+                                    'weight': wmat[pre][post] * cfg.IEGain * cfg.IECellTypeGain[preType] * cfg.IELayerGain[l] * gabab_factor,
                                     'synMechWeightFactor': synWeightFactor,
                                     'delay': 'defaultDelay+dist_3D/propVelocity',
                                     'synsPerConn': 1,

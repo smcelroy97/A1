@@ -1,11 +1,11 @@
 from netpyne.batchtools.search import search
 import numpy as np
 
-label = 'v45_batch28'
+label = 'v45_batch31'
 
 # params for search
 params = {
-    'addSubConn': [1]
+    'gabab_factor': [0.25, 0.5, 0.75]
 }
 
 

@@ -231,6 +231,8 @@ cfg.EICellTypeGain = {'PV': 1.0, 'SOM': 1.0, 'VIP': 1.0,
 # I->E by target cell type
 cfg.IECellTypeGain = {'PV': 1.0, 'SOM': 1.0, 'VIP': 1.0, 'NGF': 1.0}
 
+cfg.gabab_factor
+
 # Thalamic
 cfg.addIntraThalamicConn = 0
 cfg.addCorticoThalamicConn = 0
