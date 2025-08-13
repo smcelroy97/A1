@@ -11,10 +11,10 @@ from matplotlib import pyplot as plt
 from lfpykit.eegmegcalc import NYHeadModel
 
 stim_on = 2000  # Define onset of stimulus if necessary
-calcEEG = {'start': 2800, 'stop': 4000}
-calcMEG = {'start': 2800, 'stop': 4000}
-# filter = {'lowCut':2, 'hiCut': 12}
-# plotERP = {'useFilter': True}
+calcEEG = {'start': 2000, 'stop': 5000}
+calcMEG = {'start': 2000, 'stop': 5000}
+filter = {'lowCut':2, 'hiCut': 12}
+plotERP = {'useFilter': False}
 # plotSpectrogram = {'useFilter': False}
 # plotPSD = {'useFilter': True}
 # plotRaster = {'timeRange': [0, 2000]}
@@ -22,8 +22,9 @@ calcMEG = {'start': 2800, 'stop': 4000}
 # plotMUA = {'stimDur': 1000}
 
 # calcEEG = False
-filter = False
-plotERP = False
+# calcMEG = False
+# filter = False
+# plotERP = False
 plotSpectrogram = False
 plotPSD = False
 plotRaster = False
@@ -69,7 +70,7 @@ for file in os.listdir(base_dir):
                     sim   = sim,
                     start = calcMEG['start'],
                     end   = calcMEG['stop']
-                )  # Calculate EEG signal at one electode (currently set to 'Cz')
+                )
 
             offsetStart = calcMEG['start'] - stim_on
             endWindow = calcMEG['stop'] - stim_on
@@ -77,29 +78,53 @@ for file in os.listdir(base_dir):
 
         # Filter EEG data
         if filter:
-            filtered_data = simPlotting.filterEEG(
-                    EEG     = stim_data,
-                    lowcut  = filter['lowCut'],
-                    highcut = filter['hiCut'],
-                    fs      = 20000,
-                    order   = 2
-                )
+            if calcEEG:
+                filtered_eeg = simPlotting.filterEEG(
+                        EEG     = stim_eeg,
+                        lowcut  = filter['lowCut'],
+                        highcut = filter['hiCut'],
+                        fs      = 20000,
+                        order   = 2
+                    )
+            if calcMEG:
+                filtered_meg = simPlotting.filterEEG(
+                        EEG     = stim_meg,
+                        lowcut  = filter['lowCut'],
+                        highcut = filter['hiCut'],
+                        fs      = 20000,
+                        order   = 2
+                    )
 
         # Plot ERP '
         if plotERP:
-            if plotERP['useFilter'] == True:
-                simPlotting.plotERP(
-                    data     = filtered_data,
-                    time     = stim_window,
-                    save_dir = save_dir
-                )  # Create filtered ERP plot of time window specified
+            if filter:
+                if calcEEG:
+                    simPlotting.plotERP(
+                        data     = filtered_eeg,
+                        time     = stim_window,
+                        save_dir = save_dir
+                    )  # Create filtered ERP plot of time window specified
+
+                if calcMEG:
+                    simPlotting.plotERP(
+                        data     = filtered_meg,
+                        time     = stim_window,
+                        save_dir = save_dir + '_MEG'
+                    )  # Create filtered ERP plot of time window specified
 
             else:
-                simPlotting.plotERP(
-                    data     = stim_data,
-                    time     = t,
-                    save_dir = save_dir
-                )  # Create unfiltered ERP plot of time window specified
+                if calcEEG:
+                    simPlotting.plotERP(
+                        data     = stim_eeg,
+                        time     = t,
+                        save_dir = save_dir
+                    )  # Create unfiltered ERP plot of time window specified
+                if calcMEG:
+                    simPlotting.plotERP(
+                        data     = stim_meg,
+                        time     = t,
+                        save_dir = save_dir + '_MEG'
+                    )  # Create unfiltered ERP plot of time window specified
 
         # Plot EEG Spectrogram
         if plotSpectrogram:

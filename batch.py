@@ -1,11 +1,11 @@
 from netpyne.batchtools.search import search
 import numpy as np
 
-label = 'v45_batch31'
+label = 'v45_batch32'
 
 # params for search
 params = {
-    'gabab_factor': [0.25, 0.5, 0.75, 1.0]
+    'EEGain': np.linspace(0.1, 1.25, 10)
 }
 
 

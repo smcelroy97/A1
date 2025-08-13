@@ -65,7 +65,6 @@ class simPlotting:
 
         for sensor_idx in range(H.shape[0]):
             B_magnitude = np.linalg.norm(H[sensor_idx], axis=0)  # shape: (num_timepoints,)
-            print('balls')
 
         return B_magnitude, t
 
