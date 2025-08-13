@@ -1034,14 +1034,15 @@ def create_net_params(cfg):
     if cfg.addNetStim:
         for key in [k for k in dir(cfg) if k.startswith('NetStim')]:
             params = getattr(cfg, key, None)
-            [pop, ynorm, sec, loc, synMech, synMechWeightFactor, start, interval, noise, number, weight, delay] = [
+            [pop, ynorm, sec, loc, synMech, synMechWeightFactor, start, interval, noise, number, weight, delay, rate] = [
                 params[s] for s in ['pop', 'ynorm', 'sec', 'loc', 'synMech', 'synMechWeightFactor', 'start',
-                                    'interval', 'noise', 'number', 'weight', 'delay']
+                                    'interval', 'noise', 'number', 'weight', 'delay', 'rate']
             ] 
 
             # add stim source
             netParams.stimSourceParams[key] = {
-                'type': 'NetStim', 'start': start, 'interval': interval, 'noise': noise, 'number': number
+                'type': 'NetStim', 'start': start, 'interval': interval, 'noise': noise, 'number': number, 
+                'rate': rate
             }
             if not isinstance(pop, list): pop = [pop]
             for eachPop in pop:
@@ -1057,6 +1058,43 @@ def create_net_params(cfg):
                     'synMechWeightFactor': synMechWeightFactor,
                     'delay': delay
                 }
+
+    # Pulse sequence
+    if cfg.add_pulses:
+        par = cfg.pulse_seq_params
+        name = par['name']
+        t0, T = par['t0'], par['period']
+        pop_out = par['pop']
+        #n_post = netParams.popParams[pop_out]['numCells']
+        
+        netParams.popParams[name] = {
+            'cellModel': 'VecStim',
+            'numCells': par['n_cells'],
+            'params': {
+                'rate': 0.001,   # very small bkg (required)
+                'pulses': [
+                    { 
+                    'start': t0 + n * T, 
+                    'end':   t0 + n * T + par['width'],
+                    'rate':  par['rates'][n],
+                    'noise': 1.0,
+                    }
+                    for n in range(par['n_pulses'])
+                ]
+            }
+        }
+        netParams.connParams[f'{name}->{pop_out}'] = {
+            'preConds':  {'pop': name},
+            'postConds': {'pop': pop_out},
+            #'connList': [[i, i] for i in range(n_post)],
+            'convergence': par['convergence'],
+            'sec': 'soma',
+            'loc': 0.5,
+            'weight': par['weight'],
+            'delay': 1,
+            'synMech': 'AMPA',
+            'synsPerConn': 1
+        }
 
     #------------------------------------------------------------------------------
     # Description

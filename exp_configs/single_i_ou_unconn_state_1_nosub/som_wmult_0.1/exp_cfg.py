@@ -26,7 +26,7 @@ def apply_exp_cfg(cfg):
         'fpath_frozen_rates': str(dirpath_self / 'target_state_1.csv'),   # surrogate input
     }
 
-    # Global wight multiplier
+    # Global weight multiplier
     cfg.wmult = 0.1
 
     # Turn off subConn

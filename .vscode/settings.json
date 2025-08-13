@@ -16,6 +16,22 @@
         {
             "folderPath": "A1_OUinp\\revision\\samn\\",
             "color": "foldercolorizer.color_66ccff"
+        },
+        {
+            "folderPath": "A1_OUinp/exp_configs/batch_i_ou_subnet_state1_nosub_wmult_0.1/",
+            "color": "foldercolorizer.color_00cccc"
+        },
+        {
+            "folderPath": "A1_OUinp/exp_configs/single_i_ou_unconn_state_1_nosub/",
+            "color": "foldercolorizer.color_99cc00"
+        },
+        {
+            "folderPath": "A1_OUinp/exp_results/batch_i_ou_subnet_state1_nosub_wmult_0.1/",
+            "color": "foldercolorizer.color_00cccc"
+        },
+        {
+            "folderPath": "A1_OUinp/exp_results/single_i_ou_unconn_state_1_nosub/",
+            "color": "foldercolorizer.color_99cc00"
         }
     ]
 }

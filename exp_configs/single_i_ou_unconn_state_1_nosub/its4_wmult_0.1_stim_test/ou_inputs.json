@@ -1,0 +1,46 @@
+{
+    "IT2": {
+        "ou_mean": -0.0015,
+        "ou_std": 0.0155
+    },
+    "IT3": {
+        "ou_mean": 0,
+        "ou_std": 0.0168
+    },
+    "ITS4": {
+        "ou_mean": -0.002,
+        "ou_std": 0.0076
+    },
+    "ITP4": {
+        "ou_mean": 0,
+        "ou_std": 0.0147
+    },
+    "IT5A": {
+        "ou_mean": -0.01,
+        "ou_std": 0.0183
+    },
+    "CT5A": {
+        "ou_mean": 0,
+        "ou_std": 0.0163
+    },
+    "IT5B": {
+        "ou_mean": -0.005,
+        "ou_std": 0.0157
+    },
+    "CT5B": {
+        "ou_mean": 0,
+        "ou_std": 0.0161
+    },
+    "PT5B": {
+        "ou_mean": 0,
+        "ou_std": 0.0173
+    },
+    "IT6": {
+        "ou_mean": 0,
+        "ou_std": 0.0161
+    },
+    "CT6": {
+        "ou_mean": 0,
+        "ou_std": 0.0164
+    }
+}

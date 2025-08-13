@@ -1,0 +1,2 @@
+- A small test of delivering brief external stimuli
+- Params are copied from `pyr_wmult_0.1`
