@@ -6,7 +6,7 @@ This file has sim configs as well as specification for parameterized values in n
 
 Contributors: ericaygriffith@gmail.com, salvadordura@gmail.com, samnemo@gmail.com
 """
-from netpyne.batchtools import specs
+from netpyne import specs
 import pickle
 import json
 import numpy as np
@@ -91,7 +91,7 @@ cfg.recordDipole = False
 # Saving
 # ------------------------------------------------------------------------------
 
-cfg.simLabel = 'e1_i5_0_reduced_save'
+cfg.simLabel = 'e1_i5_0'
 cfg.saveFolder = 'simOutput/' + cfg.simLabel  # Set file output name
 cfg.savePickle = True  # Save pkl file
 cfg.saveJson = False  # Save json file
@@ -231,7 +231,7 @@ cfg.EICellTypeGain = {'PV': 1.0, 'SOM': 1.0, 'VIP': 1.0,
 # I->E by target cell type
 cfg.IECellTypeGain = {'PV': 1.0, 'SOM': 1.0, 'VIP': 1.0, 'NGF': 1.0}
 
-cfg.gabab_factor
+cfg.gabab_factor = 1.0
 
 # Thalamic
 cfg.addIntraThalamicConn = 0
@@ -241,7 +241,6 @@ cfg.addThalamoCorticalConn = 0
 cfg.thalamoCorticalGain = 1.0
 cfg.intraThalamicGain = 1.0
 cfg.corticoThalamicGain = 1.0
-cfg.CTGainThalI = 1.0
 
 cfg.intraThalamicEEGain = 1.0
 cfg.intraThalamicEIGain = 0.3
@@ -265,27 +264,8 @@ cfg.thalL4PV = 0.21367245896786016
 cfg.thalL4SOM = 0.24260966747847523
 cfg.thalL4E = 2.0  # 1.9540886147587417
 
-cfg.thalL4VIP = 1.0
-cfg.thalL4NGF = 1.0
-cfg.L3L3scaleFactor = 1.0
-cfg.CT6ScaleFactor = 1.0
-
 cfg.ITS4Type = 'ITS4'
 
-cfg.thalL1NGF = 1.0
-cfg.ENGF1 = 1.0
-
-# L4 -> L3 Inhib pops
-cfg.L4L3E = 1.0
-cfg.L4L3PV = 1.0
-cfg.L4L3SOM = 1.0
-cfg.L4L3VIP = 1.0
-cfg.L4L3NGF = 1.0
-cfg.L4L4E = 1.0
-
-# L3 -> L4 Inhib pops
-cfg.L3L4PV = 1.0
-cfg.L3L4SOM = 1.0
 
 # full weight conn matrix
 with open('conn/conn.pkl', 'rb') as fileObj:
@@ -308,8 +288,6 @@ cfg.EbkgThalamicGain = 1.04528
 cfg.IbkgThalamicGain = 0.485714
 cfg.BkgCtxEGain = 1.4285714285714286
 cfg.BkgCtxIGain = 0.8285714285714285
-
-cfg.NGF6bkgGain = 1.0
 
 cfg.cochlearThalInput = False
 # parameters to generate realistic  auditory thalamic inputs using Brian Hears
@@ -364,4 +342,4 @@ cfg.NoiseConductanceDur = cfg.duration
 cfg.addNetStim = 0
 
 cfg.tune = {}
-cfg.update_cfg()
+cfg.update()

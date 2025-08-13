@@ -228,14 +228,6 @@ def wireCortex():
                         prob = '%f * exp(-dist_2D/%f)' % (pmat[pre][post], lmat[pre][post])
                     else:
                         prob = pmat[pre][post]
-                    if post == 'CT6':
-                        scaleFactor = cfg.CT6ScaleFactor
-                    if pre == 'ITS4' or pre == 'ITP4':
-                        if post == 'IT3':
-                            scaleFactor = cfg.L4L3E  # 25
-                        if post == 'ITP4' or post == 'ITS4':
-                            scaleFactor = cfg.L4L4E
-
                     netParams.connParams['EE_' + pre + '_' + post + '_' + l] = {
                         'preConds': {'pop': pre},
                         'postConds': {'pop': post, 'ynorm': layer[l]},
@@ -265,24 +257,6 @@ def wireCortex():
                                 synWeightFactor = cfg.synWeightFractionEI_CustomCort
                             else:
                                 synWeightFactor = cfg.synWeightFractionEI  # cfg.synWeightFractionEI_CustomCort  #cfg.synWeightFractionEI
-                            if 'NGF1' in post:
-                                scaleFactor = cfg.ENGF1
-                            if pre == 'IT3':
-                                if post == 'IT3':
-                                    scaleFactor = cfg.L3L3scaleFactor
-                                if post == 'PV4':
-                                    scaleFactor = cfg.L3L4PV
-                                elif post == 'SOM4':
-                                    scaleFactor = cfg.L3L4SOM
-                            if pre == 'ITS4' or pre == 'ITP4':
-                                if post == 'PV3':
-                                    scaleFactor = cfg.L4L3PV  # 25
-                                elif post == 'SOM3':
-                                    scaleFactor = cfg.L4L3SOM
-                                elif post == 'NGF3':
-                                    scaleFactor = cfg.L4L3NGF  # 25
-                                elif post == 'VIP3':
-                                    scaleFactor = cfg.L4L3VIP  # 25
                             netParams.connParams['EI_' + pre + '_' + post + '_' + postType + '_' + l] = {
                                 'preConds': {'pop': pre},
                                 'postConds': {'pop': post, 'cellType': postType, 'ynorm': layer[l]},
@@ -432,14 +406,12 @@ def connectCortexToThal():
     for pre in Epops:
         for post in TEpops + TIpops:
             if post in pmat[pre]:
+                CTGain = cfg.corticoThalamicGain
+
                 if IsThalamicCore(post):  # use spatially dependent wiring for thalamic core
                     prob = '%f * exp(-dist_x/%f)' % (pmat[pre][post], ThalamicCoreLambda)
                 else:
                     prob = pmat[pre][post]
-                if post in TIpops:
-                    CTGain = cfg.CTGainThalI
-                else:
-                    CTGain = cfg.corticoThalamicGain
                 netParams.connParams['CxTh_' + pre + '_' + post] = {
                     'preConds': {'pop': pre},
                     'postConds': {'pop': post},
@@ -493,15 +465,12 @@ def connectThalToCortex():
                     elif post == 'NGF4':
                         syn = ESynMech
                         synWeightFactor = cfg.synWeightFractionEE
-                        scaleFactor = cfg.thalL4NGF  # 25
                     elif post == 'VIP4':
                         syn = ESynMech
                         synWeightFactor = cfg.synWeightFractionEE
-                        scaleFactor = cfg.thalL4VIP  # 25
                     elif post == 'NGF1':
                         syn = ESynMech
                         synWeightFactor = cfg.synWeightFractionEE
-                        scaleFactor = cfg.thalL1NGF  # 25
                     else:
                         syn = ESynMech
                         synWeightFactor = cfg.synWeightFractionEE
@@ -701,8 +670,8 @@ if cfg.addBkgConn:
     # ------------------------------------------------------------------------------
     for post in cfg.Epops:
         for qSnum in range(SourcesNumber):
-            netParams.stimTargetParams['StimSyn_T_all_EXC->' + post + '_' + str(qSnum)] = {
-                'source': 'StimSynS1_S_all_EXC->' + post + '_' + str(qSnum),
+            netParams.stimTargetParams['StimSyn_all_EXC->' + post + '_' + str(qSnum)] = {
+                'source': 'StimSyn_all_EXC->' + post + '_' + str(qSnum),
                 'conds':  {'pop': [post]},
                 'synMech': 'AMPA',
                 'sec': 'all',  # soma not inclued in S1 model
@@ -711,7 +680,7 @@ if cfg.addBkgConn:
 
     for post in cfg.Ipops:
         for qSnum in range(SourcesNumber):
-            netParams.stimTargetParams['StimSyn_T_all_EXC->' + post + '_' + str(qSnum)] = {
+            netParams.stimTargetParams['StimSyn_all_EXC->' + post + '_' + str(qSnum)] = {
                 'source': 'StimSyn_all_EXC->' + post + '_' + str(qSnum),
                 'synMech': 'AMPA',
                 'conds':  {'pop': [post]},
@@ -721,7 +690,7 @@ if cfg.addBkgConn:
 
     for post in cfg.Epops+cfg.Ipops:
         for qSnum in range(SourcesNumber):
-            netParams.stimTargetParams['StimSyn6_T_all_INH->' + post + '_' + str(qSnum)] = {
+            netParams.stimTargetParams['StimSyn_all_INH->' + post + '_' + str(qSnum)] = {
                 'source': 'StimSyn_all_INH->' + post + '_' + str(qSnum),
                 'conds':  {'pop': [post]},
                 'synMech': 'GABAA',

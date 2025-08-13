@@ -5,7 +5,7 @@ label = 'v45_batch31'
 
 # params for search
 params = {
-    'gabab_factor': [0.25, 0.5, 0.75]
+    'gabab_factor': [0.25, 0.5, 0.75, 1.0]
 }
 
 
@@ -15,9 +15,9 @@ shell_config = {'command': 'mpiexec -np 6 nrniv -python -mpi init.py'}
 # use batch_sge_config if running on Downstate HPC or other SGE systems
 sge_config = {
     'queue': 'cpu.q',
-    'cores': 20,
-    'vmem': '64G',
-    'realtime': '02:00:00',
+    'cores': 40,
+    'vmem': '128G',
+    'realtime': '04:00:00',
     'command': 'mpiexec -n $NSLOTS -hosts $(hostname) nrniv -python -mpi init.py'
 }
 
@@ -34,7 +34,7 @@ slurm_config = {
 
 run_config = sge_config
 search(job_type = 'sge',
-       comm_type = 'socket',
+       comm_type = 'sfs',
        label = label,
        params = params,
        output_path = str('../A1/simOutput/' + label + '/'),

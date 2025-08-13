@@ -12,4 +12,6 @@ ray/
 *.pkl
 *params.json
 *.run
+*.out
+*.csv
 simOutput/
