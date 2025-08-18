@@ -23,26 +23,27 @@ sge_config = {
 }
 
 slurm_config = {
-    'allocation' : 'TG-IBN140002',
-    'walltime' : '0:40:00',
-    'nodes' : 1,
-    'coresPerNode' : 64,
-    'email' : 'scott.mcelroy@downstate.edu',
-    'command' : 'mpiexec -n 128 nrniv -python -mpi init.py'
+    'allocation': 'TG-IBN140002',
+    'walltime': '0:40:00',
+    'partition': 'shared',
+    'nodes': 1,
+    'coresPerNode': 64,
+    'mem': '128G',
+    'email': 'scott.mcelroy@downstate.edu',
+    'command': 'mpiexec -n 4 nrniv -python -mpi init.py'
 }
 
-
-
-run_config = sge_config
-search(job_type = 'sge',
-       comm_type = 'sfs',
-       label = label,
-       params = params,
-       output_path = str('../A1/simOutput/' + label + '/'),
-       checkpoint_path = '../A1/simOutput/ray',
-       run_config = run_config,
-       num_samples = 1,
-       metric = 'loss',
-       mode = 'min',
-       algorithm = "variant_generator",
-       max_concurrent= 10)
+run_config = slurm_config
+search(job_type='ssh_slurm',  # ssh onto an sge based submission gateway
+       comm_type='sftp',  # communication through sftp
+       label='grid',
+       params=params,
+       remote_dir='/home/smcelroy/A1',  # path to your remote directory here (make sure everything is compiled in that directory)
+       output_path='/home/smcelroy/A1/simOutput/' + label,  # this will also be created as a remote directory
+       checkpoint_path='/tmp/ray/grid',  # local checkpointing directory here
+       run_config=run_config,
+       metric='loss',  # if a metric and mode is specified, the search will collect metric data and report on the optimal configuration
+       mode='min',  # currently remote submissions only support projects where session data (sim.send) is implemented
+       algorithm="grid",
+       max_concurrent=5,
+       host='grid0')  # host alias (can use ssh tunneling through config file)
