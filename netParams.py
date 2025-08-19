@@ -335,7 +335,7 @@ def wireCortex():
 
 
 if cfg.addConn and cfg.wireCortex:
-    print('wiring ctx')
+    # print('wiring ctx')
     wireCortex()
 
 # ------------------------------------------------------------------------------
@@ -394,7 +394,7 @@ def wireThal():
 
 
 if cfg.addConn and cfg.addIntraThalamicConn:
-    print('adding intrathal')
+    # print('adding intrathal')
     wireThal()
 
 
@@ -850,12 +850,12 @@ input_resistance['NGF6'] = 396.75
 # ------------------------------------------------------------------------------
 # IClamp
 # ------------------------------------------------------------------------------
-print("%s \t %s \t %s \t %s" % ("popName","resting_potential","input_resistance","holding_current"))
+# print("%s \t %s \t %s \t %s" % ("popName","resting_potential","input_resistance","holding_current"))
 for popName in cfg.Ipops + cfg.Epops:
 
     holding_current = (-75.0 - resting_potential[popName])/input_resistance[popName]
 
-    print("%s \t %20.3f \t %20.3f \t %20.3f" % (popName,resting_potential[popName],input_resistance[popName],holding_current))
+    # print("%s \t %20.3f \t %20.3f \t %20.3f" % (popName,resting_potential[popName],input_resistance[popName],holding_current))
 
 
     netParams.stimSourceParams['Input_'+popName] = {
