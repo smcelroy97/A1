@@ -178,7 +178,7 @@ for key, value in cfgLoad.items():
 
 # These values taken from M1 cfg (https://github.com/Neurosim-lab/netpyne/bflob/development/examples/M1detailed/cfg.py)
 cfg.singleCellPops = False
-cfg.reducedPop = 100  # insert number to declare specific number of populations, if going for full model set to False
+cfg.reducedPop = False  # insert number to declare specific number of populations, if going for full model set to False
 cfg.singlePop = ''
 cfg.removeWeightNorm = False
 cfg.scale = 1.0  # Is this what should be used?
@@ -310,18 +310,19 @@ if cfg.cochlearThalInput:
 # ------------------------------------------------------------------------------
 # The way this is set up now is to make F-I curves for each population but can be used for other purposes
 # Just needs to be modified for the specific use
-cfg.addIClamp = {
-    'FIcurve': False,
-    'numInjections': 13,
-    'injectionInterval': 3000,
-    'injectionDuration': 1000,
-    'injectionAmplitudes': np.linspace(0.0, 0.6, 13),
-    'holdingCurrent': False,
-    'includePops': cfg.allpops,
-    'holdingAmp': -0.075,
-    'hold_duration': 1000,
-    'hold_delay' : 1000
-}
+cfg.addIClamp = False
+#     {
+#     'FIcurve': False,
+#     'numInjections': 13,
+#     'injectionInterval': 3000,
+#     'injectionDuration': 1000,
+#     'injectionAmplitudes': np.linspace(0.0, 0.6, 13),
+#     'holdingCurrent': False,
+#     'includePops': cfg.allpops,
+#     'holdingAmp': -0.075,
+#     'hold_duration': 1000,
+#     'hold_delay' : 1000
+# }
 
 cfg.addNoiseIClamp = 0
 
