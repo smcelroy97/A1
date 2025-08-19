@@ -116,8 +116,34 @@ if sim.rank == 0:
   netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
   print('transmitting data...')
   inputs = cfg.get_mappings()
-  results = {'dummy':[1, 2, 3]}
-  results['loss'] = 700
+
+  # Get spike times and cell tags
+  spike_times = sim.simData['spkt']
+  spike_gids = sim.simData['spkid']
+  cell_tags = {cell.gid: cell.tags for cell in sim.net.cells}
+
+  # Define pop lists
+  Ipops = cfg.Ipops
+  Epops = cfg.Epops
+
+  # Only consider spikes in the last 2 seconds
+  start_time = cfg.duration - 2000  # ms
+  filtered_spikes = [(gid, t) for gid, t in zip(spike_gids, spike_times) if t >= start_time]
+
+  results = {}
+  loss = {}
+
+  sim_time = 2.0  # seconds
+
+  for pop in Ipops + Epops:
+    pop_gids = [gid for gid, tags in cell_tags.items() if tags['pop'] == pop]
+    pop_spikes = [gid for gid, t in filtered_spikes if gid in pop_gids]
+    rate = len(pop_spikes) / (len(pop_gids) * sim_time) if len(pop_gids) > 0 else 0
+    results[pop] = rate
+    target = 5.0 if pop in Ipops else 1.0
+    loss[pop] = rate - target
+
+  results['loss'] = loss
   out_json = json.dumps({**inputs, **results})
   sim.send(out_json)
 

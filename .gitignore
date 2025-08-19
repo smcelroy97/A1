@@ -14,4 +14,5 @@ ray/
 *.run
 *.out
 *.csv
+*ssh_key.json
 simOutput/

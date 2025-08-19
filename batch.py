@@ -1,14 +1,55 @@
 from netpyne.batchtools.search import search
 import numpy as np
+import json
 
-label = 'v45_batch33'
+label = 'v45_optuna'
+num_samples = 200
+
+with open('data/ssh_key.json', 'r') as f:
+    key = json.load(f)
+
+ssh_key = key['ssh_key']
 
 # params for search
-params = {
-    'EEGain': np.linspace(0.99, 1.25, 4),
-    'EIGain': np.linspace(0.1, 1.63, 10)
-}
+params = {'EELayerGain.1': [0.1, 5.0],
+          'EELayerGain.2': [0.1, 5.0],
+          'EELayerGain.3': [0.1, 5.0],
+          'EELayerGain.4': [0.1, 5.0],
+          'EELayerGain.5A': [0.1, 5.0],
+          'EELayerGain.5B': [0.1, 5.0],
+          'EELayerGain.6': [0.1, 5.0],
+          'EILayerGain.1': [0.1, 5.0],
+          'EILayerGain.2': [0.1, 5.0],
+          'EILayerGain.3': [0.1, 5.0],
+          'EILayerGain.4': [0.1, 5.0],
+          'EILayerGain.5A': [0.1, 5.0],
+          'EILayerGain.5B': [0.1, 5.0],
+          'EILayerGain.6': [0.1, 5.0],
+          'IELayerGain.1': [0.1, 5.0],
+          'IELayerGain.2': [0.1, 5.0],
+          'IELayerGain.3': [0.1, 5.0],
+          'IELayerGain.4': [0.1, 5.0],
+          'IELayerGain.5A': [0.1, 5.0],
+          'IELayerGain.5B': [0.1, 5.0],
+          'IELayerGain.6': [0.1, 5.0],
+          'IIELayerGain.1': [0.1, 5.0],
+          'IIELayerGain.2': [0.1, 5.0],
+          'IIELayerGain.3': [0.1, 5.0],
+          'IIELayerGain.4': [0.1, 5.0],
+          'IIELayerGain.5A': [0.1, 5.0],
+          'IIELayerGain.5B': [0.1, 5.0],
+          'IIELayerGain.6': [0.1, 5.0]
+          }
 
+
+CONFIG_EXPANSE_CPU = """
+source ~/.bashrc
+module purge
+module load shared
+module load cpu/0.17.3b  gcc/10.2.0/npcyll4 openmpi/4.1.1/ygduf2r
+module load sdsc
+module load cpu
+"""
 
 # use batch_shell_config if running directly on the machine
 shell_config = {'command': 'mpiexec -np 6 nrniv -python -mpi init.py'}
@@ -24,26 +65,38 @@ sge_config = {
 
 slurm_config = {
     'allocation': 'TG-IBN140002',
-    'walltime': '0:40:00',
+    'realtime': '2:40:00',
     'partition': 'shared',
     'nodes': 1,
     'coresPerNode': 64,
     'mem': '128G',
     'email': 'scott.mcelroy@downstate.edu',
-    'command': 'mpiexec -n 4 nrniv -python -mpi init.py'
+    'command': f"""
+        {CONFIG_EXPANSE_CPU}
+ time mpiexec -n $((SLURM_NTASKS-1)) python -u init.py
+        """
 }
 
-run_config = slurm_config
-search(job_type='ssh_slurm',  # ssh onto an sge based submission gateway
-       comm_type='sftp',  # communication through sftp
-       label='grid',
-       params=params,
-       remote_dir='/home/smcelroy/A1',  # path to your remote directory here (make sure everything is compiled in that directory)
-       output_path='/home/smcelroy/A1/simOutput/' + label,  # this will also be created as a remote directory
-       checkpoint_path='/tmp/ray/grid',  # local checkpointing directory here
-       run_config=run_config,
-       metric='loss',  # if a metric and mode is specified, the search will collect metric data and report on the optimal configuration
-       mode='min',  # currently remote submissions only support projects where session data (sim.send) is implemented
-       algorithm="grid",
-       max_concurrent=5,
-       host='grid0')  # host alias (can use ssh tunneling through config file)
+ssh_expanse_cpu = {
+    'job_type': 'ssh_slurm',
+    'comm_type': 'sftp',
+    'host': 'expanse',
+    'key': ssh_key,  # No key needed for this host
+    'remote_dir': '/home/smcelroy/A1',
+    'output_path': './simOutput/' + label,
+    'checkpoint_path': "./simOutput/ray_expanse_optuna",
+    'run_config': slurm_config
+    }
+
+run_config = ssh_expanse_cpu
+search(
+    label='grid',
+    params=params,
+    metric='loss',  # if a metric and mode is specified, the search will collect metric data and report on the optimal configuration
+    mode='min',  # currently remote submissions only support projects where session data (sim.send) is implemented
+    algorithm="optuna",
+    max_concurrent=1,
+    num_samples = num_samples,
+    sample_interval = 15,
+    **run_config
+    )  # host alias (can use ssh tunneling through config file)
