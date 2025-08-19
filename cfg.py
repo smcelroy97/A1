@@ -38,7 +38,7 @@ cfg.cache_efficient = True
 # cfg.printRunTime = 0.1  			## specified above
 cfg.oneSynPerNetcon = False
 cfg.includeParamsLabel = False
-cfg.printPopAvgRates = [0, cfg.duration]  # "printPopAvgRates": [[1500,1750],[1750,2000],[2000,2250],[2250,2500]]
+# cfg.printPopAvgRates = [0, cfg.duration]  # "printPopAvgRates": [[1500,1750],[1750,2000],[2000,2250],[2250,2500]]
 cfg.validateNetParams = True
 
 # ------------------------------------------------------------------------------
@@ -170,7 +170,6 @@ cfg.synWeightFractionThalCtxIE = [1.0, 0.0]
 # ------------------------------------------------------------------------------
 
 # Insert params from previous tuning
-# Insert params from previous tuning
 with open('data/initCfg.json', 'rb') as f:
     cfgLoad = json.load(f)
 
@@ -207,7 +206,7 @@ cfg.EIGain = 1.6313576020869256
 cfg.IEGain = 0.6
 cfg.IIGain = 1.4102431748127964
 
-## E/I->E/I layer weights (L1-3, L4, L5, L6)
+## E/I->E/I layer weights (L1-3, L4, L5, L6)f
 cfg.EELayerGain = {'1': 1.0, '2': 1.0, '3': 1.0, '4': 1.0, '5A': 1.0, '5B': 1.0, '6': 1.0}
 cfg.EILayerGain = {'1': 1.0, '2': 1.0, '3': 1.0, '4': 1.0, '5A': 1.0, '5B': 1.0, '6': 1.0}
 cfg.IELayerGain = {'1': 1.0, '2': 1.0, '3': 1.0, '4': 1.0, '5A': 1.0, '5B': 1.0, '6': 1.0}
@@ -318,7 +317,7 @@ cfg.addIClamp = {
     'injectionDuration': 1000,
     'injectionAmplitudes': np.linspace(0.0, 0.6, 13),
     'holdingCurrent': False,
-    'includePops': [cfg.allpops],
+    'includePops': cfg.allpops,
     'holdingAmp': -0.075,
     'hold_duration': 1000,
     'hold_delay' : 1000

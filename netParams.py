@@ -595,7 +595,7 @@ def addSubConn():
     # ------------------------------------------------------------------------------
     #  TCM -> E: apical
     netParams.subConnParams['TCM->E'] = {
-        'preConds': {'cellType': ['TCM']},
+        'preConds': {'pop': 'TCM'},
         'postConds': {'cellType': ['IT', 'ITS4', 'PT', 'CT']},
         'sec': 'apic',
         'groupSynMechs': ESynMech,
@@ -752,7 +752,7 @@ def connectCochleaToThal():
 
 
 if cfg.cochlearThalInput:
-    from input import cochlearSpikes
+#     from input import cochlearSpikes
 
     dcoch = cochlearSpikes(freqRange=cfg.cochlearThalInput['freqRange'],
                            numCenterFreqs=cfg.cochlearThalInput['numCenterFreqs'],

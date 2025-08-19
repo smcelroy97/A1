@@ -2,7 +2,7 @@ from netpyne.batchtools.search import search
 import numpy as np
 import json
 
-label = 'v45_optuna'
+label = 'v45_optuna0'
 num_samples = 200
 
 with open('data/ssh_key.json', 'r') as f:
@@ -32,13 +32,13 @@ params = {'EELayerGain.1': [0.1, 5.0],
           'IELayerGain.5A': [0.1, 5.0],
           'IELayerGain.5B': [0.1, 5.0],
           'IELayerGain.6': [0.1, 5.0],
-          'IIELayerGain.1': [0.1, 5.0],
-          'IIELayerGain.2': [0.1, 5.0],
-          'IIELayerGain.3': [0.1, 5.0],
-          'IIELayerGain.4': [0.1, 5.0],
-          'IIELayerGain.5A': [0.1, 5.0],
-          'IIELayerGain.5B': [0.1, 5.0],
-          'IIELayerGain.6': [0.1, 5.0]
+          'IILayerGain.1': [0.1, 5.0],
+          'IILayerGain.2': [0.1, 5.0],
+          'IILayerGain.3': [0.1, 5.0],
+          'IILayerGain.4': [0.1, 5.0],
+          'IILayerGain.5A': [0.1, 5.0],
+          'IILayerGain.5B': [0.1, 5.0],
+          'IILayerGain.6': [0.1, 5.0]
           }
 
 
@@ -66,10 +66,10 @@ sge_config = {
 slurm_config = {
     'allocation': 'TG-IBN140002',
     'realtime': '2:40:00',
-    'partition': 'shared',
+    'partition': 'compute',
     'nodes': 1,
-    'coresPerNode': 64,
-    'mem': '128G',
+    'coresPerNode': 128,
+    'mem': '200G',
     'email': 'scott.mcelroy@downstate.edu',
     'command': f"""
         {CONFIG_EXPANSE_CPU}
@@ -90,7 +90,7 @@ ssh_expanse_cpu = {
 
 run_config = ssh_expanse_cpu
 search(
-    label='grid',
+    label= label,
     params=params,
     metric='loss',  # if a metric and mode is specified, the search will collect metric data and report on the optimal configuration
     mode='min',  # currently remote submissions only support projects where session data (sim.send) is implemented
