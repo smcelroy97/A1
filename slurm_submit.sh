@@ -14,4 +14,4 @@
 #SBATCH --partition=compute
 source ~/.bashrc
 cd /home/smcelroy/expanse/A1
-mpirun -n 64 nrniv -python -mpi init.py simConfig=data/ANsynapseReduction1113A/ANsynapseReduction1113A_0_0_0_cfg.json netParams=data/ANsynapseReduction1113A/ANsynapseReduction1113A_netParams.py
+mpirun -n 64 nrniv -python -mpi init.py
