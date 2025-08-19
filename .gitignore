@@ -15,4 +15,5 @@ ray/
 *.out
 *.csv
 *ssh_key.json
+*screenlog
 simOutput/
