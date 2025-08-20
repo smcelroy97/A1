@@ -70,11 +70,9 @@ slurm_config = {
     'nodes': 1,
     'coresPerNode': 128,
     'mem': '200G',
-    'email': 'scott.mcelroy@downstate.edu',
-    'command': f"""
-        {CONFIG_EXPANSE_CPU}
- time mpiexec -n $((SLURM_NTASKS-1)) python -u init.py
-        """
+    # 'email': 'scott.mcelroy@downstate.edu',
+    'command': 'mpirun -n 64 nrniv -python -mpi init.py'
+
 }
 
 ssh_expanse_cpu = {
