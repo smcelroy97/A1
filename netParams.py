@@ -595,7 +595,7 @@ def addSubConn():
     # ------------------------------------------------------------------------------
     #  TCM -> E: apical
     netParams.subConnParams['TCM->E'] = {
-        'preConds': {'pop': 'TCM'},
+        'preConds': {'pop': ['TCM']},
         'postConds': {'cellType': ['IT', 'ITS4', 'PT', 'CT']},
         'sec': 'apic',
         'groupSynMechs': ESynMech,
@@ -719,7 +719,7 @@ def connectCochleaToThal():
         'delay': cfg.delayBkg}
     prob = '%f * exp(-dist_x/%f)' % (cfg.cochlearThalInput['probICore'], ThalamicCoreLambda)
     netParams.connParams['cochlea->ThalICore'] = {
-        'preConds': {'pop': 'cochlea'},
+        'preConds': {'pop': ['cochlea']},
         'postConds': {'pop': ['TI']},  # 'IRE',
         'sec': 'soma',
         'loc': 0.5,
@@ -730,8 +730,8 @@ def connectCochleaToThal():
         'delay': cfg.delayBkg}
     # cochlea -> Thal Matrix
     netParams.connParams['cochlea->ThalEMatrix'] = {
-        'preConds': {'pop': 'cochlea'},
-        'postConds': {'pop': 'TCM'},
+        'preConds': {'pop': ['cochlea']},
+        'postConds': {'pop': ['TCM']},
         'sec': 'soma',
         'loc': 0.5,
         'synMech': ESynMech,
@@ -740,7 +740,7 @@ def connectCochleaToThal():
         'synMechWeightFactor': cfg.synWeightFractionEE,
         'delay': cfg.delayBkg}
     netParams.connParams['cochlea->ThalIMatrix'] = {
-        'preConds': {'pop': 'cochlea'},
+        'preConds': {'pop': ['cochlea']},
         'postConds': {'pop': ['TIM']},  # 'IREM',
         'sec': 'soma',
         'loc': 0.5,
