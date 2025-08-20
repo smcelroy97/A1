@@ -6,10 +6,8 @@
 #SBATCH --ntasks-per-node=64
 #SBATCH -o simOutput/single.run
 #SBATCH -e simOutput/single.err
-#SBATCH --mail-user=scott.mcelroy@downstate.edu
-#SBATCH --mail-type=end
 
-#SBATCH --mem=126G
+#SBATCH --mem=250G
 #SBATCH --export=ALL
 #SBATCH --partition=compute
 source ~/.bashrc
