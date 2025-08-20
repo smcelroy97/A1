@@ -103,8 +103,8 @@ if sim.cfg.addNoiseConductance:
     combinedOUFlags.update(flags)
   sim.OUFlags = combinedOUFlags
 
-sim.saveData()
-sim.analysis.plotData()    # plot spike raster etc
+# sim.saveData()
+# sim.analysis.plotData()    # plot spike raster etc
 
 # Terminate batch process
 if sim.rank == 0:
@@ -126,7 +126,9 @@ if sim.rank == 0:
   filtered_spikes = [(gid, t) for gid, t in zip(spike_gids, spike_times) if t >= start_time]
 
   results = {}
-  loss = {}
+  pop_loss = {}
+  pop_loss['Epops'] = {}
+  pop_loss['Ipops'] = {}
 
   sim_time = 2.0  # seconds
 
@@ -136,9 +138,18 @@ if sim.rank == 0:
     rate = len(pop_spikes) / (len(pop_gids) * sim_time) if len(pop_gids) > 0 else 0
     results[pop] = rate
     target = 5.0 if pop in Ipops else 1.0
-    loss[pop] = rate - target
+    if pop in Ipops:
+      pop_loss['Ipops'][pop] = rate - target
+    if pop in Epops:
+      pop_loss['Epops'][pop] = rate - target
 
-  results['loss'] = loss
+  all_E_rates = list(pop_loss['Epops'].values())
+  all_I_rates = list(pop_loss['Ipops'].values())
+
+  results['e_loss_avg'] = sum(all_E_rates) / len(all_E_rates)
+  results['i_loss_avg'] = sum(all_I_rates) / len(all_I_rates)
+  results['loss'] = results['e_loss_avg'] + results['i_loss_avg'] / 2
+
   out_json = json.dumps({**inputs, **results})
   sim.send(out_json)
 
