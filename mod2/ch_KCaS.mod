@@ -19,6 +19,7 @@ NEURON {
 UNITS {
     (mA) = (milliamp)
     (mV) = (millivolt)
+    (molar) = (1/liter)
     (mM) = (millimolar)
 }
 
