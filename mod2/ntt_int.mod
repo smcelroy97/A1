@@ -27,6 +27,7 @@ TITLE Low threshold calcium current
 INDEPENDENT {t FROM 0 TO 1 WITH 1 (ms)}
 
 NEURON {
+    THREADSAFE
 	SUFFIX it2INT
 	USEION ca READ cai, cao WRITE ica VALENCE 2
 	RANGE gcabar, g, shift1

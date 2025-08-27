@@ -22,6 +22,7 @@ by the more efficient cnexp method.
 ENDCOMMENT
 
 NEURON {
+    THREADSAFE
 	POINT_PROCESS MyExp2Syn
 	RANGE tau1, tau2, e, i
 	NONSPECIFIC_CURRENT i

@@ -1,6 +1,8 @@
 NEURON { SUFFIX kdr2orig }
+    THREADSAFE
   
 NEURON { USEION k WRITE ik }         
+    THREADSAFE
 
 ASSIGNED { ik }
 

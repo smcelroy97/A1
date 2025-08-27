@@ -16,6 +16,7 @@ TITLE High threshold calcium current
 INDEPENDENT {t FROM 0 TO 1 WITH 1 (ms)}
 
 NEURON {
+    THREADSAFE
 	SUFFIX icalINT
 	USEION Ca READ Cai, Cao WRITE iCa VALENCE 2
         RANGE pcabar, g
