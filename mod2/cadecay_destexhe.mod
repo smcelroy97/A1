@@ -19,57 +19,53 @@ TITLE Fast mechanism for submembranal Ca++ concentration (cai)
 : Written by Alain Destexhe, Salk Institute, 1995
 : CONTRIBUTERS: Erica Griffith, Dec 2019; changing suffix to cadA1 (from cad) for use in A1 cortical model
 
-INDEPENDENT {t FROM 0 TO 1 WITH 1 (ms)}
+TITLE Fast mechanism for submembranal Ca++ concentration (cai)
 
 NEURON {
-	SUFFIX cadA1
-	USEION ca READ ica, cai WRITE cai
-	RANGE depth,kt,kd,cainf,taur
+    SUFFIX cadA1
+    USEION ca READ ica, cai WRITE cai
+    RANGE depth, kt, kd, cainf, taur
 }
 
 UNITS {
-	(molar) = (1/liter)			: moles do not appear in units
-	(mM)	= (millimolar)
-	(um)	= (micron)
-	(mA)	= (milliamp)
-	(msM)	= (ms mM)
+    (molar) = (1/liter)
+    (mM) = (millimolar)
+    (um) = (micron)
+    (mA) = (milliamp)
+    (msM) = (ms mM)
 }
 
 CONSTANT {
-	FARADAY = 96489		(coul)		: moles do not appear in units
+    FARADAY = 96489 (coul)
 }
 
 PARAMETER {
-	depth	= .1	(um)		: depth of shell
-	taur	= 5	(ms)		: rate of calcium removal
-	cainf	= 2e-4	(mM)
-	kt	= 0	(mM/ms)		: dummy
-	kd	= 0	(mM)		: dummy
+    depth = .1 (um)
+    taur = 5 (ms)
+    cainf = 2e-4 (mM)
+    kt = 0 (mM/ms)
+    kd = 0 (mM)
 }
 
 STATE {
-	cai		(mM) 
+    cai (mM)
 }
 
 INITIAL {
-	cai = cainf
+    cai = cainf
 }
 
 ASSIGNED {
-	ica		(mA/cm2)
-	drive_channel	(mM/ms)
+    ica (mA/cm2)
+    drive_channel (mM/ms)
 }
-	
+
 BREAKPOINT {
-	SOLVE state METHOD derivimplicit
+    SOLVE state METHOD derivimplicit
 }
 
-DERIVATIVE state { 
-
-	drive_channel =  - (10000) * ica / (2 * FARADAY * depth)
-
-	if (drive_channel <= 0.) { drive_channel = 0. }	: cannot pump inward
-
-	cai' = drive_channel + (cainf-cai)/taur
+DERIVATIVE state {
+    drive_channel = - (10000) * ica / (2 * FARADAY * depth)
+    if (drive_channel <= 0.) { drive_channel = 0. }
+    cai' = drive_channel + (cainf - cai) / taur
 }
-
