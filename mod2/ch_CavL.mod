@@ -23,9 +23,9 @@ NEURON {
 UNITS {
     (mA) = (milliamp)
     (mV) = (millivolt)
+    (molar) = (1/liter)
     (mM) = (millimolar)
 }
-
 PARAMETER {
     gbar = 0.001 (mho/cm2)
     v (mV)
