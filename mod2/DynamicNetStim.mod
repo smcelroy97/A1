@@ -1,7 +1,12 @@
+: $Id: nsloc.mod,v 1.7 2013/06/20  salvad $
+: from nrn/src/nrnoc/netstim.mod
+: modified to use allow for time-dependent intervals
+
 NEURON {
     ARTIFICIAL_CELL DynamicNetStim
     RANGE interval, number, start, id, type, subtype, fflag, mlenmin, mlenmax, check_interval, noise
     THREADSAFE
+    RANDOM _rand
 }
 
 PARAMETER {
@@ -36,7 +41,7 @@ FUNCTION invl(mean (ms)) (ms) {
 }
 
 FUNCTION erand() {
-    erand = -log(1.0 - scop_random())
+    erand = -log(1.0 - nrn_random_pick(_rand))
 }
 
 INITIAL {
