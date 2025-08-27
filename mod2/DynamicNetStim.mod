@@ -40,7 +40,7 @@ FUNCTION invl(mean (ms)) (ms) {
 }
 
 FUNCTION erand() {
-    erand = -log(1.0 - nrn_random_pick())
+    erand = -log(1.0 - uniform(0, 1))
 }
 
 INITIAL {
