@@ -36,7 +36,7 @@ FUNCTION invl(mean (ms)) (ms) {
 }
 
 FUNCTION erand() {
-    erand = exprand(1)
+    erand = -log(1.0 - scop_random())
 }
 
 INITIAL {

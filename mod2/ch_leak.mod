@@ -13,22 +13,13 @@ Updates:
 2014 December (Marianne Bezaire): documented
 ENDCOMMENT
 
-
-VERBATIM
-#include <stdlib.h> /* 	Include this library so that the following
-						(innocuous) warning does not appear:
-						 In function '_thread_cleanup':
-						 warning: incompatible implicit declaration of 
-						          built-in function 'free'  */
-ENDVERBATIM
-
 UNITS {
 	(mA) =(milliamp)
 	(mV) =(millivolt)
 }
  
-NEURON { 
-	SUFFIX ch_leak 
+NEURON {
+	SUFFIX ch_leak
 	NONSPECIFIC_CURRENT i
 	RANGE gmax, e, i
 	RANGE myi, g

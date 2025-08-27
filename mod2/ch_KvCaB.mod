@@ -29,6 +29,7 @@ UNITS {
 UNITS {
 	(mV) =	(millivolt)
 	(mA) =	(milliamp)
+	(molar) = (1/liter)
 	(mM) =	(millimolar)
 }
 

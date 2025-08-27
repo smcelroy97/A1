@@ -14,14 +14,6 @@ Updates:
 ENDCOMMENT
 
 
-VERBATIM
-#include <stdlib.h> /* 	Include this library so that the following
-						(innocuous) warning does not appear:
-						 In function '_thread_cleanup':
-						 warning: incompatible implicit declaration of 
-						          built-in function 'free'  */
-ENDVERBATIM
-
 UNITS {
 	(mA) = (milliamp)
 	(mV) = (millivolt)
@@ -44,13 +36,13 @@ PARAMETER {
 
 
 NEURON {
-	SUFFIX ch_KvAngf
-	USEION k READ ek WRITE ik
-	RANGE gmax, g, ik
-	RANGE myi
-	RANGE a0l, a0n, zetan, zetal, gmn, gml
-	GLOBAL ninf, linf, taul, taun : note that these four are not thread safe
-	THREADSAFE
+    SUFFIX ch_KvAngf
+    USEION k READ ek WRITE ik
+    RANGE gmax, g, ik
+    RANGE myi
+    RANGE a0l, a0n, zetan, zetal, gmn, gml
+    RANGE ninf, linf, taul, taun
+    THREADSAFE
 }
 
 STATE {
