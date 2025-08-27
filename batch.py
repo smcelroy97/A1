@@ -2,7 +2,7 @@ from netpyne.batchtools.search import search
 import numpy as np
 import json
 
-label = 'v45_optuna0'
+label = 'v45_optuna1'
 num_samples = 200
 
 with open('data/ssh_key.json', 'r') as f:

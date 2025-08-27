@@ -138,17 +138,14 @@ if sim.rank == 0:
     rate = len(pop_spikes) / (len(pop_gids) * sim_time) if len(pop_gids) > 0 else 0
     results[pop] = rate
     target = 5.0 if pop in Ipops else 1.0
-    if pop in Ipops:
-      pop_loss['Ipops'][pop] = rate - target
-    if pop in Epops:
-      pop_loss['Epops'][pop] = rate - target
 
-  all_E_rates = list(pop_loss['Epops'].values())
-  all_I_rates = list(pop_loss['Ipops'].values())
+    # Calculate MSE for E and I populations
+    e_losses = [(results[pop] - 1.0) ** 2 for pop in Epops]
+    i_losses = [(results[pop] - 5.0) ** 2 for pop in Ipops]
 
-  results['e_loss_avg'] = sum(all_E_rates) / len(all_E_rates)
-  results['i_loss_avg'] = sum(all_I_rates) / len(all_I_rates)
-  results['loss'] = results['e_loss_avg'] + results['i_loss_avg'] / 2
+    results['e_loss_avg'] = np.mean(e_losses) if e_losses else 0
+    results['i_loss_avg'] = np.mean(i_losses) if i_losses else 0
+    results['loss'] = (results['e_loss_avg'] + results['i_loss_avg']) / 2
 
   out_json = json.dumps({**inputs, **results})
   sim.send(out_json)
