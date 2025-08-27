@@ -55,11 +55,7 @@ STATE {
 	cai
 }
 
-: verbatim blocks are not thread safe (perhaps related, this mechanism cannot be used with cvode)
 INITIAL {
-	:VERBATIM	/* what is the point of this? */	
-	:cai = _ion_cai;
-	:ENDVERBATIM
 	cai = caiinf	
 	eca = ktf() * log(cao/caiinf)	
 }
