@@ -13,13 +13,13 @@ from analysis.ou_tuning import sim_res_proc_utils as proc
 def apply_exp_cfg(cfg):
 
     # Duration
-    cfg.duration = 3 * 1e3
+    cfg.duration = 20 * 1e3
 
     # Left point (ms) of the calculation time window (r, cv, ...)
-    cfg.t0_calc = 2000
+    cfg.t0_calc = 18000
 
     # Populations to use
-    pops_active = ['IT2', 'ITS4', 'ITP4']
+    pops_active = ['IT5A', 'IT5B']
 
     # Subnet parameters
     cfg.subnet_build_flag = 1
@@ -46,21 +46,6 @@ def apply_exp_cfg(cfg):
     # Cell mechanisms to modify
     with open(dirpath_self / 'mech_changes_1.json', 'r') as fid:
         cfg.mech_changes = json.load(fid)
-    
-    # External stimulus
-    cfg.add_pulses = 1
-    cfg.pulse_seq_params = {
-        'name': 'Pulse1',
-        'pop': ['ITS4', 'ITP4', 'IT6', 'CT6'],
-        't0': 1000,
-        'width': 200,
-        'n_pulses': 1,
-        'rates': [1000],
-        'weight': 2,
-        'n_cells': 1000,
-        'convergence': 1,
-        'period': 1e5
-    }
 
     if 'plotRaster' in cfg.analysis:
         cfg.analysis['plotRaster']['include'] = pops_active

@@ -13,13 +13,10 @@ from analysis.ou_tuning import sim_res_proc_utils as proc
 def apply_exp_cfg(cfg):
 
     # Duration
-    cfg.duration = 3 * 1e3
-
-    # Left point (ms) of the calculation time window (r, cv, ...)
-    cfg.t0_calc = 2000
+    cfg.duration = 5 * 1e3
 
     # Populations to use
-    pops_active = ['IT2', 'ITS4', 'ITP4']
+    pops_active = ['PV2', 'PV3']
 
     # Subnet parameters
     cfg.subnet_build_flag = 1
@@ -40,27 +37,20 @@ def apply_exp_cfg(cfg):
     cfg.ou_common = 0
     cfg.ou_noise_duration = cfg.duration
     cfg.ou_tau = 10
-    with open(dirpath_self / 'ou_inputs.json', 'r') as fid:
-        cfg.ou_pop_inputs = json.load(fid)
+    cfg.ou_pop_inputs = {
+        "PV2": {
+            "ou_mean": -0.0036891587031679797,
+            "ou_std": 0
+        },
+        "PV3": {
+            "ou_mean": -0.005124142791935895,
+            "ou_std": 0
+        }
+    }
 
     # Cell mechanisms to modify
     with open(dirpath_self / 'mech_changes_1.json', 'r') as fid:
         cfg.mech_changes = json.load(fid)
-    
-    # External stimulus
-    cfg.add_pulses = 1
-    cfg.pulse_seq_params = {
-        'name': 'Pulse1',
-        'pop': ['ITS4', 'ITP4', 'IT6', 'CT6'],
-        't0': 1000,
-        'width': 200,
-        'n_pulses': 1,
-        'rates': [1000],
-        'weight': 2,
-        'n_cells': 1000,
-        'convergence': 1,
-        'period': 1e5
-    }
 
     if 'plotRaster' in cfg.analysis:
         cfg.analysis['plotRaster']['include'] = pops_active
@@ -70,7 +60,7 @@ def apply_exp_cfg(cfg):
         cfg.analysis['plotTraces']['include'] = pops_active
     
     # Time range for rate and CV calculation
-    cfg.analysis['plotSpikeStats']['timeRange'] = (cfg.t0_calc, cfg.duration)
+    cfg.analysis['plotSpikeStats']['timeRange'] = [5000, cfg.duration]
     #cfg.analysis['plotSpikeStats'] = False
 
     # Record voltage traces
@@ -108,10 +98,9 @@ def post_run(sim):
     cfg = sim.cfg
 
     # Calculate rate and CV for each pop., save the result to json
-    t_limits = (cfg.t0_calc / 1000, cfg.duration / 1000)
+    t_limits = (5, cfg.duration / 1000)
     nspikes_min = 3
     res = proc.calc_rates_and_cvs(sim, t_limits, nspikes_min)
-    res |= proc.calc_v_stats(sim, t_limits, med_win=0.05)
     fpath_res = '{}/{}_result.json'.format(cfg.saveFolder, cfg.simLabel)
     with open(fpath_res, 'w') as fid:
         json.dump(res, fid, indent=4)

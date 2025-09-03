@@ -1,0 +1,30 @@
+{
+    "TC": {
+        "ou_mean": -0.01,
+        "ou_std": 0.0082
+    },
+    "TCM": {
+        "ou_mean": -0.01,
+        "ou_std": 0.0066
+    },
+    "HTC": {
+        "ou_mean": -0.01,
+        "ou_std": 0.0082
+    },
+    "TI": {
+        "ou_mean": 0.0,
+        "ou_std": 0.0082
+    },
+    "TIM": {
+        "ou_mean": -0.002,
+        "ou_std": 0.0088
+    },
+    "IRE": {
+        "ou_mean": -0.01,
+        "ou_std": 0.0082
+    },
+    "IREM": {
+        "ou_mean": -0.01,
+        "ou_std": 0.007
+    }
+}

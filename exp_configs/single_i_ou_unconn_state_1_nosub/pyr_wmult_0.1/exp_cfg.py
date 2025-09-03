@@ -13,10 +13,10 @@ from analysis.ou_tuning import sim_res_proc_utils as proc
 def apply_exp_cfg(cfg):
 
     # Duration
-    cfg.duration = 5 * 1e3
+    cfg.duration = 10 * 1e3
 
     # Left point (ms) of the calculation time window (r, cv, ...)
-    cfg.t0_calc = 2000
+    cfg.t0_calc = 8000
 
     # Populations to use
     pops_active = ['IT2', 'IT3', 'ITS4', 'ITP4', 'IT5A', 'CT5A',

@@ -1,0 +1,1 @@
+- Simulation of PV2 pop. (in a surrogate background) with ou_mean and ou_std hardcoded in exp_cfg.py
