@@ -49,6 +49,21 @@ def apply_exp_cfg(cfg, par=None):
     # Cell mechanisms to modify
     with open(dirpath_self / 'mech_changes_1.json', 'r') as fid:
         cfg.mech_changes = json.load(fid)
+    
+    # External stimulus
+    cfg.add_pulses = 1
+    cfg.pulse_seq_params = {
+        'name': 'Pulse1',
+        'pop': ['IT2', 'IT3', 'ITS4', 'IT5A', 'IT5B', 'IT6'],
+        't0': 5000,
+        'width': 400,
+        'n_pulses': 1,
+        'rates': [1000],
+        'weight': 5,
+        'n_cells': 1000,
+        'convergence': 1,
+        'period': 1e5
+    }
 
     # Time range for rate and CV calculation
     cfg.analysis['plotSpikeStats']['timeRange'] = (cfg.t0_calc, cfg.duration)
@@ -87,6 +102,9 @@ def post_run(sim):
 
     # Experiment sub-name
     exp_name_sub = (f'exp_t_{t_limits[0]}_{t_limits[1]}')
+    par = cfg.pulse_seq_params
+    exp_name_sub += (f'_pulse_r_{par["rates"][0]}_w_{par["weight"]}_'
+                     f'dur_{par["width"]}')
 
     # Generate filename postfix with param values
     exp_id = exp_name.split('_')[-1]

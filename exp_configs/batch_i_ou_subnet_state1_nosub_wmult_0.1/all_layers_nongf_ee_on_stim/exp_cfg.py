@@ -14,7 +14,6 @@ import numpy as np
 from analysis.ou_tuning import sim_res_proc_utils as proc
 
 
-
 def apply_exp_cfg(cfg, par=None):
 
     # Duration
@@ -49,6 +48,21 @@ def apply_exp_cfg(cfg, par=None):
     # Cell mechanisms to modify
     with open(dirpath_self / 'mech_changes_1.json', 'r') as fid:
         cfg.mech_changes = json.load(fid)
+    
+    # External stimulus
+    cfg.add_pulses = 1
+    cfg.pulse_seq_params = {
+        'name': 'Pulse1',
+        'pop': ['ITS4'],
+        't0': 4000,
+        'width': 500,
+        'n_pulses': 1,
+        'rates': [1000],
+        'weight': 5,
+        'n_cells': 1000,
+        'convergence': 1,
+        'period': 1e5
+    }
 
     # Time range for rate and CV calculation
     cfg.analysis['plotSpikeStats']['timeRange'] = (cfg.t0_calc, cfg.duration)

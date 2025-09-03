@@ -14,7 +14,6 @@ import numpy as np
 from analysis.ou_tuning import sim_res_proc_utils as proc
 
 
-
 def apply_exp_cfg(cfg, par=None):
 
     # Duration
