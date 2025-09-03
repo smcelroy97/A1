@@ -41,3 +41,4 @@ exp_results/**/*.nc
 !exp_results/batch*/**/combined/**
 *.bak
 !analysis/OLD
+.vscode/
