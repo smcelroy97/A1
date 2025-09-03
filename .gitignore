@@ -10,6 +10,7 @@ x86_64/
 *.out
 .idea
 *ray*
+*variant_generator*
 simulations/
 exp_results/**/*.png
 exp_results/**/*.pkl

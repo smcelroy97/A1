@@ -103,9 +103,12 @@ print('Request:')
 print(sim_request)
 
 # Get external input rates (for every pop) from the request
-cfg.ou_pop_inputs = sim_request['input']
-cfg.addConn = sim_request['connected']
-cfg.wmult = sim_request['wmult']
+if 'input' in sim_request:
+    cfg.ou_pop_inputs = sim_request['input']
+if 'connected' in sim_request:
+    cfg.addConn = sim_request['connected']
+if 'wmult' in sim_request:
+    cfg.wmult = sim_request['wmult']
 
 # Create netParams based on the config
 netParams = create_net_params(cfg)
