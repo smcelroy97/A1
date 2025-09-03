@@ -1060,12 +1060,17 @@ def create_net_params(cfg):
                 }
 
     # Pulse sequence
-    if cfg.add_pulses:
+    if hasattr(cfg, 'add_pulses') and cfg.add_pulses:
         par = cfg.pulse_seq_params
         name = par['name']
         t0, T = par['t0'], par['period']
         pop_out = par['pop']
         #n_post = netParams.popParams[pop_out]['numCells']
+
+        if isinstance(pop_out, str):
+            pop_out = [pop_out]
+        pop_out = [pop for pop in pop_out if pop in netParams.popParams]
+        pop_out_str = '_'.join(pop_out)
         
         netParams.popParams[name] = {
             'cellModel': 'VecStim',
@@ -1083,7 +1088,7 @@ def create_net_params(cfg):
                 ]
             }
         }
-        netParams.connParams[f'{name}->{pop_out}'] = {
+        netParams.connParams[f'{name}->{pop_out_str}'] = {
             'preConds':  {'pop': name},
             'postConds': {'pop': pop_out},
             #'connList': [[i, i] for i in range(n_post)],
