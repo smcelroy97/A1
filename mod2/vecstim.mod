@@ -69,15 +69,3 @@ VERBATIM
 ENDVERBATIM
 }
 
-PROCEDURE play() {
-VERBATIM
-	void** vv;
-	vv = (void**)(&space);
-	*vv = (void*)0;
-	if (ifarg(1)) {
-		*vv = vector_arg(1);
-	}
-ENDVERBATIM
-}
-        
-

@@ -90,11 +90,7 @@ DERIVATIVE castate {
 
 UNITSOFF
 INITIAL {
-	VERBATIM
-	Cai = _ion_Cai;
-	Cao = _ion_Cao;
-	ENDVERBATIM
-
+	
 :   Activation functions and kinetics were obtained from
 :   Huguenard & Prince, and were at 23-25 deg.
 :   Transformation to 36 deg assuming Q10 of 5 and 3 for m and h

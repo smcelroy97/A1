@@ -35,9 +35,6 @@ UNITS {
     (msM) = (ms mM)
 }
 
-CONSTANT {
-    FARADAY = 96489 (coul)
-}
 
 PARAMETER {
     depth = .1 (um)
@@ -65,7 +62,7 @@ BREAKPOINT {
 }
 
 DERIVATIVE state {
-    drive_channel = - (10000) * ica / (2 * FARADAY * depth)
+    drive_channel = - (10000) * ica / (2 * 96485 * depth)
     if (drive_channel <= 0.) { drive_channel = 0. }
     cai' = drive_channel + (cainf - cai) / taur
 }

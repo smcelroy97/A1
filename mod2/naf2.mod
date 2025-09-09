@@ -1,7 +1,8 @@
-NEURON { SUFFIX naf2  }
-    THREADSAFE
-NEURON {  USEION na WRITE ina }
-    THREADSAFE
+NEURON { SUFFIX naf2  
+         USEION na WRITE ina 
+         THREADSAFE
+}
+
 ASSIGNED { ina }
 
 PARAMETER {

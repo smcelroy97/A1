@@ -179,14 +179,14 @@ NET_RECEIVE(weight,  r0, t0 (ms)) {
         r0 = weight*(Rinf + (r0 - Rinf)*exp(-(t - t0)/Rtau))
         t0 = t
         synon = synon - weight
-        state_discontinuity(Ron, Ron - r0)
-        state_discontinuity(Roff, Roff + r0)
+        Ron = Ron - r0
+        Roff = Roff + r0
     } else {
         r0 = weight*r0*exp(-Beta*(t - t0))
         t0 = t
         synon = synon + weight
-        state_discontinuity(Ron, Ron + r0)
-        state_discontinuity(Roff, Roff - r0)
+        Ron = Ron + r0
+        Roff = Roff - r0
         net_send(Cdur, 1)
     }
 }
