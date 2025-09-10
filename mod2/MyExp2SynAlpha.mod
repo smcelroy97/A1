@@ -24,7 +24,7 @@ ENDCOMMENT
 
 NEURON {
 	POINT_PROCESS MyExp2SynAlpha : alphasynapses
-        RANGE tau1, tau2, e, i, g
+        RANGE tau1, tau2, e, i, g, gmax
 	NONSPECIFIC_CURRENT i
 }
 

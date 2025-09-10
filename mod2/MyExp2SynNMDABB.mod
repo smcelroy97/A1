@@ -2,7 +2,7 @@
 NEURON {
 :  THREADSAFE
   POINT_PROCESS MyExp2SynNMDABB
-  RANGE e, i, iNMDA, s, sNMDA, r, tau1NMDA, tau2NMDA, Vwt, smax, sNMDAmax, g
+  RANGE e, i, iNMDA, s, sNMDA, r, tau1NMDA, tau2NMDA, Vwt, smax, sNMDAmax, g, gmax
   NONSPECIFIC_CURRENT iNMDA
   USEION ca READ cai,cao WRITE ica
   GLOBAL fracca

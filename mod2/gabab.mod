@@ -101,7 +101,7 @@ ENDCOMMENT
 NEURON {
     THREADSAFE
     POINT_PROCESS GABAB
-    RANGE R, G, g
+    RANGE R, G, g, gmax
     NONSPECIFIC_CURRENT i
     GLOBAL Cmax, Cdur
     GLOBAL K1, K2, K3, K4, KD, Erev, cutoff
