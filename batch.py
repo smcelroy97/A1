@@ -51,6 +51,10 @@ module load sdsc
 module load cpu
 """
 
+CONFIG_EXPANSE_GPU = """
+
+"""
+
 # use batch_shell_config if running directly on the machine
 shell_config = {'command': 'mpiexec -np 6 nrniv -python -mpi init.py'}
 
@@ -63,18 +67,6 @@ sge_config = {
     'command': 'mpiexec -n $NSLOTS -hosts $(hostname) nrniv -python -mpi init.py'
 }
 
-slurm_config = {
-    'allocation': 'TG-IBN140002',
-    'realtime': '2:40:00',
-    'partition': 'compute',
-    'nodes': 1,
-    'coresPerNode': 128,
-    'mem': '200G',
-    # 'email': 'scott.mcelroy@downstate.edu',
-    'command': 'mpirun -n 64 nrniv -python -mpi init.py'
-
-}
-
 ssh_expanse_cpu = {
     'job_type': 'ssh_slurm',
     'comm_type': 'sftp',
@@ -82,9 +74,42 @@ ssh_expanse_cpu = {
     'key': ssh_key,  # No key needed for this host
     'remote_dir': '/home/smcelroy/A1',
     'output_path': './simOutput/' + label,
-    'checkpoint_path': "./simOutput/ray_expanse_optuna",
-    'run_config': slurm_config
+    'checkpoint_path': "./simOutput/ray",
+    'run_config': {
+        'allocation': 'TG-IBN140002',
+        'realtime': '2:40:00',
+        'partition': 'compute',
+        'nodes': 1,
+        'coresPerNode': 128,
+        'mem': '200G',
+        'command': f"""
+        {CONFIG_EXPANSE_CPU}
+        mpirun -n 64 nrniv -python -mpi init.py
+        """
     }
+}
+
+ssh_expanse_gpu = {
+    'job_type': 'ssh_slurm',
+    'comm_type': 'sftp',
+    'host': 'expanse',
+    'key': ssh_key,  # No key needed for this host
+    'remote_dir': '/home/smcelroy/A1',
+    'output_path': './simOutput/' + label,
+    'checkpoint_path': "./simOutput/ray",
+    'run_config': {
+        'allocation': 'TG-IBN140002',
+        'realtime': '2:40:00',
+        'partition': 'gpu-shared',
+        'nodes': 1,
+        'coresPerNode': 16,
+        'mem': '200G',
+        'command': f"""
+    {CONFIG_EXPANSE_CPU}
+    mpirun -n 64 nrniv -python -mpi init.py
+    """
+    }
+}
 
 run_config = ssh_expanse_cpu
 search(

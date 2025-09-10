@@ -15,7 +15,7 @@ Updates:
 ENDCOMMENT
 
 NEURON {
-    SUFFIX Kdrfastngf
+    SUFFIX ch_Kdrfastngf
     USEION k WRITE ik
     RANGE gbar, ik, g, m, h
 }

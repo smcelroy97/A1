@@ -14,7 +14,7 @@ Updates:
 ENDCOMMENT
 
 NEURON {
-    SUFFIX CavN
+    SUFFIX ch_CavN
     USEION ca READ cai, eca WRITE ica
     RANGE gbar, ica, g, m, h
 }

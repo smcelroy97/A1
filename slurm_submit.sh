@@ -9,7 +9,7 @@
 
 #SBATCH --mem=250G
 #SBATCH --export=ALL
-#SBATCH --partition=compute
+#SBATCH --partition=GPU
 source ~/.bashrc
 cd /home/smcelroy/expanse/A1
 mpirun -n 64 nrniv -python -mpi init.py

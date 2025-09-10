@@ -10,7 +10,7 @@ Updates:
 ENDCOMMENT
 
 NEURON {
-    SUFFIX KCaS
+    SUFFIX ch_KCaS
     USEION ca READ cai
     USEION k WRITE ik
     RANGE gbar, ik, g, m
