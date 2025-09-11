@@ -17,7 +17,7 @@ ENDCOMMENT
 NEURON {
     SUFFIX ch_CavL
     USEION ca READ cai, eca WRITE ica
-    RANGE gbar, ica, g, m, h
+    RANGE gmax, ica, g, m, h
 }
 
 UNITS {
@@ -27,7 +27,7 @@ UNITS {
     (mM) = (millimolar)
 }
 PARAMETER {
-    gbar = 0.001 (mho/cm2)
+    gmax = 0.001 (mho/cm2)
     v (mV)
     cai = 5e-5 (mM)
     eca = 140 (mV)
@@ -58,7 +58,7 @@ INITIAL {
 
 BREAKPOINT {
     SOLVE states METHOD cnexp
-    g = gbar * m * h
+    g = gmax * m * h
     ica = g * (v - eca)
 }
 

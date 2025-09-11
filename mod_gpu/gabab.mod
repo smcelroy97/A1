@@ -98,95 +98,113 @@ ENDCOMMENT
 
 
 
-NEURON {
-    THREADSAFE
-    POINT_PROCESS GABAB
-    RANGE R, G, g
-    NONSPECIFIC_CURRENT i
-    GLOBAL Cmax, Cdur
-    GLOBAL K1, K2, K3, K4, KD, Erev, cutoff
-}
+INDEPENDENT {t FROM 0 TO 1 WITH 1 (ms)}
 
+NEURON {
+	POINT_PROCESS GABAB
+	RANGE R, G, g
+	NONSPECIFIC_CURRENT i
+	GLOBAL Cmax, Cdur
+	GLOBAL K1, K2, K3, K4, KD, Erev, warn, cutoff
+}
 UNITS {
-    (nA) = (nanoamp)
-    (mV) = (millivolt)
-    (umho) = (micromho)
-    (mM) = (milli/liter)
+	(nA) = (nanoamp)
+	(mV) = (millivolt)
+	(umho) = (micromho)
+	(mM) = (milli/liter)
 }
 
 PARAMETER {
-    Cmax    = 0.5   (mM)
-    Cdur    = 0.3   (ms)
-    K1      = 0.52  (/ms mM)
-    K2      = 0.0013 (/ms)
-    K3      = 0.098 (/ms)
-    K4      = 0.033 (/ms)
-    KD      = 100
-    n       = 4
-    Erev    = -95   (mV)
-    cutoff  = 1e12
+
+	Cmax	= 0.5	(mM)		: max transmitter concentration
+	Cdur	= 0.3	(ms)		: transmitter duration (rising phase)
+:
+:	From Kfit with long pulse (5ms 0.5mM)
+:
+	K1	= 0.52	(/ms mM)	: forward binding rate to receptor
+	K2	= 0.0013 (/ms)		: backward (unbinding) rate of receptor
+	K3	= 0.098 (/ms)		: rate of G-protein production
+	K4	= 0.033 (/ms)		: rate of G-protein decay
+	KD	= 100			: dissociation constant of K+ channel
+	n	= 4			: nb of binding sites of G-protein on K+
+	Erev	= -95	(mV)		: reversal potential (E_K)
+	warn	= 0			: too large G warning has/has not been issued
+        cutoff = 1e12
 }
 
+
 ASSIGNED {
-    v       (mV)
-    i       (nA)
-    g       (umho)
-    Gn
-    R
-    edc
-    synon
-    Rinf
-    Rtau (ms)
-    Beta (/ms)
+	v		(mV)		: postsynaptic voltage
+	i 		(nA)		: current = g*(v - Erev)
+	g 		(umho)		: conductance
+	Gn
+	R				: fraction of activated receptor
+	edc
+	synon
+	Rinf
+	Rtau (ms)
+	Beta (/ms)
 }
 
 STATE {
-    Ron Roff
-    G
+	Ron Roff
+	G				: fraction of activated G-protein
 }
 
+
 INITIAL {
-    R = 0
-    G = 0
-    Ron = 0
-    Roff = 0
-    synon = 0
-    Rinf = K1*Cmax/(K1*Cmax + K2)
-    Rtau = 1/(K1*Cmax + K2)
-    Beta = K2
+	R = 0
+	G = 0
+	Ron = 0
+	Roff = 0
+	synon = 0
+	Rinf = K1*Cmax/(K1*Cmax + K2)
+	Rtau = 1/(K1*Cmax + K2)
+	Beta = K2
+
 }
 
 BREAKPOINT {
-    SOLVE bindkin METHOD derivimplicit
-    if (G < cutoff) {
-        Gn = G*G*G*G
-        g = Gn / (Gn+KD)
-    } else {
-        g = 1
-    }
-    i = g*(v - Erev)
+	SOLVE bindkin METHOD derivimplicit
+	if (G < cutoff) {
+		Gn = G*G*G*G : ^n = 4
+		g = Gn / (Gn+KD)
+	} else {
+		if(!warn){
+			printf("gabab.mod WARN: G = %g too large\n", G)		
+			warn = 1
+		}
+		g = 1
+	}
+	i = g*(v - Erev)
 }
+
 
 DERIVATIVE bindkin {
-    Ron' = synon*K1*Cmax - (K1*Cmax + K2)*Ron
-    Roff' = -K2*Roff
-    R = Ron + Roff
-    G' = K3 * R - K4 * G
+	Ron' = synon*K1*Cmax - (K1*Cmax + K2)*Ron
+	Roff' = -K2*Roff
+	R = Ron + Roff
+	G' = K3 * R - K4 * G
 }
 
+: following supports both saturation from single input and
+: summation from multiple inputs
+: Note: automatic initialization of all reference args to 0 except first
+
 NET_RECEIVE(weight,  r0, t0 (ms)) {
-    if (flag == 1) {
-        r0 = weight*(Rinf + (r0 - Rinf)*exp(-(t - t0)/Rtau))
-        t0 = t
-        synon = synon - weight
-        Ron = Ron - r0
-        Roff = Roff + r0
-    } else {
-        r0 = weight*r0*exp(-Beta*(t - t0))
-        t0 = t
-        synon = synon + weight
-        Ron = Ron + r0
-        Roff = Roff - r0
-        net_send(Cdur, 1)
-    }
+	if (flag == 1) { : at end of Cdur pulse so turn off
+		r0 = weight*(Rinf + (r0 - Rinf)*exp(-(t - t0)/Rtau))
+		t0 = t
+		synon = synon - weight
+		state_discontinuity(Ron, Ron - r0)
+		state_discontinuity(Roff, Roff + r0)
+        }else{ : at beginning of Cdur pulse so turn on
+		r0 = weight*r0*exp(-Beta*(t - t0))
+		t0 = t
+		synon = synon + weight
+		state_discontinuity(Ron, Ron + r0)
+		state_discontinuity(Roff, Roff - r0)
+		:come again in Cdur
+		net_send(Cdur, 1)
+        }
 }

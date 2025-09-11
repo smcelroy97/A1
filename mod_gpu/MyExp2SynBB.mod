@@ -2,7 +2,7 @@
 NEURON {
 :  THREADSAFE
   POINT_PROCESS MyExp2SynBB
-  RANGE tau1, tau2, e, i, g, Vwt
+  RANGE tau1, tau2, e, i, g, Vwt, gmax
   NONSPECIFIC_CURRENT i
 }
 
