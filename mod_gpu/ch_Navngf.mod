@@ -15,12 +15,7 @@ Updates:
 ENDCOMMENT
 
 COMMENT
-VERBATIM
-#include <stdlib.h> 
-/* 	Include this library so that the following (innocuous) warning does not appear:
-		In function '_thread_cleanup':
-		warning: incompatible implicit declaration of built-in function 'free'  */
-ENDVERBATIM
+
 ENDCOMMENT
 
 UNITS {
@@ -124,7 +119,6 @@ PROCEDURE rates(v) {  :Computes rate and other constants at current v.
 PROCEDURE trates(v) {  :Computes rate and other constants at current v.
                       :Call once from HOC to initialize inf at resting v.
 	LOCAL tinc	: only available to block; must be first line in block
-	TABLE minf, mexp, hinf, hexp, mtau, htau
 	DEPEND dt, celsius, mAlphV, mAlphC, mBetaV, mBetaC, hAlphV, hAlphC, hBetaV, hBetaC
 	FROM -100 TO 100 WITH 200
 

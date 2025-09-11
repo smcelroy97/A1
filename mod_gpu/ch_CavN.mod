@@ -106,7 +106,6 @@ PROCEDURE rates(v) {  :Computes rate and other constants at current v.
 PROCEDURE trates(v) {  :Computes rate and other constants at current v.
                       :Call once from HOC to initialize inf at resting v.
 	LOCAL tinc
-	TABLE  cinf, cexp, dinf, dexp, ctau, dtau
 	DEPEND dt, celsius FROM -100 TO 100 WITH 200
                            
 	rates(v)	: not consistently executed from here if usetable_hh == 1
