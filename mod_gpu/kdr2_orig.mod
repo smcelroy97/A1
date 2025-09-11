@@ -9,8 +9,7 @@ NEURON {
 ASSIGNED {
 		ik
 		g
-		i
-		}
+}
 
 PARAMETER {
 	erev 		= -95        (mV)

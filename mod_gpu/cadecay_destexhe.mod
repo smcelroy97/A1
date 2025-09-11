@@ -35,10 +35,6 @@ UNITS {
 	(msM)	= (ms mM)
 }
 
-CONSTANT {
-	FARADAY = 96489		(coul)		: moles do not appear in units
-:	FARADAY = 96.489	(k-coul)	: moles do not appear in units
-}
 
 PARAMETER {
 	depth	= .1	(um)		: depth of shell
@@ -46,6 +42,7 @@ PARAMETER {
 	cainf	= 2e-4	(mM)
 	kt	= 0	(mM/ms)		: dummy
 	kd	= 0	(mM)		: dummy
+	FARADAY = 96489 (coul)          : moles do not appear in units
 }
 
 STATE {
