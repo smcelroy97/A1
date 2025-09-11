@@ -12,10 +12,10 @@ INDEPENDENT {t FROM 0 TO 1 WITH 1 (ms)}
 
 NEURON {
     THREADSAFE
-	SUFFIX iar
-	USEION other WRITE iother VALENCE 1
-        RANGE ghbar, shift
-	GLOBAL h_inf, tau_h, erev, stp
+    SUFFIX iar
+    USEION other WRITE iother VALENCE 1
+    RANGE ghbar, shift, h_inf, tau_h
+    GLOBAL erev, stp
 }
 
 UNITS {

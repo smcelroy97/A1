@@ -27,15 +27,13 @@ ENDCOMMENT
 
 INDEPENDENT {t FROM 0 TO 1 WITH 1 (ms)}
 
+
 NEURON {
-    THREADSAFE
-  SUFFIX naz
-  USEION na READ ena WRITE ina
-  RANGE m, h, gna, gmax, i
-  GLOBAL tha, thi1, thi2, qa, qi, qinf, thinf
-  GLOBAL minf, hinf, mtau, htau
-  GLOBAL Ra, Rb, Rd, Rg
-  GLOBAL q10, temp, tadj, vmin, vmax, vshift
+        THREADSAFE
+        SUFFIX naz
+        USEION na READ ena WRITE ina
+        RANGE m, h, gna, gmax, i, minf, hinf, mtau, htau, tadj
+        GLOBAL tha, thi1, thi2, qa, qi, thinf, qinf, Ra, Rb, Rd, Rg, q10, temp, vmin, vmax, vshift
 }
 
 PARAMETER {

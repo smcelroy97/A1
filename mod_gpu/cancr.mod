@@ -7,8 +7,7 @@ NEURON {
     THREADSAFE
 	SUFFIX cancr
 	USEION ca READ cai, eca WRITE ica 
-    RANGE gcabar, ica, po
-	GLOBAL hinf, minf, s_inf
+    RANGE gcabar, ica, po, hinf, minf, s_inf
 }
 
 UNITS {

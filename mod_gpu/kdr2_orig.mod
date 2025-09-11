@@ -1,10 +1,16 @@
-NEURON { SUFFIX kdr2orig }
-    THREADSAFE
-  
-NEURON { USEION k WRITE ik }         
-    THREADSAFE
+NEURON {
+	SUFFIX kdr2orig
+	USEION k WRITE ik
+	RANGE gmax, erev, g, i
+	THREADSAFE
+}
 
-ASSIGNED { ik }
+
+ASSIGNED {
+		ik
+		g
+		i
+		}
 
 PARAMETER {
 	erev 		= -95        (mV)

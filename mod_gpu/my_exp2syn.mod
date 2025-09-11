@@ -26,9 +26,7 @@ NEURON {
 	POINT_PROCESS MyExp2Syn
 	RANGE tau1, tau2, e, i
 	NONSPECIFIC_CURRENT i
-
-	RANGE g
-	GLOBAL total
+	RANGE g, total
 }
 
 UNITS {

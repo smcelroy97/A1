@@ -28,10 +28,11 @@ INDEPENDENT {t FROM 0 TO 1 WITH 1 (ms)}
 
 NEURON {
     THREADSAFE
-	SUFFIX it2INT
-	USEION ca READ cai, cao WRITE ica VALENCE 2
-	RANGE gcabar, g, shift1
-	GLOBAL m_inf, tau_m, h_inf, tau_h, shift2, sm, sh, phi_m, phi_h, hx, mx,rat
+    SUFFIX it2INT
+    USEION ca READ cai, cao WRITE ica VALENCE 2
+    RANGE gcabar, g, shift1
+    RANGE m_inf, tau_m, h_inf, tau_h, phi_m, phi_h
+    GLOBAL shift2, sm, sh, hx, mx, rat
 }
 
 UNITS {
@@ -91,10 +92,6 @@ DERIVATIVE castate {
 
 UNITSOFF
 INITIAL {
-	VERBATIM
-	cai = _ion_cai;
-	cao = _ion_cao;
-	ENDVERBATIM
 
 :   Activation functions and kinetics were obtained from
 :   Huguenard & Prince, and were at 23-25 deg.

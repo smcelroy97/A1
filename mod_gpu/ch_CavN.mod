@@ -13,13 +13,6 @@ Updates:
 2014 December (Marianne Bezaire): documented
 ENDCOMMENT
 
-VERBATIM
-#include <stdlib.h> /* 	Include this library so that the following
-						(innocuous) warning does not appear:
-						 In function '_thread_cleanup':
-						 warning: incompatible implicit declaration of 
-						          built-in function 'free'  */
-ENDVERBATIM
  
 UNITS {
 	(mA) =(milliamp)
@@ -89,9 +82,6 @@ PROCEDURE states() {	:Computes state variables m, h, and n
         trates(v)	:      at the current v and dt.
 	c = c + cexp*(cinf-c)
 	d = d + dexp*(dinf-d)
-        :VERBATIM				
-        :return 0;
-        :ENDVERBATIM
 }
  
 LOCAL q10

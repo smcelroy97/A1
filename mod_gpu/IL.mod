@@ -19,8 +19,8 @@ NEURON {
     THREADSAFE
 	SUFFIX icalINT
 	USEION Ca READ Cai, Cao WRITE iCa VALENCE 2
-        RANGE pcabar, g
-	GLOBAL 	m_inf, tau_m, sh1, sh2, rat
+        RANGE pcabar, g, m_inf, tau_m
+	GLOBAL sh1, sh2, rat
 }
 
 

@@ -22,8 +22,8 @@ NEURON {
   SUFFIX Nca
   USEION ca READ eca WRITE ica
   RANGE i, m, h, gca, gmax
-  RANGE minf, hinf, mtau, htau
-  GLOBAL q10, temp, tadj, vmin, vmax, vshift
+  RANGE minf, hinf, mtau, htau, tadj
+  GLOBAL q10, temp, vmin, vmax, vshift
 }
 
 PARAMETER {

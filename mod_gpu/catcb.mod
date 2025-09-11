@@ -6,10 +6,8 @@ TITLE t-type calcium channel with high threshold for activation
 NEURON {
     THREADSAFE
 	SUFFIX catcb
-	USEION ca READ cai, eca    
-        RANGE gcatbar, iCa
-        RANGE gcatbar, ica
-	GLOBAL hinf, minf
+	USEION ca READ cai, eca
+		RANGE gcatbar, ica, hinf, minf
 }
 
 UNITS {

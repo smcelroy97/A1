@@ -84,9 +84,6 @@ PROCEDURE states() {    : exact when v held constant
 	m = m + m_exp * (m_inf - m)
 	h = h + h_exp * (h_inf - h)
 	n = n + n_exp * (n_inf - n)
-	VERBATIM
-	return 0;
-	ENDVERBATIM
 }
 
 UNITSOFF

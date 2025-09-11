@@ -14,14 +14,6 @@ Updates:
 ENDCOMMENT
 
 
-VERBATIM
-#include <stdlib.h> /* 	Include this library so that the following
-						(innocuous) warning does not appear:
-						 In function '_thread_cleanup':
-						 warning: incompatible implicit declaration of
-						          built-in function 'free'  */
-ENDVERBATIM
-
 UNITS {
 	(molar) = (1/liter)
 }

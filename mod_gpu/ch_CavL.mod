@@ -15,14 +15,6 @@ Updates:
 ENDCOMMENT
 
 
-VERBATIM
-#include <stdlib.h> /* 	Include this library so that the following
-						(innocuous) warning does not appear:
-						 In function '_thread_cleanup':
-						 warning: incompatible implicit declaration of 
-						          built-in function 'free'  */
-ENDVERBATIM
-
 UNITS {
 	(mA) = (milliamp)
 	(mV) = (millivolt)
@@ -71,9 +63,6 @@ ASSIGNED {
 INITIAL {
 	rate(v)
 	m = minf
-	VERBATIM
-	cai=_ion_cai;
-	ENDVERBATIM
 }
 
 BREAKPOINT {

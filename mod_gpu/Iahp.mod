@@ -29,8 +29,8 @@ NEURON {
 	USEION k2 WRITE ik2 VALENCE 1
 	USEION Ca READ Cai VALENCE 2
 	USEION ca READ cai
-        RANGE gkbar, i, g, ratc, ratC, minf, taum
-	GLOBAL beta, cac, m_inf, tau_m, x
+        RANGE gkbar, i, g, ratc, ratC, minf, taum, m_inf, tau_m
+	GLOBAL beta, cac, x
 }
 
 
@@ -93,10 +93,6 @@ INITIAL {
 :  activation kinetics are assumed to be at 22 deg. C
 :  Q10 is assumed to be 3
 :
-	VERBATIM
-	cai = _ion_cai;
-	Cai = _ion_Cai;
-	ENDVERBATIM
 
 	tadj = 3 ^ ((celsius-22.0)/10)
 
