@@ -27,4 +27,4 @@ module load openmpi/mlnx/gcc/64/4.1.5a1
 module load cmake/3.31.2/w4akk6u
 
 # Run simulation with special
-time mpirun --bind-to none -n $SLURM_NTASKS mod2/x86_64/special -mpi -python init.py
+time mpirun --bind-to none -n $SLURM_NTASKS ./x86_64/special -mpi -python init.py

@@ -8,7 +8,6 @@ NEURON {
 
 ASSIGNED {
 		ik
-		g
 }
 
 PARAMETER {

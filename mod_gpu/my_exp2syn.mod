@@ -79,8 +79,8 @@ DERIVATIVE state {
 }
 
 NET_RECEIVE(weight (uS)) {
-	state_discontinuity(A, A + weight*factor)
-	state_discontinuity(B, B + weight*factor)
+	A = A + weight*factor
+	B = B + weight*factor
 	total = total+weight
 }
 

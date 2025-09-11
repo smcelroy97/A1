@@ -119,8 +119,6 @@ PROCEDURE rates(v) {  :Computes rate and other constants at current v.
 PROCEDURE trates(v) {  :Computes rate and other constants at current v.
                       :Call once from HOC to initialize inf at resting v.
 	LOCAL tinc	: only available to block; must be first line in block
-	DEPEND dt, celsius, mAlphV, mAlphC, mBetaV, mBetaC, hAlphV, hAlphC, hBetaV, hBetaC
-	FROM -100 TO 100 WITH 200
 
 	rates(v)	: not consistently executed from here if usetable_hh == 1
 				: so don't expect the tau values to be tracking along with
