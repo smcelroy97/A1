@@ -36,6 +36,7 @@ UNITS {
 }
  
 NEURON { 
+    THREADSAFE
 	SUFFIX ch_Kdrfastngf
 	USEION k READ ek WRITE ik VALENCE 1
 	RANGE g, gmax, ninf, ntau, ik

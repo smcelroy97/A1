@@ -28,6 +28,7 @@ ENDCOMMENT
 INDEPENDENT {t FROM 0 TO 1 WITH 1 (ms)}
 
 NEURON {
+    THREADSAFE
   SUFFIX naz
   USEION na READ ena WRITE ina
   RANGE m, h, gna, gmax, i

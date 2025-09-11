@@ -16,6 +16,7 @@ TITLE Hippocampal HH channels
 INDEPENDENT {t FROM 0 TO 1 WITH 1 (ms)}
 
 NEURON {
+    THREADSAFE
 	SUFFIX hh2
 	USEION na READ ena WRITE ina
 	USEION k READ ek WRITE ik

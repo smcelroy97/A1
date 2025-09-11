@@ -24,6 +24,7 @@ TITLE Slow Ca-dependent potassium current
 INDEPENDENT {t FROM 0 TO 1 WITH 1 (ms)}
 
 NEURON {
+    THREADSAFE
 	SUFFIX iahp
 	USEION k2 WRITE ik2 VALENCE 1
 	USEION Ca READ Cai VALENCE 2

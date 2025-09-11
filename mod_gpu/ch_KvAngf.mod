@@ -44,6 +44,7 @@ PARAMETER {
 
 
 NEURON {
+    THREADSAFE
 	SUFFIX ch_KvAngf
 	USEION k READ ek WRITE ik
 	RANGE gmax, g, ik

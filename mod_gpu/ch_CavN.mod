@@ -32,6 +32,7 @@ UNITS {
  
  
 NEURON {
+    THREADSAFE
 	SUFFIX ch_CavN				: The name of the mechanism
 	USEION ca READ eca WRITE ica VALENCE 2 
 	RANGE g

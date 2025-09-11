@@ -30,6 +30,7 @@ TITLE Slow Ca-dependent cation current
 INDEPENDENT {t FROM 0 TO 1 WITH 1 (ms)}
 
 NEURON {
+    THREADSAFE
 	SUFFIX icanINT
 	USEION other2 WRITE iother2 VALENCE 1
 	USEION Ca READ Cai VALENCE 2
