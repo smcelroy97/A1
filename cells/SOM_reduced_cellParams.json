@@ -9,10 +9,8 @@
     },
     "globals": {
         "celsius": 23.0,
-        "hinf_catcb": 0.3068442636178239,
         "ki0_k_ion": 140.0,
-        "ko0_k_ion": 3.82,
-        "minf_catcb": 0.0358812246203101
+        "ko0_k_ion": 3.82
     },
     "secLists": {
         "all": [
@@ -191,7 +189,9 @@
                 },
                 "cadyn": {},
                 "catcb": {
-                    "gcatbar": 0.003
+                    "gcatbar": 0.003,
+                    "hinf_catcb": 0.3068442636178239,
+                    "minf_catcb": 0.0358812246203101
                 },
                 "hin": {
                     "K": 10.0,

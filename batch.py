@@ -52,7 +52,13 @@ module load cpu
 """
 
 CONFIG_EXPANSE_GPU = """
-
+echo "Loading modules..."
+source ~/.bashrc
+module purge
+module use /cm/shared/apps/spack/0.21.2/gpu/dev/share/spack/lmod/linux-rocky8-x86_64/Core
+module load nvhpc/24.11/2utxz5z
+module load openmpi/mlnx/gcc/64/4.1.5a1
+module load cmake/3.31.2/w4akk6u
 """
 
 # use batch_shell_config if running directly on the machine
@@ -105,8 +111,8 @@ ssh_expanse_gpu = {
         'coresPerNode': 16,
         'mem': '200G',
         'command': f"""
-    {CONFIG_EXPANSE_CPU}
-    mpirun -n 64 nrniv -python -mpi init.py
+    {CONFIG_EXPANSE_GPU}
+    time mpirun --bind-to none -n $SLURM_NTASKS ./x86_64/special -mpi -python init.py
     """
     }
 }
