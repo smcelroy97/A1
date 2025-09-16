@@ -35,20 +35,23 @@ cfg.connRandomSecFromList = False  # set to false for reproducibility
 cfg.cvode_active = False
 cfg.cvode_atol = 1e-6
 cfg.cache_efficient = True
-# cfg.printRunTime = 0.1  			## specified above
+cfg.printRunTime = 0.1  			# specified above
 cfg.oneSynPerNetcon = False
 cfg.includeParamsLabel = False
 # cfg.printPopAvgRates = [0, cfg.duration]  # "printPopAvgRates": [[1500,1750],[1750,2000],[2000,2250],[2250,2500]]
 cfg.validateNetParams = True
+cfg.use_coreNEURON = False
 
 # ------------------------------------------------------------------------------
 # GPU Flags
 # ------------------------------------------------------------------------------
 
-cfg.rand123GlobalIndex = None
-cfg.coreneuron = True
-cfg.random123 = True
-cfg.gpu = True
+if cfg.use_coreNEURON:
+    cfg.rand123GlobalIndex = None
+    cfg.coreneuron = True
+    cfg.random123 = True
+    cfg.gpu = True
+
 
 # ------------------------------------------------------------------------------
 # Recording
@@ -93,7 +96,7 @@ cfg.recordStim = False  # Seen in M1 cfg.py
 cfg.recordTime = True  # SEen in M1 cfg.py
 cfg.recordStep = 0.05  # St ep size (in ms) to save data -- value from M1 cfg.py
 
-cfg.recordLFP = False  #  [[100, y, 100] for y in range(0, 2000, 100)]
+cfg.recordLFP = False   # [[100, y, 100] for y in range(0, 2000, 100)]
 cfg.recordDipole = False
 
 # ------------------------------------------------------------------------------
@@ -104,7 +107,7 @@ cfg.simLabel = 'e1_i5_0'
 cfg.saveFolder = 'simOutput/' + cfg.simLabel  # Set file output name
 cfg.savePickle = True  # Save pkl file
 cfg.saveJson = False  # Save json file
-cfg.saveDataInclude = ['simData', 'simConfig','netParams']
+cfg.saveDataInclude = ['simData', 'simConfig', 'netParams']
 cfg.backupCfgFile = None
 cfg.gatherOnlySimData = False
 cfg.saveCellSecs = False
@@ -123,7 +126,7 @@ cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig'
 # 'oneFigPer': 'cell', 'overlay': True, 'saveFig': False, 'showFig': False, 'figSize':(12,8)}
 
 
-def setplotTraces(ncell=50, linclude=cfg.allpops, timeRange=cfg.duration):
+def set_plot_traces(ncell=50, linclude=cfg.allpops, timeRange=cfg.duration):
     pops = []
     for pop in linclude:
         for i in range(ncell):
@@ -131,7 +134,7 @@ def setplotTraces(ncell=50, linclude=cfg.allpops, timeRange=cfg.duration):
     cfg.analysis['plotTraces'] = {'include': linclude, 'timeRange': timeRange, 'oneFigPer': 'trace', 'overlay': True, 'saveFig': False, 'showFig': False, 'figSize': (12, 8)}
 
 
-# setplotTraces(ncell=1, timeRange=[1750, 3000])
+# set_plot_traces(ncell=1, timeRange=[1750, 3000])
 
 layer_bounds = {'L1': 100, 'L2': 160, 'L3': 950, 'L4': 1250, 'L5A': 1334, 'L5B': 1550, 'L6': 2000}
 
