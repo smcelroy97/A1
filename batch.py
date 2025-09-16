@@ -88,6 +88,7 @@ ssh_expanse_cpu = {
         'nodes': 1,
         'coresPerNode': 128,
         'mem': '200G',
+        'email': scott.mcelroy@downstate.edu,
         'command': f"""
         {CONFIG_EXPANSE_CPU}
         mpirun -n 64 nrniv -python -mpi init.py
