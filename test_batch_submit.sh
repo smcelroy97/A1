@@ -16,7 +16,11 @@
 cd $SLURM_SUBMIT_DIR
 
 # Conda setup
-source ~/.bashrc
+# source ~/.bashrc
+conda activate netpynegpu
+
+export PATH=$HOME/neuronGPU/bin:$PATH
+export PYTHONPATH=$HOME/neuronGPU/lib/python:$PYTHONPATH
 
 # Load modules
 echo "Loading modules..."

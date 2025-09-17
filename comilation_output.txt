@@ -1,0 +1,1003 @@
+(netpynegpu) [smcelroy@exp-7-59 GPUA1]$ nrnivmodl -coreneuron mod_gpu
+/home/smcelroy/GPUA1
+Mod files: "mod_gpu/mod_gpu/APCounter2.mod" "mod_gpu/mod_gpu/ar_traub.mod" "mod_gpu/mod_gpu/CA1ika.mod" "mod_gpu/mod_gpu/CA1ikdr.mod" "mod_gpu/mod_gpu/CA1ina.mod" "mod_gpu/mod_gpu/cadad.mod" "mod_gpu/mod_gpu/cadecay_destexhe.mod" "mod_gpu/mod_gpu/cad.mod" "mod_gpu/mod_gpu/Cadynamics.mod" "mod_gpu/mod_gpu/cadyn.mod" "mod_gpu/mod_gpu/cagk.mod" "mod_gpu/mod_gpu/cal_mh.mod" "mod_gpu/mod_gpu/cal_mig.mod" "mod_gpu/mod_gpu/cancr.mod" "mod_gpu/mod_gpu/canin.mod" "mod_gpu/mod_gpu/can_mig.mod" "mod_gpu/mod_gpu/caolmw.mod" "mod_gpu/mod_gpu/capr.mod" "mod_gpu/mod_gpu/catcb.mod" "mod_gpu/mod_gpu/cat_mig.mod" "mod_gpu/mod_gpu/cat_traub.mod" "mod_gpu/mod_gpu/ch_CavL.mod" "mod_gpu/mod_gpu/ch_CavN.mod" "mod_gpu/mod_gpu/ch_KCaS.mod" "mod_gpu/mod_gpu/ch_Kdrfastngf.mod" "mod_gpu/mod_gpu/ch_KvAngf.mod" "mod_gpu/mod_gpu/ch_KvCaB.mod" "mod_gpu/mod_gpu/ch_leak.mod" "mod_gpu/mod_gpu/ch_Navngf.mod" "mod_gpu/mod_gpu/ConductanceSource.mod" "mod_gpu/mod_gpu/cp2.mod" "mod_gpu/mod_gpu/cp.mod" "mod_gpu/mod_gpu/gabab.mod" "mod_gpu/mod_gpu/h_BS.mod" "mod_gpu/mod_gpu/HH2.mod" "mod_gpu/mod_gpu/h_harnett.mod" "mod_gpu/mod_gpu/HH_traub.mod" "mod_gpu/mod_gpu/hin.mod" "mod_gpu/mod_gpu/h_kole.mod" "mod_gpu/mod_gpu/h_migliore.mod" "mod_gpu/mod_gpu/htc.mod" "mod_gpu/mod_gpu/Iahp.mod" "mod_gpu/mod_gpu/ICal.mod" "mod_gpu/mod_gpu/Ican.mod" "mod_gpu/mod_gpu/ican_sidi.mod" "mod_gpu/mod_gpu/icaolmw.mod" "mod_gpu/mod_gpu/icapr.mod" "mod_gpu/mod_gpu/iccr.mod" "mod_gpu/mod_gpu/IC.mod" "mod_gpu/mod_gpu/iconc_Ca.mod" "mod_gpu/mod_gpu/iholmkop.mod" "mod_gpu/mod_gpu/iholmw.mod" "mod_gpu/mod_gpu/ihpyrkop.mod" "mod_gpu/mod_gpu/IKM.mod" "mod_gpu/mod_gpu/ikscr.mod" "mod_gpu/mod_gpu/IKsin.mod" "mod_gpu/mod_gpu/IL_gutnick.mod" "mod_gpu/mod_gpu/IL.mod" "mod_gpu/mod_gpu/IM_cortex.mod" "mod_gpu/mod_gpu/ipulse3.mod" "mod_gpu/mod_gpu/IT2.mod" "mod_gpu/mod_gpu/IT.mod" "mod_gpu/mod_gpu/kahppr.mod" "mod_gpu/mod_gpu/kaolmkop.mod" "mod_gpu/mod_gpu/kap_BS.mod" "mod_gpu/mod_gpu/kapcb.mod" "mod_gpu/mod_gpu/kapin.mod" "mod_gpu/mod_gpu/kapyrkop.mod" "mod_gpu/mod_gpu/kBK.mod" "mod_gpu/mod_gpu/kca.mod" "mod_gpu/mod_gpu/kcaolmw.mod" "mod_gpu/mod_gpu/kcpr.mod" "mod_gpu/mod_gpu/kctin.mod" "mod_gpu/mod_gpu/kdmc_BS.mod" "mod_gpu/mod_gpu/kdr2_orig.mod" "mod_gpu/mod_gpu/kdr_BS.mod" "mod_gpu/mod_gpu/kdrbwb.mod" "mod_gpu/mod_gpu/kdrcr.mod" "mod_gpu/mod_gpu/kdrin.mod" "mod_gpu/mod_gpu/kdrolmkop.mod" "mod_gpu/mod_gpu/kdrpr.mod" "mod_gpu/mod_gpu/kdrpyrkop.mod" "mod_gpu/mod_gpu/kl.mod" "mod_gpu/mod_gpu/km.mod" "mod_gpu/mod_gpu/kv.mod" "mod_gpu/mod_gpu/MyExp2SynAlpha.mod" "mod_gpu/mod_gpu/MyExp2SynBB.mod" "mod_gpu/mod_gpu/my_exp2syn.mod" "mod_gpu/mod_gpu/MyExp2SynNMDABB.mod" "mod_gpu/mod_gpu/na_2.mod" "mod_gpu/mod_gpu/naf2.mod" "mod_gpu/mod_gpu/nafbwb.mod" "mod_gpu/mod_gpu/nafcr.mod" "mod_gpu/mod_gpu/nafolmkop.mod" "mod_gpu/mod_gpu/nafpr.mod" "mod_gpu/mod_gpu/nafpyrkop.mod" "mod_gpu/mod_gpu/nafx.mod" "mod_gpu/mod_gpu/nap_sidi.mod" "mod_gpu/mod_gpu/nax_BS.mod" "mod_gpu/mod_gpu/naz.mod" "mod_gpu/mod_gpu/Nca.mod" "mod_gpu/mod_gpu/ntIh.mod" "mod_gpu/mod_gpu/ntleak.mod" "mod_gpu/mod_gpu/ntt_int.mod" "mod_gpu/mod_gpu/ntt.mod" "mod_gpu/mod_gpu/pasi.mod" "mod_gpu/mod_gpu/savedist.mod" "mod_gpu/mod_gpu/tia.mod" "mod_gpu/mod_gpu/vecstim.mod"
+
+Creating 'x86_64' directory for .o files.
+
+[INFO] Running: make -j4 -f /home/smcelroy/neuronGPU/share/coreneuron/nrnivmodl_core_makefile ROOT=/home/smcelroy/neuronGPU MODS_PATH=x86_64/corenrn/mod2c BUILD_TYPE=STATIC NRN_PRCELLSTATE=0
+Default NMODL flags:
+Translating x86_64/corenrn/mod2c/CA1ika.mod into x86_64/corenrn/mod2c//CA1ika.cpp
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/APCounter2.mod into x86_64/corenrn/mod2c//APCounter2.cpp
+Thread Safe
+Notice: This mechanism cannot be used with CVODE
+Warning: v undefined. (declared within VERBATIM?)
+cvode_emit=0 cvode_not_allowed=1
+diff: x86_64/corenrn/mod2c/_mod_func.cpp: No such file or directory
+Translating x86_64/corenrn/mod2c/CA1ikdr.mod into x86_64/corenrn/mod2c//CA1ikdr.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Thread Safe
+Translating x86_64/corenrn/mod2c/CA1ina.mod into x86_64/corenrn/mod2c//CA1ina.cpp
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/Cadynamics.mod into x86_64/corenrn/mod2c//Cadynamics.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/ConductanceSource.mod into x86_64/corenrn/mod2c//ConductanceSource.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Thread Safe
+Translating x86_64/corenrn/mod2c/HH2.mod into x86_64/corenrn/mod2c//HH2.cpp
+cvode_emit=0 cvode_not_allowed=0
+Thread Safe
+Translating x86_64/corenrn/mod2c/HH_traub.mod into x86_64/corenrn/mod2c//HH_traub.cpp
+Notice: This mechanism cannot be used with CVODE
+cvode_emit=0 cvode_not_allowed=1
+Warning: Default 36 of PARAMETER celsius will be ignored and set by NEURON.
+Warning: Default -90 of PARAMETER ek will be ignored and set by NEURON.
+Warning: Default 50 of PARAMETER ena will be ignored and set by NEURON.
+Translating x86_64/corenrn/mod2c/IC.mod into x86_64/corenrn/mod2c//IC.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/ICal.mod into x86_64/corenrn/mod2c//ICal.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/IKM.mod into x86_64/corenrn/mod2c//IKM.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Warning: Default 36 of PARAMETER celsius will be ignored and set by NEURON.
+Translating x86_64/corenrn/mod2c/IKsin.mod into x86_64/corenrn/mod2c//IKsin.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/IL.mod into x86_64/corenrn/mod2c//IL.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Warning: Default 2 of PARAMETER Cao will be ignored and set by NEURON.
+Warning: Default 5e-05 of PARAMETER Cai will be ignored and set by NEURON.
+Warning: Default 36 of PARAMETER celsius will be ignored and set by NEURON.
+Translating x86_64/corenrn/mod2c/IL_gutnick.mod into x86_64/corenrn/mod2c//IL_gutnick.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Warning: Default 36 of PARAMETER celsius will be ignored and set by NEURON.
+Translating x86_64/corenrn/mod2c/IM_cortex.mod into x86_64/corenrn/mod2c//IM_cortex.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Warning: Default 36 of PARAMETER celsius will be ignored and set by NEURON.
+Translating x86_64/corenrn/mod2c/IT.mod into x86_64/corenrn/mod2c//IT.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Warning: Default 2 of PARAMETER cao will be ignored and set by NEURON.
+Warning: Default 0.00024 of PARAMETER cai will be ignored and set by NEURON.
+Translating x86_64/corenrn/mod2c/Iahp.mod into x86_64/corenrn/mod2c//Iahp.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Warning: Default 5e-05 of PARAMETER Cai will be ignored and set by NEURON.
+Warning: Default 36 of PARAMETER celsius will be ignored and set by NEURON.
+Warning: Default 5e-05 of PARAMETER cai will be ignored and set by NEURON.
+Translating x86_64/corenrn/mod2c/IT2.mod into x86_64/corenrn/mod2c//IT2.cpp
+Thread Safe
+Warning: celsius undefined. (declared within VERBATIM?)
+cvode_emit=0 cvode_not_allowed=0
+Thread Safe
+Translating x86_64/corenrn/mod2c/Ican.mod into x86_64/corenrn/mod2c//Ican.cpp
+cvode_emit=0 cvode_not_allowed=0
+Warning: Default 5e-05 of PARAMETER Cai will be ignored and set by NEURON.
+Warning: Default 36 of PARAMETER celsius will be ignored and set by NEURON.
+Warning: Default 5e-05 of PARAMETER cai will be ignored and set by NEURON.
+Translating x86_64/corenrn/mod2c/MyExp2SynAlpha.mod into x86_64/corenrn/mod2c//MyExp2SynAlpha.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Thread Safe
+Translating x86_64/corenrn/mod2c/MyExp2SynBB.mod into x86_64/corenrn/mod2c//MyExp2SynBB.cpp
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/MyExp2SynNMDABB.mod into x86_64/corenrn/mod2c//MyExp2SynNMDABB.cpp
+Thread Safe
+INCLUDEing x86_64/corenrn/mod2c/ghk.inc
+Warning: celsius undefined. (declared within VERBATIM?)
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/Nca.mod into x86_64/corenrn/mod2c//Nca.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/ar_traub.mod into x86_64/corenrn/mod2c//ar_traub.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Thread Safe
+Translating x86_64/corenrn/mod2c/cad.mod into x86_64/corenrn/mod2c//cad.cpp
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/cadad.mod into x86_64/corenrn/mod2c//cadad.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/cadecay_destexhe.mod into x86_64/corenrn/mod2c//cadecay_destexhe.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/cadyn.mod into x86_64/corenrn/mod2c//cadyn.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/cagk.mod into x86_64/corenrn/mod2c//cagk.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/cal_mh.mod into x86_64/corenrn/mod2c//cal_mh.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/cal_mig.mod into x86_64/corenrn/mod2c//cal_mig.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Warning: Default 2 of PARAMETER cao will be ignored and set by NEURON.
+Warning: Default 5e-05 of PARAMETER cai will be ignored and set by NEURON.
+Translating x86_64/corenrn/mod2c/can_mig.mod into x86_64/corenrn/mod2c//can_mig.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Warning: Default 2 of PARAMETER cao will be ignored and set by NEURON.
+Warning: Default 5e-05 of PARAMETER cai will be ignored and set by NEURON.
+Translating x86_64/corenrn/mod2c/cancr.mod into x86_64/corenrn/mod2c//cancr.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/canin.mod into x86_64/corenrn/mod2c//canin.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/caolmw.mod into x86_64/corenrn/mod2c//caolmw.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/capr.mod into x86_64/corenrn/mod2c//capr.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/cat_mig.mod into x86_64/corenrn/mod2c//cat_mig.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Warning: Default 2 of PARAMETER cao will be ignored and set by NEURON.
+Warning: Default 5e-05 of PARAMETER cai will be ignored and set by NEURON.
+Warning: Default 25 of PARAMETER celsius will be ignored and set by NEURON.
+Translating x86_64/corenrn/mod2c/cat_traub.mod into x86_64/corenrn/mod2c//cat_traub.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/catcb.mod into x86_64/corenrn/mod2c//catcb.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/ch_CavL.mod into x86_64/corenrn/mod2c//ch_CavL.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/ch_CavN.mod into x86_64/corenrn/mod2c//ch_CavN.cpp
+Thread Safe
+Notice: This mechanism cannot be used with CVODE
+cvode_emit=0 cvode_not_allowed=1
+Translating x86_64/corenrn/mod2c/ch_KCaS.mod into x86_64/corenrn/mod2c//ch_KCaS.cpp
+Thread Safe
+Notice: This mechanism cannot be used with CVODE
+cvode_emit=0 cvode_not_allowed=1
+Translating x86_64/corenrn/mod2c/ch_Kdrfastngf.mod into x86_64/corenrn/mod2c//ch_Kdrfastngf.cpp
+Thread Safe
+Notice: This mechanism cannot be used with CVODE
+cvode_emit=0 cvode_not_allowed=1
+Translating x86_64/corenrn/mod2c/ch_KvAngf.mod into x86_64/corenrn/mod2c//ch_KvAngf.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/ch_KvCaB.mod into x86_64/corenrn/mod2c//ch_KvCaB.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/ch_Navngf.mod into x86_64/corenrn/mod2c//ch_Navngf.cpp
+Thread Safe
+Notice: This mechanism cannot be used with CVODE
+cvode_emit=0 cvode_not_allowed=1
+Translating x86_64/corenrn/mod2c/ch_leak.mod into x86_64/corenrn/mod2c//ch_leak.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/cp.mod into x86_64/corenrn/mod2c//cp.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/cp2.mod into x86_64/corenrn/mod2c//cp2.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/exp2syn.mod into x86_64/corenrn/mod2c//exp2syn.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/expsyn.mod into x86_64/corenrn/mod2c//expsyn.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/gabab.mod into x86_64/corenrn/mod2c//gabab.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Thread Safe
+Translating x86_64/corenrn/mod2c/h_BS.mod into x86_64/corenrn/mod2c//h_BS.cpp
+cvode_emit=0 cvode_not_allowed=0
+Warning: Default 34 of PARAMETER celsius will be ignored and set by NEURON.
+Translating x86_64/corenrn/mod2c/h_harnett.mod into x86_64/corenrn/mod2c//h_harnett.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/h_kole.mod into x86_64/corenrn/mod2c//h_kole.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/h_migliore.mod into x86_64/corenrn/mod2c//h_migliore.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/hh.mod into x86_64/corenrn/mod2c//hh.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/hin.mod into x86_64/corenrn/mod2c//hin.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Warning: Default -10 of PARAMETER ehi will be ignored and set by NEURON.
+Translating x86_64/corenrn/mod2c/htc.mod into x86_64/corenrn/mod2c//htc.cpp
+Thread Safe
+NEURON's CVode method ignores conservation
+Warning: celsius undefined. (declared within VERBATIM?)
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/ican_sidi.mod into x86_64/corenrn/mod2c//ican_sidi.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Warning: Default 36 of PARAMETER celsius will be ignored and set by NEURON.
+Thread Safe
+Translating x86_64/corenrn/mod2c/icaolmw.mod into x86_64/corenrn/mod2c//icaolmw.cpp
+Translating x86_64/corenrn/mod2c/icapr.mod into x86_64/corenrn/mod2c//icapr.cpp
+INCLUDEing x86_64/corenrn/mod2c/aux_fun.inc
+cvode_emit=0 cvode_not_allowed=0
+INCLUDEing x86_64/corenrn/mod2c/aux_fun.inc
+cvode_emit=0 cvode_not_allowed=0
+Thread Safe
+Thread Safe
+Translating x86_64/corenrn/mod2c/iccr.mod into x86_64/corenrn/mod2c//iccr.cpp
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/iconc_Ca.mod into x86_64/corenrn/mod2c//iconc_Ca.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/iholmkop.mod into x86_64/corenrn/mod2c//iholmkop.cpp
+Thread Safe
+INCLUDEing x86_64/corenrn/mod2c/aux_fun.inc
+cvode_emit=0 cvode_not_allowed=0
+Thread Safe
+Translating x86_64/corenrn/mod2c/iholmw.mod into x86_64/corenrn/mod2c//iholmw.cpp
+INCLUDEing x86_64/corenrn/mod2c/aux_fun.inc
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/ihpyrkop.mod into x86_64/corenrn/mod2c//ihpyrkop.cpp
+Thread Safe
+INCLUDEing x86_64/corenrn/mod2c/aux_fun.inc
+cvode_emit=0 cvode_not_allowed=0
+Thread Safe
+Translating x86_64/corenrn/mod2c/ikscr.mod into x86_64/corenrn/mod2c//ikscr.cpp
+cvode_emit=0 cvode_not_allowed=0
+Thread Safe
+Translating x86_64/corenrn/mod2c/ipulse3.mod into x86_64/corenrn/mod2c//ipulse3.cpp
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/kBK.mod into x86_64/corenrn/mod2c//kBK.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Thread Safe
+Translating x86_64/corenrn/mod2c/kahppr.mod into x86_64/corenrn/mod2c//kahppr.cpp
+INCLUDEing x86_64/corenrn/mod2c/aux_fun.inc
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/kaolmkop.mod into x86_64/corenrn/mod2c//kaolmkop.cpp
+Thread Safe
+INCLUDEing x86_64/corenrn/mod2c/aux_fun.inc
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/kap_BS.mod into x86_64/corenrn/mod2c//kap_BS.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/kapcb.mod into x86_64/corenrn/mod2c//kapcb.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/kapin.mod into x86_64/corenrn/mod2c//kapin.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/kapyrkop.mod into x86_64/corenrn/mod2c//kapyrkop.cpp
+Thread Safe
+INCLUDEing x86_64/corenrn/mod2c/aux_fun.inc
+cvode_emit=0 cvode_not_allowed=0
+Thread Safe
+Translating x86_64/corenrn/mod2c/kca.mod into x86_64/corenrn/mod2c//kca.cpp
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/kcaolmw.mod into x86_64/corenrn/mod2c//kcaolmw.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Thread Safe
+Translating x86_64/corenrn/mod2c/kcpr.mod into x86_64/corenrn/mod2c//kcpr.cpp
+INCLUDEing x86_64/corenrn/mod2c/aux_fun.inc
+cvode_emit=0 cvode_not_allowed=0
+Thread Safe
+Translating x86_64/corenrn/mod2c/kctin.mod into x86_64/corenrn/mod2c//kctin.cpp
+NEURON's CVode method ignores conservation
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/kdmc_BS.mod into x86_64/corenrn/mod2c//kdmc_BS.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/kdr2_orig.mod into x86_64/corenrn/mod2c//kdr2_orig.cpp
+Thread Safe
+INCLUDEing x86_64/corenrn/mod2c/bg_cvode.inc
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/kdr_BS.mod into x86_64/corenrn/mod2c//kdr_BS.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Thread Safe
+Translating x86_64/corenrn/mod2c/kdrbwb.mod into x86_64/corenrn/mod2c//kdrbwb.cpp
+INCLUDEing x86_64/corenrn/mod2c/aux_fun.inc
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/kdrcr.mod into x86_64/corenrn/mod2c//kdrcr.cpp
+cvode_emit=0 cvode_not_allowed=0
+Thread Safe
+Thread Safe
+Translating x86_64/corenrn/mod2c/kdrin.mod into x86_64/corenrn/mod2c//kdrin.cpp
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/kdrolmkop.mod into x86_64/corenrn/mod2c//kdrolmkop.cpp
+Thread Safe
+INCLUDEing x86_64/corenrn/mod2c/aux_fun.inc
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/kdrpr.mod into x86_64/corenrn/mod2c//kdrpr.cpp
+Thread Safe
+INCLUDEing x86_64/corenrn/mod2c/aux_fun.inc
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/kdrpyrkop.mod into x86_64/corenrn/mod2c//kdrpyrkop.cpp
+Thread Safe
+Translating x86_64/corenrn/mod2c/kl.mod into x86_64/corenrn/mod2c//kl.cpp
+INCLUDEing x86_64/corenrn/mod2c/aux_fun.inc
+cvode_emit=0 cvode_not_allowed=0
+cvode_emit=0 cvode_not_allowed=0
+Thread Safe
+Thread Safe
+Translating x86_64/corenrn/mod2c/km.mod into x86_64/corenrn/mod2c//km.cpp
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/kv.mod into x86_64/corenrn/mod2c//kv.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/my_exp2syn.mod into x86_64/corenrn/mod2c//my_exp2syn.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/na_2.mod into x86_64/corenrn/mod2c//na_2.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Thread Safe
+Translating x86_64/corenrn/mod2c/naf2.mod into x86_64/corenrn/mod2c//naf2.cpp
+INCLUDEing x86_64/corenrn/mod2c/bg_cvode.inc
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/nafbwb.mod into x86_64/corenrn/mod2c//nafbwb.cpp
+Thread Safe
+INCLUDEing x86_64/corenrn/mod2c/aux_fun.inc
+cvode_emit=0 cvode_not_allowed=0
+Thread Safe
+Translating x86_64/corenrn/mod2c/nafcr.mod into x86_64/corenrn/mod2c//nafcr.cpp
+cvode_emit=0 cvode_not_allowed=0
+Warning: Default 55 of PARAMETER ena will be ignored and set by NEURON.
+Thread Safe
+Translating x86_64/corenrn/mod2c/nafolmkop.mod into x86_64/corenrn/mod2c//nafolmkop.cpp
+INCLUDEing x86_64/corenrn/mod2c/aux_fun.inc
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/nafpr.mod into x86_64/corenrn/mod2c//nafpr.cpp
+Thread Safe
+Translating x86_64/corenrn/mod2c/nafpyrkop.mod into x86_64/corenrn/mod2c//nafpyrkop.cpp
+INCLUDEing x86_64/corenrn/mod2c/aux_fun.inc
+cvode_emit=0 cvode_not_allowed=0
+INCLUDEing x86_64/corenrn/mod2c/aux_fun.inc
+cvode_emit=0 cvode_not_allowed=0
+Thread Safe
+Translating x86_64/corenrn/mod2c/nafx.mod into x86_64/corenrn/mod2c//nafx.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Warning: Default 55 of PARAMETER ena will be ignored and set by NEURON.
+Translating x86_64/corenrn/mod2c/nap_sidi.mod into x86_64/corenrn/mod2c//nap_sidi.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/nax_BS.mod into x86_64/corenrn/mod2c//nax_BS.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/naz.mod into x86_64/corenrn/mod2c//naz.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/netstim.mod into x86_64/corenrn/mod2c//netstim.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Notice: ARTIFICIAL_CELL is a synonym for POINT_PROCESS which hints that it
+only affects and is affected by discrete events. As such it is not
+located in a section and is not associated with an integrator
+Thread Safe
+Translating x86_64/corenrn/mod2c/ntIh.mod into x86_64/corenrn/mod2c//ntIh.cpp
+cvode_emit=0 cvode_not_allowed=0
+Warning: Default 36 of PARAMETER celsius will be ignored and set by NEURON.
+Translating x86_64/corenrn/mod2c/ntleak.mod into x86_64/corenrn/mod2c//ntleak.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/ntt.mod into x86_64/corenrn/mod2c//ntt.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Warning: Default 2 of PARAMETER Cao will be ignored and set by NEURON.
+Warning: Default 5e-05 of PARAMETER Cai will be ignored and set by NEURON.
+Warning: Default 36 of PARAMETER celsius will be ignored and set by NEURON.
+Thread Safe
+Translating x86_64/corenrn/mod2c/ntt_int.mod into x86_64/corenrn/mod2c//ntt_int.cpp
+cvode_emit=0 cvode_not_allowed=0
+Warning: Default 36 of PARAMETER celsius will be ignored and set by NEURON.
+Warning: Default 2 of PARAMETER cao will be ignored and set by NEURON.
+Warning: Default 5e-05 of PARAMETER cai will be ignored and set by NEURON.
+Thread Safe
+Translating x86_64/corenrn/mod2c/pasi.mod into x86_64/corenrn/mod2c//pasi.cpp
+cvode_emit=0 cvode_not_allowed=0
+Thread Safe
+Translating x86_64/corenrn/mod2c/passive.mod into x86_64/corenrn/mod2c//passive.cpp
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/pattern.mod into x86_64/corenrn/mod2c//pattern.cpp
+cvode_emit=0 cvode_not_allowed=0
+Notice: ARTIFICIAL_CELL is a synonym for POINT_PROCESS which hints that it
+only affects and is affected by discrete events. As such it is not
+located in a section and is not associated with an integrator
+Thread Safe
+Thread Safe
+Translating x86_64/corenrn/mod2c/savedist.mod into x86_64/corenrn/mod2c//savedist.cpp
+cvode_emit=0 cvode_not_allowed=0
+Thread Safe
+Translating x86_64/corenrn/mod2c/stim.mod into x86_64/corenrn/mod2c//stim.cpp
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/svclmp.mod into x86_64/corenrn/mod2c//svclmp.cpp
+Thread Safe
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/tia.mod into x86_64/corenrn/mod2c//tia.cpp
+Thread Safe
+Warning: celsius undefined. (declared within VERBATIM?)
+cvode_emit=0 cvode_not_allowed=0
+Translating x86_64/corenrn/mod2c/vecstim.mod into x86_64/corenrn/mod2c//vecstim.cpp
+cvode_emit=0 cvode_not_allowed=0
+Thread Safe
+Thread Safe
+NVC++-W-1057-Static variables are not supported in acc routine - _ZN50_INTERNAL_28_x86_64_corenrn_mod2c_IKM_cpp_ec76867810coreneuron14_tmin_exptableE (x86_64/corenrn/mod2c/IKM.cpp: 357)
+NVC++-W-1057-Static variables are not supported in acc routine - _ZN50_INTERNAL_28_x86_64_corenrn_mod2c_IKM_cpp_ec76867810coreneuron14_tmin_exptableE (x86_64/corenrn/mod2c/IKM.cpp: 365)
+NVC++/x86-64 Linux 24.11-0: compilation completed with warnings
+NVC++-W-1057-Static variables are not supported in acc routine - _ZN56_INTERNAL_34_x86_64_corenrn_mod2c_IM_cortex_cpp_c45f74ec10coreneuron14_tmin_exptableE (x86_64/corenrn/mod2c/IM_cortex.cpp: 357)
+NVC++-W-1057-Static variables are not supported in acc routine - _ZN56_INTERNAL_34_x86_64_corenrn_mod2c_IM_cortex_cpp_c45f74ec10coreneuron14_tmin_exptableE (x86_64/corenrn/mod2c/IM_cortex.cpp: 365)
+NVC++/x86-64 Linux 24.11-0: compilation completed with warnings
+"x86_64/corenrn/mod2c/htc.cpp", line 594: warning: variable "_iml" is used before its value is set [used_before_set]
+      _thread[_spth1]._pvoid = nrn_cons_sparseobj(ihkin_htc{}, 5, _ml, _threadargs_);
+                                                                       ^
+
+Remark: individual warnings can be suppressed with "--diag_suppress <warning-name>"
+
+"x86_64/corenrn/mod2c/htc.cpp", line 594: warning: variable "_p" is used before its value is set [used_before_set]
+      _thread[_spth1]._pvoid = nrn_cons_sparseobj(ihkin_htc{}, 5, _ml, _threadargs_);
+                                                                       ^
+
+"x86_64/corenrn/mod2c/htc.cpp", line 594: warning: variable "_ppvar" is used before its value is set [used_before_set]
+      _thread[_spth1]._pvoid = nrn_cons_sparseobj(ihkin_htc{}, 5, _ml, _threadargs_);
+                                                                       ^
+
+"x86_64/corenrn/mod2c/htc.cpp", line 594: warning: variable "v" is used before its value is set [used_before_set]
+      _thread[_spth1]._pvoid = nrn_cons_sparseobj(ihkin_htc{}, 5, _ml, _threadargs_);
+                                                                       ^
+
+"x86_64/corenrn/mod2c/kctin.cpp", line 539: warning: variable "_iml" is used before its value is set [used_before_set]
+      _thread[_spth1]._pvoid = nrn_cons_sparseobj(kin_kctin{}, 3, _ml, _threadargs_);
+                                                                       ^
+
+Remark: individual warnings can be suppressed with "--diag_suppress <warning-name>"
+
+"x86_64/corenrn/mod2c/kctin.cpp", line 539: warning: variable "_p" is used before its value is set [used_before_set]
+      _thread[_spth1]._pvoid = nrn_cons_sparseobj(kin_kctin{}, 3, _ml, _threadargs_);
+                                                                       ^
+
+"x86_64/corenrn/mod2c/kctin.cpp", line 539: warning: variable "_ppvar" is used before its value is set [used_before_set]
+      _thread[_spth1]._pvoid = nrn_cons_sparseobj(kin_kctin{}, 3, _ml, _threadargs_);
+                                                                       ^
+
+"x86_64/corenrn/mod2c/kctin.cpp", line 539: warning: variable "v" is used before its value is set [used_before_set]
+      _thread[_spth1]._pvoid = nrn_cons_sparseobj(kin_kctin{}, 3, _ml, _threadargs_);
+                                                                       ^
+
+NVC++-W-1057-Static variables are not supported in acc routine - _ZN56_INTERNAL_34_x86_64_corenrn_mod2c_kdr2_orig_cpp_915d369410coreneuron7FARADAYE (x86_64/corenrn/mod2c/kdr2_orig.cpp: 518)
+NVC++-W-1057-Static variables are not supported in acc routine - _ZN56_INTERNAL_34_x86_64_corenrn_mod2c_kdr2_orig_cpp_915d369410coreneuron7FARADAYE (x86_64/corenrn/mod2c/kdr2_orig.cpp: 549)
+NVC++-W-1057-Static variables are not supported in acc routine - _ZN56_INTERNAL_34_x86_64_corenrn_mod2c_kdr2_orig_cpp_915d369410coreneuron7FARADAYE (x86_64/corenrn/mod2c/kdr2_orig.cpp: 575)
+NVC++/x86-64 Linux 24.11-0: compilation completed with warnings
+NVC++-W-1057-Static variables are not supported in acc routine - _ZN49_INTERNAL_27_x86_64_corenrn_mod2c_km_cpp_c3f83f9b10coreneuron12_tmin_tratesE (x86_64/corenrn/mod2c/km.cpp: 429)
+NVC++-W-1057-Static variables are not supported in acc routine - _ZN49_INTERNAL_27_x86_64_corenrn_mod2c_kv_cpp_6acef40110coreneuron12_tmin_tratesE (x86_64/corenrn/mod2c/kv.cpp: 427)
+NVC++/x86-64 Linux 24.11-0: compilation completed with warnings
+NVC++/x86-64 Linux 24.11-0: compilation completed with warnings
+NVC++-W-1057-Static variables are not supported in acc routine - _ZN51_INTERNAL_29_x86_64_corenrn_mod2c_naf2_cpp_3cb0478610coreneuron7FARADAYE (x86_64/corenrn/mod2c/naf2.cpp: 518)
+NVC++-W-1057-Static variables are not supported in acc routine - _ZN51_INTERNAL_29_x86_64_corenrn_mod2c_naf2_cpp_3cb0478610coreneuron7FARADAYE (x86_64/corenrn/mod2c/naf2.cpp: 549)
+NVC++-W-1057-Static variables are not supported in acc routine - _ZN51_INTERNAL_29_x86_64_corenrn_mod2c_naf2_cpp_3cb0478610coreneuron7FARADAYE (x86_64/corenrn/mod2c/naf2.cpp: 575)
+NVC++/x86-64 Linux 24.11-0: compilation completed with warnings
+/home/smcelroy/GPUA1
+ => Binary creating x86_64/special-core
+/home/smcelroy/neuronGPU/share/coreneuron/coreneuron.cpp:
+[INFO] MOD files built successfully for CoreNEURON
+ -> Compiling mod_func.cpp
+ -> NMODL ../mod_gpu/APCounter2.mod
+ -> NMODL ../mod_gpu/ar_traub.mod
+ -> NMODL ../mod_gpu/CA1ika.mod
+Translating APCounter2.mod into /home/smcelroy/GPUA1/x86_64/APCounter2.c
+Notice: This mechanism cannot be used with CVODE
+Warning: v undefined. (declared within VERBATIM?)
+Translating ar_traub.mod into /home/smcelroy/GPUA1/x86_64/ar_traub.c
+Thread Safe
+ -> NMODL ../mod_gpu/CA1ikdr.mod
+Translating CA1ika.mod into /home/smcelroy/GPUA1/x86_64/CA1ika.c
+Thread Safe
+Thread Safe
+ -> NMODL ../mod_gpu/CA1ina.mod
+ -> NMODL ../mod_gpu/cadad.mod
+Translating CA1ikdr.mod into /home/smcelroy/GPUA1/x86_64/CA1ikdr.c
+Translating CA1ina.mod into /home/smcelroy/GPUA1/x86_64/CA1ina.c
+Thread Safe
+ -> NMODL ../mod_gpu/cadecay_destexhe.mod
+Thread Safe
+Translating cadad.mod into /home/smcelroy/GPUA1/x86_64/cadad.c
+Thread Safe
+ -> NMODL ../mod_gpu/cad.mod
+ -> NMODL ../mod_gpu/Cadynamics.mod
+Translating cadecay_destexhe.mod into /home/smcelroy/GPUA1/x86_64/cadecay_destexhe.c
+Thread Safe
+ -> NMODL ../mod_gpu/cadyn.mod
+ -> NMODL ../mod_gpu/cagk.mod
+Translating cad.mod into /home/smcelroy/GPUA1/x86_64/cad.c
+Thread Safe
+ -> NMODL ../mod_gpu/cal_mh.mod
+Translating Cadynamics.mod into /home/smcelroy/GPUA1/x86_64/Cadynamics.c
+Translating cadyn.mod into /home/smcelroy/GPUA1/x86_64/cadyn.c
+Thread Safe
+Translating cagk.mod into /home/smcelroy/GPUA1/x86_64/cagk.c
+Thread Safe
+ -> NMODL ../mod_gpu/cal_mig.mod
+ -> NMODL ../mod_gpu/cancr.mod
+Thread Safe
+ -> NMODL ../mod_gpu/canin.mod
+Translating cal_mh.mod into /home/smcelroy/GPUA1/x86_64/cal_mh.c
+Thread Safe
+ -> NMODL ../mod_gpu/can_mig.mod
+Translating cal_mig.mod into /home/smcelroy/GPUA1/x86_64/cal_mig.c
+Warning: Default 2 of PARAMETER cao will be ignored and set by NEURON.
+Warning: Default 5e-05 of PARAMETER cai will be ignored and set by NEURON.
+Translating cancr.mod into /home/smcelroy/GPUA1/x86_64/cancr.c
+Thread Safe
+ -> NMODL ../mod_gpu/caolmw.mod
+Translating canin.mod into /home/smcelroy/GPUA1/x86_64/canin.c
+Thread Safe
+ -> NMODL ../mod_gpu/capr.mod
+Thread Safe
+Translating can_mig.mod into /home/smcelroy/GPUA1/x86_64/can_mig.c
+Warning: Default 2 of PARAMETER cao will be ignored and set by NEURON.
+Warning: Default 5e-05 of PARAMETER cai will be ignored and set by NEURON.
+ -> NMODL ../mod_gpu/catcb.mod
+Thread Safe
+Translating caolmw.mod into /home/smcelroy/GPUA1/x86_64/caolmw.c
+ -> NMODL ../mod_gpu/cat_mig.mod
+Thread Safe
+Translating capr.mod into /home/smcelroy/GPUA1/x86_64/capr.c
+ -> NMODL ../mod_gpu/cat_traub.mod
+Translating catcb.mod into /home/smcelroy/GPUA1/x86_64/catcb.c
+Thread Safe
+ -> NMODL ../mod_gpu/ch_CavL.mod
+Translating cat_mig.mod into /home/smcelroy/GPUA1/x86_64/cat_mig.c
+Thread Safe
+Warning: Default 2 of PARAMETER cao will be ignored and set by NEURON.
+Warning: Default 5e-05 of PARAMETER cai will be ignored and set by NEURON.
+Warning: Default 25 of PARAMETER celsius will be ignored and set by NEURON.
+ -> NMODL ../mod_gpu/ch_CavN.mod
+Translating cat_traub.mod into /home/smcelroy/GPUA1/x86_64/cat_traub.c
+Thread Safe
+ -> NMODL ../mod_gpu/ch_KCaS.mod
+Translating ch_CavL.mod into /home/smcelroy/GPUA1/x86_64/ch_CavL.c
+Thread Safe
+ -> NMODL ../mod_gpu/ch_Kdrfastngf.mod
+Thread Safe
+Translating ch_CavN.mod into /home/smcelroy/GPUA1/x86_64/ch_CavN.c
+Notice: This mechanism cannot be used with CVODE
+ -> NMODL ../mod_gpu/ch_KvAngf.mod
+Thread Safe
+Translating ch_KCaS.mod into /home/smcelroy/GPUA1/x86_64/ch_KCaS.c
+Notice: This mechanism cannot be used with CVODE
+ -> NMODL ../mod_gpu/ch_KvCaB.mod
+Thread Safe
+Translating ch_Kdrfastngf.mod into /home/smcelroy/GPUA1/x86_64/ch_Kdrfastngf.c
+Notice: This mechanism cannot be used with CVODE
+ -> NMODL ../mod_gpu/ch_leak.mod
+Thread Safe
+Translating ch_KvAngf.mod into /home/smcelroy/GPUA1/x86_64/ch_KvAngf.c
+ -> NMODL ../mod_gpu/ch_Navngf.mod
+Translating ch_KvCaB.mod into /home/smcelroy/GPUA1/x86_64/ch_KvCaB.c
+Thread Safe
+ -> NMODL ../mod_gpu/ConductanceSource.mod
+Thread Safe
+Translating ch_leak.mod into /home/smcelroy/GPUA1/x86_64/ch_leak.c
+Thread Safe
+ -> NMODL ../mod_gpu/cp2.mod
+Translating ch_Navngf.mod into /home/smcelroy/GPUA1/x86_64/ch_Navngf.c
+Notice: This mechanism cannot be used with CVODE
+Thread Safe
+ -> NMODL ../mod_gpu/cp.mod
+Translating ConductanceSource.mod into /home/smcelroy/GPUA1/x86_64/ConductanceSource.c
+ -> NMODL ../mod_gpu/gabab.mod
+Thread Safe
+Translating cp2.mod into /home/smcelroy/GPUA1/x86_64/cp2.c
+ -> NMODL ../mod_gpu/h_BS.mod
+Thread Safe
+Translating cp.mod into /home/smcelroy/GPUA1/x86_64/cp.c
+ -> NMODL ../mod_gpu/HH2.mod
+Translating gabab.mod into /home/smcelroy/GPUA1/x86_64/gabab.c
+Thread Safe
+ -> NMODL ../mod_gpu/h_harnett.mod
+Translating h_BS.mod into /home/smcelroy/GPUA1/x86_64/h_BS.c
+Thread Safe
+Warning: Default 34 of PARAMETER celsius will be ignored and set by NEURON.
+ -> NMODL ../mod_gpu/HH_traub.mod
+Thread Safe
+Translating HH2.mod into /home/smcelroy/GPUA1/x86_64/HH2.c
+ -> NMODL ../mod_gpu/hin.mod
+Thread Safe
+Translating h_harnett.mod into /home/smcelroy/GPUA1/x86_64/h_harnett.c
+ -> NMODL ../mod_gpu/h_kole.mod
+Thread Safe
+Translating HH_traub.mod into /home/smcelroy/GPUA1/x86_64/HH_traub.c
+Notice: This mechanism cannot be used with CVODE
+Warning: Default 36 of PARAMETER celsius will be ignored and set by NEURON.
+Warning: Default -90 of PARAMETER ek will be ignored and set by NEURON.
+Warning: Default 50 of PARAMETER ena will be ignored and set by NEURON.
+Thread Safe
+ -> NMODL ../mod_gpu/h_migliore.mod
+Translating hin.mod into /home/smcelroy/GPUA1/x86_64/hin.c
+Warning: Default -10 of PARAMETER ehi will be ignored and set by NEURON.
+Thread Safe
+ -> NMODL ../mod_gpu/htc.mod
+Translating h_kole.mod into /home/smcelroy/GPUA1/x86_64/h_kole.c
+ -> NMODL ../mod_gpu/Iahp.mod
+Translating h_migliore.mod into /home/smcelroy/GPUA1/x86_64/h_migliore.c
+Thread Safe
+ -> NMODL ../mod_gpu/ICal.mod
+Thread Safe
+Translating htc.mod into /home/smcelroy/GPUA1/x86_64/htc.c
+NEURON's CVode method ignores conservation
+Warning: celsius undefined. (declared within VERBATIM?)
+ -> NMODL ../mod_gpu/Ican.mod
+Thread Safe
+Translating Iahp.mod into /home/smcelroy/GPUA1/x86_64/Iahp.c
+Warning: Default 5e-05 of PARAMETER Cai will be ignored and set by NEURON.
+Warning: Default 36 of PARAMETER celsius will be ignored and set by NEURON.
+Warning: Default 5e-05 of PARAMETER cai will be ignored and set by NEURON.
+ -> NMODL ../mod_gpu/ican_sidi.mod
+Thread Safe
+Translating ICal.mod into /home/smcelroy/GPUA1/x86_64/ICal.c
+ -> NMODL ../mod_gpu/icaolmw.mod
+Thread Safe
+Translating Ican.mod into /home/smcelroy/GPUA1/x86_64/Ican.c
+Warning: Default 5e-05 of PARAMETER Cai will be ignored and set by NEURON.
+Warning: Default 36 of PARAMETER celsius will be ignored and set by NEURON.
+Warning: Default 5e-05 of PARAMETER cai will be ignored and set by NEURON.
+ -> NMODL ../mod_gpu/icapr.mod
+Translating ican_sidi.mod into /home/smcelroy/GPUA1/x86_64/ican_sidi.c
+Thread Safe
+Warning: Default 36 of PARAMETER celsius will be ignored and set by NEURON.
+ -> NMODL ../mod_gpu/iccr.mod
+Translating icaolmw.mod into /home/smcelroy/GPUA1/x86_64/icaolmw.c
+Thread Safe
+INCLUDEing aux_fun.inc
+ -> NMODL ../mod_gpu/IC.mod
+Translating icapr.mod into /home/smcelroy/GPUA1/x86_64/icapr.c
+Thread Safe
+INCLUDEing aux_fun.inc
+ -> NMODL ../mod_gpu/iconc_Ca.mod
+Translating iccr.mod into /home/smcelroy/GPUA1/x86_64/iccr.c
+Thread Safe
+ -> NMODL ../mod_gpu/iholmkop.mod
+Translating IC.mod into /home/smcelroy/GPUA1/x86_64/IC.c
+Thread Safe
+ -> NMODL ../mod_gpu/iholmw.mod
+Translating iconc_Ca.mod into /home/smcelroy/GPUA1/x86_64/iconc_Ca.c
+Thread Safe
+ -> NMODL ../mod_gpu/ihpyrkop.mod
+Translating iholmkop.mod into /home/smcelroy/GPUA1/x86_64/iholmkop.c
+Thread Safe
+INCLUDEing aux_fun.inc
+ -> NMODL ../mod_gpu/IKM.mod
+Translating iholmw.mod into /home/smcelroy/GPUA1/x86_64/iholmw.c
+Thread Safe
+INCLUDEing aux_fun.inc
+ -> NMODL ../mod_gpu/ikscr.mod
+Thread Safe
+Translating ihpyrkop.mod into /home/smcelroy/GPUA1/x86_64/ihpyrkop.c
+INCLUDEing aux_fun.inc
+ -> NMODL ../mod_gpu/IKsin.mod
+Translating IKM.mod into /home/smcelroy/GPUA1/x86_64/IKM.c
+Thread Safe
+Warning: Default 36 of PARAMETER celsius will be ignored and set by NEURON.
+ -> NMODL ../mod_gpu/IL_gutnick.mod
+Thread Safe
+Translating ikscr.mod into /home/smcelroy/GPUA1/x86_64/ikscr.c
+ -> NMODL ../mod_gpu/IL.mod
+Translating IKsin.mod into /home/smcelroy/GPUA1/x86_64/IKsin.c
+Thread Safe
+ -> NMODL ../mod_gpu/IM_cortex.mod
+Translating IL_gutnick.mod into /home/smcelroy/GPUA1/x86_64/IL_gutnick.c
+Thread Safe
+Warning: Default 36 of PARAMETER celsius will be ignored and set by NEURON.
+ -> NMODL ../mod_gpu/ipulse3.mod
+Translating IL.mod into /home/smcelroy/GPUA1/x86_64/IL.c
+Thread Safe
+Warning: Default 2 of PARAMETER Cao will be ignored and set by NEURON.
+Warning: Default 5e-05 of PARAMETER Cai will be ignored and set by NEURON.
+Warning: Default 36 of PARAMETER celsius will be ignored and set by NEURON.
+ -> NMODL ../mod_gpu/IT2.mod
+Thread Safe
+Translating IM_cortex.mod into /home/smcelroy/GPUA1/x86_64/IM_cortex.c
+Warning: Default 36 of PARAMETER celsius will be ignored and set by NEURON.
+ -> NMODL ../mod_gpu/IT.mod
+Translating ipulse3.mod into /home/smcelroy/GPUA1/x86_64/ipulse3.c
+Thread Safe
+ -> NMODL ../mod_gpu/kahppr.mod
+Thread Safe
+Translating IT2.mod into /home/smcelroy/GPUA1/x86_64/IT2.c
+Warning: celsius undefined. (declared within VERBATIM?)
+ -> NMODL ../mod_gpu/kaolmkop.mod
+Thread Safe
+Translating IT.mod into /home/smcelroy/GPUA1/x86_64/IT.c
+Warning: Default 2 of PARAMETER cao will be ignored and set by NEURON.
+Warning: Default 0.00024 of PARAMETER cai will be ignored and set by NEURON.
+ -> NMODL ../mod_gpu/kap_BS.mod
+Thread Safe
+Translating kahppr.mod into /home/smcelroy/GPUA1/x86_64/kahppr.c
+INCLUDEing aux_fun.inc
+ -> NMODL ../mod_gpu/kapcb.mod
+Thread Safe
+Translating kaolmkop.mod into /home/smcelroy/GPUA1/x86_64/kaolmkop.c
+INCLUDEing aux_fun.inc
+ -> NMODL ../mod_gpu/kapin.mod
+Translating kap_BS.mod into /home/smcelroy/GPUA1/x86_64/kap_BS.c
+Thread Safe
+Thread Safe
+ -> NMODL ../mod_gpu/kapyrkop.mod
+Translating kapcb.mod into /home/smcelroy/GPUA1/x86_64/kapcb.c
+ -> NMODL ../mod_gpu/kBK.mod
+Translating kapin.mod into /home/smcelroy/GPUA1/x86_64/kapin.c
+Thread Safe
+ -> NMODL ../mod_gpu/kca.mod
+Thread Safe
+Translating kapyrkop.mod into /home/smcelroy/GPUA1/x86_64/kapyrkop.c
+INCLUDEing aux_fun.inc
+ -> NMODL ../mod_gpu/kcaolmw.mod
+Translating kBK.mod into /home/smcelroy/GPUA1/x86_64/kBK.c
+Thread Safe
+ -> NMODL ../mod_gpu/kcpr.mod
+Thread Safe
+Translating kca.mod into /home/smcelroy/GPUA1/x86_64/kca.c
+ -> NMODL ../mod_gpu/kctin.mod
+Translating kcaolmw.mod into /home/smcelroy/GPUA1/x86_64/kcaolmw.c
+Thread Safe
+ -> NMODL ../mod_gpu/kdmc_BS.mod
+Thread Safe
+Translating kcpr.mod into /home/smcelroy/GPUA1/x86_64/kcpr.c
+INCLUDEing aux_fun.inc
+ -> NMODL ../mod_gpu/kdr2_orig.mod
+Thread Safe
+Translating kctin.mod into /home/smcelroy/GPUA1/x86_64/kctin.c
+NEURON's CVode method ignores conservation
+ -> NMODL ../mod_gpu/kdr_BS.mod
+Thread Safe
+Translating kdmc_BS.mod into /home/smcelroy/GPUA1/x86_64/kdmc_BS.c
+ -> NMODL ../mod_gpu/kdrbwb.mod
+Thread Safe
+Translating kdr2_orig.mod into /home/smcelroy/GPUA1/x86_64/kdr2_orig.c
+INCLUDEing bg_cvode.inc
+ -> NMODL ../mod_gpu/kdrcr.mod
+Thread Safe
+Translating kdr_BS.mod into /home/smcelroy/GPUA1/x86_64/kdr_BS.c
+ -> NMODL ../mod_gpu/kdrin.mod
+Translating kdrbwb.mod into /home/smcelroy/GPUA1/x86_64/kdrbwb.c
+Thread Safe
+INCLUDEing aux_fun.inc
+ -> NMODL ../mod_gpu/kdrolmkop.mod
+Thread Safe
+Translating kdrcr.mod into /home/smcelroy/GPUA1/x86_64/kdrcr.c
+ -> NMODL ../mod_gpu/kdrpr.mod
+Translating kdrin.mod into /home/smcelroy/GPUA1/x86_64/kdrin.c
+Thread Safe
+ -> NMODL ../mod_gpu/kdrpyrkop.mod
+Translating kdrolmkop.mod into /home/smcelroy/GPUA1/x86_64/kdrolmkop.c
+Thread Safe
+INCLUDEing aux_fun.inc
+ -> NMODL ../mod_gpu/kl.mod
+Translating kdrpr.mod into /home/smcelroy/GPUA1/x86_64/kdrpr.c
+Thread Safe
+INCLUDEing aux_fun.inc
+ -> NMODL ../mod_gpu/km.mod
+Translating kdrpyrkop.mod into /home/smcelroy/GPUA1/x86_64/kdrpyrkop.c
+Thread Safe
+INCLUDEing aux_fun.inc
+ -> NMODL ../mod_gpu/kv.mod
+Translating kl.mod into /home/smcelroy/GPUA1/x86_64/kl.c
+Thread Safe
+ -> NMODL ../mod_gpu/MyExp2SynAlpha.mod
+Thread Safe
+Translating km.mod into /home/smcelroy/GPUA1/x86_64/km.c
+ -> NMODL ../mod_gpu/MyExp2SynBB.mod
+Translating kv.mod into /home/smcelroy/GPUA1/x86_64/kv.c
+Thread Safe
+ -> NMODL ../mod_gpu/my_exp2syn.mod
+Thread Safe
+Translating MyExp2SynAlpha.mod into /home/smcelroy/GPUA1/x86_64/MyExp2SynAlpha.c
+ -> NMODL ../mod_gpu/MyExp2SynNMDABB.mod
+Thread Safe
+Translating MyExp2SynBB.mod into /home/smcelroy/GPUA1/x86_64/MyExp2SynBB.c
+ -> NMODL ../mod_gpu/na_2.mod
+Thread Safe
+Translating my_exp2syn.mod into /home/smcelroy/GPUA1/x86_64/my_exp2syn.c
+ -> NMODL ../mod_gpu/naf2.mod
+Thread Safe
+Translating MyExp2SynNMDABB.mod into /home/smcelroy/GPUA1/x86_64/MyExp2SynNMDABB.c
+INCLUDEing ghk.inc
+Warning: celsius undefined. (declared within VERBATIM?)
+ -> NMODL ../mod_gpu/nafbwb.mod
+Thread Safe
+Translating na_2.mod into /home/smcelroy/GPUA1/x86_64/na_2.c
+ -> NMODL ../mod_gpu/nafcr.mod
+Translating naf2.mod into /home/smcelroy/GPUA1/x86_64/naf2.c
+Thread Safe
+INCLUDEing bg_cvode.inc
+ -> NMODL ../mod_gpu/nafolmkop.mod
+Thread Safe
+Translating nafbwb.mod into /home/smcelroy/GPUA1/x86_64/nafbwb.c
+INCLUDEing aux_fun.inc
+ -> NMODL ../mod_gpu/nafpr.mod
+Thread Safe
+Translating nafcr.mod into /home/smcelroy/GPUA1/x86_64/nafcr.c
+Warning: Default 55 of PARAMETER ena will be ignored and set by NEURON.
+ -> NMODL ../mod_gpu/nafpyrkop.mod
+Translating nafolmkop.mod into /home/smcelroy/GPUA1/x86_64/nafolmkop.c
+Thread Safe
+INCLUDEing aux_fun.inc
+ -> NMODL ../mod_gpu/nafx.mod
+Translating nafpr.mod into /home/smcelroy/GPUA1/x86_64/nafpr.c
+Thread Safe
+INCLUDEing aux_fun.inc
+ -> NMODL ../mod_gpu/nap_sidi.mod
+Translating nafpyrkop.mod into /home/smcelroy/GPUA1/x86_64/nafpyrkop.c
+Thread Safe
+INCLUDEing aux_fun.inc
+ -> NMODL ../mod_gpu/nax_BS.mod
+Translating nafx.mod into /home/smcelroy/GPUA1/x86_64/nafx.c
+Thread Safe
+Warning: Default 55 of PARAMETER ena will be ignored and set by NEURON.
+ -> NMODL ../mod_gpu/naz.mod
+Thread Safe
+Translating nap_sidi.mod into /home/smcelroy/GPUA1/x86_64/nap_sidi.c
+ -> NMODL ../mod_gpu/Nca.mod
+Translating nax_BS.mod into /home/smcelroy/GPUA1/x86_64/nax_BS.c
+Thread Safe
+ -> NMODL ../mod_gpu/ntIh.mod
+Translating naz.mod into /home/smcelroy/GPUA1/x86_64/naz.c
+Thread Safe
+ -> NMODL ../mod_gpu/ntleak.mod
+Translating Nca.mod into /home/smcelroy/GPUA1/x86_64/Nca.c
+Thread Safe
+ -> NMODL ../mod_gpu/ntt_int.mod
+Thread Safe
+Translating ntIh.mod into /home/smcelroy/GPUA1/x86_64/ntIh.c
+Warning: Default 36 of PARAMETER celsius will be ignored and set by NEURON.
+ -> NMODL ../mod_gpu/ntt.mod
+Thread Safe
+Translating ntleak.mod into /home/smcelroy/GPUA1/x86_64/ntleak.c
+ -> NMODL ../mod_gpu/pasi.mod
+Thread Safe
+Translating ntt_int.mod into /home/smcelroy/GPUA1/x86_64/ntt_int.c
+Warning: Default 36 of PARAMETER celsius will be ignored and set by NEURON.
+Warning: Default 2 of PARAMETER cao will be ignored and set by NEURON.
+Warning: Default 5e-05 of PARAMETER cai will be ignored and set by NEURON.
+ -> NMODL ../mod_gpu/savedist.mod
+Thread Safe
+Translating ntt.mod into /home/smcelroy/GPUA1/x86_64/ntt.c
+Warning: Default 2 of PARAMETER Cao will be ignored and set by NEURON.
+Warning: Default 5e-05 of PARAMETER Cai will be ignored and set by NEURON.
+Warning: Default 36 of PARAMETER celsius will be ignored and set by NEURON.
+ -> NMODL ../mod_gpu/tia.mod
+Translating pasi.mod into /home/smcelroy/GPUA1/x86_64/pasi.c
+Thread Safe
+ -> NMODL ../mod_gpu/vecstim.mod
+Thread Safe
+Translating savedist.mod into /home/smcelroy/GPUA1/x86_64/savedist.c
+Thread Safe
+ -> Compiling APCounter2.c
+ -> Compiling ar_traub.c
+Translating tia.mod into /home/smcelroy/GPUA1/x86_64/tia.c
+Warning: celsius undefined. (declared within VERBATIM?)
+Translating vecstim.mod into /home/smcelroy/GPUA1/x86_64/vecstim.c
+Thread Safe
+Thread Safe
+ -> Compiling CA1ika.c
+ -> Compiling CA1ikdr.c
+ -> Compiling CA1ina.c
+ -> Compiling cadad.c
+ -> Compiling cadecay_destexhe.c
+ -> Compiling cad.c
+ -> Compiling Cadynamics.c
+ -> Compiling cadyn.c
+ -> Compiling cagk.c
+ -> Compiling cal_mh.c
+ -> Compiling cal_mig.c
+ -> Compiling cancr.c
+ -> Compiling canin.c
+ -> Compiling can_mig.c
+ -> Compiling caolmw.c
+ -> Compiling capr.c
+ -> Compiling catcb.c
+ -> Compiling cat_mig.c
+ -> Compiling cat_traub.c
+ -> Compiling ch_CavL.c
+ -> Compiling ch_CavN.c
+ -> Compiling ch_KCaS.c
+ -> Compiling ch_Kdrfastngf.c
+ -> Compiling ch_KvAngf.c
+ -> Compiling ch_KvCaB.c
+ -> Compiling ch_leak.c
+ -> Compiling ch_Navngf.c
+ -> Compiling ConductanceSource.c
+ -> Compiling cp2.c
+ -> Compiling cp.c
+ -> Compiling gabab.c
+ -> Compiling h_BS.c
+ -> Compiling HH2.c
+ -> Compiling h_harnett.c
+ -> Compiling HH_traub.c
+ -> Compiling hin.c
+ -> Compiling h_kole.c
+ -> Compiling h_migliore.c
+ -> Compiling htc.c
+ -> Compiling Iahp.c
+ -> Compiling ICal.c
+ -> Compiling Ican.c
+ -> Compiling ican_sidi.c
+ -> Compiling icaolmw.c
+ -> Compiling icapr.c
+ -> Compiling iccr.c
+ -> Compiling IC.c
+ -> Compiling iconc_Ca.c
+ -> Compiling iholmkop.c
+ -> Compiling iholmw.c
+ -> Compiling ihpyrkop.c
+ -> Compiling IKM.c
+ -> Compiling ikscr.c
+ -> Compiling IKsin.c
+ -> Compiling IL_gutnick.c
+ -> Compiling IL.c
+ -> Compiling IM_cortex.c
+ -> Compiling ipulse3.c
+ -> Compiling IT2.c
+ -> Compiling IT.c
+ -> Compiling kahppr.c
+ -> Compiling kaolmkop.c
+ -> Compiling kap_BS.c
+ -> Compiling kapcb.c
+ -> Compiling kapin.c
+ -> Compiling kapyrkop.c
+ -> Compiling kBK.c
+ -> Compiling kca.c
+ -> Compiling kcaolmw.c
+ -> Compiling kcpr.c
+ -> Compiling kctin.c
+ -> Compiling kdmc_BS.c
+ -> Compiling kdr2_orig.c
+ -> Compiling kdr_BS.c
+ -> Compiling kdrbwb.c
+ -> Compiling kdrcr.c
+ -> Compiling kdrin.c
+ -> Compiling kdrolmkop.c
+ -> Compiling kdrpr.c
+ -> Compiling kdrpyrkop.c
+ -> Compiling kl.c
+ -> Compiling km.c
+ -> Compiling kv.c
+ -> Compiling MyExp2SynAlpha.c
+ -> Compiling MyExp2SynBB.c
+ -> Compiling my_exp2syn.c
+ -> Compiling MyExp2SynNMDABB.c
+ -> Compiling na_2.c
+ -> Compiling naf2.c
+ -> Compiling nafbwb.c
+ -> Compiling nafcr.c
+ -> Compiling nafolmkop.c
+ -> Compiling nafpr.c
+ -> Compiling nafpyrkop.c
+ -> Compiling nafx.c
+ -> Compiling nap_sidi.c
+ -> Compiling nax_BS.c
+ -> Compiling naz.c
+ -> Compiling Nca.c
+ -> Compiling ntIh.c
+ -> Compiling ntleak.c
+ -> Compiling ntt_int.c
+ -> Compiling ntt.c
+ -> Compiling pasi.c
+ -> Compiling savedist.c
+ -> Compiling tia.c
+ -> Compiling vecstim.c
+ => LINKING shared library ./libnrnmech.so
+ => LINKING executable ./special LDFLAGS are:     /home/smcelroy/.conda/envs/netpynegpu/lib/libreadline.so.8.3 -Wl,-rpath,/home/smcelroy/.conda/envs/netpynegpu/lib /cm/shared/apps/spack/0.21.2/gpu/dev/opt/spack/linux-rocky8-skylake_avx512/gcc-8.5.0/ncurses-6.4-z36hcjwu3ajl25ehyjvbhhpbg6i44uzv/lib/libcurses.so -Wl,-rpath,/cm/shared/apps/spack/0.21.2/gpu/dev/opt/spack/linux-rocky8-skylake_avx512/gcc-8.5.0/ncurses-6.4-z36hcjwu3ajl25ehyjvbhhpbg6i44uzv/lib /cm/shared/apps/spack/0.21.2/gpu/dev/opt/spack/linux-rocky8-skylake_avx512/gcc-8.5.0/ncurses-6.4-z36hcjwu3ajl25ehyjvbhhpbg6i44uzv/lib/libform.so -Wl,-rpath,/cm/shared/apps/spack/0.21.2/gpu/dev/opt/spack/linux-rocky8-skylake_avx512/gcc-8.5.0/ncurses-6.4-z36hcjwu3ajl25ehyjvbhhpbg6i44uzv/lib /home/smcelroy/.conda/envs/netpynegpu/lib/libpython3.10.so -Wl,-rpath,/home/smcelroy/.conda/envs/netpynegpu/lib /cm/shared/apps/spack/0.21.2/gpu/dev/opt/spack/linux-rocky8-skylake_avx512/gcc-8.5.0/nvhpc-24.11-2utxz5zvsn5ub3jpvbh3sa2hk54xx4rw/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/lib/libmpi.so -Wl,-rpath,/cm/shared/apps/spack/0.21.2/gpu/dev/opt/spack/linux-rocky8-skylake_avx512/gcc-8.5.0/nvhpc-24.11-2utxz5zvsn5ub3jpvbh3sa2hk54xx4rw/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/lib
+/home/smcelroy/neuronGPU/share/nrn/nrnmain.cpp:
+Successfully created x86_64/special

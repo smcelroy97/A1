@@ -1,7 +1,7 @@
 NEURON {
 	SUFFIX kdr2orig
 	USEION k WRITE ik
-	RANGE gmax, erev, g, i
+	RANGE gmax, g, i
 	THREADSAFE
 }
 
@@ -17,7 +17,7 @@ PARAMETER {
         vrest           = 0.0
 	mvalence 	= 2.8
 	mgamma 		= 0.5			: 0.7
-	mbaserate 	= .13 
+	mbaserate 	= .13
 	mvhalf 		=  -18
 	mbasetau 	= 0.3
 	mtemp 		=  36
@@ -48,10 +48,6 @@ PARAMETER {
 INCLUDE "bg_cvode.inc"
 
 PROCEDURE iassign () { i = g*(v-erev) ik=i }
-:** kmbg 
-
-
-
-
+:** kmbg
 
 

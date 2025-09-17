@@ -1,0 +1,239 @@
+Traceback (most recent call last):
+  File "/cm/shared/apps/spack/0.17.3/cpu/b/opt/spack/linux-rocky8-zen/gcc-8.5.0/anaconda3-2021.05-q4munrgvh7qp4o7r3nzcdkbuph4z7375/bin/conda", line 12, in <module>
+    from conda.cli import main
+ModuleNotFoundError: No module named 'conda'
+NEURON -- VERSION 8.2.6+ HEAD (078a34a9d+) 2024-07-24
+Duke, Yale, and the BlueBrain Project -- Copyright 1984-2022
+See http://neuron.yale.edu/neuron/credits
+
+Additional mechanisms from files
+ "mod_gpu/APCounter2.mod" "mod_gpu/ar_traub.mod" "mod_gpu/CA1ika.mod" "mod_gpu/CA1ikdr.mod" "mod_gpu/CA1ina.mod" "mod_gpu/cadad.mod" "mod_gpu/cadecay_destexhe.mod" "mod_gpu/cad.mod" "mod_gpu/Cadynamics.mod" "mod_gpu/cadyn.mod" "mod_gpu/cagk.mod" "mod_gpu/cal_mh.mod" "mod_gpu/cal_mig.mod" "mod_gpu/cancr.mod" "mod_gpu/canin.mod" "mod_gpu/can_mig.mod" "mod_gpu/caolmw.mod" "mod_gpu/capr.mod" "mod_gpu/catcb.mod" "mod_gpu/cat_mig.mod" "mod_gpu/cat_traub.mod" "mod_gpu/ch_CavL.mod" "mod_gpu/ch_CavN.mod" "mod_gpu/ch_KCaS.mod" "mod_gpu/ch_Kdrfastngf.mod" "mod_gpu/ch_KvAngf.mod" "mod_gpu/ch_KvCaB.mod" "mod_gpu/ch_leak.mod" "mod_gpu/ch_Navngf.mod" "mod_gpu/ConductanceSource.mod" "mod_gpu/cp2.mod" "mod_gpu/cp.mod" "mod_gpu/gabab.mod" "mod_gpu/h_BS.mod" "mod_gpu/HH2.mod" "mod_gpu/h_harnett.mod" "mod_gpu/HH_traub.mod" "mod_gpu/hin.mod" "mod_gpu/h_kole.mod" "mod_gpu/h_migliore.mod" "mod_gpu/htc.mod" "mod_gpu/Iahp.mod" "mod_gpu/ICal.mod" "mod_gpu/Ican.mod" "mod_gpu/ican_sidi.mod" "mod_gpu/icaolmw.mod" "mod_gpu/icapr.mod" "mod_gpu/iccr.mod" "mod_gpu/IC.mod" "mod_gpu/iconc_Ca.mod" "mod_gpu/iholmkop.mod" "mod_gpu/iholmw.mod" "mod_gpu/ihpyrkop.mod" "mod_gpu/IKM.mod" "mod_gpu/ikscr.mod" "mod_gpu/IKsin.mod" "mod_gpu/IL_gutnick.mod" "mod_gpu/IL.mod" "mod_gpu/IM_cortex.mod" "mod_gpu/ipulse3.mod" "mod_gpu/IT2.mod" "mod_gpu/IT.mod" "mod_gpu/kahppr.mod" "mod_gpu/kaolmkop.mod" "mod_gpu/kap_BS.mod" "mod_gpu/kapcb.mod" "mod_gpu/kapin.mod" "mod_gpu/kapyrkop.mod" "mod_gpu/kBK.mod" "mod_gpu/kca.mod" "mod_gpu/kcaolmw.mod" "mod_gpu/kcpr.mod" "mod_gpu/kctin.mod" "mod_gpu/kdmc_BS.mod" "mod_gpu/kdr2_orig.mod" "mod_gpu/kdr_BS.mod" "mod_gpu/kdrbwb.mod" "mod_gpu/kdrcr.mod" "mod_gpu/kdrin.mod" "mod_gpu/kdrolmkop.mod" "mod_gpu/kdrpr.mod" "mod_gpu/kdrpyrkop.mod" "mod_gpu/kl.mod" "mod_gpu/km.mod" "mod_gpu/kv.mod" "mod_gpu/MyExp2SynAlpha.mod" "mod_gpu/MyExp2SynBB.mod" "mod_gpu/my_exp2syn.mod" "mod_gpu/MyExp2SynNMDABB.mod" "mod_gpu/na_2.mod" "mod_gpu/naf2.mod" "mod_gpu/nafbwb.mod" "mod_gpu/nafcr.mod" "mod_gpu/nafolmkop.mod" "mod_gpu/nafpr.mod" "mod_gpu/nafpyrkop.mod" "mod_gpu/nafx.mod" "mod_gpu/nap_sidi.mod" "mod_gpu/nax_BS.mod" "mod_gpu/naz.mod" "mod_gpu/Nca.mod" "mod_gpu/ntIh.mod" "mod_gpu/ntleak.mod" "mod_gpu/ntt_int.mod" "mod_gpu/ntt.mod" "mod_gpu/pasi.mod" "mod_gpu/savedist.mod" "mod_gpu/tia.mod" "mod_gpu/vecstim.mod"
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:558: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/smcelroy/.conda/envs/py310/lib/python3.10/site-packages/numpy/_core/getlimits.py:90: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+
+
+Creating network of 43 cell populations on 16 hosts...:   0%|          |[A
+
+Creating network of 43 cell populations on 16 hosts...:  19%|#8        |[A
+
+Creating network of 43 cell populations on 16 hosts...:  33%|###2      |[A
+
+Creating network of 43 cell populations on 16 hosts...:  58%|#####8    |[A
+
+Creating network of 43 cell populations on 16 hosts...:  74%|#######4  |[A
+Creating network of 43 cell populations on 16 hosts...: 100%|##########|
+catcb mechanism not inserted in section compartCell_NGF_HH_reduced_8.dend
+8 ./x86_64/special: 
+8  near line 1
+8  hinf_catcb=0.3068442636178239
+                              ^
+catcb mechanism not inserted in section compartCell_NGF_HH_reduced_0.dend
+0 ./x86_64/special: 
+0  near line 1
+0  hinf_catcb=0.3068442636178239
+                              ^
+catcb mechanism not inserted in section compartCell_NGF_HH_reduced_1.dend
+1 ./x86_64/special: 
+1  near line 1
+1  hinf_catcb=0.3068442636178239
+                              ^
+catcb mechanism not inserted in section compartCell_NGF_HH_reduced_14.dend
+14 ./x86_64/special: 
+14  near line 1
+14  hinf_catcb=0.3068442636178239
+                              ^
+catcb mechanism not inserted in section compartCell_NGF_HH_reduced_9.dend
+9 ./x86_64/special: 
+9  near line 1
+9  hinf_catcb=0.3068442636178239
+                              ^
+catcb mechanism not inserted in section compartCell_NGF_HH_reduced_13.dend
+13 ./x86_64/special: 
+13  near line 1
+13  hinf_catcb=0.3068442636178239
+                              ^
+--------------------------------------------------------------------------
+MPI_ABORT was invoked on rank 8 in communicator MPI_COMM_WORLD
+with errorcode -1.
+
+NOTE: invoking MPI_ABORT causes Open MPI to kill all MPI processes.
+You may or may not see output from other processes, depending on
+exactly when Open MPI kills them.
+--------------------------------------------------------------------------
+catcb mechanism not inserted in section compartCell_NGF_HH_reduced_12.dend
+12 ./x86_64/special: 
+12  near line 1
+12  hinf_catcb=0.3068442636178239
+                              ^
+catcb mechanism not inserted in section compartCell_NGF_HH_reduced_4.dend
+4 ./x86_64/special: 
+4  near line 1
+4  hinf_catcb=0.3068442636178239
+                              ^
+catcb mechanism not inserted in section compartCell_NGF_HH_reduced_5.dend
+5 ./x86_64/special: 
+5  near line 1
+5  hinf_catcb=0.3068442636178239
+                              ^
+catcb mechanism not inserted in section compartCell_NGF_HH_reduced_11.dend
+11 ./x86_64/special: 
+11  near line 1
+11  hinf_catcb=0.3068442636178239
+                              ^
+catcb mechanism not inserted in section compartCell_NGF_HH_reduced_6.dend
+6 ./x86_64/special: 
+6  near line 1
+6  hinf_catcb=0.3068442636178239
+                              ^
+catcb mechanism not inserted in section compartCell_NGF_HH_reduced_15.dend
+15 ./x86_64/special: 
+15  near line 1
+15  hinf_catcb=0.3068442636178239
+                              ^
+catcb mechanism not inserted in section compartCell_NGF_HH_reduced_2.dend
+2 ./x86_64/special: 
+2  near line 1
+2  hinf_catcb=0.3068442636178239
+                              ^
+catcb mechanism not inserted in section compartCell_NGF_HH_reduced_7.dend
+7 ./x86_64/special: 
+7  near line 1
+7  hinf_catcb=0.3068442636178239
+                              ^
+catcb mechanism not inserted in section compartCell_NGF_HH_reduced_3.dend
+3 ./x86_64/special: 
+3  near line 1
+3  hinf_catcb=0.3068442636178239
+                              ^
+[exp-6-60:2432374] 13 more processes have sent help message help-mpi-api.txt / mpi-abort
+[exp-6-60:2432374] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+
+real	10m11.818s
+user	0m0.034s
+sys	0m0.040s
