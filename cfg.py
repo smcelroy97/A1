@@ -40,7 +40,7 @@ cfg.oneSynPerNetcon = False
 cfg.includeParamsLabel = False
 # cfg.printPopAvgRates = [0, cfg.duration]  # "printPopAvgRates": [[1500,1750],[1750,2000],[2000,2250],[2250,2500]]
 cfg.validateNetParams = True
-cfg.use_coreNEURON = False
+cfg.use_coreNEURON = True
 
 # ------------------------------------------------------------------------------
 # GPU Flags
