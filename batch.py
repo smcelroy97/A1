@@ -126,7 +126,7 @@ search(
     metric='loss',  # if a metric and mode is specified, the search will collect metric data and report on the optimal configuration
     mode='min',  # currently remote submissions only support projects where session data (sim.send) is implemented
     algorithm="optuna",
-    max_concurrent=1,
+    max_concurrent=6,
     num_samples = num_samples,
     sample_interval = 15,
     **run_config

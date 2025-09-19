@@ -751,25 +751,25 @@ def connectCochleaToThal():
         'delay': cfg.delayBkg}
 
 
-if cfg.cochlearThalInput:
-#     from input import cochlearSpikes
-
-    dcoch = cochlearSpikes(freqRange=cfg.cochlearThalInput['freqRange'],
-                           numCenterFreqs=cfg.cochlearThalInput['numCenterFreqs'],
-                           loudnessScale=cfg.cochlearThalInput['loudnessScale'],
-                           lfnwave=cfg.cochlearThalInput['lfnwave'],
-                           lonset=cfg.cochlearThalInput['lonset'])
-    cochlearSpkTimes = dcoch['spkT']
-    cochlearCenterFreqs = dcoch['cf']
-    netParams.cf = dcoch['cf']
-    numCochlearCells = len(cochlearCenterFreqs)
-    netParams.popParams['cochlea'] = {
-        'cellModel': 'VecStim',
-        'numCells': numCochlearCells,
-        'spkTimes': cochlearSpkTimes,
-        'ynormRange': layer['cochlear']}
-
-    connectCochleaToThal()
+# if cfg.cochlearThalInput:
+# #     from input import cochlearSpikes
+#
+#     dcoch = cochlearSpikes(freqRange=cfg.cochlearThalInput['freqRange'],
+#                            numCenterFreqs=cfg.cochlearThalInput['numCenterFreqs'],
+#                            loudnessScale=cfg.cochlearThalInput['loudnessScale'],
+#                            lfnwave=cfg.cochlearThalInput['lfnwave'],
+#                            lonset=cfg.cochlearThalInput['lonset'])
+#     cochlearSpkTimes = dcoch['spkT']
+#     cochlearCenterFreqs = dcoch['cf']
+#     netParams.cf = dcoch['cf']
+#     numCochlearCells = len(cochlearCenterFreqs)
+#     netParams.popParams['cochlea'] = {
+#         'cellModel': 'VecStim',
+#         'numCells': numCochlearCells,
+#         'spkTimes': cochlearSpkTimes,
+#         'ynormRange': layer['cochlear']}
+#
+#     connectCochleaToThal()
 
 resting_potential = {}
 resting_potential['NGF1'] = -62.60
@@ -914,34 +914,34 @@ if cfg.addIClamp:
                 'loc': 0.5
             }
 
-if cfg.addNoiseConductance:
-    with open('data/inputResistances.json', 'rb') as f:
-    # with open('simOutput/input_res_0/input_res_vals.json', 'rb') as f:
-        inpRes = json.load(f)
-
-    netParams.NoiseConductanceParams = {}
-    for pop in cfg.allpops:
-        Gin = 1 / inpRes[pop]
-        g0 = (cfg.OUamp / 100) * Gin
-        sigma = (cfg.OUstd / 100) * Gin
-        # print('pop is: '  + pop + ' Input resistance is: ' + str(inpRes[pop]) + ' input conductance is: ' + str(Gin) + '   g0 is:  ' + str(g0))
-        netParams.NoiseConductanceParams[pop] = {
-            'g0': g0,
-            'sigma': sigma
-        }
-
-        for pop in cfg.allpops:
-            netParams.stimSourceParams['NoiseSEClamp_source_' + pop] = {
-                'type': 'ConductanceSource',
-                'dur1': cfg.NoiseConductanceDur,
-                'amp1': 0  # rmpPops[pop] #abs(rmpPops[pop] * 0.18)
-            }
-            netParams.stimTargetParams['NoiseSEClamp_target_' + pop] = {
-                'source': 'NoiseSEClamp_source_' + pop,
-                'sec': 'soma',
-                'loc': 0.5,
-                'conds': {'pop': pop}
-            }
+# if cfg.addNoiseConductance:
+#     with open('data/inputResistances.json', 'rb') as f:
+#     # with open('simOutput/input_res_0/input_res_vals.json', 'rb') as f:
+#         inpRes = json.load(f)
+#
+#     netParams.NoiseConductanceParams = {}
+#     for pop in cfg.allpops:
+#         Gin = 1 / inpRes[pop]
+#         g0 = (cfg.OUamp / 100) * Gin
+#         sigma = (cfg.OUstd / 100) * Gin
+#         # print('pop is: '  + pop + ' Input resistance is: ' + str(inpRes[pop]) + ' input conductance is: ' + str(Gin) + '   g0 is:  ' + str(g0))
+#         netParams.NoiseConductanceParams[pop] = {
+#             'g0': g0,
+#             'sigma': sigma
+#         }
+#
+#         for pop in cfg.allpops:
+#             netParams.stimSourceParams['NoiseSEClamp_source_' + pop] = {
+#                 'type': 'ConductanceSource',
+#                 'dur1': cfg.NoiseConductanceDur,
+#                 'amp1': 0  # rmpPops[pop] #abs(rmpPops[pop] * 0.18)
+#             }
+#             netParams.stimTargetParams['NoiseSEClamp_target_' + pop] = {
+#                 'source': 'NoiseSEClamp_source_' + pop,
+#                 'sec': 'soma',
+#                 'loc': 0.5,
+#                 'conds': {'pop': pop}
+#             }
 
 if cfg.addNoiseIClamp:
     with open('data/inputResistances.json', 'rb') as f:
