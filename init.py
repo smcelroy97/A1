@@ -103,8 +103,8 @@ if sim.cfg.addNoiseConductance:
     combinedOUFlags.update(flags)
   sim.OUFlags = combinedOUFlags
 
-# sim.saveData()
-# sim.analysis.plotData()    # plot spike raster etc
+sim.saveData()
+sim.analysis.plotData()    # plot spike raster etc
 
 # Terminate batch process
 if sim.rank == 0:
