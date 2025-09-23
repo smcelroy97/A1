@@ -18,7 +18,13 @@ SIM_DURATION = 10 * 1e3
 TCALC_LIMITS = (5, SIM_DURATION / 1000)
 
 POPS_ACTIVE = [
-    'NGF1', 'NGF2', 'NGF3', 'NGF4', 'NGF5A', 'NGF5B', 'NGF6'
+    'IT2', 'IT3', 'ITS4', 'ITP4', 'IT5A', 'CT5A', 
+    'IT5B', 'CT5B', 'PT5B', 'IT6', 'CT6',
+    'PV2', 'PV3', 'PV4', 'PV5A', 'PV5B', 'PV6',
+    'SOM2', 'SOM3', 'SOM4', 'SOM5A', 'SOM5B', 'SOM6',
+    'VIP2', 'VIP3', 'VIP4', 'VIP5A', 'VIP5B', 'VIP6',
+    'NGF1', 'NGF2', 'NGF3', 'NGF4', 'NGF5A', 'NGF5B', 'NGF6',
+    'TC', 'TCM', 'HTC', 'TI', 'TIM', 'IRE', 'IREM'
 ]
 
 
@@ -65,7 +71,7 @@ def apply_exp_cfg(cfg):
     #cfg.analysis['plotSpikeStats']['timeRange'] = [cfg.duration - 1000, cfg.duration]
     cfg.analysis['plotSpikeStats'] = False
 
-    #cfg.analysis['plotRaster'] = False
+    cfg.analysis['plotRaster'] = False
 
     # Record voltage traces
     ncells_rec = 4
