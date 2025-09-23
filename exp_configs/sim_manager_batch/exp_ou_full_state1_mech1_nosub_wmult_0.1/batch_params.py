@@ -61,5 +61,5 @@ def post_update(cfg):
         cfg.wmult = sim_request['wmult']
     if 'subnet_params' in sim_request:
         cfg.subnet_params |= sim_request['subnet_params']
-    if 'duration' in sim_request:
-        cfg.duration = sim_request['duration']
+    #if 'duration' in sim_request:
+    #    cfg.duration = sim_request['duration']
