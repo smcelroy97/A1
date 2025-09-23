@@ -91,8 +91,6 @@ is_batch = args.batch
 if not args.batch and args.name is None:
     raise ValueError("Either --name or --batch is requred")
 
-need_run = True
-
 # Experiment name (define the folder name in exp_configs and exp_results)
 if not is_batch:
     exp_name = args.name
@@ -203,6 +201,12 @@ if comm.is_host():
     netParams.save('{}/{}_netParams.json'.format(cfg.saveFolder, cfg.simLabel))
 #print('SAVING DONE', flush=True)
 
+# Run or skip
+if hasattr(cfg, 'need_run'):
+    need_run = cfg.need_run
+else:
+    need_run = True
+
 if need_run:
     # Initialize
     sim.initialize(simConfig=cfg, netParams=netParams)
@@ -284,19 +288,22 @@ if comm.is_host():
     print('transmitting data...')
     inputs = specs.get_mappings()
     
-    avgRates = sim.analysis.popAvgRates(
-        tranges=[cfg.duration - 1000, cfg.duration],
-        show=False
-    )
-    
-    # Save average firing rates to a separate json file
-    fpath_res = '{}/{}_result.json'.format(cfg.saveFolder, cfg.simLabel)
-    with open(fpath_res, 'w') as fid:
-        json.dump({'rates': avgRates}, fid, indent=4)
-    
-    # Experiment-specific result processing
-    if hasattr(cfg_mod, 'post_run'):
-        cfg_mod.post_run(sim) 
+    if need_run:    
+        # Save average firing rates to a separate json file
+        avgRates = sim.analysis.popAvgRates(
+            tranges=[cfg.duration - 1000, cfg.duration],
+            show=False
+        )
+        fpath_res = '{}/{}_result.json'.format(cfg.saveFolder, cfg.simLabel)
+        with open(fpath_res, 'w') as fid:
+            json.dump({'rates': avgRates}, fid, indent=4)
+        
+        # Experiment-specific result processing
+        if hasattr(cfg_mod, 'post_run'):
+            cfg_mod.post_run(sim)
+    else:
+        print(f'>>>>>>>>>>> {cfg.simLabel} SKIPPED', flush=True)
+        avgRates = {}
 
     avgRates['loss'] = 700
     out_json = json.dumps({**inputs, **avgRates})
