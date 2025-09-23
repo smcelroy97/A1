@@ -2,8 +2,7 @@ from netpyne.batchtools.search import search
 import numpy as np
 import json
 
-label = 'v45_batch34'
-num_samples = 200
+label = 'v45_optuna2'
 
 with open('data/ssh_key.json', 'r') as f:
     key = json.load(f)
@@ -125,15 +124,14 @@ ssh_expanse_gpu = {
     }
 }
 
-run_config = sge_config
+run_config = ssh_expanse_cpu
 search(
     label= label,
     params=params,
     metric='loss',  # if a metric and mode is specified, the search will collect metric data and report on the optimal configuration
     mode='min',  # currently remote submissions only support projects where session data (sim.send) is implemented
-    algorithm="variant_generator",
+    algorithm="optuna",
     max_concurrent=6,
-    # num_samples = num_samples,
-    # sample_interval = 15,
+    sample_interval = 15,
     **run_config
     )  # host alias (can use ssh tunneling through config file)

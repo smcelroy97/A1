@@ -105,7 +105,7 @@ cfg.recordDipole = False
 
 cfg.simLabel = 'e1_i5_0'
 cfg.saveFolder = 'simOutput/' + cfg.simLabel  # Set file output name
-cfg.savePickle = True  # Save pkl file
+cfg.savePickle = False  # Save pkl file
 cfg.saveJson = False  # Save json file
 cfg.saveDataInclude = ['simData', 'simConfig', 'netParams', 'net']
 cfg.backupCfgFile = None
@@ -120,7 +120,7 @@ cfg.saveCellConns = False
 cfg.analysis['plotRaster'] = {'include': cfg.allpops, 'saveFig': True, 'showFig': False, 'orderInverse': True, 'figSize': (25, 25),
                               'markerSize': 1}   # Plot a raster
 
-# cfg.analysis['plotSpikeStats'] = {'stats' : ['isicv'], 'saveFig' : True}
+cfg.analysis['plotSpikeStats'] = {'stats': ['rate'], 'saveFig': True, 'showFig': False}
 
 # cfg.analysis['plotTraces'] = {'include': cfg.allpops, 'timeRange': [0, cfg.duration],
 # 'oneFigPer': 'cell', 'overlay': True, 'saveFig': False, 'showFig': False, 'figSize':(12,8)}
