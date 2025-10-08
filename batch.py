@@ -4,6 +4,11 @@ import json
 from netpyne.batchtools.search import generate_constructors
 from batchtk.algos import optuna_search
 from batchtk.utils import expand_path
+import os
+
+
+output_dir=os.path.abspath('./optimization')
+os.makedirs(output_dir, exist_ok=True)
 
 label = 'v45_optuna3'
 
@@ -91,7 +96,6 @@ ssh_expanse_cpu = {
     'host': 'expanse',
     # 'key': ssh_key,  # No key needed for this host
     # 'remote_dir': '/home/smcelroy/A1',
-    'output_path': './simOutput/' + label,
     'checkpoint_path': "./simOutput/ray",
     'run_config': {
         'allocation': 'TG-MED240050',
@@ -132,7 +136,7 @@ ssh_expanse_gpu = {
 }
 
 run_config = ssh_expanse_cpu
-search(
+optuna_search(
     label=label,
     params=params,
     metric='loss',  # if a metric and mode is specified, the search will collect metric data and report on the optimal configuration
@@ -142,6 +146,6 @@ search(
     num_samples=num_samples,
     interval=15,
     project_path='.',
-    output_path=expand_path('./optimization', create_dirs=True)
+    output_path=output_dir
     **run_config
     )  # host alias (can use ssh tunneling through config file)
