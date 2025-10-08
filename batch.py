@@ -1,15 +1,16 @@
 from netpyne.batchtools.search import search
 import numpy as np
 import json
+from netpyne.batchtools.search import generate_constructors
 
 label = 'v45_optuna3'
 
 num_samples = 200000
 
-with open('data/ssh_key.json', 'r') as f:
-    key = json.load(f)
-
-ssh_key = key['ssh_key']
+# with open('data/ssh_key.json', 'r') as f:
+#     key = json.load(f)
+#
+# ssh_key = key['ssh_key']
 
 # params for search
 params = {'EELayerGain.1': [0.1, 5.0],
@@ -81,12 +82,12 @@ sge_config = {
         'command': 'mpiexec -n $NSLOTS -hosts $(hostname) nrniv -python -mpi init.py'
     }
 }
-
+dispatcher, submit = generate_constructors('slurm', 'sfs')
 ssh_expanse_cpu = {
-    'job_type': 'slurm',
-    'comm_type': 'sfs',
+    'dispatcher_constructor': dispatcher,
+    'submit_constructor' :submit,
     'host': 'expanse',
-    'key': ssh_key,  # No key needed for this host
+    # 'key': ssh_key,  # No key needed for this host
     'remote_dir': '/home/smcelroy/A1',
     'output_path': './simOutput/' + label,
     'checkpoint_path': "./simOutput/ray",
@@ -110,7 +111,7 @@ ssh_expanse_gpu = {
     'job_type': 'ssh_slurm',
     'comm_type': 'sftp',
     'host': 'expanse',
-    'key': ssh_key,  # No key needed for this host
+    # 'key': ssh_key,  # No key needed for this host
     'remote_dir': '/home/smcelroy/A1',
     'output_path': './simOutput/' + label,
     'checkpoint_path': "./simOutput/ray",
