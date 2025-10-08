@@ -2,7 +2,9 @@ from netpyne.batchtools.search import search
 import numpy as np
 import json
 
-label = 'v45_optuna2'
+label = 'v45_optuna3'
+
+num_samples = 200000
 
 with open('data/ssh_key.json', 'r') as f:
     key = json.load(f)
@@ -81,25 +83,25 @@ sge_config = {
 }
 
 ssh_expanse_cpu = {
-    'job_type': 'ssh_slurm',
-    'comm_type': 'sftp',
+    'job_type': 'slurm',
+    'comm_type': 'sfs',
     'host': 'expanse',
     'key': ssh_key,  # No key needed for this host
     'remote_dir': '/home/smcelroy/A1',
     'output_path': './simOutput/' + label,
     'checkpoint_path': "./simOutput/ray",
     'run_config': {
-        'allocation': 'TG-IBN140002',
+        'allocation': 'TG-MED240050',
         'realtime': '2:40:00',
         'partition': 'compute',
         'nodes': 1,
-        'coresPerNode': 128,
+        'coresPerNode': 64,
         'mem': '200G',
         'custom': '',
         'email': 'scott.mcelroy@downstate.edu',
         'command': f"""
         {CONFIG_EXPANSE_CPU}
-        mpirun -n 64 nrniv -python -mpi init.py
+        mpirun -n $SLURM_NTASKS nrniv -python -mpi init.py
         """
     }
 }
@@ -113,16 +115,16 @@ ssh_expanse_gpu = {
     'output_path': './simOutput/' + label,
     'checkpoint_path': "./simOutput/ray",
     'run_config': {
-        'allocation': 'TG-IBN140002',
+        'allocation': 'TG-MED240050',
         'realtime': '2:40:00',
         'partition': 'gpu-shared',
         'nodes': 1,
         'coresPerNode': 16,
         'mem': '200G',
         'command': f"""
-    {CONFIG_EXPANSE_GPU}
-    time mpirun --bind-to none -n $SLURM_NTASKS ./x86_64/special -mpi -python init.py
-    """
+        {CONFIG_EXPANSE_GPU}
+        time mpirun --bind-to none -n $SLURM_NTASKS ./x86_64/special -mpi -python init.py
+        """
     }
 }
 
@@ -134,6 +136,7 @@ search(
     mode='min',  # currently remote submissions only support projects where session data (sim.send) is implemented
     algorithm="optuna",
     max_concurrent=6,
+    num_samples = num_samples,
     sample_interval = 15,
     **run_config
     )  # host alias (can use ssh tunneling through config file)
