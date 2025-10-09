@@ -71,7 +71,7 @@ module load cmake/3.31.2/w4akk6u
 """
 
 dispatcher, submit = generate_constructors('slurm', 'sfs')
-slurm_config: {
+slurm_config: {'''
         'allocation': 'TG-MED240050',
         'realtime': '2:40:00',
         'partition': 'compute',
@@ -83,7 +83,7 @@ slurm_config: {
         'command': f"""
         {CONFIG_EXPANSE_CPU}
         mpirun -n $SLURM_NTASKS nrniv -python -mpi init.py
-        """
+        '''
     }
 
 run_config = ssh_expanse_cpu
