@@ -86,7 +86,6 @@ slurm_config: {'''
         '''
     }
 
-run_config = ssh_expanse_cpu
 results = optuna_search(
     study_label=label,
     param_space=params,
