@@ -62,7 +62,8 @@ module load cpu
 
 CONFIG_EXPANSE_GPU = """
 echo "Loading modules..."
-source ~/.bashrc
+. /cm/shared/apps/spack/0.17.3/cpu/b/opt/spack/linux-rocky8-zen/gcc-8.5.0/anaconda3-2021.05-q4munrgvh7qp4o7r3nzcdkbuph4z7375/etc/profile.d/conda.sh
+conda activate py310
 module purge
 module use /cm/shared/apps/spack/0.21.2/gpu/dev/share/spack/lmod/linux-rocky8-x86_64/Core
 module load nvhpc/24.11/2utxz5z
@@ -71,19 +72,19 @@ module load cmake/3.31.2/w4akk6u
 """
 
 dispatcher, submit = generate_constructors('slurm', 'sfs')
-slurm_config: {'''
+slurm_config = {
         'allocation': 'TG-MED240050',
         'realtime': '2:40:00',
         'partition': 'compute',
         'nodes': 1,
         'coresPerNode': 64,
         'mem': '200G',
-        'custom': '',
+        'custom': '--export=NONE',
         'email': 'scott.mcelroy@downstate.edu',
         'command': f"""
         {CONFIG_EXPANSE_CPU}
         mpirun -n $SLURM_NTASKS nrniv -python -mpi init.py
-        '''
+        """
     }
 
 results = optuna_search(
