@@ -1,11 +1,9 @@
-from netpyne.batchtools.search import search
 import numpy as np
 import json
 from netpyne.batchtools.search import generate_constructors
 from batchtk.algos import optuna_search
 from batchtk.utils import expand_path
 import os
-
 
 output_dir=os.path.abspath('./optimization')
 os.makedirs(output_dir, exist_ok=True)
@@ -72,32 +70,8 @@ module load openmpi/mlnx/gcc/64/4.1.5a1
 module load cmake/3.31.2/w4akk6u
 """
 
-# use batch_shell_config if running directly on the machine
-shell_config = {'command': 'mpiexec -np 6 nrniv -python -mpi init.py'}
-
-# use batch_sge_config if running on Downstate HPC or other SGE systems
-sge_config = {
-    'job_type': 'sge',
-    'comm_type': 'sfs',
-    'queue': 'cpu.q',
-    'output_path': str('../A1/simOutput/' + label + '/'),
-    'checkpoint_path': '../A1/simOutput/ray',
-    'run_config': {
-        'cores': 40,
-        'vmem': '128G',
-        'realtime': '04:00:00',
-        'command': 'mpiexec -n $NSLOTS -hosts $(hostname) nrniv -python -mpi init.py'
-    }
-}
 dispatcher, submit = generate_constructors('slurm', 'sfs')
-ssh_expanse_cpu = {
-    'dispatcher_constructor': dispatcher,
-    'submit_constructor': submit,
-    'host': 'expanse',
-    # 'key': ssh_key,  # No key needed for this host
-    # 'remote_dir': '/home/smcelroy/A1',
-    'checkpoint_path': "./simOutput/ray",
-    'run_config': {
+slurm_config: {
         'allocation': 'TG-MED240050',
         'realtime': '2:40:00',
         'partition': 'compute',
@@ -111,41 +85,20 @@ ssh_expanse_cpu = {
         mpirun -n $SLURM_NTASKS nrniv -python -mpi init.py
         """
     }
-}
-
-ssh_expanse_gpu = {
-    'job_type': 'ssh_slurm',
-    'comm_type': 'sftp',
-    'host': 'expanse',
-    # 'key': ssh_key,  # No key needed for this host
-    'remote_dir': '/home/smcelroy/A1',
-    'output_path': './simOutput/' + label,
-    'checkpoint_path': "./simOutput/ray",
-    'run_config': {
-        'allocation': 'TG-MED240050',
-        'realtime': '2:40:00',
-        'partition': 'gpu-shared',
-        'nodes': 1,
-        'coresPerNode': 16,
-        'mem': '200G',
-        'command': f"""
-        {CONFIG_EXPANSE_GPU}
-        time mpirun --bind-to none -n $SLURM_NTASKS ./x86_64/special -mpi -python init.py
-        """
-    }
-}
 
 run_config = ssh_expanse_cpu
-optuna_search(
-    label=label,
-    params=params,
-    metric='loss',  # if a metric and mode is specified, the search will collect metric data and report on the optimal configuration
-    mode='min',  # currently remote submissions only support projects where session data (sim.send) is implemented
-    algorithm="optuna",
-    max_concurrent=6,
-    num_samples=num_samples,
+results = optuna_search(
+    study_label=label,
+    param_space=params,
+    metrics={'loss': 'minimize'},  #
+    num_trials=num_trials, num_workers=6,
+    dispatcher_constructor = dispatcher,
+    submit_constructor = submit,
+    submit_kwargs= slurm_config,
     interval=15,
     project_path='.',
-    output_path=output_dir
-    **run_config
+    output_path=output_dir,
     )  # host alias (can use ssh tunneling through config file)
+
+
+results.to_csv('./optimization/search_results.csv')
