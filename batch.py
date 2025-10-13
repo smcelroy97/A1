@@ -53,11 +53,6 @@ params = {'EELayerGain.1': [0.1, 5.0],
 
 CONFIG_EXPANSE_CPU = """
 source ~/.bashrc
-module purge
-module load shared
-module load cpu/0.17.3b  gcc/10.2.0/npcyll4 openmpi/4.1.1/ygduf2r
-module load sdsc
-module load cpu
 """
 
 CONFIG_EXPANSE_GPU = """
