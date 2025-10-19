@@ -1,0 +1,3 @@
+- Full model
+- Split IT3-IT3 connections into surrogate (static) and active parts
+- Fraction of the active part is the batch parameter

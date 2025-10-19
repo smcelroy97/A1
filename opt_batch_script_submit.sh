@@ -6,11 +6,11 @@
 #$ -l h_vmem=64G
 #$ -V
 #$ -l h_rt=12:00:00
-#$ -o /ddn/niknovikov19/repo/A1_OUinp/exp_results/sim_manager_batch/exp_subnet_state1_mech1_nosub_wmult_0.1/L4_thal_conn_5s_spline_alpha_0.1_auto_pfr_2/log/batch_script_log.out
-#$ -e /ddn/niknovikov19/repo/A1_OUinp/exp_results/sim_manager_batch/exp_subnet_state1_mech1_nosub_wmult_0.1/L4_thal_conn_5s_spline_alpha_0.1_auto_pfr_2/log/batch_script_log.err
+#$ -o /ddn/niknovikov19/repo/A1_OUinp/exp_results/sim_manager_batch/exp_subnet_state1_mech1_nosub_wmult_0.25/its4_pt5b/log/batch_script_log.out
+#$ -e /ddn/niknovikov19/repo/A1_OUinp/exp_results/sim_manager_batch/exp_subnet_state1_mech1_nosub_wmult_0.25/its4_pt5b/log/batch_script_log.err
 
 source ~/.bashrc
 conda activate netpyne_batch
 export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$LD_LIBRARY_PATH
 cd /ddn/niknovikov19/repo/A1_OUinp
-python opt_batch_script.py "/ddn/niknovikov19/repo/A1_OUinp/exp_results/sim_manager_batch/exp_subnet_state1_mech1_nosub_wmult_0.1/L4_thal_conn_5s_spline_alpha_0.1_auto_pfr_2" "sim_manager_batch/exp_subnet_state1_mech1_nosub_wmult_0.1"
+python opt_batch_script.py "/ddn/niknovikov19/repo/A1_OUinp/exp_results/sim_manager_batch/exp_subnet_state1_mech1_nosub_wmult_0.25/its4_pt5b" "sim_manager_batch/exp_subnet_state1_mech1_nosub_wmult_0.25"

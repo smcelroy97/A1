@@ -4,4 +4,4 @@
 - Subconn is turned off.
 - For exc. cells, gKDR is increased to avoid cell-level multistability (see `mech_changes_1.json`)
     It distorts f-I curves compared to experimental data, re-tuning is needed in future.
-- 10% connectivity
+- 25% connectivity

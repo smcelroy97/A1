@@ -12,6 +12,5 @@
 source ~/.bashrc
 conda activate netpyne_batch
 export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$LD_LIBRARY_PATH
-#cd /ddn/niknovikov19/repo/A1_OUinp/exp_configs/batch_i_ou/batch_i_ou_rx_switch_var_oumean_mech_v
-cd /ddn/niknovikov19/repo/A1_OUinp/exp_configs/batch_i_ou_subnet/batch_i_ou_subnet_wmult_0.05_pyr_ikdr_mult_3s_6pts
+cd /ddn/niknovikov19/repo/A1_OUinp/exp_configs/batch_i_ougrid_unconn_state1_mech1_nosub_wmult_0.25/all
 python post_batch.py

@@ -1,0 +1,3 @@
+- Single simulation of unconnected model to check the selected OU inputs (see `ou_inputs.json`).
+- OU selection is based on: `exp_results/batch_i_ougrid_unconn_state1_mech1_nosub_wmult_0.25/all/exp_ou_nmean_16_nstd_16`
+- Script for OU selection: `analysis/ou_tuning/plot_rate_cv_grid_2.py`
