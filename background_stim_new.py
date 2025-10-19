@@ -202,7 +202,8 @@ def add_noise_iclamp(sim):
         'dur': sim.cfg.ou_ramp_dur if hasattr(sim.cfg, 'ou_ramp_dur') else None,
         'offset': sim.cfg.ou_ramp_offset if hasattr(sim.cfg, 'ou_ramp_offset') else 0,
         'mult': sim.cfg.ou_ramp_mult if hasattr(sim.cfg, 'ou_ramp_mult') else 0,
-        'type': sim.cfg.ou_ramp_type if hasattr(sim.cfg, 'ou_ramp_type') else 'down'
+        'type': sim.cfg.ou_ramp_type if hasattr(sim.cfg, 'ou_ramp_type') else 'down',
+        'pops': sim.cfg.ou_ramp_pops if hasattr(sim.cfg, 'ou_ramp_pops') else None
     }
 
     for cell_ind, cell in enumerate(sim.net.cells):
@@ -226,6 +227,11 @@ def add_noise_iclamp(sim):
                 if not np.isscalar(sigma):
                     sigma = sigma[0] + cell_pos * (sigma[1] - sigma[0])
 
+                ramp_par_ = ramp_par
+                if ramp_par and (ramp_par['pops'] is not None):
+                    if pop not in ramp_par['pops']:
+                        ramp_par_ = None
+
                 tvec, svec = generate_ou_signal(
                     tau=sim.cfg.ou_tau,
                     sigma=sigma,
@@ -236,7 +242,7 @@ def add_noise_iclamp(sim):
                     invert_output=False,
                     cutoff=None,   # don't prune negative values
                     plotFig=False,
-                    ramp_par=ramp_par
+                    ramp_par=ramp_par_
                 )
 
                 vecs_dict[cell_ind]['tvecs'].update({stim_ind: tvec})

@@ -159,6 +159,8 @@ if hasattr(cfg, 'subnet_build_flag') and cfg.subnet_build_flag:
     desc = SubnetDesc()
     desc.pops_active = cfg.subnet_params['pops_active']
     desc.conns_frozen = cfg.subnet_params['conns_frozen']
+    if 'conns_split' in cfg.subnet_params:
+        desc.conns_split = cfg.subnet_params['conns_split']
 
     # Set firing rates of the frozen pops.
     if 'fpath_frozen_rates' in cfg.subnet_params:
