@@ -1,0 +1,4 @@
+- Full model
+- Split E-E and IT6->PV6 connections into surrogate (static) and active parts
+- Fraction of the active part for E-E is 0.5
+- Fraction of the active part for IT6->PV6 is the batch parameter

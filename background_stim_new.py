@@ -194,8 +194,9 @@ def add_noise_iclamp(sim):
     """Generate and play OU current signal(s) for every cell. """
 
     vecs_dict = {}
-    #print('add_noise_iclamp(): create OU inputs '
-    #      f'(dt={sim.cfg.dt}, ou_tau={sim.cfg.ou_tau})')
+    if sim.rank == 0:
+        print('add_noise_iclamp(): create OU inputs '
+            f'(dt={sim.cfg.dt}, ou_tau={sim.cfg.ou_tau})', flush=True)
     
     ramp_par = {
         't0': sim.cfg.ou_ramp_t0 if hasattr(sim.cfg, 'ou_ramp_t0') else 0,
@@ -216,6 +217,9 @@ def add_noise_iclamp(sim):
                 pop = cell.tags['pop']
                 mean = sim.net.params.NoiseOUParams[pop]['mean']
                 sigma = sim.net.params.NoiseOUParams[pop]['sigma']
+
+                if (sim.rank == 0) and (cell_ind == 0) and (stim_ind == 0):
+                    print(f'Create OU ({pop}): mean = {mean}, sigma = {sigma}', flush=True)
 
                 # Relative cell "position" in the pop (0 to 1)
                 pop_gids = sim._pop_gid_range[pop]
@@ -255,6 +259,161 @@ def add_noise_iclamp(sim):
                 )
     
     return sim, vecs_dict
+
+
+# Helper: local cells by pop
+def _get_local_cells(sim, pop_name):
+    return [c for c in sim.net.cells if c.tags['pop'] == pop_name]
+
+# Helper: all gids by pop (global)
+def _get_all_gids(sim, pop_name):
+    """Global list of GIDs for a population, on every rank."""
+    local = sim.net.pops[pop_name].cellGids
+    all_lists = sim.pc.py_allgather(local)          # list-of-lists on every rank
+    return [g for sub in all_lists for g in sub]    # flatten
+
+
+def make_rate_controller(sim, pop_name):
+    """
+    Create a feedback controller mech that responds 
+    to pop. rate deviation from the target value.
+    """
+    local_cells = _get_local_cells(sim, pop_name)
+    gids = _get_all_gids(sim, pop_name)
+    if len(local_cells) == 0:
+        return {'ctrl_mech': None, 'netcon_list': [],
+                'tvec': None, 'zvec': None, 'rvec': None}
+
+    if sim.rank == 0:
+        print(f'>>> {pop_name}: ngids={len(gids)}, ncells={len(local_cells)}', flush=True)
+
+    # Attach RateController to the soma of the 1st cell on this rank
+    soma = local_cells[0].secs['soma']['hObj']
+    ctrl_par = sim.cfg.ou_ctrl_params
+    ctrl = None
+    ctrl = h.RateController(soma(0.5))
+    ctrl.tau, ctrl.r0, ctrl.k, ctrl.z0 = (
+        ctrl_par['tau_ctrl'], ctrl_par['target_rates'][pop_name], 
+        ctrl_par['k_ctrl'], ctrl_par['z0']
+    )
+
+    if sim.rank == 0:
+        print(f'>>> {pop_name}: CTRL created', flush=True)
+
+    # Subscribe this controller to spikes from all gids of this population.
+    # This creates incoming NetCons on THIS rank that deliver events from each gid.
+    netcon_list = []
+    for gid in gids:
+        nc_in = sim.pc.gid_connect(gid, ctrl)  # auto-routed across ranks
+        nc_in.weight[0] = 1.0 / len(gids)
+        nc_in.delay = 1
+        netcon_list.append(nc_in)
+    
+    # Record the controller
+    #tvec, zvec, rvec = None, None, None
+    tvec, zvec, rvec = h.Vector(), h.Vector(), h.Vector()
+    tvec.record(h._ref_t)
+    zvec.record(ctrl._ref_z)
+    rvec.record(ctrl._ref_rate)
+    
+    return {'ctrl_mech': ctrl, 'netcon_list': netcon_list,
+            'tvec': tvec, 'zvec': zvec, 'rvec': rvec}
+
+
+def make_controlled_iclamps(sim, cells, ctrl):
+    for n, c in enumerate(cells):
+        # Create IClamp mech
+        soma = c.secs['soma']['hObj']
+        clamp = h.NoiseIClampControlled(soma(0.5))
+        #clamp.mu_gain = 1
+
+        # Set the control input signal
+        h.setpointer(ctrl._ref_z, 'pmu', clamp)
+
+        # Record the received ctrl signal
+        if (sim.rank == 0) and (n == 0):
+            tvec = h.Vector()
+            tvec.record(h._ref_t, sim.cfg.dt)
+            zvec = h.Vector()
+            #zvec.record(clamp._ref_i, sim.cfg.dt)
+            zvec.record(c.secs['soma']['hObj'](0.5)._ref_v)
+        else:
+            tvec = None
+            zvec = None
+
+        # Store refs to avoid GC
+        c.secs['soma'].setdefault('stims', []).append(
+            {'type': 'NoiseIClampControlled', 'hObj': clamp, 'tvec': tvec, 'zvec': zvec}
+        )
+
+
+def add_noise_iclamp_ctrl(sim):
+    """Generate and play rate-controlled OU current signal(s) for every cell. """
+
+    # Create rate-controlling feedbacks
+    ctrl_dict = {}
+    for pop_name in sim.net.pops:
+        if pop_name in sim.net.params.NoiseOUParams:
+            ctrl_dict[pop_name] = make_rate_controller(sim, pop_name)
+            print(f'>>> {sim.rank} {pop_name} ctrl keys: ', ctrl_dict[pop_name].keys(), flush=True)
+
+    vecs_dict = {}
+
+    for cell_ind, cell in enumerate(sim.net.cells):
+
+        pop_name = cell.tags['pop']
+
+        vecs_dict.update({cell_ind: {'tvecs': {}, 'svecs': {}}})
+        cell_seed = sim.cfg.seeds['stim'] + cell.gid
+
+        if pop_name in sim.net.params.NoiseOUParams:
+            # Test mech receiving ctrl signal
+            soma = cell.secs['soma']['hObj']
+            debug_inp = h.NoiseIClampControlled(soma(0.5))
+            debug_inp.mu_gain = 1e-3
+            vecs_dict[cell_ind]['debug_inp'] = debug_inp
+            
+            # Connect the feedback controller
+            ctrl = ctrl_dict[pop_name]['ctrl_mech']
+            #h.setpointer(ctrl._ref_z, 'p_ctrl', stim['hObj'])
+            h.setpointer(ctrl._ref_z, 'p_ctrl', debug_inp)
+
+            # Record the ctrl-receiving mech
+            if 'debug_rec' not in ctrl_dict[pop_name]:
+                ctrl_tvec = h.Vector()
+                ctrl_tvec.record(h._ref_t)
+                ctrl_vec = h.Vector()
+                ctrl_vec.record(debug_inp._ref_i)
+                ctrl_dict[pop_name]['debug_rec'] = {
+                    'tvec': ctrl_tvec, 'ctrl_vec': ctrl_vec}
+
+        for stim_ind, stim in enumerate(cell.stims):
+            if 'NoiseOU' in stim['label']:
+                # Generate zero-mean noise with unit amplitude
+                tvec, svec = generate_ou_signal(
+                    tau=sim.cfg.ou_tau,
+                    sigma=1,
+                    mean=0,
+                    duration=sim.cfg.duration,
+                    dt=sim.cfg.dt,
+                    seed=cell_seed,
+                    invert_output=False,
+                    cutoff=None,   # don't prune negative values
+                    plotFig=False
+                )
+                # Store the noise signal
+                vecs_dict[cell_ind]['tvecs'].update({stim_ind: tvec})
+                vecs_dict[cell_ind]['svecs'].update({stim_ind: svec})
+
+                # Play the noise via NoiseIClampControlled mech
+                vecs_dict[cell_ind]['svecs'][stim_ind].play(
+                    #stim['hObj']._ref_noise,
+                    stim['hObj']._ref_amp,
+                    vecs_dict[cell_ind]['tvecs'][stim_ind],
+                    True   # continuous
+                )
+    
+    return sim, vecs_dict, ctrl_dict
 
 
 if __name__ == '__main__':

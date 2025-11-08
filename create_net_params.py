@@ -1,3 +1,4 @@
+from copy import deepcopy
 import json
 import pickle
 
@@ -996,37 +997,45 @@ def create_net_params(cfg):
                 'sigma': sigma
             }
 
-            # Mechanism of deliverance, field names
-            if cfg.add_ou_conductance:
-                mech = 'ConductanceSource'
-                dur_name = 'dur1'
-                amp_name = 'amp1'
-            elif cfg.add_ou_current:
-                mech = 'IClamp'
-                dur_name = 'dur'
-                amp_name = 'amp'
-
             # Duration
             if cfg.add_ou_conductance and hasattr(cfg, 'NoiseConductanceDur'):
                 duration = cfg.NoiseConductanceDur   # for compatibility with previous version
             else:
                 duration = cfg.ou_noise_duration
-            
-            #print(f'\tduration = {duration}')
-            #print(f'\tmech = {mech}')
 
-            for pop in cfg.allpops:
-                netParams.stimSourceParams[f'NoiseOU_source_{pop}'] = {
-                    'type': mech,
-                    dur_name: duration,
-                    amp_name: 0
+            # Source params
+            if cfg.add_ou_conductance:
+                src_par = {
+                    'type': 'ConductanceSource',
+                    'dur1': duration,
+                    'amp1': 0
                 }
-                netParams.stimTargetParams[f'NoiseOU_target_{pop}'] = {
-                    'source': f'NoiseOU_source_{pop}',
-                    'sec':'soma',
-                    'loc': 0.5,
-                    'conds': {'pop': pop}
-                }
+            elif cfg.add_ou_current:
+                #if hasattr(cfg, 'ou_ctrl_params'):
+                if False:
+                    par = cfg.ou_ctrl_params
+                    src_par = {
+                        'type': 'NoiseIClampControlled',
+                        'mu0': mean,
+                        'sigma0': sigma,
+                        'mu_gain': par['mu_gain'],
+                        'sigma_gain': par['sigma_gain'],
+                        'noise': 0   # zero-mean noise will be played here later
+                    }
+                else:
+                    src_par = {
+                        'type': 'IClamp',
+                        'dur': duration,
+                        'amp': 0
+                    }
+
+            netParams.stimSourceParams[f'NoiseOU_source_{pop}'] = deepcopy(src_par)
+            netParams.stimTargetParams[f'NoiseOU_target_{pop}'] = {
+                'source': f'NoiseOU_source_{pop}',
+                'sec':'soma',
+                'loc': 0.5,
+                'conds': {'pop': pop}
+            }
 
     #------------------------------------------------------------------------------
     # NetStim inputs (to simulate short external stimuli; not bkg)

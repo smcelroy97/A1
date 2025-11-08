@@ -2,8 +2,10 @@ import argparse
 import json
 import os
 from pathlib import Path
+from pprint import pprint
 
 import matplotlib
+import matplotlib.pyplot as plt
 matplotlib.use('Agg')  # to avoid graphics error on servers
 import numpy as np
 import pandas as pd
@@ -238,9 +240,9 @@ if need_run:
         )
 
     # Create connections and external inputs
-    sim.net.connectCells()      # create connections between cells based on params
+    #sim.net.connectCells()      # create connections between cells based on params
     #print('Adding stims...', flush=True)
-    sim.net.addStims() 			# add network stimulation
+    #sim.net.addStims() 			# add network stimulation
 
     import warnings
     warnings.simplefilter('once')
@@ -248,13 +250,22 @@ if need_run:
     # Extract min/max cell gid for every pop. across ranks into sim._pop_gid_range
     _collect_cell_gids()
 
+    from neuron import h
+    h.CVode().active(0)
+    h.dt = sim.cfg.dt
+
+    # Setup variables to record for each cell (spikes, V traces, etc)
+    sim.setupRecording()
+
     # Add OU current or conductance input to each Cell
     if sim.cfg.add_ou_current:
-        sim, vecs_dict = bs.add_noise_iclamp(sim)
+        #if hasattr(sim.cfg, 'ou_ctrl_params'):
+        if False:
+            sim, vecs_dict, ctrl_dict = bs.add_noise_iclamp_ctrl(sim)
+        else:
+            sim, vecs_dict = bs.add_noise_iclamp(sim)
     if sim.cfg.add_ou_conductance:
         sim, vecs_dict, OUFlags = bs.add_noise_gclamp(sim)
-
-    sim.setupRecording()       # setup variables to record for each cell (spikes, V traces, etc)
     
     """ # Print ik mechs
     if comm.is_host():
@@ -264,18 +275,29 @@ if need_run:
         print([name for name in dir(seg.kBK)])
         #print([name for name in seg.__dict__]) """
 
+    ctrl_dict = {}
+    for pop in ['ITP4', 'ITS4', 'PV4', 'SOM4', 'VIP4', 'NGF4']:
+        cells = bs._get_local_cells(sim, pop)
+        if len(cells) == 0:
+            continue
+        ctrl_dict[pop] = bs.make_rate_controller(sim, pop)
+        bs.make_controlled_iclamps(sim, cells, ctrl_dict[pop]['ctrl_mech'])
+    
     # Run
-    print('Runing...', flush=True)
+    #if sim.rank == 0:
+    print(f'Rank {sim.rank}: running...', flush=True)
     sim.runSim()               # run parallel Neuron simulation
+    #if sim.rank == 0:
+    #    print(f'Gathering the results...', flush=True)
     sim.gatherData()
 
     # Gather OUFlags
-    if sim.cfg.add_ou_conductance:
+    """ if sim.cfg.add_ou_conductance:
         allOUFlags = sim.pc.py_allgather(OUFlags)
         combinedOUFlags = {}
         for flags in allOUFlags:
             combinedOUFlags.update(flags)
-        sim.OUFlags = combinedOUFlags
+        sim.OUFlags = combinedOUFlags """
 
     # Save and plot the result
     sim.saveData()
@@ -303,6 +325,43 @@ if comm.is_host():
         # Experiment-specific result processing
         if hasattr(cfg_mod, 'post_run'):
             cfg_mod.post_run(sim)
+        
+        # Plot and save controller signals
+        for pop_vis in ['ITP4', 'ITS4', 'PV4', 'SOM4', 'VIP4', 'NGF4']:
+            cells = bs._get_local_cells(sim, pop_vis)
+            if len(cells) == 0:
+                continue
+            print('CELL TYPE: ', type(cells[0]))
+            print('SECS TYPE: ', type(cells[0].secs))
+            print('SECS: ', cells[0].secs.keys())
+            #pprint(cells[0].__dict__)
+
+            if pop_vis not in ctrl_dict:
+                continue
+            print(f'CTRL KEYS ({pop_vis}): ', ctrl_dict[pop_vis].keys())            
+
+            tvec_ctrl = ctrl_dict[pop_vis]['tvec']
+            rvec_ctrl = ctrl_dict[pop_vis]['rvec']
+            zvec_ctrl = ctrl_dict[pop_vis]['zvec']
+            
+            stim = cells[0].secs['soma']['stims'][0]
+            tvec_stim = stim['tvec']
+            zvec_stim = stim['zvec']
+
+            plt.figure()
+            plt.subplot(3, 1, 1)
+            plt.plot(np.array(tvec_ctrl), np.array(rvec_ctrl))
+            plt.title(f'Controller rate, {pop_vis}')
+            plt.subplot(3, 1, 2)
+            plt.plot(np.array(tvec_ctrl), np.array(zvec_ctrl))
+            plt.title(f'Controller z, {pop_vis}')
+            plt.subplot(3, 1, 3)
+            plt.plot(np.array(tvec_stim), np.array(zvec_stim))
+            #plt.title(f'IClamp z, {pop_vis}')
+            plt.title(f'Voltage, {pop_vis}')
+            plt.xlabel('Time')
+            plt.savefig(f'{cfg.saveFolder}/{cfg.simLabel}_ctrl_traces_{pop_vis}.png')
+
     else:
         print(f'>>>>>>>>>>> {cfg.simLabel} SKIPPED', flush=True)
         avgRates = {}
