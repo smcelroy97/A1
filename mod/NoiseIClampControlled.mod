@@ -1,7 +1,7 @@
 NEURON {
   POINT_PROCESS NoiseIClampControlled
   NONSPECIFIC_CURRENT i
-  RANGE mu, sigma, noise
+  RANGE mu, sigma, noise, ctrl
   POINTER pmu, psigma
 }
 
@@ -19,8 +19,21 @@ ASSIGNED {
   i (nA)
   pmu    : mean current pointer (nA)
   psigma : current std. pointer (nA)
+  ctrl
 }
 
+INITIAL {
+  ctrl = 0.0
+}
+
+LOCAL s
+
 BREAKPOINT {
-  i = -(pmu + sigma * noise)
+  :i = -(pmu + sigma * noise)
+  ctrl = psigma * 10
+  s = sigma + psigma
+  if (s < 0) {
+      s = 0
+  }
+  i = -mu + s * noise
 }

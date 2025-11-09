@@ -242,7 +242,7 @@ if need_run:
     # Create connections and external inputs
     #sim.net.connectCells()      # create connections between cells based on params
     #print('Adding stims...', flush=True)
-    #sim.net.addStims() 			# add network stimulation
+    sim.net.addStims() 			# add network stimulation
 
     import warnings
     warnings.simplefilter('once')
@@ -250,9 +250,9 @@ if need_run:
     # Extract min/max cell gid for every pop. across ranks into sim._pop_gid_range
     _collect_cell_gids()
 
-    from neuron import h
-    h.CVode().active(0)
-    h.dt = sim.cfg.dt
+    #from neuron import h
+    #h.CVode().active(0)
+    #h.dt = sim.cfg.dt
 
     # Setup variables to record for each cell (spikes, V traces, etc)
     sim.setupRecording()
@@ -278,9 +278,9 @@ if need_run:
     ctrl_dict = {}
     for pop in ['ITP4', 'ITS4', 'PV4', 'SOM4', 'VIP4', 'NGF4']:
         cells = bs._get_local_cells(sim, pop)
+        ctrl_dict[pop] = bs.make_rate_controller(sim, pop)
         if len(cells) == 0:
             continue
-        ctrl_dict[pop] = bs.make_rate_controller(sim, pop)
         bs.make_controlled_iclamps(sim, cells, ctrl_dict[pop]['ctrl_mech'])
     
     # Run
@@ -343,6 +343,7 @@ if comm.is_host():
             tvec_ctrl = ctrl_dict[pop_vis]['tvec']
             rvec_ctrl = ctrl_dict[pop_vis]['rvec']
             zvec_ctrl = ctrl_dict[pop_vis]['zvec']
+            r0 = ctrl_dict[pop_vis]['r0']
             
             stim = cells[0].secs['soma']['stims'][0]
             tvec_stim = stim['tvec']
@@ -351,13 +352,14 @@ if comm.is_host():
             plt.figure()
             plt.subplot(3, 1, 1)
             plt.plot(np.array(tvec_ctrl), np.array(rvec_ctrl))
+            plt.plot([0, cfg.duration], [r0, r0], '--')
             plt.title(f'Controller rate, {pop_vis}')
             plt.subplot(3, 1, 2)
             plt.plot(np.array(tvec_ctrl), np.array(zvec_ctrl))
             plt.title(f'Controller z, {pop_vis}')
             plt.subplot(3, 1, 3)
             plt.plot(np.array(tvec_stim), np.array(zvec_stim))
-            #plt.title(f'IClamp z, {pop_vis}')
+            #plt.title(f'IClamp i, {pop_vis}')
             plt.title(f'Voltage, {pop_vis}')
             plt.xlabel('Time')
             plt.savefig(f'{cfg.saveFolder}/{cfg.simLabel}_ctrl_traces_{pop_vis}.png')

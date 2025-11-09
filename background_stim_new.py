@@ -317,25 +317,26 @@ def make_rate_controller(sim, pop_name):
     rvec.record(ctrl._ref_rate)
     
     return {'ctrl_mech': ctrl, 'netcon_list': netcon_list,
-            'tvec': tvec, 'zvec': zvec, 'rvec': rvec}
+            'tvec': tvec, 'zvec': zvec, 'rvec': rvec, 'r0': ctrl.r0}
 
 
 def make_controlled_iclamps(sim, cells, ctrl):
     for n, c in enumerate(cells):
         # Create IClamp mech
         soma = c.secs['soma']['hObj']
-        clamp = h.NoiseIClampControlled(soma(0.5))
-        #clamp.mu_gain = 1
+        clamp = h.NoiseIClampControlled2(soma(0.5))
+        clamp.mu_gain = sim.cfg.ou_ctrl_params['mu_gain']
 
         # Set the control input signal
-        h.setpointer(ctrl._ref_z, 'pmu', clamp)
+        h.setpointer(ctrl._ref_z, 'pctrl', clamp)
 
         # Record the received ctrl signal
         if (sim.rank == 0) and (n == 0):
             tvec = h.Vector()
-            tvec.record(h._ref_t, sim.cfg.dt)
+            tvec.record(h._ref_t)
             zvec = h.Vector()
-            #zvec.record(clamp._ref_i, sim.cfg.dt)
+            #zvec.record(clamp._ref_ctrl)
+            #zvec.record(clamp._ref_i)
             zvec.record(c.secs['soma']['hObj'](0.5)._ref_v)
         else:
             tvec = None
@@ -369,7 +370,7 @@ def add_noise_iclamp_ctrl(sim):
         if pop_name in sim.net.params.NoiseOUParams:
             # Test mech receiving ctrl signal
             soma = cell.secs['soma']['hObj']
-            debug_inp = h.NoiseIClampControlled(soma(0.5))
+            debug_inp = h.NoiseIClampControlled2(soma(0.5))
             debug_inp.mu_gain = 1e-3
             vecs_dict[cell_ind]['debug_inp'] = debug_inp
             

@@ -25,10 +25,11 @@ OU_CTRL = 1
 def apply_exp_cfg(cfg, par=None):
 
     # Duration
-    cfg.duration = 1000
+    cfg.duration = 10000
 
     cfg.saveCellSecs = True
-    cfg.hParams['nthread'] = 1
+    #cfg.hParams['nthread'] = 1
+    cfg.cache_efficient = 0
 
     # Left point (ms) of the calculation time window (r, cv, ...)
     #cfg.t0_calc = cfg.duration - 2000
@@ -49,7 +50,7 @@ def apply_exp_cfg(cfg, par=None):
     cfg.addSubConn = 0
 
     # OU current input
-    cfg.add_ou_current = 0
+    cfg.add_ou_current = 1
     cfg.ou_common = 0
     cfg.ou_noise_duration = cfg.duration
     cfg.ou_tau = 10
@@ -63,11 +64,11 @@ def apply_exp_cfg(cfg, par=None):
     # OU controlled by a rate feedback
     if OU_CTRL:
         cfg.ou_ctrl_params = {
-            'mu_gain': 0.1,
+            'mu_gain': 0.02,
             'sigma_gain': 0.2,
-            'tau_ctrl': 200,
+            'tau_ctrl': 300,
             'target_rates': target_rates,
-            'k_ctrl': 1e-4,
+            'k_ctrl': 1e-2,
             'z0': 0.0
         }
 

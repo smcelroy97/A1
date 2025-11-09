@@ -28,19 +28,14 @@ INITIAL {
   ctrl = 0.0         : avoid NaNs before pointer is set
 }
 
-STATE { hold }
-
 LOCAL mu, sigma
 
 BREAKPOINT {
-  SOLVE states METHOD cnexp
   ctrl = pctrl * 10
   mu = mu0 + mu_gain * pctrl
   sigma = sigma0 + sigma_gain * pctrl
   if (sigma < 0) {
       sigma = 0
   }
-  i = -(mu + sigma * noise) + 1e-12 * v
+  i = -(mu + sigma * noise)
 }
-
-DERIVATIVE states { hold' = 0 }
