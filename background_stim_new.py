@@ -4,6 +4,7 @@
 from math import sqrt, exp
 
 #import h5py.h5d
+import matplotlib.pyplot as plt
 from neuron import h
 import numpy as np
 
@@ -282,7 +283,7 @@ def make_rate_controller(sim, pop_name):
     gids = _get_all_gids(sim, pop_name)
     if len(local_cells) == 0:
         return {'ctrl_mech': None, 'netcon_list': [],
-                'tvec': None, 'zvec': None, 'rvec': None}
+                'tvec': None, 'zvec': None, 'rvec': None, 'r0': None}
 
     if sim.rank == 0:
         print(f'>>> {pop_name}: ngids={len(gids)}, ncells={len(local_cells)}', flush=True)
@@ -292,9 +293,10 @@ def make_rate_controller(sim, pop_name):
     ctrl_par = sim.cfg.ou_ctrl_params
     ctrl = None
     ctrl = h.RateController(soma(0.5))
-    ctrl.tau, ctrl.r0, ctrl.k, ctrl.z0 = (
+    ctrl.tau, ctrl.r0, ctrl.k, ctrl.kp, ctrl.z0, ctrl.t0 = (
         ctrl_par['tau_ctrl'], ctrl_par['target_rates'][pop_name], 
-        ctrl_par['k_ctrl'], ctrl_par['z0']
+        ctrl_par['k_ctrl'], ctrl_par['kp_ctrl'], ctrl_par['z0'],
+        ctrl_par['t0']
     )
 
     if sim.rank == 0:
@@ -318,6 +320,57 @@ def make_rate_controller(sim, pop_name):
     
     return {'ctrl_mech': ctrl, 'netcon_list': netcon_list,
             'tvec': tvec, 'zvec': zvec, 'rvec': rvec, 'r0': ctrl.r0}
+
+
+def _get_ctrl_for_gather(ctrl_dict):
+    res = {}
+    for pop, d in ctrl_dict.items():
+        res[pop] = {
+            'r0': d['r0'],
+            'tvec': d['tvec'],
+            'zvec': d['zvec'],
+            'rvec': d['rvec']
+        }
+    return res
+
+
+def gather_ctrl_data(sim, ctrl_dict):
+    if ctrl_dict is None:
+        return None
+    
+    rank_ctrl_dicts = sim.pc.py_allgather(
+        _get_ctrl_for_gather(ctrl_dict))
+    
+    ctrl_dict_all = {}
+    for rank_ctrl_dict in rank_ctrl_dicts:
+        for pop, ctrl_data in rank_ctrl_dict.items():
+            #print('Gather ctrl data: ', pop, flush=True)
+            if ((pop not in ctrl_dict_all) or 
+                    (ctrl_dict_all[pop]['tvec'] is None)):
+                ctrl_dict_all[pop] = ctrl_data
+        #print('----------', flush=True)
+    return ctrl_dict_all
+
+
+def plot_save_ctrl_traces(sim, ctrl_dict):
+    """Plot and save controller signals. """
+    for pop_vis in ctrl_dict.keys():
+        tvec_ctrl = ctrl_dict[pop_vis]['tvec']
+        rvec_ctrl = ctrl_dict[pop_vis]['rvec']
+        zvec_ctrl = ctrl_dict[pop_vis]['zvec']
+        r0 = ctrl_dict[pop_vis]['r0']
+
+        plt.figure(111); plt.clf()
+        plt.subplot(2, 1, 1)
+        plt.plot(np.array(tvec_ctrl), np.array(rvec_ctrl))
+        plt.plot([0, sim.cfg.duration], [r0, r0], '--')
+        plt.title(f'Controller rate, {pop_vis}')
+        plt.subplot(2, 1, 2)
+        plt.plot(np.array(tvec_ctrl), np.array(zvec_ctrl))
+        plt.title(f'Controller z, {pop_vis}')
+        plt.xlabel('Time')
+        plt.savefig(f'{sim.cfg.saveFolder}/'
+                    f'{sim.cfg.simLabel}_ctrl_traces_{pop_vis}.png')
 
 
 def make_controlled_iclamps(sim, cells, ctrl):
@@ -369,24 +422,24 @@ def add_noise_iclamp_ctrl(sim):
 
         if pop_name in sim.net.params.NoiseOUParams:
             # Test mech receiving ctrl signal
-            soma = cell.secs['soma']['hObj']
+            """ soma = cell.secs['soma']['hObj']
             debug_inp = h.NoiseIClampControlled2(soma(0.5))
             debug_inp.mu_gain = 1e-3
-            vecs_dict[cell_ind]['debug_inp'] = debug_inp
+            vecs_dict[cell_ind]['debug_inp'] = debug_inp """
             
             # Connect the feedback controller
-            ctrl = ctrl_dict[pop_name]['ctrl_mech']
+            #ctrl = ctrl_dict[pop_name]['ctrl_mech']
             #h.setpointer(ctrl._ref_z, 'p_ctrl', stim['hObj'])
-            h.setpointer(ctrl._ref_z, 'p_ctrl', debug_inp)
+            #h.setpointer(ctrl._ref_z, 'p_ctrl', debug_inp)
 
             # Record the ctrl-receiving mech
-            if 'debug_rec' not in ctrl_dict[pop_name]:
+            """ if 'debug_rec' not in ctrl_dict[pop_name]:
                 ctrl_tvec = h.Vector()
                 ctrl_tvec.record(h._ref_t)
                 ctrl_vec = h.Vector()
                 ctrl_vec.record(debug_inp._ref_i)
                 ctrl_dict[pop_name]['debug_rec'] = {
-                    'tvec': ctrl_tvec, 'ctrl_vec': ctrl_vec}
+                    'tvec': ctrl_tvec, 'ctrl_vec': ctrl_vec} """
 
         for stim_ind, stim in enumerate(cell.stims):
             if 'NoiseOU' in stim['label']:
@@ -406,13 +459,17 @@ def add_noise_iclamp_ctrl(sim):
                 vecs_dict[cell_ind]['tvecs'].update({stim_ind: tvec})
                 vecs_dict[cell_ind]['svecs'].update({stim_ind: svec})
 
-                # Play the noise via NoiseIClampControlled mech
+                # Play the noise via NoiseIClampControlled2 mech
                 vecs_dict[cell_ind]['svecs'][stim_ind].play(
-                    #stim['hObj']._ref_noise,
-                    stim['hObj']._ref_amp,
+                    stim['hObj']._ref_noise,
+                    #stim['hObj']._ref_amp,
                     vecs_dict[cell_ind]['tvecs'][stim_ind],
                     True   # continuous
                 )
+
+                # Connect a feedback controller
+                ctrl = ctrl_dict[pop_name]['ctrl_mech']
+                h.setpointer(ctrl._ref_z, 'pctrl', stim['hObj'])
     
     return sim, vecs_dict, ctrl_dict
 

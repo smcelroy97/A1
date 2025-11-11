@@ -32,14 +32,14 @@ def apply_exp_cfg(cfg, par=None):
     cfg.cache_efficient = 0
 
     # Left point (ms) of the calculation time window (r, cv, ...)
-    #cfg.t0_calc = cfg.duration - 2000
-    cfg.t0_calc = 0
+    cfg.t0_calc = cfg.duration - 2000
+    #cfg.t0_calc = 0
 
     # Subnet parameters
     cfg.subnet_build_flag = 1
     cfg.subnet_params = {
         'pops_active': POPS_ACTIVE,
-        'conns_frozen': ['all'],  # unconnected model
+        'conns_frozen': 'all',  # unconnected model
         'fpath_frozen_rates': str(dirpath_self / 'target_state_1.csv'),   # surrogate input
     }
 
@@ -64,12 +64,13 @@ def apply_exp_cfg(cfg, par=None):
     # OU controlled by a rate feedback
     if OU_CTRL:
         cfg.ou_ctrl_params = {
-            'mu_gain': 0.02,
-            'sigma_gain': 0.2,
-            'tau_ctrl': 300,
+            'mu_gain': 1e-2,
+            'sigma_gain': 0.0,
+            'tau_ctrl': 200,
             'target_rates': target_rates,
-            'k_ctrl': 1e-2,
-            'z0': 0.0
+            'k_ctrl': 1e-3,
+            'z0': 0.0,
+            't0': 0.0
         }
 
     # Cell mechanisms to modify
@@ -129,7 +130,7 @@ def post_run(sim):
         par = cfg.ou_ctrl_params
         exp_name_sub += (
             f'_kmu_{par["mu_gain"]}_ksigma_{par["sigma_gain"]}'
-            f'_tau_{par["tau_ctrl"]}_kctrl_{par["k_ctrl"]}'
+            f'_tau_{par["tau_ctrl"]}_kctrl_{par["k_ctrl"]}_tc0_{par["t0"]}'
         )
 
     # Create a subfolder to put the results

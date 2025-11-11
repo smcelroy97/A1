@@ -18,14 +18,29 @@ import pandas as pd
 from analysis.ou_tuning import sim_res_proc_utils as proc
 
 
-POPS_ACTIVE = ['ITP4', 'ITS4', 'PV4', 'SOM4', 'VIP4', 'NGF4']
-OU_CTRL = 1
+POPS_ACTIVE = [
+    'NGF1',
+    'IT2', 'PV2', 'SOM2', 'VIP2', 'NGF2',
+    'IT3', 'PV3', 'SOM3', 'VIP3', 'NGF3',
+    'ITP4', 'ITS4', 'PV4', 'SOM4', 'VIP4', 'NGF4',
+    'IT5A', 'CT5A', 'PV5A', 'SOM5A', 'VIP5A', 'NGF5A',
+    'IT5B', 'CT5B' , 'PT5B', 'PV5B', 'SOM5B', 'VIP5B', 'NGF5B',
+    'IT6', 'CT6', 'PV6', 'SOM6', 'VIP6', 'NGF6',
+    'TC', 'TCM', 'HTC', 'TI', 'TIM', 'IRE', 'IREM'
+]
+
+POPS_E = ['IT2', 'IT3', 'ITS4', 'ITP4', 'IT5A', 'CT5A',
+          'IT5B', 'CT5B', 'PT5B', 'IT6', 'CT6']
+
+EE_FRAC_ACTIVE = 0.5
+
+OU_CTRL = 0
 
 
 def apply_exp_cfg(cfg, par=None):
 
     # Duration
-    cfg.duration = 10000
+    cfg.duration = 5000
 
     #cfg.saveCellSecs = True
     cfg.cache_efficient = 0
@@ -33,11 +48,15 @@ def apply_exp_cfg(cfg, par=None):
     # Left point (ms) of the calculation time window (r, cv, ...)
     cfg.t0_calc = max(0, cfg.duration - 2000)
 
+    conns_ee = [(pop1, pop2) for pop1 in POPS_E for pop2 in POPS_E]
+    conns_ee = list(set(conns_ee))
+
     # Subnet parameters
     cfg.subnet_build_flag = 1
     cfg.subnet_params = {   
         'pops_active': POPS_ACTIVE,
         'conns_frozen': [],
+        'conns_split': {f'{c[0]}, {c[1]}': EE_FRAC_ACTIVE for c in conns_ee},
         'fpath_frozen_rates': str(dirpath_self / 'target_state_1.csv'),
     }    
 
@@ -124,7 +143,8 @@ def post_run(sim):
     # Metric calculation time interval in seconds
     t_limits = (cfg.t0_calc / 1000, cfg.duration / 1000)
 
-    exp_name_sub = (f'exp_t_{t_limits[0]}_{t_limits[1]}')
+    exp_name_sub = (f'exp_t_{t_limits[0]}_{t_limits[1]}'
+                    f'_eefrac_{EE_FRAC_ACTIVE}')
     if OU_CTRL:
         par = cfg.ou_ctrl_params
         exp_name_sub += (
@@ -149,7 +169,7 @@ def post_run(sim):
             (dirpath_res / fname).rename(dirpath_res_sub / fname)
     
     # Move traces to the subfodler
-    for fpath in dirpath_res.glob(f'{exp_name}_*traces*.png'):
+    for fpath in dirpath_res.glob(f'{exp_name}_traces_*.png'):
         fpath.rename(dirpath_res_sub / fpath.name)
     
     # Save rates, CVs, and voltage stats to a json file

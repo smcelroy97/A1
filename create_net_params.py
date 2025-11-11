@@ -1011,11 +1011,11 @@ def create_net_params(cfg):
                     'amp1': 0
                 }
             elif cfg.add_ou_current:
-                #if hasattr(cfg, 'ou_ctrl_params'):
-                if False:
+                if hasattr(cfg, 'ou_ctrl_params'):
+                #if False:
                     par = cfg.ou_ctrl_params
                     src_par = {
-                        'type': 'NoiseIClampControlled',
+                        'type': 'NoiseIClampControlled2',
                         'mu0': mean,
                         'sigma0': sigma,
                         'mu_gain': par['mu_gain'],
