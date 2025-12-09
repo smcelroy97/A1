@@ -293,11 +293,18 @@ def make_rate_controller(sim, pop_name):
     ctrl_par = sim.cfg.ou_ctrl_params
     ctrl = None
     ctrl = h.RateController(soma(0.5))
-    ctrl.tau, ctrl.r0, ctrl.k, ctrl.kp, ctrl.z0, ctrl.t0 = (
-        ctrl_par['tau_ctrl'], ctrl_par['target_rates'][pop_name], 
-        ctrl_par['k_ctrl'], ctrl_par['kp_ctrl'], ctrl_par['z0'],
-        ctrl_par['t0']
-    )
+    par_names = [
+        ('tau', 'tau_ctrl'), ('taus', 'taus_ctrl'), ('r0', 'target_rates'),
+        ('k', 'k_ctrl'), ('kp', 'kp_ctrl'), ('z0', 'z0'),
+        ('t0', 't0'), ('tlock', 'tlock')
+    ]
+    for mech_par, cfg_par in par_names:
+        if cfg_par not in ctrl_par:
+            continue
+        val = ctrl_par[cfg_par]
+        if mech_par == 'r0':
+            val = val[pop_name]
+        setattr(ctrl, mech_par, val)
 
     if sim.rank == 0:
         print(f'>>> {pop_name}: CTRL created', flush=True)
@@ -322,14 +329,20 @@ def make_rate_controller(sim, pop_name):
             'tvec': tvec, 'zvec': zvec, 'rvec': rvec, 'r0': ctrl.r0}
 
 
+def _decimate(vec, n):
+    if vec is None:
+        return None
+    return [vec.x[i] for i in range(0, int(vec.size()), n)]
+
 def _get_ctrl_for_gather(ctrl_dict):
     res = {}
+    n = 100
     for pop, d in ctrl_dict.items():
         res[pop] = {
             'r0': d['r0'],
-            'tvec': d['tvec'],
-            'zvec': d['zvec'],
-            'rvec': d['rvec']
+            'tvec': _decimate(d['tvec'], n),
+            'zvec': _decimate(d['zvec'], n),
+            'rvec': _decimate(d['rvec'], n)
         }
     return res
 
@@ -354,6 +367,7 @@ def gather_ctrl_data(sim, ctrl_dict):
 
 def plot_save_ctrl_traces(sim, ctrl_dict):
     """Plot and save controller signals. """
+
     for pop_vis in ctrl_dict.keys():
         tvec_ctrl = ctrl_dict[pop_vis]['tvec']
         rvec_ctrl = ctrl_dict[pop_vis]['rvec']
