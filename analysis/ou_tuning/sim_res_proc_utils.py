@@ -61,3 +61,25 @@ def calc_v_stats(
         res['v_med_max'][pop] = Vmed.ravel().max()
         res['v_med_avg'][pop] = Vmed.ravel().mean()
     return res
+
+def calc_rate_dynamics(
+        sim,   # NetPyNE sim object obtained after a simulation
+        t_limits: tuple[float | None, float | None] = (None, None),
+        dt_bin: float = 5e-3,   # firing rate time bin
+        tau_smooth: float | None = None,
+        pops_used: list[str] | None = None
+        ) -> dict:
+    # Convert NetPyNE object to a dict (same as stored in pkl files)
+    sim_res = utils.prepare_sim_result(sim)
+    # Calculation time window
+    t1 = t_limits[0] or 0
+    t2 = t_limits[1] or utils.get_sim_duration(sim_res)
+    # Extract spikes
+    pops_used = pops_used or utils.get_pop_names(sim_res)
+    net_spikes = utils.get_net_spikes(sim_res, pop_names=pops_used)
+    ncells = utils.get_net_size(sim_res)
+    # Rate dynamics
+    r_data = proc.calc_net_rate_dynamics(
+        net_spikes, time_range=(t1, t2), dt_bin=dt_bin,
+        tau_smooth=tau_smooth, ncells=ncells)
+    return r_data
