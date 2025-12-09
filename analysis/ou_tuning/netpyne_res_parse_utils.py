@@ -267,7 +267,8 @@ def prepare_sim_result(sim) -> Dict:
         dataSave['simConfig'] = sim.cfg.__dict__
     if 'simData' in include:
         if 'LFP' in sim.allSimData:
-            sim.allSimData['LFP'] = sim.allSimData['LFP'].tolist()
+            if not isinstance(sim.allSimData['LFP'], list):
+                sim.allSimData['LFP'] = sim.allSimData['LFP'].tolist()
             if hasattr(sim.net, 'recXElectrode'):
                 dataSave['net']['recXElectrode'] = sim.net.recXElectrode
         dataSave['simData'] = sim.allSimData
