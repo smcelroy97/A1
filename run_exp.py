@@ -2,6 +2,7 @@ import argparse
 import json
 import os
 from pathlib import Path
+import pickle as pkl
 from pprint import pprint
 
 import matplotlib
@@ -129,7 +130,10 @@ else:
 if not is_batch:
     # Automatically set the experiment name in config
     cfg.simLabel = exp_name.split('/')[-1]   # remove subfolders if any
-    cfg.saveFolder = str(dirpath_self / DIRNAME_EXP_RESULTS / exp_name)
+    cfg.saveFolder = dirpath_self / DIRNAME_EXP_RESULTS / exp_name
+    if hasattr(cfg, 'exp_name_sub'):
+        cfg.saveFolder /= cfg.exp_name_sub
+    cfg.saveFolder = str(cfg.saveFolder)
 
 # Update config by batchtools (if applicable)
 cfg.update_cfg()
@@ -294,6 +298,7 @@ if need_run:
 
     # Gather controller traces
     if ctrl_dict is not None:
+        print('>>> Gather controller data...', flush=True)
         ctrl_dict = bs.gather_ctrl_data(sim, ctrl_dict)
     
     # Save and plot the result
@@ -318,6 +323,16 @@ if comm.is_host():
         fpath_res = '{}/{}_result.json'.format(cfg.saveFolder, cfg.simLabel)
         with open(fpath_res, 'w') as fid:
             json.dump({'rates': avgRates}, fid, indent=4)
+        
+        # Save controller data
+        if ctrl_dict is not None:
+            fpath_res = '{}/{}_ctrl.pkl'.format(cfg.saveFolder, cfg.simLabel)
+            with open(fpath_res, 'wb') as fid:
+                pkl.dump(ctrl_dict, fid)
+
+        # Plot controller signals and save the figures
+        if ctrl_dict is not None:
+            bs.plot_save_ctrl_traces(sim, ctrl_dict)
         
         # Experiment-specific result processing
         if hasattr(cfg_mod, 'post_run'):
@@ -375,10 +390,7 @@ if comm.is_host():
             plt.xlabel('Time')
             plt.savefig(f'{cfg.saveFolder}/{cfg.simLabel}_ctrl_traces_{pop_vis}.png') """
 
-        # Plot and save controller signals
-        if ctrl_dict is not None:
-            bs.plot_save_ctrl_traces(sim, ctrl_dict)
-
+        
     else:
         print(f'>>>>>>>>>>> {cfg.simLabel} SKIPPED', flush=True)
         avgRates = {}
