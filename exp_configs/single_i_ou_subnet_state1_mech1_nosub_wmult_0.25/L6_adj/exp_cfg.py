@@ -12,35 +12,28 @@ dirpath_self = Path(__file__).resolve().parent
 sys.path.append(str(dirpath_repo_root))
 sys.path.append(str(dirpath_self))
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+from analysis.ou_tuning import netpyne_res_parse_utils as parse_utils
 from analysis.ou_tuning import sim_res_proc_utils as proc
+import time
 
 
-POPS_ACTIVE = [
-    'NGF1',
-    'IT2', 'PV2', 'SOM2', 'VIP2', 'NGF2',
-    'IT3', 'PV3', 'SOM3', 'VIP3', 'NGF3',
-    'ITP4', 'ITS4', 'PV4', 'SOM4', 'VIP4', 'NGF4',
-    'IT5A', 'CT5A', 'PV5A', 'SOM5A', 'VIP5A', 'NGF5A',
-    'IT5B', 'CT5B' , 'PT5B', 'PV5B', 'SOM5B', 'VIP5B', 'NGF5B',
-    'IT6', 'CT6', 'PV6', 'SOM6', 'VIP6', 'NGF6',
-    'TC', 'TCM', 'HTC', 'TI', 'TIM', 'IRE', 'IREM'
-]
+POPS_ACTIVE = ['IT6', 'CT6', 'PV6', 'SOM6', 'VIP6', 'NGF6']
+OU_CTRL = 0
 
-POPS_E = ['IT2', 'IT3', 'ITS4', 'ITP4', 'IT5A', 'CT5A',
-          'IT5B', 'CT5B', 'PT5B', 'IT6', 'CT6']
-
-EE_FRAC_ACTIVE = 0.5
-
-OU_CTRL = 1
+OU_INP_LABEL = 'adj1'
+OU_INP_PATH = ('exp_results/single_i_ou_subnet_state1_mech1_nosub_wmult_0.25/L6/'
+               'exp_t_36.0_40.0_kmu_0.1_ksigma_0.0_tau_200_taus_2500_tc0_2000_'
+               'tlock_25000_kci_0.0005_kcp_0.0/ou_inputs_adj.json')
 
 
 def apply_exp_cfg(cfg, par=None):
 
     # Duration
-    cfg.duration = 50000
+    cfg.duration = 40000
 
     #cfg.saveCellSecs = True
     cfg.cache_efficient = 0
@@ -48,15 +41,11 @@ def apply_exp_cfg(cfg, par=None):
     # Left point (ms) of the calculation time window (r, cv, ...)
     cfg.t0_calc = max(0, cfg.duration - 4000)
 
-    conns_ee = [(pop1, pop2) for pop1 in POPS_E for pop2 in POPS_E]
-    conns_ee = list(set(conns_ee))
-
     # Subnet parameters
     cfg.subnet_build_flag = 1
     cfg.subnet_params = {   
         'pops_active': POPS_ACTIVE,
         'conns_frozen': [],
-        'conns_split': {f'{c[0]}, {c[1]}': EE_FRAC_ACTIVE for c in conns_ee},
         'fpath_frozen_rates': str(dirpath_self / 'target_state_1.csv'),
     }    
 
@@ -71,12 +60,13 @@ def apply_exp_cfg(cfg, par=None):
     cfg.ou_common = 0
     cfg.ou_noise_duration = cfg.duration
     cfg.ou_tau = 10
-    with open(dirpath_self / 'ou_inputs.json', 'r') as fid:
+    with open(dirpath_repo_root / OU_INP_PATH, 'r') as fid:
         cfg.ou_pop_inputs = json.load(fid)
     
     # Read target rates
     df = pd.read_csv(dirpath_self / 'target_state_1.csv')
     target_rates = df.set_index('pop_name')['target_rate'].to_dict()
+    cfg.target_rates = target_rates
 
     # OU controlled by a rate feedback
     if OU_CTRL:
@@ -90,7 +80,7 @@ def apply_exp_cfg(cfg, par=None):
             'kp_ctrl': 0e-2,
             'z0': 0,
             't0': 2000,
-            'tlock': 40000
+            'tlock': 25000
         }
 
     # Cell mechanisms to modify
@@ -100,21 +90,6 @@ def apply_exp_cfg(cfg, par=None):
     # Time range for rate and CV calculation
     #cfg.analysis['plotSpikeStats']['timeRange'] = (cfg.t0_calc, cfg.duration)
     cfg.analysis['plotSpikeStats'] = False
-
-    # External stimulus
-    cfg.add_pulses = 0
-    cfg.pulse_seq_params = {
-        'name': 'Pulse1',
-        'pop': ['ITS4'],
-        't0': 3500,
-        'width': 500,
-        'n_pulses': 1,
-        'rates': [1000],
-        'weight': 5,
-        'n_cells': 1000,
-        'convergence': 1,
-        'period': 1e5
-    }
 
     # Record background inputs
     """ ncells_rec = 1
@@ -160,8 +135,7 @@ def post_run(sim):
     # Metric calculation time interval in seconds
     t_limits = (cfg.t0_calc / 1000, cfg.duration / 1000)
 
-    exp_name_sub = (f'exp_t_{t_limits[0]}_{t_limits[1]}'
-                    f'_eefrac_{EE_FRAC_ACTIVE}')
+    exp_name_sub = (f'exp_{OU_INP_LABEL}_t_{t_limits[0]}_{t_limits[1]}')
     if OU_CTRL:
         par = cfg.ou_ctrl_params
         exp_name_sub += (
@@ -170,10 +144,6 @@ def post_run(sim):
             f'_tc0_{par["t0"]}_tlock_{par["tlock"]}'
             f'_kci_{par["k_ctrl"]}_kcp_{par["kp_ctrl"]}'
         )
-    if cfg.add_pulses:
-        par = cfg.pulse_seq_params
-        exp_name_sub += (f'_stim_{par["pop"][0]}_{par["t0"]}_{par["width"]}_'
-                         f'r_{par["rates"][0]}_w_{par["weight"]}')
 
     # Create a subfolder to put the results
     dirpath_res = Path(cfg.saveFolder)
@@ -182,7 +152,7 @@ def post_run(sim):
 
     # Move results to the subfolder
     res_names = [
-        'raster.png', 'cfg.json', 'netParams.json', 'ctrl.pkl'
+        'raster.png', 'cfg.json', 'netParams.json', 'data.pkl'
         #'spikeStat_boxplot_rate.png', 'spikeStat_boxplot_isicv.png'
     ]
     for res_name in res_names:
@@ -201,3 +171,22 @@ def post_run(sim):
     fpath_res = dirpath_res_sub / f'{exp_name}_result.json'
     with open(fpath_res, 'w') as fid:
         json.dump(res, fid, indent=4)
+
+    # Plot and save rate dynamics
+    os.makedirs(dirpath_res_sub / 'rvec_figs', exist_ok=True)
+    r_data = proc.calc_rate_dynamics(
+        sim, t_limits=(3, None), tau_smooth=0.5, pops_used=POPS_ACTIVE)
+    colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
+    plt.figure()
+    for n, pop in enumerate(POPS_ACTIVE):
+        tt, rr = r_data[pop]
+        r0 = cfg.target_rates[pop]
+        plt.plot(tt, rr, label=pop, color=colors[n])
+        plt.plot([tt[0], tt[-1]], [r0, r0], '--', color=colors[n])
+    plt.xlabel('Time')
+    plt.ylabel('Firing rate')
+    plt.legend(bbox_to_anchor=(1, 1))
+    plt.yscale('log')
+    plt.ylim(0.05, None)
+    plt.savefig(dirpath_res_sub / 'rvec_figs' / f'{exp_name}.png', dpi=300)
+    

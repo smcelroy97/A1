@@ -62,14 +62,16 @@ def apply_exp_cfg(cfg, par=None):
     # OU controlled by a rate feedback
     if OU_CTRL:
         cfg.ou_ctrl_params = {
-            'mu_gain': 1e-1,
+            'mu_gain': 2e-1,
             'sigma_gain': 0.0,
             'tau_ctrl': 20,
+            'taus_ctrl': 500,
             'target_rates': target_rates,
             'k_ctrl': 5e-3,
             'kp_ctrl': 10e-2,
             'z0': 0,
-            't0': 2000
+            't0': 2000,
+            'tlock': 7000
         }
 
     # Cell mechanisms to modify
@@ -129,7 +131,8 @@ def post_run(sim):
         par = cfg.ou_ctrl_params
         exp_name_sub += (
             f'_kmu_{par["mu_gain"]}_ksigma_{par["sigma_gain"]}'
-            f'_tau_{par["tau_ctrl"]}_tc0_{par["t0"]}'
+            f'_tau_{par["tau_ctrl"]}_taus_{par["taus_ctrl"]}'
+            f'_tc0_{par["t0"]}_tlock_{par["tlock"]}'
             f'_kci_{par["k_ctrl"]}_kcp_{par["kp_ctrl"]}'
         )
 

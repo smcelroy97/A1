@@ -32,31 +32,40 @@ POPS_ACTIVE = [
 POPS_E = ['IT2', 'IT3', 'ITS4', 'ITP4', 'IT5A', 'CT5A',
           'IT5B', 'CT5B', 'PT5B', 'IT6', 'CT6']
 
-EE_FRAC_ACTIVE = 0.5
+POP_PAIRS_IT_PV = [
+    ('IT2', 'PV2'), ('IT3', 'PV3'), ('ITP4', 'PV4'), ('ITS4', 'PV4'),
+    ('IT5A', 'PV5A'), ('IT5B', 'PV5B'), ('IT6', 'PV6')
+]
 
-OU_CTRL = 1
+EE_FRAC_ACTIVE = 0.5
+ITPV_FRAC_ACTIVE = 0.5
+
+OU_CTRL = 0
 
 
 def apply_exp_cfg(cfg, par=None):
 
     # Duration
-    cfg.duration = 50000
+    cfg.duration = 5000
 
     #cfg.saveCellSecs = True
     cfg.cache_efficient = 0
 
     # Left point (ms) of the calculation time window (r, cv, ...)
-    cfg.t0_calc = max(0, cfg.duration - 4000)
+    cfg.t0_calc = max(0, cfg.duration - 2000)
 
     conns_ee = [(pop1, pop2) for pop1 in POPS_E for pop2 in POPS_E]
     conns_ee = list(set(conns_ee))
+
+    conns_split = {f'{c[0]}, {c[1]}': EE_FRAC_ACTIVE for c in conns_ee}
+    conns_split |= {f'{c[0]}, {c[1]}': ITPV_FRAC_ACTIVE for c in POP_PAIRS_IT_PV}
 
     # Subnet parameters
     cfg.subnet_build_flag = 1
     cfg.subnet_params = {   
         'pops_active': POPS_ACTIVE,
         'conns_frozen': [],
-        'conns_split': {f'{c[0]}, {c[1]}': EE_FRAC_ACTIVE for c in conns_ee},
+        'conns_split': conns_split,
         'fpath_frozen_rates': str(dirpath_self / 'target_state_1.csv'),
     }    
 
@@ -84,13 +93,13 @@ def apply_exp_cfg(cfg, par=None):
             'mu_gain': 1e-1,
             'sigma_gain': 0.0,
             'tau_ctrl': 200,
-            'taus_ctrl': 2500,
+            'taus_ctrl': 1000,
             'target_rates': target_rates,
-            'k_ctrl': 5e-4,
+            'k_ctrl': 2e-4,
             'kp_ctrl': 0e-2,
             'z0': 0,
             't0': 2000,
-            'tlock': 40000
+            'tlock': 12000
         }
 
     # Cell mechanisms to modify
@@ -100,21 +109,6 @@ def apply_exp_cfg(cfg, par=None):
     # Time range for rate and CV calculation
     #cfg.analysis['plotSpikeStats']['timeRange'] = (cfg.t0_calc, cfg.duration)
     cfg.analysis['plotSpikeStats'] = False
-
-    # External stimulus
-    cfg.add_pulses = 0
-    cfg.pulse_seq_params = {
-        'name': 'Pulse1',
-        'pop': ['ITS4'],
-        't0': 3500,
-        'width': 500,
-        'n_pulses': 1,
-        'rates': [1000],
-        'weight': 5,
-        'n_cells': 1000,
-        'convergence': 1,
-        'period': 1e5
-    }
 
     # Record background inputs
     """ ncells_rec = 1
@@ -161,7 +155,7 @@ def post_run(sim):
     t_limits = (cfg.t0_calc / 1000, cfg.duration / 1000)
 
     exp_name_sub = (f'exp_t_{t_limits[0]}_{t_limits[1]}'
-                    f'_eefrac_{EE_FRAC_ACTIVE}')
+                    f'_ee_{EE_FRAC_ACTIVE}_itpv_{ITPV_FRAC_ACTIVE}')
     if OU_CTRL:
         par = cfg.ou_ctrl_params
         exp_name_sub += (
@@ -170,10 +164,6 @@ def post_run(sim):
             f'_tc0_{par["t0"]}_tlock_{par["tlock"]}'
             f'_kci_{par["k_ctrl"]}_kcp_{par["kp_ctrl"]}'
         )
-    if cfg.add_pulses:
-        par = cfg.pulse_seq_params
-        exp_name_sub += (f'_stim_{par["pop"][0]}_{par["t0"]}_{par["width"]}_'
-                         f'r_{par["rates"][0]}_w_{par["weight"]}')
 
     # Create a subfolder to put the results
     dirpath_res = Path(cfg.saveFolder)
@@ -182,7 +172,7 @@ def post_run(sim):
 
     # Move results to the subfolder
     res_names = [
-        'raster.png', 'cfg.json', 'netParams.json', 'ctrl.pkl'
+        'raster.png', 'cfg.json', 'netParams.json',
         #'spikeStat_boxplot_rate.png', 'spikeStat_boxplot_isicv.png'
     ]
     for res_name in res_names:
@@ -191,9 +181,8 @@ def post_run(sim):
             (dirpath_res / fname).rename(dirpath_res_sub / fname)
     
     # Move traces to the subfodler
-    os.makedirs(dirpath_res_sub / 'traces', exist_ok=True)
     for fpath in dirpath_res.glob(f'{exp_name}_*traces*.png'):
-        fpath.rename(dirpath_res_sub / 'traces' / fpath.name)
+        fpath.rename(dirpath_res_sub / fpath.name)
     
     # Save rates, CVs, and voltage stats to a json file
     res = proc.calc_rates_and_cvs(sim, t_limits, nspikes_min=3)
