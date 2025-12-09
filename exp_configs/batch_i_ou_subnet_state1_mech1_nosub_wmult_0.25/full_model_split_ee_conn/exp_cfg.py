@@ -138,7 +138,7 @@ def post_run(sim):
     # Generate filename postfix with param values
     exp_id = exp_name.split('_')[-1]
     postfix = (f'{exp_id}_eefrac_{cfg.ee_frac_active}')
-
+    
     # Create subfolders to put the results
     dirpath_res = Path(cfg.saveFolder)
     dirpath_res_sub = dirpath_res / exp_name_sub
