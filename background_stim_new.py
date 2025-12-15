@@ -227,6 +227,7 @@ def add_noise_iclamp(sim):
                 #print(f'GIDS: {pop_gids}')
                 cell_pos = (cell.gid - pop_gids[0]) / (pop_gids[1] - pop_gids[0])
 
+                # If OU mean/sigma is given by 2 values - interpolate between them across cells
                 if not np.isscalar(mean):
                     mean = mean[0] + cell_pos * (mean[1] - mean[0])
                 if not np.isscalar(sigma):
@@ -237,6 +238,7 @@ def add_noise_iclamp(sim):
                     if pop not in ramp_par['pops']:
                         ramp_par_ = None
 
+                # Generate OU noise
                 tvec, svec = generate_ou_signal(
                     tau=sim.cfg.ou_tau,
                     sigma=sigma,
@@ -250,9 +252,11 @@ def add_noise_iclamp(sim):
                     ramp_par=ramp_par_
                 )
 
+                # Store the noise and time bins
                 vecs_dict[cell_ind]['tvecs'].update({stim_ind: tvec})
                 vecs_dict[cell_ind]['svecs'].update({stim_ind: svec})
 
+                # Play OU noise to the cell
                 vecs_dict[cell_ind]['svecs'][stim_ind].play(
                     stim['hObj']._ref_amp,
                     vecs_dict[cell_ind]['tvecs'][stim_ind],
