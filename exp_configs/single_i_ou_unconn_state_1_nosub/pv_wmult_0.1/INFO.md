@@ -1,3 +1,0 @@
-- Single simulation of PV cells to check the selected OU inputs (see `ou_inputs.json`).
-- OU selection is based on: `exp_results/batch_i_ougrid_unconn_state1_nosub_wmult_0.1/pv/exp_ou_nmean_20_nstd_20`
-- Notebook for OU selection: `exp_configs/batch_i_ougrid_unconn_state1_nosub_wmult_0.1/explore_result.ipynb`

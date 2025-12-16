@@ -1,3 +1,0 @@
-- Full model
-- Split E-E connections into surrogate (static) and active parts
-- Fraction of the active part is the batch parameter

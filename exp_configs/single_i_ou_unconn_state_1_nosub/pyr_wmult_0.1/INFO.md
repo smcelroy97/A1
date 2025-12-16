@@ -1,3 +1,0 @@
-- Single simulation of PYR cells to check the selected OU inputs (see `ou_inputs.json`).
-- OU selection is based on: `exp_results/batch_i_ougrid_unconn_state1_nosub_wmult_0.1/pyr/exp_ou_nmean_10_nstd_10`
-- Notebook for OU selection: `exp_configs/batch_i_ougrid_unconn_state1_nosub_wmult_0.1/explore_result.ipynb`

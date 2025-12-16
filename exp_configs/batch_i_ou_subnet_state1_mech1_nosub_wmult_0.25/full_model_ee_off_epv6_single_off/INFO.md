@@ -1,4 +1,0 @@
-- Full model
-- All E-E connections are static
-- Turn off E-PV6 connections for each E pop. separately to find what causes the deviation from the target regime
-- Presynatic pop. of the static E-PV6 link is the batch parameter
