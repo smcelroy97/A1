@@ -44,3 +44,5 @@ exp_results/**/*.nc
 .vscode/
 mod/ctrl_mod.txt
 temp_local/
+exp_configs
+exp_results
