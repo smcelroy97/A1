@@ -1,74 +1,38 @@
 ## TODO
 
+### Meeting Notes
+
 ### 1. Problem definition:
 
-Solution    -> appropriate channel densities for relevant channels
+Parameter Space:
+* conductance for various channels s/t cell no longer exhibits undesired behavior
+  * should avoid ih and any fast acting channels.
+  * NOTE: altering slow channels will alter AP characteristics of the cell
 
-Constraints -> depol block should happen at a reasonable I
-            -> no multi-stability ( no multiple regimes) -> consolidate regions between  resting and depol ..
-            -> validate across multiple input stimulus (internal loop)
-                -> within solutions we shouldn't see 
+Desired/Undesired behavior:
+* unwanted: cell exhibits different fi curve "behaviors" (/multiple states) after a stimulus is applied
+  * see cfg.py -> cfg.ou variables (tuning/cfg.py:73)
+* unwanted: altering channel conductance can dramatically change fi curve including f(i) during spiking behavior & @ what (i) depol blockade occurs
 
-#### 1a. define parameters:constraints for sweep
-* channel densities?
-  * preserve segment properties of PT cells (don't touch iH)
-    * gbar kdr changed - not able to get a non-bistable f/i curve
-    * no HH channels (no fast)
-    * target bar <-
-    * o/w no stricter guidance--
-  * -> implement uniform ratio <- to start out look into distributions later 
-  * search bounds
+Loss function: 3 objectives. 
+* parameters which generate a cell with different fi curve "behaviors" (tuning/TODO.md:13) should have worse fitness. 
+* parameters which generate a cell with different depolarization blockade thresholds should have worse fitness.
+* parameters which generate a cell with different f(i) (NOTE: compared to what reference) should have worse fitness.
 
+### 2. Python Implementation:
+* search should be applied to any channel conductances as appropriate
+* internally, for each parameter vector, fi curve should be sampled across a cfg.ou grid
 
-#### 1b. define analysis/fitness functions for sweep
-* similarity to f/i curve? not as important
-  * state transitions ( (rest->spiking) >>->block)
-    * move depol block to earlier
-    * frequency ceiling much lower
-  * f(i) < (f'(i) similarities)
-* bistability
-  * mathematical characterization
-  * thresholds for bistability tolerance --
-* changing input stimulation (rx, wx, amp) should not produce a bistable curve
+### 3. Likely schedule (next steps for January):
 
-### 2. Python implementation: (grid search -> automated search)
+* quickest solution given current code base -
+  * outer search suggests a parameter vector to inner search
+    * inner search performs a grid search across cfg.ou
+0a. code initial small grid search for outer parameters and inner cfg.ou (January)
+  * need to refactor to allow application of suggested parameter vector to the cell parameters (January)
+  * need to code outer and inner grid search (January)
+0b. decide & code loss function/metric recordings to be captured. (January?)
+1.  review scores and plots of initial small grid search, validate that loss function/metric creates scores as desired, revisit 0b. as necessary
+2.  migrate initial small grid search to a larger optimization function (CMA-ES/TSPE/NSGA2/...)
 
-#### 2a. implement parameter batch
-* place parameters into cfg for batch 
-
-#### 2b. implement analysis/fitness functions in NetPyNE
-* through simulation data values
-
-### 3. Analysis: (grid search -> automated search)
-
-#### 3a. present findings for review
-
-#### 3b. refactoring (2 or 1 as necessary)
-
-## NOTES
-### Implementation:
-
-entrypoint: 
-init.py?
-desired outcome: 
-sim_output/sim_IT5A_kdr_mult_1_ramp_1.5_rx_75_wx_0.5/fi_curve_IT5A.png
-w/o bistability?
-cell: 
-IT5A_reduced ()
-
-stimulation parameters also searchable?
-
-collapse
-
-stimulation is a constraint -->
-
-various stimulation <-
-### Timeline:
-January -> set up software to perform parameter sweep w/ input sweep
-(nested batches)
-
-### Distribution:
-
-### Additional:
-
-
+tuning/figures/notes0.png
