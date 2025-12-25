@@ -86,7 +86,9 @@ class sTC (Cell):
     self.soma.insert('htc') # h-current -- htc.mod
     self.soma.insert('ia') # tia.mod (A-type K channel)
     self.soma.insert('kl') # kl.mod (K leak)
-    self.soma.insert('cadad') # calcium decay    
+    self.soma.insert('cadad') # calcium decay
+    self.soma.insert('cal') # high threshold calcum channel - promotes bursting NOTE: Cell Reports paper/model did not have CaL in TC neurons, only in HTC neurons
+    self.soma.gcalbar_cal = 0.001 #* 2.0 # NOTE: Cell Reports paper/model did not have CaL in TC neurons    
     self.soma.e_pas = -70 # from Rinzel
     self.soma.g_pas = 1e-5
     self.soma.ena= 50
