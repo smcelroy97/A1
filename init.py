@@ -12,7 +12,7 @@ import pandas as pd
 from netpyne.batchtools import comm, specs
 from netpyne import sim
 
-from netParams import cfg, netParams
+from netParams_new import cfg, netParams
 from post_run import post_run
 
 import background_stim_new as bs
