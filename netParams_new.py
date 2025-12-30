@@ -21,10 +21,10 @@ from cfg_new import cfg
 # General network parameters
 #------------------------------------------------------------------------------
 
-netParams.scale = cfg.scale 
-netParams.sizeX = cfg.sizeX 
-netParams.sizeY = cfg.sizeY
-netParams.sizeZ = cfg.sizeZ
+netParams.scale = 1.0
+netParams.sizeX = 200.0
+netParams.sizeY = 2000.0
+netParams.sizeZ = 200.0
 netParams.shape = 'cylinder'
 
 #------------------------------------------------------------------------------
@@ -47,11 +47,18 @@ netParams.loadCellParamsRule(label='IT5A_reduced', fileName='cells/IT5A_reduced_
 #------------------------------------------------------------------------------
 # Population parameters
 #------------------------------------------------------------------------------
-with open('cells/cellDensity.pkl', 'rb') as fileObj:
-    density = pickle.load(fileObj)['density']
-density = {k: [x * cfg.scaleDensity for x in v] for k, v in density.items()}
 
-netParams.popParams['IT5A'] =     {'cellType': 'IT',  'cellModel': 'HH_reduced',   'ynormRange': layer['5A'], 	'density': 0.5*density[('A1','E')][3]}
+# scaleDensity is 1.
+netParams.popParams['IT5A'] = {
+    'cellType': 'IT',
+    'cellModel': 'HH_reduced',
+    'ynormRange': [0.625, 0.667],
+    'density': 0.5 * 272160.0}
+
+# density[('A1', 'E')]
+# Out[3]: [0.0, 179784.0, 177744.0, 272160.0, 208413.0, 142870.0]
+# In [4]: density[('A1', 'E')][3]
+# Out[4]: 272160.0
 
 #------------------------------------------------------------------------------
 # Synaptic mechanism parameters
@@ -61,8 +68,13 @@ netParams.synMechParams['AMPA'] = {'mod':'MyExp2SynBB', 'tau1': 0.05, 'tau2': 5.
 #------------------------------------------------------------------------------
 # OU current / conductance inputs
 #------------------------------------------------------------------------------
-with open('data/inputResistances.json', 'rb') as f:
-    inpRes = json.load(f)
+
+# In [7]: with open('data/inputResistances.json', 'rb') as f:
+#    ...:     res = json.load(f)
+#    ...:
+#
+# In [8]: res['IT5A']
+# Out[8]: 0.044510289788146154
 
 def _multiply(x, y):
     if np.isscalar(x):
@@ -76,7 +88,7 @@ for pop in cfg.allpops:
     ou_amp = _multiply(cfg.OUamp, 0.01)
     ou_std = _multiply(cfg.OUstd, 0.01)
     
-    K = 70 / inpRes[pop]
+    K = 70 / 0.044510289788146154
 
     mean = _multiply(ou_amp, K)
     sigma = _multiply(ou_std, K)

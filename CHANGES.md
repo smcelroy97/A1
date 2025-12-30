@@ -28,3 +28,8 @@ This document outlines the changes made to the simulation configuration and netw
 - **Updated `init.py`**:
   - The main simulation script, `init.py`, was updated to import the consolidated and simplified configuration and network parameters from `cfg_new.py` and `netParams_new.py`.
   - The line `from netParams import cfg, netParams` was replaced with `from netParams_new import cfg, netParams`.
+
+
+
+![anti-pattern](figures/img0.png)
+![img.png](figures/img1.png)
