@@ -112,10 +112,10 @@ netParams.stimTargetParams[f'bkg_targ_{POP}'] =  {
 v = cfg.mech_changes
 
 def multiply_parameters_func(pop: str,
-                            secs: list,
-                            mech: str,
-                            parameter: str,
-                            factor: int|float):
+                             secs: list,
+                             mech: str,
+                             parameter: str,
+                             factor: int|float):
     _pop = netParams.popParams[pop]
     for sec in secs:
         _pop['secs'][sec]['mechs'][mech][parameter] *= factor
