@@ -29,22 +29,13 @@ cfg.seeds['conn'] = 1
 # ------------------------------------------------------------------------------
 # Recording
 # ------------------------------------------------------------------------------
-POP_ACTIVE = 'IT5A'
-cfg.pops_active = [POP_ACTIVE]
-cfg.allpops = cfg.pops_active
 
-# Choose the cells to record voltages for each active pop.
-ncells_rec = 500
-# this is a simplification, in the original code it's loaded from a file
-pops_sz = {'IT5A': 500} 
-cfg.pop_cells_rec = {}
-for pop in cfg.allpops:
-    N = np.minimum(pops_sz[pop], ncells_rec)
-    cfg.pop_cells_rec[pop] = np.linspace(0, pops_sz[pop] - 1, N, dtype=int)
+
+# original code ---
+# 359 'IT5A' cells ---
 
 # Record voltage traces
-cfg.recordCells = [(pop, list(cfg.pop_cells_rec[pop]))
-                    for pop in cfg.allpops]
+cfg.recordCells = [('IT5A', *range(359))]
 cfg.recordTraces = {
     'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'}
 }
@@ -72,7 +63,7 @@ cfg.saveCellConns = False
 # Analysis and plotting
 # ------------------------------------------------------------------------------
 cfg.analysis['plotRaster'] = {
-    'include': cfg.pops_active,
+    'include': ['IT5A'],
     'saveFig': True,
     'showFig': False,
     'orderInverse': True,
@@ -93,7 +84,6 @@ cfg.KgbarFactor = 1.0
 # ------------------------------------------------------------------------------
 # Synapses
 # ------------------------------------------------------------------------------
-cfg.AMPATau2Factor = 1.0
 
 # ------------------------------------------------------------------------------
 # Network
@@ -102,11 +92,6 @@ cfg.singleCellPops = False
 cfg.reducedPop = False
 cfg.singlePop = ''
 cfg.removeWeightNorm = False
-cfg.scale = 1.0
-cfg.sizeY = 2000.0
-cfg.sizeX = 100.0
-cfg.sizeZ = 100.0
-cfg.scaleDensity = 1.0
 
 # ------------------------------------------------------------------------------
 # Connectivity
@@ -118,9 +103,6 @@ cfg.wmult = 1.0
 cfg.addIntraThalamicConn = 1
 cfg.addCorticoThalamicConn = 1
 cfg.addThalamoCorticalConn = 1
-
-
-
 
 # ------------------------------------------------------------------------------
 # Background inputs
@@ -158,10 +140,6 @@ cfg.addNetStim = False
 # NetStim inputs (weak, just to randomly jitter the cells between steady-states)
 cfg.bkg_r = 75    # firing rate
 cfg.bkg_w = 0.5   # weight
-cfg.bkg_spike_inputs = {
-    pop: {'r': cfg.bkg_r, 'w': cfg.bkg_w}
-    for pop in cfg.pops_active
-}
 
 # Strong ramp-up pulse for switching between the steady-states
 cfg.ou_ramp_dur = 1000   # duration
@@ -171,12 +149,19 @@ cfg.ou_ramp_mult = 0
 cfg.ou_ramp_type = 'up'
 
 # Mechanisms to modify
-cfg.mech_changes = {
-    'sec': 'all',
-    'mech': 'kdr',
-    'par': 'gbar',
-    'mult': 3
+# label
+cfg.multiply_parameters = {
+    'kdr0': {
+        'secs': ('Adend1', 'Adend2', 'Adend3', 'Bdend', 'axon', 'soma'),
+        'mech': 'kdr',
+        'parameter': 'gbar',
+        'factor': 1
+    }
+
 }
+
+
+
 
 # Update via batchtools
 # this is not defined in this file, so we'll skip it
@@ -184,3 +169,4 @@ cfg.mech_changes = {
 #     cfg.update_cfg()
 
 cfg.tune = {}
+
