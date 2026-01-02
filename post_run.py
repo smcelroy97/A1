@@ -31,7 +31,7 @@ def post_run(sim):
         V0.append(V_)
         tt.append(tt_)
 
-    for pop in cfg.pops_active:
+    for pop in ['IT5A']:
         
         # Extract spike times from the sim result
         spikes = parse_utils.get_pop_spikes(sim_result, pop, combine_cells=False)

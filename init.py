@@ -34,38 +34,6 @@ def setdminID(sim, lpop):
     sim.simData['dnumc'] = {pop: np.amax(
         dGIDs[pop]) - np.amin(dGIDs[pop]) for pop in lpop if len(dGIDs[pop]) > 0}
 
-def setCochCellLocationsX(cfg, netParams, pop, sz, scale):
-    # Set the cell positions on a line
-    if pop not in sim.net.pops:
-        return
-    offset = sim.simData['dminID'][pop]
-    ncellinrange = 0  # number of cochlear cells with center frequency in frequency range represented by this model
-    sidx = -1
-    for idx, cf in enumerate(netParams.cf):
-        if cf >= cfg.cochThalFreqRange[0] and cf <= cfg.cochThalFreqRange[1]:
-            if sidx == -1:
-                sidx = idx  # start index
-            ncellinrange += 1
-    if sidx > -1:
-        offset += sidx
-    for c in sim.net.cells:
-        if c.gid in sim.net.pops[pop].cellGids:
-            cf = netParams.cf[c.gid-sim.simData['dminID'][pop]]
-            if cf >= cfg.cochThalFreqRange[0] and cf <= cfg.cochThalFreqRange[1]:
-                c.tags['x'] = cellx = (
-                    scale * (cf - cfg.cochThalFreqRange[0]) /
-                    (cfg.cochThalFreqRange[1] - cfg.cochThalFreqRange[0])
-                )
-                # make sure these values consistent
-                c.tags['xnorm'] = cellx / netParams.sizeX
-            else:
-                # put it outside range for core
-                c.tags['x'] = cellx = 100000000
-                # make sure these values consistent
-                c.tags['xnorm'] = cellx / netParams.sizeX
-            c.updateShape()
-
-
 dirpath_self = Path(__file__).resolve().parent
 
 comm.initialize()
@@ -95,17 +63,9 @@ sim.net.allPops = {label: pop.__getstate__()
                     for label, pop in sim.net.pops.items()}
 
 # Set min/max cell gid for each population
-setdminID(sim, cfg.allpops)
+setdminID(sim, ['IT5A'])
 
 # Set cell locations for cochlear cells
-if cfg.cochlearThalInput:
-    setCochCellLocationsX(
-        cfg,
-        netParams,
-        'cochlea',
-        netParams.popParams['cochlea']['numCells'],
-        cfg.sizeX
-    )
 
 # Create connections and external inputs
 sim.net.connectCells()      # create connections between cells based on params
@@ -122,14 +82,18 @@ _collect_cell_gids()
 sim.setupRecording()
 
 # Add OU current or conductance input to each Cell
-ctrl_dict = None
-if sim.cfg.add_ou_current:
-    if hasattr(sim.cfg, 'ou_ctrl_params'):
-        sim, vecs_dict, ctrl_dict = bs.add_noise_iclamp_ctrl(sim)
-    else:
-        sim, vecs_dict = bs.add_noise_iclamp(sim)
-if sim.cfg.add_ou_conductance:
-    sim, vecs_dict, OUFlags = bs.add_noise_gclamp(sim)
+#ctrl_dict = None
+sim, vecs_dict = bs.add_noise_iclamp(sim)
+
+
+
+#if sim.cfg.add_ou_current: # always 1
+#    if hasattr(sim.cfg, 'ou_ctrl_params'): # attribute does not exist
+#        sim, vecs_dict, ctrl_dict = bs.add_noise_iclamp_ctrl(sim)
+#    else:
+#        sim, vecs_dict = bs.add_noise_iclamp(sim)
+#if sim.cfg.add_ou_conductance:
+#    sim, vecs_dict, OUFlags = bs.add_noise_gclamp(sim)
 
 """ # Print ik mechs
 if comm.is_host():
@@ -156,9 +120,9 @@ sim.gatherData()
     sim.OUFlags = combinedOUFlags """
 
 # Gather controller traces
-if ctrl_dict is not None:
-    print('>>> Gather controller data...', flush=True)
-    ctrl_dict = bs.gather_ctrl_data(sim, ctrl_dict)
+#if ctrl_dict is not None:
+#    print('>>> Gather controller data...', flush=True)
+#    ctrl_dict = bs.gather_ctrl_data(sim, ctrl_dict)
 
 # Save and plot the result
 sim.saveData()
@@ -180,14 +144,14 @@ if comm.is_host():
         json.dump({'rates': avgRates}, fid, indent=4)
     
     # Save controller data
-    if ctrl_dict is not None:
-        fpath_res = '{}/{}_ctrl.pkl'.format(cfg.saveFolder, cfg.simLabel)
-        with open(fpath_res, 'wb') as fid:
-            pkl.dump(ctrl_dict, fid)
+    #if ctrl_dict is not None:
+    #    fpath_res = '{}/{}_ctrl.pkl'.format(cfg.saveFolder, cfg.simLabel)
+    #    with open(fpath_res, 'wb') as fid:
+    #        pkl.dump(ctrl_dict, fid)
 
     # Plot controller signals and save the figures
-    if ctrl_dict is not None:
-        bs.plot_save_ctrl_traces(sim, ctrl_dict)
+    #if ctrl_dict is not None:
+    #    bs.plot_save_ctrl_traces(sim, ctrl_dict)
     
     # Experiment-specific result processing
     # TODO

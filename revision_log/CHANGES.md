@@ -123,3 +123,9 @@ The `netParams_new.py` file now explicitly and clearly defines only what is nece
     - The Ornstein-Uhlenbeck current is now explicitly defined as an `IClamp` source (`NoiseOU_source_POP`). This makes its implementation clear and self-contained.
     - The background jitter is explicitly defined with a `NetStim` source (`bkg_src_POP`) and its corresponding target, including the required `AMPA` synaptic mechanism.
 - **Self-Contained Logic:** The logic for modifying mechanism parameters is now a simple, local function (`multiply_parameters_func`) within the file, removing external dependencies.
+
+
+
+
+cochlear thalamic input:
+        "cochlearThalInput": false,
