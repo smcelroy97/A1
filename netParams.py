@@ -8,7 +8,7 @@ from netpyne.batchtools import specs
 
 netParams = specs.NetParams()   # object of class NetParams to store the network parameters
 
-from cfg_new import cfg
+from cfg import cfg
 
 POP = 'IT5A'
 #------------------------------------------------------------------------------

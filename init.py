@@ -5,14 +5,14 @@ import pickle as pkl
 
 import matplotlib
 import matplotlib.pyplot as plt
-matplotlib.use('Agg')  # to avoid graphics error on servers
+#matplotlib.use('Agg')  # to avoid graphics error on servers
 import numpy as np
 import pandas as pd
 
 from netpyne.batchtools import comm, specs
 from netpyne import sim
 
-from netParams_new import cfg, netParams
+from netParams import cfg, netParams
 from post_run import post_run
 
 import background_stim_new as bs
@@ -36,17 +36,17 @@ def setdminID(sim, lpop):
 
 dirpath_self = Path(__file__).resolve().parent
 
-comm.initialize()
+#comm.initialize()
 
 # Create a folder for the results
 os.makedirs(cfg.saveFolder, exist_ok=True)
 
 # Save cfg and netParams into the output folder
-if comm.is_host():
-    fpath_cfg = "{}/{}_cfg.json".format(cfg.saveFolder, cfg.simLabel)
-    print(f'Saving to {fpath_cfg}', flush=True)
-    cfg.save(fpath_cfg)
-    netParams.save('{}/{}_netParams.json'.format(cfg.saveFolder, cfg.simLabel))
+#if comm.is_host():
+#    fpath_cfg = "{}/{}_cfg.json".format(cfg.saveFolder, cfg.simLabel)
+#    print(f'Saving to {fpath_cfg}', flush=True)
+#    cfg.save(fpath_cfg)
+#    netParams.save('{}/{}_netParams.json'.format(cfg.saveFolder, cfg.simLabel))
 
 # Initialize
 sim.initialize(simConfig=cfg, netParams=netParams)
@@ -62,8 +62,14 @@ sim.net.allCells = [cell.__getstate__() for cell in sim.net.cells]
 sim.net.allPops = {label: pop.__getstate__()
                     for label, pop in sim.net.pops.items()}
 
+
+track = sim
 # Set min/max cell gid for each population
 setdminID(sim, ['IT5A'])
+# debug data
+
+
+
 
 # Set cell locations for cochlear cells
 
@@ -129,6 +135,7 @@ sim.saveData()
 sim.analysis.plotData()    # plot spike raster etc
 
 # Finalize
+"""
 if comm.is_host():
     #netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
     print('transmitting data...')
@@ -163,3 +170,4 @@ if comm.is_host():
 
     # Plot and save f-I curves
     post_run(sim)
+"""
