@@ -109,16 +109,18 @@ netParams.stimTargetParams[f'bkg_targ_{POP}'] =  {
 #------------------------------------------------------------------------------
 # Modify membrane mechanisms
 #------------------------------------------------------------------------------
-v = cfg.mech_changes
 
 def multiply_parameters_func(pop: str,
                              secs: list,
                              mech: str,
                              parameter: str,
                              factor: int|float):
-    _pop = netParams.popParams[pop]
+    _pop = netParams.cellParams[pop]
     for sec in secs:
         _pop['secs'][sec]['mechs'][mech][parameter] *= factor
 
-for rule in cfg.multiply_parameter:
-    multiply_parameters_func(pop=f"{POP}", **cfg.multiply_parameters[rule])
+for rule in cfg.multiply_parameters:
+    multiply_parameters_func(pop=f"{POP}_reduced", **cfg.multiply_parameters[rule])
+
+
+netParams.save('./new_params.json')

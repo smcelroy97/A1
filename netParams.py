@@ -32,3 +32,6 @@ for pop in cfg.pops_active:
         'synMech': 'AMPA',
         'weight': cfg.bkg_spike_inputs[pop]['w']
     }
+
+
+netParams.save('./old_params.json')

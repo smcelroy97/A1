@@ -85,7 +85,7 @@ cfg.mech_changes = {
 }
 
 # Update via batchtools
-cfg.update_cfg()
+cfg.update()
 
 cfg.simLabel = (
     f'sim_{POP_ACTIVE}_{cfg.mech_changes["mech"]}'
@@ -95,3 +95,5 @@ cfg.simLabel = (
     f'_ouamp_{cfg.OUamp[0]}_{cfg.OUamp[1]}'
 )
 cfg.saveFolder = 'sim_output/' + cfg.simLabel
+
+cfg.save('./old_cfg.json') # the fact this breaks with old_cfg.json is absurd, and not going to refactor because there are so many save functions...

@@ -1,0 +1,33 @@
+attribute,LHS,RHS
+NoiseOUParams,"{'IT5A': {'mean': [-0.3145340114979085, 2.830806103481176], 'sigma': 0.0}}",<<NONE>>
+CT5A_reduced,"{'conds': {'cellModel': 'HH_reduced', 'cellType': 'CT', 'ynorm': [0.625, 0.6 ...",<<NONE>>
+CT5B_reduced,"{'conds': {'cellModel': 'HH_reduced', 'cellType': 'CT', 'ynorm': [0.667, 0.7 ...",<<NONE>>
+CT6_reduced,"{'conds': {'cellModel': 'HH_reduced', 'cellType': 'CT', 'ynorm': [0.775, 1]} ...",<<NONE>>
+HTC_reduced,"{'conds': {'cellModel': 'HH_reduced', 'cellType': 'HTC', 'ynorm': [1.2, 1.4] ...",<<NONE>>
+IT2_reduced,"{'conds': {'cellModel': 'HH_reduced', 'cellType': 'IT', 'ynorm': [0.05, 0.08 ...",<<NONE>>
+IT3_reduced,"{'conds': {'cellModel': 'HH_reduced', 'cellType': 'IT', 'ynorm': [0.08, 0.47 ...",<<NONE>>
+IT5B_reduced,"{'conds': {'cellModel': 'HH_reduced', 'cellType': 'IT', 'ynorm': [0.667, 0.7 ...",<<NONE>>
+IT6_reduced,"{'conds': {'cellModel': 'HH_reduced', 'cellType': 'IT', 'ynorm': [0.775, 1]} ...",<<NONE>>
+ITP4_reduced,"{'conds': {'cellModel': 'HH_reduced', 'cellType': 'IT', 'ynorm': [0.475, 0.6 ...",<<NONE>>
+ITS4_reduced,"{'conds': {'cellModel': 'HH_reduced', 'cellType': 'ITS4', 'ynorm': [0.475, 0 ...",<<NONE>>
+NGF_reduced,"{'conds': {'cellModel': 'HH_reduced', 'cellType': 'NGF', 'ynorm': [0.0, 1]}, ...",<<NONE>>
+PT5B_reduced,"{'conds': {'cellModel': 'HH_reduced', 'cellType': 'PT', 'ynorm': [0.667, 0.7 ...",<<NONE>>
+PV_reduced,"{'conds': {'cellModel': 'HH_reduced', 'cellType': 'PV', 'ynorm': [0.05, 1]}, ...",<<NONE>>
+RE_reduced,"{'conds': {'cellModel': 'HH_reduced', 'cellType': 'RE', 'ynorm': [1.2, 1.4]} ...",<<NONE>>
+SOM_reduced,"{'conds': {'cellModel': 'HH_reduced', 'cellType': 'SOM', 'ynorm': [0.05, 1]} ...",<<NONE>>
+TC_reduced,"{'conds': {'cellModel': 'HH_reduced', 'cellType': 'TC', 'ynorm': [1.2, 1.4]} ...",<<NONE>>
+TI_reduced,"{'conds': {'cellModel': 'HH_reduced', 'cellType': 'TI', 'ynorm': [1.2, 1.4]} ...",<<NONE>>
+VIP_reduced,"{'conds': {'cellModel': 'HH_reduced', 'cellType': 'VIP', 'ynorm': [0.05, 1]} ...",<<NONE>>
+GABAA,"{'e': -80, 'mod': 'MyExp2SynBB', 'tau1': 0.07, 'tau2': 18.2}",<<NONE>>
+GABAASlow,"{'e': -80, 'mod': 'MyExp2SynBB', 'tau1': 2, 'tau2': 100}",<<NONE>>
+GABAASlowSlow,"{'e': -80, 'mod': 'MyExp2SynBB', 'tau1': 200, 'tau2': 400}",<<NONE>>
+GABAA_VIP,"{'e': -80, 'mod': 'MyExp2SynBB', 'tau1': 0.3, 'tau2': 6.4}",<<NONE>>
+GABABCtx,"{'e': -105, 'mod': 'MyExp2SynBB', 'tau1': 41, 'tau2': 642}",<<NONE>>
+GABABThal,"{'e': -105, 'mod': 'MyExp2SynBB', 'tau1': 41, 'tau2': 642}",<<NONE>>
+NMDA,"{'e': 0, 'mod': 'MyExp2SynNMDABB', 'tau1NMDA': 15, 'tau2NMDA': 150}",<<NONE>>
+cellParams][IT5A_reduced][secs][Adend1][mechs][kdr][gbar,0.01503618619512,0.00501206206504
+cellParams][IT5A_reduced][secs][Adend2][mechs][kdr][gbar,0.01503618619512,0.00501206206504
+cellParams][IT5A_reduced][secs][Adend3][mechs][kdr][gbar,0.01503618619512,0.00501206206504
+cellParams][IT5A_reduced][secs][Bdend][mechs][kdr][gbar,0.01503618619512,0.00501206206504
+cellParams][IT5A_reduced][secs][axon][mechs][kdr][gbar,0.0751809309756,0.025060310325199998
+cellParams][IT5A_reduced][secs][soma][mechs][kdr][gbar,0.0273,0.0091

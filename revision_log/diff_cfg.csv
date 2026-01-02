@@ -1,0 +1,94 @@
+attribute,LHS,RHS
+AMPATau2Factor,1.0,<<NONE>>
+EEGain,1,<<NONE>>
+EELayerGain,"{'1': 1, '2': 1, '3': 1, '4': 1, '5A': 1, '5B': 1, '6': 1}",<<NONE>>
+EEPopGain,"{'CT5A': 1, 'CT5B': 1, 'CT6': 1.0, 'IT2': 1, 'IT3': 1, 'IT5A': 1.0, 'IT5B':  ...",<<NONE>>
+EICellTypeGain,"{'NGF': 1, 'PV': 1, 'SOM': 1, 'VIP': 1}",<<NONE>>
+EIGain,1,<<NONE>>
+EILayerGain,"{'1': 1, '2': 1, '3': 1, '4': 1, '5A': 1, '5B': 1, '6': 1}",<<NONE>>
+EIPopGain,"{'NGF1': 1.0, 'NGF2': 1.0, 'NGF3': 1.0, 'NGF4': 1.0, 'NGF5A': 1, 'NGF5B': 1, ...",<<NONE>>
+ENGF1,1.0,<<NONE>>
+Epops,"['IT2', 'IT3', 'ITP4', 'ITS4', 'IT5A', 'CT5A', 'IT5B', 'CT5B', 'PT5B', 'IT6' ...",<<NONE>>
+GABABCtx,"{'e': -105, 'mod': 'MyExp2SynBB', 'tau1': 41, 'tau2': 642}",<<NONE>>
+GABABThal,"{'e': -105, 'mod': 'MyExp2SynBB', 'tau1': 41, 'tau2': 642}",<<NONE>>
+ICThalInput,False,<<NONE>>
+ICThalMatrixCoreFactor,0.1,<<NONE>>
+ICThalprobECore,0.163484173596043,<<NONE>>
+ICThalprobEMatrix,0.163484173596043,<<NONE>>
+ICThalprobICore,0.0936669688856933,<<NONE>>
+ICThalprobIMatrix,0.0936669688856933,<<NONE>>
+ICThalweightECore,0.8350476447841453,<<NONE>>
+ICThalweightICore,0.2114492149101151,<<NONE>>
+IECellTypeGain,"{'NGF': 1, 'PV': 1, 'SOM': 1, 'VIP': 1}",<<NONE>>
+IEGain,1,<<NONE>>
+IELayerGain,"{'1': 1, '2': 1, '3': 1, '4': 1, '5A': 1, '5B': 1, '6': 1}",<<NONE>>
+IIGain,1,<<NONE>>
+IILayerGain,"{'1': 1, '2': 1, '3': 1, '4': 1, '5A': 1, '5B': 1, '6': 1}",<<NONE>>
+Ipops,"['NGF1', 'PV2', 'SOM2', 'VIP2', 'NGF2', 'PV3', 'SOM3', 'VIP3', 'NGF3', 'PV4' ...",<<NONE>>
+L4L3E,1.0,<<NONE>>
+L4L3NGF,1.0,<<NONE>>
+L4L3PV,1.0,<<NONE>>
+L4L3SOM,1.0,<<NONE>>
+L4L3VIP,1.0,<<NONE>>
+TEpops,"['TC', 'TCM', 'HTC']",<<NONE>>
+TIpops,"['IRE', 'IREM', 'TI', 'TIM']",<<NONE>>
+ThalamicCoreLambda,50.0,<<NONE>>
+allCorticalPops,"['NGF1', 'IT2', 'SOM2', 'PV2', 'VIP2', 'NGF2', 'IT3', 'SOM3', 'PV3', 'VIP3', ...",<<NONE>>
+allThalPops,"['TC', 'TCM', 'HTC', 'IRE', 'IREM', 'TI', 'TIM']",<<NONE>>
+allpops,['IT5A'],<<NONE>>
+bkg_spike_inputs,"{'IT5A': {'r': 75, 'w': 0.5}}",<<NONE>>
+cochThalFreqRange,"[750, 1250]",<<NONE>>
+cochThalprobECore,0.9,<<NONE>>
+cochThalprobEMatrix,0.1125,<<NONE>>
+cochThalprobICore,0.45,<<NONE>>
+cochThalprobIMatrix,0.0028,<<NONE>>
+cochThalweightECore,0.225,<<NONE>>
+cochThalweightEMatrix,0.1125,<<NONE>>
+cochThalweightICore,0.0675,<<NONE>>
+cochThalweightIMatrix,0.0675,<<NONE>>
+cochlearThalInput,False,<<NONE>>
+corticoThalamicGain,1.0,<<NONE>>
+intraThalamicCoreEEGain,1.0,<<NONE>>
+intraThalamicCoreEIGain,1,<<NONE>>
+intraThalamicCoreIEGain,1,<<NONE>>
+intraThalamicCoreIIGain,1.0,<<NONE>>
+intraThalamicEEGain,1.0,<<NONE>>
+intraThalamicEIGain,1.0,<<NONE>>
+intraThalamicGain,1,<<NONE>>
+intraThalamicIEGain,1.0,<<NONE>>
+intraThalamicIIGain,1.0,<<NONE>>
+mech_changes,"{'mech': 'kdr', 'mult': 3, 'par': 'gbar', 'sec': 'all'}",<<NONE>>
+ou_params_fpath,,<<NONE>>
+ou_pop_inputs,{},<<NONE>>
+pop_cells_rec,"{'IT5A': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,  ...",<<NONE>>
+pops_active,['IT5A'],<<NONE>>
+scale,1.0,<<NONE>>
+scaleDensity,1.0,<<NONE>>
+sizeX,200.0,<<NONE>>
+sizeY,2000.0,<<NONE>>
+sizeZ,200.0,<<NONE>>
+synWeightFractionEE,"[0.5, 0.5]",<<NONE>>
+synWeightFractionEI,"[0.5, 0.5]",<<NONE>>
+synWeightFractionEI_CustomCort,"[0.5, 0.5]",<<NONE>>
+synWeightFractionENGF,"[0.834, 0.166]",<<NONE>>
+synWeightFractionIE,"[0.9, 0.1]",<<NONE>>
+synWeightFractionII,[1.0],<<NONE>>
+synWeightFractionNGF,"{'E': [0.5, 1.0], 'I': [1.0]}",<<NONE>>
+synWeightFractionSOM,"{'E': [0.9, 0.2], 'I': [1.0]}",<<NONE>>
+synWeightFractionThal,"{'Ctx': {'I': {'E': [1.0, 0.0], 'I': [1.0]}}, 'Thal': {'I': {'E': [0.9, 0.4] ...",<<NONE>>
+thalL1NGF,1.0,<<NONE>>
+thalL4E,1,<<NONE>>
+thalL4NGF,1.0,<<NONE>>
+thalL4PV,1,<<NONE>>
+thalL4SOM,1,<<NONE>>
+thalL4VIP,1.0,<<NONE>>
+thalamoCorticalGain,1,<<NONE>>
+tune,{},<<NONE>>
+useHScale,False,<<NONE>>
+wmat,"{'CT5A': {'CT5A': 0.75, 'CT5B': 0.75, 'CT6': 0.4, 'HTC': 0.7, 'IRE': 0.23, ' ...",<<NONE>>
+multiply_parameters,<<NONE>>,"{'kdr0': {'factor': 1, 'mech': 'kdr', 'parameter': 'gbar', 'secs': ['Adend1' ..."
+addIClamp,int,bool
+addNetStim,int,bool
+addRIClamp,int,bool
+printPopAvgRates][1,5000.0,7000.0
+verbose,int,bool

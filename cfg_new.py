@@ -35,7 +35,7 @@ cfg.seeds['conn'] = 1
 # 359 'IT5A' cells ---
 
 # Record voltage traces
-cfg.recordCells = [('IT5A', *range(359))]
+cfg.recordCells = [['IT5A', [*range(359)]]]
 cfg.recordTraces = {
     'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'}
 }
@@ -168,5 +168,4 @@ cfg.multiply_parameters = {
 # if hasattr(cfg, 'update_cfg'):
 #     cfg.update_cfg()
 
-cfg.tune = {}
-
+cfg.save('./new_cfg.json')
