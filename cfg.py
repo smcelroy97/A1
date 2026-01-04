@@ -73,6 +73,17 @@ cfg.analysis['plotRaster'] = {
 
 cfg.analysis['plotSpikeStats'] = False
 
+""" was in orig code...
+cfg.analysis['plotSpikeStats'] = {
+    'include': ['IT5A'],
+    'stats': ['rate', 'isicv'],
+    'figSize': (6, 12),
+    'timeRange': [1000, cfg.duration],
+    'dpi': 300,
+    'showFig': 0,
+    'saveFig': 1
+}
+"""
 # ------------------------------------------------------------------------------
 # Cells
 # ------------------------------------------------------------------------------
@@ -157,7 +168,6 @@ cfg.multiply_parameters = {
         'parameter': 'gbar',
         'factor': 1
     }
-
 }
 
 
