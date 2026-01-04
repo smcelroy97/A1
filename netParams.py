@@ -88,6 +88,17 @@ netParams.stimTargetParams[f'NoiseOU_target_{POP}'] = {
         'conds': {'pop': POP}
 }
 
+# not a part of official netpyne code, relevant for background_stim_new ...
+netParams['NoiseOUParams'] = {
+    "IT5A": {
+        "mean": [
+            -0.3145340114979085,
+            2.830806103481176
+        ],
+        "sigma": 0.0
+    }
+}
+
 #------------------------------------------------------------------------------
 # NetStim inputs
 #------------------------------------------------------------------------------

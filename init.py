@@ -67,9 +67,12 @@ track = sim
 # Set min/max cell gid for each population
 setdminID(sim, ['IT5A'])
 # debug data
+message = (f"minID output:\n"
+           f"dminID: {sim.simData['dminID']}\n"
+           f"dmaxID: {sim.simData['dmaxID']}\n"
+           f"dnumc : {sim.simData['dnumc']}\n")
 
-
-
+print(message)
 
 # Set cell locations for cochlear cells
 
@@ -170,4 +173,27 @@ if comm.is_host():
 
     # Plot and save f-I curves
     post_run(sim)
+"""
+
+
+"""
+mpiexec -np 5 nrniv -python -mpi init.py  123.86s user 2.59s system 429% cpu 29.457 total
+
+minID output:
+dminID: {'IT5A': np.int64(0)}
+dmaxID: {'IT5A': np.int64(358)}
+dnumc : {'IT5A': np.int64(358)}
+
+Gathering data...
+  Done; gather time = 0.43 s.
+
+Analyzing...
+  Cells: 359
+  Connections: 0 (0.00 per cell)
+  Spikes: 23547 (9.37 Hz)
+  Simulated time: 7.0 s; 5 workers
+  Run time: 20.47 s
+   IT5A : 9.370 Hz
+   
+130.92s user 2.72s system 441% cpu 30.293 total
 """
