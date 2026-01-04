@@ -49,7 +49,7 @@ cfg.recordDipole = False
 # ------------------------------------------------------------------------------
 # Saving
 # ------------------------------------------------------------------------------
-cfg.simLabel = 'sim_IT5A_kdr_mult_3_ramp_1.5_rx_75_wx_0.5_ouamp_-0.02_0.18'
+cfg.simLabel = 'sim_IT5A_kdr_mult_1_ramp_1.5_rx_75_wx_0.5_ouamp_-0.02_0.18'
 cfg.saveFolder = 'sim_output/' + cfg.simLabel
 cfg.savePickle = True
 cfg.saveJson = False
