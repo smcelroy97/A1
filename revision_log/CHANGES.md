@@ -31,8 +31,8 @@ This document outlines the changes made to the simulation configuration and netw
 
 
 
-![anti-pattern](figures/img0.png)
-![img.png](figures/img1.png)
+![anti-pattern](img0.png)
+![img.png](img1.png)
 
 # Comprehensive Refactoring for Single-Cell Tuning
 
@@ -126,6 +126,15 @@ The `netParams_new.py` file now explicitly and clearly defines only what is nece
 
 
 
+### bug in plotSpikeStats
+logic of plotSpikeStats from original code ...
+![img2.png](img2.png)
+takes from an old sim,
+![img3.png](img3.png)
 
-cochlear thalamic input:
-        "cochlearThalInput": false,
+however, not reflected in the new cfg.py
+![img.png](img4.png)
+
+old plotSpikeStates is retained, esp. [1000, 5000]
+
+even though the new duration is 7000...
