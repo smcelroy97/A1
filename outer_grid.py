@@ -1,6 +1,6 @@
 from batchtk.runtk import LocalDispatcher, SHSubmitSFS
 from batchtk.utils.storage import SQLiteStorage
-from batchtk.runtk.trial import trial as runtk_trial
+from batchtk.runtk.trial import trial
 import os, itertools
 from concurrent.futures import ThreadPoolExecutor
 from collections import namedtuple
@@ -31,9 +31,9 @@ def generate_config(job):
 
 def eval_inner(job):
     cfg = {param: index for param, index in zip(params, job.indexes)}
-    cfg['batchnum'] = job.label  # pass outer trial number to inner script for labeling...
+    cfg['batch_num'] = job.label  # pass outer trial number to inner script for labeling...
     tid = "outer_{}".format(job.label)
-    data = runtk_trial(
+    data = trial(
         config=cfg,
         label='batch',
         tid=tid,
@@ -42,7 +42,7 @@ def eval_inner(job):
         output_dir='./outer_out',
         submit_constructor=SHSubmitSFS, #ZSHSubmitSFS ?, # running on the hpc where the zsh requires some mpi finagling.
         dispatcher_kwargs=None,
-        submit_kwargs={'command': 'python dummy_inner.py'}, # nested, external optimizer considers both parameters, internal performs 2 operations.
+        submit_kwargs={'command': 'python inner_dummy.py'}, # nested, external optimizer considers both parameters, internal performs 2 operations.
         interval=1,
         storage_kwargs=storage_kwargs,
         report=('path', 'data'),
