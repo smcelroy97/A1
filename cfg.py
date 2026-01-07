@@ -49,8 +49,8 @@ cfg.recordDipole = False
 # ------------------------------------------------------------------------------
 # Saving
 # ------------------------------------------------------------------------------
-cfg.simLabel = 'sim_IT5A_kdr_mult_1_ramp_1.5_rx_75_wx_0.5_ouamp_-0.02_0.18'
-cfg.saveFolder = 'sim_output/' + cfg.simLabel
+cfg.simLabel = 'sim'
+cfg.saveFolder = 'sim_output'
 cfg.savePickle = True
 cfg.saveJson = False
 cfg.saveDataInclude = ['simData', 'simConfig', 'net', 'netParams',  'netCells', 'netPops']
@@ -168,7 +168,7 @@ cfg.ou_ramp_type = 'up'
 #                             parameter: str,
 #                             factor: int|float):
 
-
+cfg.batch_num = 0 # assist labelling
 cfg.multiply_parameters = {
     'kdr0': {
         'secs': ('Adend1', 'Adend2', 'Adend3', 'Bdend', 'axon', 'soma'),
@@ -177,7 +177,7 @@ cfg.multiply_parameters = {
         'factor': 1,
     },
     'cal0': { # not present in axon
-        'secs': ('Adend1', 'Adend2', 'Adend3', 'Bdend', 'axon'),
+        'secs': ('Adend1', 'Adend2', 'Adend3', 'Bdend', 'soma'),
         'mech': 'cal',
         'parameter': 'gcalbar',
         'factor': 1,
@@ -186,7 +186,7 @@ cfg.multiply_parameters = {
 
 
 
-
+cfg.update()
 # Update via batchtools
 # this is not defined in this file, so we'll skip it
 # if hasattr(cfg, 'update_cfg'):

@@ -47,8 +47,7 @@ def eval_inner(job):
         storage_kwargs=storage_kwargs,
         report=('path', 'data'),
     )
-    loss = [float(data[key]) for key in ['ou_ramp_offset']]
-    return loss
+    return data
 
 
 with ThreadPoolExecutor(max_workers=3) as executor:

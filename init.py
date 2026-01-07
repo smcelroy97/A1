@@ -134,9 +134,19 @@ sim.gatherData()
 #    ctrl_dict = bs.gather_ctrl_data(sim, ctrl_dict)
 
 # Save and plot the result
+
+path = f"{cfg.saveFolder}/{cfg.simLabel}"
 sim.saveData()
 sim.analysis.plotData()    # plot spike raster etc
 
+
+
+message = {'offset': cfg.ou_ramp_offset,
+           'hbm': len(sim.allSimData['spkt']),
+           'path': f"{cfg.saveFolder}/{cfg.simLabel}",}
+
+sim.send(message)
+print(message)
 # Finalize
 """
 if comm.is_host():

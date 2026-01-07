@@ -12,6 +12,7 @@ from concurrent.futures import ThreadPoolExecutor
 from collections import namedtuple
 import pandas
 
+path = os.getcwd()
 outer_cfg = RunConfig()
 
 outer_cfg['label'] = 0
@@ -40,13 +41,16 @@ def dot_serialize(struct, current=''):
 
 outer_cfg.update()
 outer_cfg = dict(dot_serialize(outer_cfg))
-
+_list = ['_runner', '_batchtk_label_pointer', '_batchtk_dir_pointer']
+for _ in _list:
+    outer_cfg.pop(_, None)
+    # remove internal handlers
 param_space = {
-    'ou_ramp_offset': [0.75, 1.0, 2.00, 3.00, 4.00],
+    'ou_ramp_offset': [1.0, 2.00, 4.00],
 }
 
 
-os.makedirs(f"./outer_out/{outer_label}", exist_ok=True)
+os.makedirs(f"./batch/{outer_label}", exist_ok=True)
 storage_kwargs = dict(label='trials', directory=f"./outer_out/{outer_label}",
                       filename='inner_grid.sqlite.db', timeout=30)
 
@@ -68,27 +72,25 @@ def eval_script(job):
         tid=tid,
         dispatcher_constructor=LocalDispatcher,
         project_dir=path,
-        output_dir='./outer_out',
+        output_dir='./batch',
         submit_constructor=SHSubmitSFS, #ZSHSubmitSFS ?, # running on the hpc where the zsh requires some mpi finagling.
         dispatcher_kwargs=None,
-        submit_kwargs={'command': 'mpiexec -np 4 nrniv -python -mpi init.py'},
+        submit_kwargs={'command': 'python init.py'},
         interval=1,
         storage_kwargs=storage_kwargs,
         report=('path', 'data'),
     )
-    loss = [float(data[key]) for key in ['offset', 'hbm', 'path']]
-    return loss
+    return data
 
 with ThreadPoolExecutor(max_workers=3) as executor:
     results = executor.map(eval_script, all_jobs)
 
-results_df = pandas.DataFrame(list(results)).set_index('job_num').drop(columns=['_runner', '_batchtk_label_pointer', '_batchtk_dir_pointer'])
+results_df = pandas.DataFrame(list(results))
 print(results_df)
 
 results_df.to_csv(f"grid_{outer_label}.csv")
 
 message = {
-    'label': results_df['label'].iloc[2],
     'ou_ramp_offset': results_df['offset'].iloc[2],
     'spike_data': str(results_df['hbm'].describe()),
     'path': results_df['path'].iloc[2],
