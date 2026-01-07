@@ -161,12 +161,26 @@ cfg.ou_ramp_type = 'up'
 
 # Mechanisms to modify
 # label
+# see in netParams.py multiply_parameters_func ...
+#def multiply_parameters_func(pop: str,
+#                             secs: list,
+#                             mech: str,
+#                             parameter: str,
+#                             factor: int|float):
+
+
 cfg.multiply_parameters = {
     'kdr0': {
         'secs': ('Adend1', 'Adend2', 'Adend3', 'Bdend', 'axon', 'soma'),
         'mech': 'kdr',
         'parameter': 'gbar',
-        'factor': 1
+        'factor': 1,
+    },
+    'cal0': { # not present in axon
+        'secs': ('Adend1', 'Adend2', 'Adend3', 'Bdend', 'axon'),
+        'mech': 'cal',
+        'parameter': 'gcalbar',
+        'factor': 1,
     }
 }
 
@@ -178,4 +192,4 @@ cfg.multiply_parameters = {
 # if hasattr(cfg, 'update_cfg'):
 #     cfg.update_cfg()
 
-cfg.save('./new_cfg.json')
+#cfg.save('./new_cfg.json')

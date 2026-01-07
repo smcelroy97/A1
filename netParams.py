@@ -134,4 +134,4 @@ for rule in cfg.multiply_parameters:
     multiply_parameters_func(pop=f"{POP}_reduced", **cfg.multiply_parameters[rule])
 
 
-netParams.save('./new_params.json')
+#netParams.save('./new_params.json')
