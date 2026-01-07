@@ -54,18 +54,23 @@ def generate_config(job):
     cfg={key: space[index] for key, space, index in zip(params, spaces, job.indexes)}
     cfg.update(outer_cfg)
     cfg['label'] = f"{outer_label}_{job.label}"
+
+    cfg['job_num'] = f"{job.label}"
     return cfg
 
 with ThreadPoolExecutor(max_workers=3) as executor:
     results = executor.map(generate_config, all_jobs)
 
-results_list = []
-for result in results:
-    results_list.append(pandas.Series(results))
-
-results_df = pandas.DataFrame(results_list)
-
+results_df = pandas.DataFrame(list(results)).set_index('job_num').drop(columns=['_runner', '_batchtk_label_pointer', '_batchtk_dir_pointer'])
 print(results_df)
 
-#with get_comm() as comm: # communicate results back to outer optuna script --
-#    comm.send({'WT': results['scriptWT'], 'MUT': results['scriptMUT']})
+results_df.to_csv(f"grid_{outer_label}.csv")
+
+message = {
+    'label': results_df['label'].iloc[2],
+    'ou_ramp_offset': results_df['ou_ramp_offset'].iloc[2],
+    'description': str(results_df['ou_ramp_offset'].describe()),
+}
+
+with get_comm() as comm: # communicate results back to outer optuna script --
+    comm.send(message)
