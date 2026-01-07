@@ -20,7 +20,7 @@ cfg.cvode_atol = 1e-6
 cfg.cache_efficient = True
 cfg.oneSynPerNetcon = False
 cfg.includeParamsLabel = False
-cfg.printPopAvgRates = [0, cfg.duration]
+#cfg.printPopAvgRates = [0, cfg.duration] # don't use cfg.duration as a reference structure...
 cfg.validateNetParams = False
 
 cfg.seeds['stim'] = 1 
@@ -49,8 +49,8 @@ cfg.recordDipole = False
 # ------------------------------------------------------------------------------
 # Saving
 # ------------------------------------------------------------------------------
-cfg.simLabel = 'sim'
-cfg.saveFolder = 'sim_output'
+cfg.simLabel = 'basic_sim'
+cfg.saveFolder = 'batch'
 cfg.savePickle = True
 cfg.saveJson = False
 cfg.saveDataInclude = ['simData', 'simConfig', 'net', 'netParams',  'netCells', 'netPops']
@@ -73,17 +73,6 @@ cfg.analysis['plotRaster'] = {
 
 cfg.analysis['plotSpikeStats'] = False
 
-""" was in orig code...
-cfg.analysis['plotSpikeStats'] = {
-    'include': ['IT5A'],
-    'stats': ['rate', 'isicv'],
-    'figSize': (6, 12),
-    'timeRange': [1000, cfg.duration],
-    'dpi': 300,
-    'showFig': 0,
-    'saveFig': 1
-}
-"""
 # ------------------------------------------------------------------------------
 # Cells
 # ------------------------------------------------------------------------------
@@ -159,16 +148,17 @@ cfg.ou_ramp_offset = 1.5   # amplitude (current to soma)
 cfg.ou_ramp_mult = 0
 cfg.ou_ramp_type = 'up'
 
-# Mechanisms to modify
-# label
-# see in netParams.py multiply_parameters_func ...
-#def multiply_parameters_func(pop: str,
-#                             secs: list,
-#                             mech: str,
-#                             parameter: str,
-#                             factor: int|float):
+cfg.batch_id = 0 # assist labelling
 
-cfg.batch_num = 0 # assist labelling
+# Mechanisms to modify...
+# see in netParams.py multiply_parameters_func ...
+# def multiply_parameters_func(pop: str,
+#                              secs: list,
+#                              mech: str,
+#                              parameter: str,
+#                              factor: int|float):
+# 'kdr0' and 'cal0', labels, dictionary of 'secs', 'mech', 'parameter', 'factor' form the kwargs...
+
 cfg.multiply_parameters = {
     'kdr0': {
         'secs': ('Adend1', 'Adend2', 'Adend3', 'Bdend', 'axon', 'soma'),
@@ -184,12 +174,4 @@ cfg.multiply_parameters = {
     }
 }
 
-
-
 cfg.update()
-# Update via batchtools
-# this is not defined in this file, so we'll skip it
-# if hasattr(cfg, 'update_cfg'):
-#     cfg.update_cfg()
-
-#cfg.save('./new_cfg.json')

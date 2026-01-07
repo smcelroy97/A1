@@ -15,7 +15,7 @@ param_space = {
 }
 
 
-storage_kwargs = dict(label='trials', directory='./outer_out',
+storage_kwargs = dict(label='trials', directory='./batch',
                       filename='outer_search.sqlite.db', timeout=30)
 
 params, spaces = zip(*param_space.items())
@@ -39,10 +39,10 @@ def eval_inner(job):
         tid=tid,
         dispatcher_constructor=LocalDispatcher,
         project_dir=path,
-        output_dir='./outer_out',
+        output_dir='./batch',
         submit_constructor=SHSubmitSFS, #ZSHSubmitSFS ?, # running on the hpc where the zsh requires some mpi finagling.
         dispatcher_kwargs=None,
-        submit_kwargs={'command': 'python inner_dummy.py'}, # nested, external optimizer considers both parameters, internal performs 2 operations.
+        submit_kwargs={'command': 'python inner_grid.py'}, # nested, external optimizer considers both parameters, internal performs 2 operations.
         interval=1,
         storage_kwargs=storage_kwargs,
         report=('path', 'data'),
@@ -56,14 +56,4 @@ with ThreadPoolExecutor(max_workers=3) as executor:
 results_df = pandas.DataFrame(list(results))
 print(results_df)
 
-results_df.to_csv(f"batch.csv")
-
-#sampler = samplers[ALGO](seed=0)
-
-#study   = optuna.create_study(directions=directions,
-#                              storage="sqlite:///{}/outer_out_search.db".format(path, ALGO),
-#                              load_if_exists=True,
-#                              sampler=sampler,
-#                              study_name='search'.format(ALGO))
-
-#study.optimize(eval_inner, n_trials=6, timeout=300)
+results_df.to_csv(f"batch/complete_batch.csv")

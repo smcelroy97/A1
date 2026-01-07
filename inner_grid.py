@@ -16,7 +16,7 @@ path = os.getcwd()
 outer_cfg = RunConfig()
 
 outer_cfg['label'] = 0
-outer_cfg['batch_num'] = 0
+outer_cfg['batch_id'] = 0
 outer_cfg['multiply_parameters'] = {
     'kdr0': {'factor': 1},
     'cal0': {'factor': 1},
@@ -47,8 +47,10 @@ for _ in _list:
     # remove internal handlers
 param_space = {
     'ou_ramp_offset': [1.0, 2.00, 4.00],
+    'bkg_r': [25, 75, 125],
+    'bkg_w': [0.1, 0.5, 1.0]
 }
-
+# NetStim inputs (weak, just to randomly jitter the cells between steady-states)
 
 os.makedirs(f"./batch/{outer_label}", exist_ok=True)
 storage_kwargs = dict(label='trials', directory=f"./outer_out/{outer_label}",
@@ -90,11 +92,20 @@ print(results_df)
 
 results_df.to_csv(f"grid_{outer_label}.csv")
 
-message = {
+message = { #TODO decide what to send here
     'ou_ramp_offset': results_df['offset'].iloc[2],
     'spike_data': str(results_df['hbm'].describe()),
     'path': results_df['path'].iloc[2],
 }
+
+# TODO by next meeting
+# 1. TODO organize nested grid search I/O structures---
+# 1. TODO return should be some data structure? (xarray)
+# 1. TODO load all trials here--
+
+# TODO long term goals
+# 2. TODO add some comparative metrics --
+# 2. TODO metrics for stability, check w/ Nikita
 
 with get_comm() as comm: # communicate results back to outer script --
     comm.send(message)
