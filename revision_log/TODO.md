@@ -1,8 +1,26 @@
-## TODO:
+## TODO
 
-current NOTES
+@Nikita -- 
+here are the two dummy functions:
+[init.py](https://github.com/jchen6727/tuning/blob/fa8d77d72b633dd6510f6b56654c129aecc1ae16/init.py#L149)
+[inner_grid.py](https://github.com/jchen6727/tuning/blob/60148221ef4aeea77307a798a433c6106d69cd6b/inner_grid.py#L100)
+any analysis in the outer_grid.py I can only see as being useful for analyzing overall search results (solution space topography, pareto front, etc.)
+however, by the end of the outer search, it will have relevant paths that can be loaded to describe any simulation results...
 
-### NOTES
+they need to be rewritten to compute relevant values, and you may wish to discuss how we want to perform large data I/O (I am using `pandas`, `sqlite`, `.csv`, and `.json` here, but only as an example/proof of concept)
+
+@Scott --
+Can review the notes and if you have any questions forward to me, may have to implement some structural changes depending on what files we want to pass between the outer and inner grid, what datapoints we want to collect, what parameters and ranges we want to search, etc...
+I also describe the `custom_template` at the end and would suggest seeing what deployment on the HPC of your choice will look like
+
+Additionally, please consider what equations would make sense for the two dummy functions described above...
+of note, running locally can take awhile see 
+
+
+### RUNNING BATCH
+from the root directory, using MacOS and zsh, run `python outer_grid.py`
+
+### NOTES - IMPLEMENTATION
 here's what the current output structure looks like:
 
 ![img.png](img5.png)
