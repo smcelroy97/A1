@@ -10,12 +10,14 @@ however, by the end of the outer search, it will have relevant paths that can be
 they need to be rewritten to compute relevant values, and you may wish to discuss how we want to perform large data I/O (I am using `pandas`, `sqlite`, `.csv`, and `.json` here, but only as an example/proof of concept)
 
 @Scott --
-Can review the notes and if you have any questions forward to me, may have to implement some structural changes depending on what files we want to pass between the outer and inner grid, what datapoints we want to collect, what parameters and ranges we want to search, etc...
+Can review the notes and if you have any questions on implementation forward to me, may have to implement some structural changes depending on what files we want to pass between the outer and inner grid, what datapoints we want to collect, what parameters and ranges we want to search, etc...
 I also describe the `custom_template` at the end and would suggest seeing what deployment on the HPC of your choice will look like
+For fitness functions/analysis will not be able to help as much.
 
-Additionally, please consider what equations would make sense for the two dummy functions described above...
-of note, running locally can take awhile see 
+of note, running locally can take awhile see [here](https://github.com/jchen6727/tuning/blob/dae528bfe33d108e20d64d976e004f30f088d422/cfg.py#L9)
+, may want to shorten the simulation time for initial testing and validation, then bring back up after validating HPC deployment...
 
+otherwise, please review the CHANGES.md and the two TODO.md , the powerpoint and notes0.png stored in this directory for reference on state of the project
 
 ### RUNNING BATCH
 from the root directory, using MacOS and zsh, run `python outer_grid.py`
