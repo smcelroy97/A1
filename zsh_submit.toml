@@ -1,0 +1,18 @@
+command_template = "nohup zsh {output_path}.sh"
+
+script_template = """\
+#!/usr/bin/env zsh
+
+source ~/.zshrc
+conda activate dev
+export DYLD_LIBRARY_PATH="/opt/homebrew/Cellar/open-mpi/5.0.9/lib"
+export MPI_LIB_NRN_PATH="/opt/homebrew/Cellar/open-mpi/5.0.9/lib"
+{handles}
+{env}
+
+export JOBID=$$
+cd {project_dir}
+{command} > {stdout} 2>&1
+pid=$!
+echo $pid >&1
+"""

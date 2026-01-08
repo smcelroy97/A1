@@ -148,7 +148,7 @@ sim.analysis.plotData()    # plot spike raster for viz.
 
 def sim_analysis():# don't need to pass
     """
-    #TODO nikita
+    #TODO @nikita populate this function with whatever data needs can be calculated and stored ...
     sim_analysis takes sim object and calculates any notable values that can be gained from sim object
     #NOTES
     single numeric values and strings can be sent via message and collated in an sql/pandas structure for organization
@@ -179,7 +179,8 @@ def sim_analysis():# don't need to pass
     return message
 # save .json
 
-message = sim_analysis()
-sim.send(message)
+if sim.rank == 0: # allSimData only exists on node 0... only one node should be performing analysis and file op...
+    message = sim_analysis()
+    sim.send(message)
 
 # Finalize
