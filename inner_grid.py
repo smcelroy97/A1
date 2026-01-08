@@ -15,7 +15,7 @@ import pandas
 path = os.getcwd()
 outer_cfg = RunConfig()
 
-outer_cfg['label'] = 0
+outer_cfg['label'] = 'outer_0'
 outer_cfg['batch_id'] = 0
 outer_cfg['multiply_parameters'] = {
     'kdr0': {'factor': 1},
@@ -42,19 +42,19 @@ def dot_serialize(struct, current=''):
 outer_cfg.update()
 outer_cfg = dict(dot_serialize(outer_cfg))
 _list = ['_runner', '_batchtk_label_pointer', '_batchtk_dir_pointer']
-for _ in _list:
+for _ in _list:    # remove internal handlers before passing to internal trial
     outer_cfg.pop(_, None)
-    # remove internal handlers
-param_space = {
-    'ou_ramp_offset': [1.0, 2.00, 4.00],
-    'bkg_r': [25, 75, 125],
-    'bkg_w': [0.1, 0.5, 1.0]
+
+param_space = { # expand these parameter spaces...
+    'ou_ramp_offset': [1.0, 4.00],
+    'bkg_r': [25, 125],
+    'bkg_w': [0.1, 1.0],
 }
 # NetStim inputs (weak, just to randomly jitter the cells between steady-states)
 
 os.makedirs(f"./batch/{outer_label}", exist_ok=True)
-storage_kwargs = dict(label='trials', directory=f"./outer_out/{outer_label}",
-                      filename='inner_grid.sqlite.db', timeout=30)
+storage_kwargs = dict(label='trials', directory=f"./batch/{outer_label}",
+                      filename='grid.sqlite.db', timeout=30)
 
 params, spaces = zip(*param_space.items())
 space_indexes = [range(len(space)) for space in spaces]
@@ -86,6 +86,7 @@ def eval_script(job):
 
 with ThreadPoolExecutor(max_workers=3) as executor:
     results = executor.map(eval_script, all_jobs)
+
 
 results_df = pandas.DataFrame(list(results))
 print(results_df)

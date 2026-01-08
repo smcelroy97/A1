@@ -7,7 +7,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 #matplotlib.use('Agg')  # to avoid graphics error on servers
 import numpy as np
-import pandas as pd
+import pandas
 
 from netpyne.batchtools import comm, specs
 from netpyne import sim
@@ -137,26 +137,49 @@ sim.gatherData()
 
 path = f"{cfg.saveFolder}/{cfg.simLabel}"
 sim.saveData()
-sim.analysis.plotData()    # plot spike raster etc
+sim.analysis.plotData()    # plot spike raster for viz.
 
+# sim analysis...
 
-
-# TODO james -- place dummy functions --
-# TODO create the relevant xarray/ .json file ...
-# two firing rates (pre stimulus, post stimulus) for every cell
+# TODO James -- dummy functions --
+# TODO Scott/Nikita create the relevant xarray/ .json file ...
+# TODO Scott two firing rates (pre stimulus, post stimulus) for every cell
 # please avoid any sim analysis functions/check if necessary
-message = {#'offset': cfg.ou_ramp_offset,
-           #'hbm': len(sim.allSimData['spkt']),
-           'path': f"{cfg.saveFolder}/{cfg.simLabel}",}
 
-
-
-def init_analysis(sim):
+def sim_analysis():# don't need to pass
     """
-    does some basic data analysis
+    #TODO nikita
+    sim_analysis takes sim object and calculates any notable values that can be gained from sim object
+    #NOTES
+    single numeric values and strings can be sent via message and collated in an sql/pandas structure for organization
+    or, can save any larger values to desired format, and open them using path (unique to each job)
     """
-pass
+
+    # larger data structures can be stored in a separate file...
+    spike_data = pandas.DataFrame({
+        'gid': sim.allSimData['spkid'],
+        'time': sim.allSimData['spkt']}
+    )
+    filtered_data = spike_data[(spike_data['gid']  > 100 ) & (spike_data['gid']  < 150 ) &
+                               (spike_data['time'] > 1000) & (spike_data['time'] < 1500)]
+
+    csv_name = f"{path}.csv"
+
+    filtered_data.to_csv(csv_name)
+
+    message = {'hbm0': cfg.ou_ramp_offset, # basic hbm values
+               'hbm1': cfg.bkg_r,
+               'hbm2': cfg.bkg_w,
+               'hbm3': len(sim.allSimData['spkt']),
+               'path': path,
+               'csv': csv_name}
+
+    print(message)
+
+    return message
 # save .json
+
+message = sim_analysis()
 sim.send(message)
-print(message)
+
 # Finalize

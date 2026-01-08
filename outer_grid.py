@@ -10,8 +10,8 @@ import pandas
 path = os.getcwd()
 
 param_space = {
-    'multiply_parameters.kdr0.factor': [1.0, 2.0, 3.0],
-    'multiply_parameters.cal0.factor': [0.5, 1.0, 1.5],
+    'multiply_parameters.kdr0.factor': [1.0, 3.0],
+    'multiply_parameters.cal0.factor': [0.5, 1.5],
 }
 
 
@@ -31,7 +31,7 @@ def generate_config(job):
 
 def eval_inner(job):
     cfg = {param: index for param, index in zip(params, job.indexes)}
-    cfg['batch_num'] = job.label  # pass outer trial number to inner script for labeling...
+    cfg['batch_id'] = job.label  # pass outer trial number to inner script for labeling...
     tid = "outer_{}".format(job.label)
     data = trial(
         config=cfg,
