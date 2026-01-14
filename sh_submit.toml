@@ -1,0 +1,11 @@
+command_template = "sh {output_path}.sh"
+
+script_template = """\
+#!/bin/bash
+
+{handles}
+{env}
+source ~/.bashrc
+
+nohup python inner_grid.py > {stdout} 2>&1
+"""

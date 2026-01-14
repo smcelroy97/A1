@@ -1,0 +1,19 @@
+command_template = "qsub {output_path}.sh"
+
+script_template = """\
+#!/bin/bash
+
+#$ -N tuning_{label}
+#$ -q cpu.q
+#$ -pe smp 5
+#$ -l h_vmem=32G
+#$ -l h_rt=00:15:00
+#$ -o {stdout}
+#$ -cwd
+
+{handles}
+{env}
+source ~/.bashrc
+
+mpiexec -n 4 nrniv -python -mpi init.py
+"""
