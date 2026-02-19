@@ -18,6 +18,14 @@ from post_run import post_run
 import background_stim_new as bs
 from collect_cell_gids import _collect_cell_gids
 import warnings
+from neuron import h
+pc = h.ParallelContext()
+
+nhosts = int(pc.nhost())   # total MPI ranks (cores)
+rank   = int(pc.id())      # this process ID (0..nhosts-1)
+
+print("Running on", nhosts, "cores. This is rank", rank)
+
 
 sim.initialize()
 
