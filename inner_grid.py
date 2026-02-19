@@ -87,7 +87,7 @@ def eval_script(job):
         output_dir=f"./batch/{outer_label}",
         submit_constructor=Submit, #ZSHSubmitSFS ?, # running on the hpc where the zsh requires some mpi finagling.
         dispatcher_kwargs=None,
-        submit_kwargs={'command': 'mpirun -n 20 nrniv -python -mpi init.py'},
+        submit_kwargs={'command': 'mpirun nrniv -python -mpi init.py'},
         interval=1,
         storage_constructor=None,
         #storage_kwargs=storage_kwargs, # for now no checkpointing
