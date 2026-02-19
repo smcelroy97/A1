@@ -5,17 +5,16 @@ import os, itertools
 from concurrent.futures import ThreadPoolExecutor
 from collections import namedtuple
 import pandas
-from batchtk.utils import TomlParser
+from batchtk.utils.parser import TomlParser
 # more flexible import of header.py
 
 path = os.getcwd()
 
 param_space = {
-    'multiply_parameters.kdr0.factor': [1.0, 3.0],
-    'multiply_parameters.cal0.factor': [0.5, 1.5],
+    'multiply_parameters.kdr0.factor': [1.0, 2.0, 3.0]
 }
 
-parser = TomlParser(file_path='zsh_submit.toml')
+parser = TomlParser(file_path='outer_slurm.toml')
 Submit = parser.get_submit_class()
 
 storage_kwargs = dict(label='trials', directory='./batch',

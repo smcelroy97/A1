@@ -3,7 +3,7 @@
 # generates a grid search through cfg.ou_* (ou_ramp_offset)
 from batchtk.runtk import LocalDispatcher, SHSubmitSFS, SHSubmit
 from batchtk.runtk.trial import trial, LABEL_POINTER, DIR_POINTER
-from batchtk.utils import TomlParser
+from batchtk.utils.parser import TomlParser
 from batchtk.utils.storage import SQLiteStorage
 #TODO debug concurrent.futures threading lock issues...
 from batchtk.runtk import RunConfig, get_comm
@@ -14,7 +14,7 @@ from collections import namedtuple
 import pandas, json
 
 
-parser = TomlParser(file_path='zsh_submit.toml')
+parser = TomlParser(file_path='inner_slurm.toml')
 Submit = parser.get_submit_class()
 
 path = os.getcwd()
@@ -22,8 +22,7 @@ outer_cfg = RunConfig()
 
 outer_cfg['batch_id'] = 0
 outer_cfg['multiply_parameters'] = {
-    'kdr0': {'factor': 1},
-    'cal0': {'factor': 1},
+    'kdr0': {'factor': 1}
 }
 
 outer_cfg.update()
@@ -70,6 +69,15 @@ def eval_script(job):
     cfg.update(outer_cfg)
     cfg.update({'saveFolder': DIR_POINTER, 'simLabel': LABEL_POINTER})
     tid = f"{outer_label}_{job.label}"
+    # save a copy of the config used for this job so we can reproduce or inspect it later
+    configs_dir = os.path.join(path, 'batch', outer_label, 'configs')
+    try:
+        os.makedirs(configs_dir, exist_ok=True)
+        cfg_file = os.path.join(configs_dir, f"{tid}_config.json")
+        with open(cfg_file, 'w') as cf:
+            json.dump(cfg, cf, default=str, indent=2)
+    except Exception as e:
+        print(f"Warning: failed to save config for {tid}: {e}")
     data = trial(
         config=cfg,
         label='batch',
@@ -79,7 +87,7 @@ def eval_script(job):
         output_dir=f"./batch/{outer_label}",
         submit_constructor=Submit, #ZSHSubmitSFS ?, # running on the hpc where the zsh requires some mpi finagling.
         dispatcher_kwargs=None,
-        submit_kwargs={'command': 'mpiexec -np 5 nrniv -python -mpi init.py'},
+        submit_kwargs={'command': 'mpirun nrniv -python -mpi init.py'},
         interval=1,
         storage_constructor=None,
         #storage_kwargs=storage_kwargs, # for now no checkpointing
