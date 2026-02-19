@@ -102,9 +102,6 @@ with ThreadPoolExecutor(max_workers=4) as executor:
 results_df = pandas.DataFrame(list(results))
 print(results_df)
 
-csv_file = f"./batch/{outer_label}/results.csv"
-results_df.to_csv(csv_file)
-
 def inner_analysis():# don't need to pass
     """
     #TODO nikita populate this function with whatever data needs to be stored ...
@@ -125,14 +122,9 @@ def inner_analysis():# don't need to pass
     json_file = f"./batch/{outer_label}/csv.json"
 
     message = json.dumps({
-        'min': results_df['hbm3'].min(),
-        'max': results_df['hbm3'].max(),
-        'mean': results_df['hbm3'].mean(),
-        'json': json_file,
-        'csv': csv_file})
-    with open(json_file, "w") as fptr:
-        json.dump(data_table, fptr)
-
+        'min': results_df['hbm0'],
+        'max': results_df['hbm1'],
+        'mean': results_df['hbm2']})
     print(message)
 
     return message
