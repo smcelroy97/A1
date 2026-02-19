@@ -37,9 +37,6 @@ def sim_analysis():# don't need to pass
     or, can save any larger values to desired format, and open them using path (unique to each job)
     """
 
-
-    filtered_data.to_csv(csv_name)
-
     message = {'hbm0': cfg.ou_ramp_offset, # basic hbm values
                'hbm1': cfg.bkg_r,
                'hbm2': cfg.bkg_w}
