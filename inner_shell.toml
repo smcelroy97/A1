@@ -1,4 +1,4 @@
-command_template = "sbatch {output_path}.sh"
+command_template = "sh {output_path}.sh"
 
 script_template = """\
 #!/bin/bash
@@ -19,5 +19,5 @@ conda activate fitune
 module load openmpi/mlnx/gcc/64/4.1.5a1
 export JOBID=$$
 cd {project_dir}
-{command} > {stdout} 2>&1 
-""" 
+{command} > {stdout} 2>&1
+"""
