@@ -19,6 +19,8 @@ import background_stim_new as bs
 from collect_cell_gids import _collect_cell_gids
 import warnings
 
+sim.initialize()
+
 warnings.simplefilter('once')
 
 # TODO James -- dummy functions --
@@ -35,25 +37,12 @@ def sim_analysis():# don't need to pass
     or, can save any larger values to desired format, and open them using path (unique to each job)
     """
 
-    post_run(sim)
-
-    # larger data structures can be stored in a separate file...
-    spike_data = pandas.DataFrame({
-        'gid': sim.allSimData['spkid'],
-        'time': sim.allSimData['spkt']}
-    )
-    filtered_data = spike_data[(spike_data['gid']  > 100 ) & (spike_data['gid']  < 150 ) &
-                               (spike_data['time'] > 1000) & (spike_data['time'] < 1500)]
-
-    csv_name = f"{path}.csv"
 
     filtered_data.to_csv(csv_name)
 
     message = {'hbm0': cfg.ou_ramp_offset, # basic hbm values
                'hbm1': cfg.bkg_r,
-               'hbm2': cfg.bkg_w,
-               'path': path,
-               'csv': csv_name}
+               'hbm2': cfg.bkg_w}
 
     print(message)
 
@@ -63,5 +52,3 @@ def sim_analysis():# don't need to pass
 if sim.rank == 0: # allSimData only exists on node 0... only one node should be performing analysis and file op...
     message = sim_analysis()
     sim.send(message)
-
-# Finalize
