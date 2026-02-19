@@ -40,17 +40,17 @@ class simPlotting:
         # Calculate EEG
         eeg = M @ p * 1e9
         single_chan = eeg[48, :]
-        # goodchan = eeg[38]
+        eeg = eeg[38]
 
         onset = int(start / 0.05)
         offset = int(end / 0.05)
-        return single_chan, t
+        return eeg, t
 
     @staticmethod
     def calculateMEG(sim, start, end):
 
         timeRange = [start, end]
-        timeSteps = [int(timeRange[0] / 0.05), int(timeRange[1] / 0.05)]
+        timeSteps = [int(timeRange[0] / sim.cfg.dt), int(timeRange[1] / sim.cfg.dt)]
         t = np.arange(timeRange[0], timeRange[1], 0.05)
 
         p = sim.allSimData['dipoleSum'].T # tangential current dipole (nAµm)
@@ -58,19 +58,54 @@ class simPlotting:
         r_p = np.array([0, 0, 90000])  # dipole location (µm)
         r = np.array([[0, 0, 92000]])  # measurement location (µm)
         m = SphericallySymmetricVolCondMEG(r=r)
+        # B_magnitude = B_magnitude * 1.2566370614400001e-09  # In Tesla
 
         M = m.get_transformation_matrix(r_p=r_p)
 
         H = M @ p
 
         for sensor_idx in range(H.shape[0]):
-            B_magnitude = np.linalg.norm(H[sensor_idx], axis=0)  # shape: (num_timepoints,)
+            B_mag = np.linalg.norm(H[sensor_idx], axis=0)  # shape: (num_timepoints,)
 
-        return B_magnitude, t
+        # B = np.einsum('sij,jt->sit', M, p)  # Tesla
+        # for sensor_idx in range(B.shape[0]):
+        #     B_mag = np.linalg.norm(B, axis=1)  # (S, T)
+
+        return B_mag, t
+    # def calculateMEG(sim, start, end):
+    #     dt_ms = 0.05  # sampling in ms
+    #     t = np.arange(start, end, dt_ms)
+    #
+    #     # dipole moment: nA·µm -> A·m (1 nA·µm = 1e-15 A·m)
+    #     p = sim.allSimData['dipoleSum'].T  # shape (3, T_full), units nA·µm
+    #     i0 = int(start / dt_ms)
+    #     i1 = int(end / dt_ms)
+    #     p = p[:, i0:i1] * 1e-15  # now A·m
+    #
+    #     # positions: µm -> m
+    #     r_p = np.array([0.0, 0.0, 90000.0])  # m
+    #     r = np.array([[0.0, 0.0, 92000.0]])  # m, shape (n_sensors, 3)
+    #
+    #     m = SphericallySymmetricVolCondMEG(r=r)
+    #     M = m.get_transformation_matrix(r_p=r_p)  # expect (n_sensors, 3, 3) or (3, 3)
+    #
+    #     # Compute B (Tesla) at sensors over time
+    #     if M.ndim == 2:
+    #         # single sensor: (3,3) @ (3,T) -> (3,T)
+    #         B = M @ p  # Tesla
+    #
+    #         B_mag = np.linalg.norm(B, axis=0)  # (T,)
+    #     else:
+    #         # multiple sensors: (S,3,3) x (3,T) -> (S,3,T)
+    #         B = np.einsum('sij,jt->sit', M, p)  # Tesla
+    #         for sensor_idx in range(B.shape[0]):
+    #             B_mag = np.linalg.norm(B, axis=1)  # (S, T)
+    #
+    #     return B_mag, t
 
     @staticmethod
     def filterEEG(
-            EEG,
+            signal,
             lowcut,
             highcut,
             fs,
@@ -81,7 +116,7 @@ class simPlotting:
         low = lowcut / nyq
         high = highcut / nyq
         b, a = butter(order, [low, high], btype='band')
-        filtered_signal = filtfilt(b, a, EEG)
+        filtered_signal = filtfilt(b, a, signal)
         return filtered_signal
 
     @staticmethod
@@ -89,16 +124,24 @@ class simPlotting:
             data,
             time,
             save_dir,
-            figsize = (30,20)
+            units,
+            figsize=(25, 13.5)
     ):
-
-        plt.figure(figsize=figsize)
-        plt.plot(time,data/1000, color='black', linewidth = 8)
+        fig = plt.figure(figsize=figsize, linewidth=20)
+        plt.tight_layout()
+        plt.rc('font', size=50)
+        plt.plot(time, data / 1000, color='black', linewidth=6)
+        plt.gca().invert_yaxis()
         plt.axhline(y=0, color='black',linestyle='-', linewidth = 4)
-        plt.tick_params(labelsize=50)
-        plt.xlabel('Time (ms)', fontsize = 65)
-        plt.ylabel('uV', fontsize = 65)
+        plt.tick_params(labelsize=50, width=5, length=10)
+        plt.ylabel(units)
+        plt.xlabel('Time (s)')
+        if units == 'T':
+            plt.title('MEG')
+        else:
+            plt.title('EEG')
         plt.savefig(save_dir + '_ERP.png')
+        plt.close()
         print('saved')
 
     @staticmethod
@@ -106,7 +149,8 @@ class simPlotting:
             data,
             time,
             save_dir,
-            figsize = (20,20)
+            type,
+            figsize = (25,14)
     ):
 
         # sampling frequency
@@ -114,7 +158,7 @@ class simPlotting:
 
         # Define freqs you care about
         minFreq = 1
-        maxFreq = 80
+        maxFreq = 60
 
         # Perform Morlet transform
         freqList = None
@@ -136,9 +180,15 @@ class simPlotting:
 
         # Spectrogram plot params
         plt.figure(figsize=figsize)
-        plt.tick_params(labelsize=50)
-        plt.xlabel('Time (ms)', fontsize = 65)
-        plt.ylabel('Frequency (Hz)', fontsize = 65)
+
+        plt.tick_params(labelsize=50, width=5, length=10)
+        plt.xlabel('Time (ms)')
+        plt.ylabel('Frequency (Hz)')
+        plt.rc('font', size=50)
+        if type == 'MEG':
+            plt.title('MEG Spectrogram')
+        if type == 'EEG':
+            plt.title('EEG Spectrogram')
         plt.imshow(
             S,
             extent        = (np.amin(T), np.amax(T), np.amin(F), np.amax(F)),
@@ -146,16 +196,18 @@ class simPlotting:
             interpolation = 'None',
             aspect        = 'auto',
             vmin          = vmin,
-            vmax          = vmax,
+            vmax          = vmax * 0.45,
             cmap          = plt.get_cmap('viridis')
             )
-        plt.savefig(save_dir + '_EEGspect.png')
+        plt.savefig(save_dir + 'spect_pt.png')
 
     @staticmethod
     def plot_PSD(
             data,
             save_dir,
-            figsize = (20,20)
+            time,
+            figsize = (20,20),
+
     ):
         # sampling frequency
         fs = int(1000.0 / 0.05)

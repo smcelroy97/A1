@@ -10,19 +10,19 @@ from scipy import signal
 from matplotlib import pyplot as plt
 from lfpykit.eegmegcalc import NYHeadModel
 
-stim_on = 2000  # Define onset of stimulus if necessary
-calcEEG = {'start': 2000, 'stop': 5000}
-calcMEG = {'start': 2000, 'stop': 5000}
-filter = {'lowCut':2, 'hiCut': 12}
-plotERP = {'useFilter': False}
-# plotSpectrogram = {'useFilter': False}
-# plotPSD = {'useFilter': True}
-# plotRaster = {'timeRange': [0, 2000]}
-# PSDSpect = {'timeRange': [3000, 4000], 'useLFP': False, 'useCSD': True}
+stim_on = 3000  # Define onset of stimulus if necessary
+calcEEG = {'start': stim_on, 'stop': 4000}
+# calcMEG = {'start': stim_on, 'stop': 4000}
+filter = {'lowCut': 5, 'hiCut': 1000}
+plotERP = {'useFilter': True}
+# plotSpectrogram = {'useFilter': True}
+# plotPSD = {'useFilter': False}
+# plotRaster = {'timeRange': [2500, 5000]}
+# PSDSpect = {'timeRange': [3000, 5000], 'useLFP': False, 'useCSD': True}
 # plotMUA = {'stimDur': 1000}
 
 # calcEEG = False
-# calcMEG = False
+calcMEG = False
 # filter = False
 # plotERP = False
 plotSpectrogram = False
@@ -32,12 +32,12 @@ PSDSpect = False
 plotMUA = False
 
 
-batch = 'v45_batch22'  # Name of batch for fig saving
+batch = 'Scz_grid_0312'  # Name of batch for fig saving
 
 # Load sim EEG data
 base_dir = '/Users/scoot/A1ProjData/A1_sim_data/' + batch + '/'  # Define dir from saved data dir
-# base_dir = '/Users/scoot/A1ProjData/A1_sim_data/'
-figure_dir = '/Users/scoot/A1ProjData/A1_figs/SIMfigs/' # Define dir for saving figures
+# base_dir = '../simOutput/' + batch + '/'
+figure_dir = '/Users/scoot/A1ProjData/A1_figs/SIMfigs/'  # Define dir for saving figures
 
 nmda_per_file = {}
 # Loop through all files in the directory
@@ -52,7 +52,6 @@ for file in os.listdir(base_dir):
             os.mkdir(figure_dir + batch)  # Create Figure directory if one doesn't already exist
 
         save_dir = str(figure_dir + batch + '/' + fname)  # Define save directory for figures
-
 
         if calcEEG:
             stim_eeg, stim_window = simPlotting.calculateEEG(
@@ -80,7 +79,7 @@ for file in os.listdir(base_dir):
         if filter:
             if calcEEG:
                 filtered_eeg = simPlotting.filterEEG(
-                        EEG     = stim_eeg,
+                        signal     = stim_eeg,
                         lowcut  = filter['lowCut'],
                         highcut = filter['hiCut'],
                         fs      = 20000,
@@ -88,28 +87,31 @@ for file in os.listdir(base_dir):
                     )
             if calcMEG:
                 filtered_meg = simPlotting.filterEEG(
-                        EEG     = stim_meg,
+                        signal    = stim_meg,
                         lowcut  = filter['lowCut'],
                         highcut = filter['hiCut'],
                         fs      = 20000,
                         order   = 2
                     )
 
-        # Plot ERP '
+        # Plot ERP
+        t_sec = [(tim/1000) + 4 for tim in t]
         if plotERP:
             if filter:
                 if calcEEG:
                     simPlotting.plotERP(
                         data     = filtered_eeg,
-                        time     = stim_window,
-                        save_dir = save_dir
+                        time     = t_sec,
+                        save_dir=save_dir + '_EEG_',
+                        units='uV'
                     )  # Create filtered ERP plot of time window specified
 
                 if calcMEG:
                     simPlotting.plotERP(
                         data     = filtered_meg,
-                        time     = stim_window,
-                        save_dir = save_dir + '_MEG'
+                        time     = t_sec,
+                        save_dir=save_dir + '_MEG_',
+                        units='T'
                     )  # Create filtered ERP plot of time window specified
 
             else:
@@ -117,43 +119,55 @@ for file in os.listdir(base_dir):
                     simPlotting.plotERP(
                         data     = stim_eeg,
                         time     = t,
-                        save_dir = save_dir
+                        save_dir = save_dir + '_EEG_',
+                        units = 'uV'
                     )  # Create unfiltered ERP plot of time window specified
                 if calcMEG:
                     simPlotting.plotERP(
                         data     = stim_meg,
                         time     = t,
-                        save_dir = save_dir + '_MEG'
+                        save_dir = save_dir + '_MEG_',
+                        units = 'T'
                     )  # Create unfiltered ERP plot of time window specified
 
         # Plot EEG Spectrogram
         if plotSpectrogram:
             if plotSpectrogram['useFilter'] == True:
-                simPlotting.plot_spectrogram(
-                    data     = filtered_data,
-                    time     = t,
-                    save_dir = save_dir
-                )
+                if calcEEG:
+                    simPlotting.plot_spectrogram(
+                        data     = filtered_eeg,
+                        time     = t,
+                        save_dir = save_dir + '_EEG_',
+                        type = 'EEG'
+                    )
+                if calcMEG:
+                    simPlotting.plot_spectrogram(
+                        data=filtered_eeg,
+                        time=t,
+                        save_dir=save_dir + '_MEG_',
+                        type = 'MEG'
+                    )
 
-            else:
-                simPlotting.plot_spectrogram(
-                    data     = stim_data,
-                    time     = t,
-                    save_dir = save_dir
-                )
+            # else:
+            #     simPlotting.plot_spectrogram(
+            #         data     = stim_eeg,
+            #         time     = t,
+            #         save_dir = save_dir + '_MEG_'
+            #     )
 
         # Plot EEG PSD
         if plotPSD:
             if plotPSD['useFilter'] == True:
                 simPlotting.plot_PSD(
-                    data     = filtered_data,
+                    data     = filtered_eeg,
                     save_dir = save_dir
                 )
 
             else:
                 simPlotting.plot_PSD(
-                    data     = stim_data,
-                    save_dir = save_dir
+                    data     = stim_eeg,
+                    save_dir = save_dir,
+                    time = t
                 )
 
         # Plot Raster
