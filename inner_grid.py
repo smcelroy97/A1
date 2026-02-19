@@ -14,7 +14,7 @@ from collections import namedtuple
 import pandas, json
 
 
-parser = TomlParser(file_path='inner_slurm.toml')
+parser = TomlParser(file_path='inner_shell.toml')
 Submit = parser.get_submit_class()
 
 path = os.getcwd()

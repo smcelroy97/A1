@@ -1,13 +1,14 @@
-command_template = "sbatch {output_path}.sh"
+command_template = "sh {output_path}.sh"
 
 script_template = """\
 #!/bin/bash
 #SBATCH --job-name={label}
 #SBATCH -A TG-MED240050
-#SBATCH -t 48:00:00
+#SBATCH -t 2:30:00
 #SBATCH --nodes=1
-#SBATCH --ntasks=64
-#SBATCH --mem=4G
+#SBATCH --ntasks=10
+#SBATCH --mem=50G
+#SBATCH --export=ALL
 #SBATCH --partition=compute
 
 {handles}
@@ -16,6 +17,7 @@ script_template = """\
 source ~/.bashrc
 conda activate fitune
 module load openmpi/mlnx/gcc/64/4.1.5a1
+export JOBID=$$
 cd {project_dir}
 {command} > {stdout} 2>&1
 """
