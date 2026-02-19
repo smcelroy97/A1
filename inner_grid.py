@@ -110,16 +110,6 @@ def inner_analysis():# don't need to pass
     single numeric values and strings can be sent via message and collated in an sql/pandas structure for organization
     or, can save any larger values to desired format, and open them using path (unique to each job)
     """
-    data_table = {}
-    # larger data structures can be stored in a separate file...
-
-    # note, no guarantee that the results_df is sorted properly...
-    for trial in results_df.itertuples():
-        data_table[trial.trial_label] = trial.csv
-    # do whatever data calculations on the results_df, from loaded trial.csv values, or pass through,
-    # however, for searches we want a single, or multiple, fitness scores.
-
-    json_file = f"./batch/{outer_label}/csv.json"
 
     message = json.dumps({
         'min': results_df['hbm0'],
