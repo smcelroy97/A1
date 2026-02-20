@@ -34,13 +34,6 @@ cfg.ou_tau = 10
 cfg.OUamp = [-0.02, 0.1]   # interpolate between 2 values from 1st to last cell
 cfg.OUstd = 0   # zero std. -> constant input
 
-# Mechanisms to modify
-# cfg.mech_changes = {
-#     'sec': 'all',
-#     'mech': 'kdr',
-#     'par': 'gbar',
-#     'mult': 1
-# }
 
 cfg.multiply_parameters = {
     'kdr0': {
@@ -95,13 +88,7 @@ cfg.recordCells = [(pop, list(cfg.pop_cells_rec[pop]))
 cfg.recordTraces = {
     'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'}
 }
-cfg.recordStep =  0.1
-""" cfg.analysis['plotTraces'] = {
-    'include': [(pop, cells_rec) for pop in cfg.allpops],
-    'timeRange': [0, cfg.duration],
-    'oneFigPer': 'cell', 'overlay': False,
-    'saveFig': True, 'showFig': False, 'figSize': (18, 12)
-} """
+cfg.recordStep = 0.1
 
 # Update via batchtools
 cfg.update()

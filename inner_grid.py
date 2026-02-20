@@ -5,7 +5,7 @@ from batchtk.runtk import LocalDispatcher, SHSubmitSFS, SHSubmit
 from batchtk.runtk.trial import trial, LABEL_POINTER, DIR_POINTER
 from batchtk.utils.parser import TomlParser
 from batchtk.utils.storage import SQLiteStorage
-#TODO debug concurrent.futures threading lock issues...
+#  TODO debug concurrent.futures threading lock issues...
 from batchtk.runtk import RunConfig, get_comm
 from batchtk import runtk
 import os, itertools
@@ -29,20 +29,22 @@ outer_cfg.update()
 
 outer_label = f"grid{outer_cfg['batch_id']}"
 
+
 def dot_serialize(struct, current=''):
     """
     Recursively traverses dictionary, generate dot-separated paths to all non-dict values
     """
     paths = []
     for key, value in struct.items():
-        if key[0] == '_': # skip all internal handlers to cfg for dot serialization
+        if key[0] == '_':  # skip all internal handlers to cfg for dot serialization
             continue
         _next = f"{current}.{key}" if current else key
         if isinstance(struct[key], dict):
             paths.extend(dot_serialize(value, _next))
         else:
-            paths.append( (_next, value))
+            paths.append((_next, value))
     return paths
+
 
 outer_cfg = dict(dot_serialize(outer_cfg))
 
@@ -50,16 +52,15 @@ param_space = { # expand these parameter spaces...
     'ou_ramp_offset': [1.0, 4.00],
     'bkg_r': [25, 125],
 #    'bkg_w': [0.1, 1.0],
-}
+    }
+
 # NetStim inputs (weak, just to randomly jitter the cells between steady-states)
 
 os.makedirs(f"./batch/{outer_label}", exist_ok=True)
-#storage_kwargs = dict(label='trials', directory=f"./batch/{outer_label}",
-#                      filename='grid.sqlite.db', timeout=30) # only if storage needed ....
 
 params, spaces = zip(*param_space.items())
 space_indexes = [range(len(space)) for space in spaces]
-#all_indexes = itertools.product(*space_indexes) # can generate ids the space index, enumerate index or hash index
+# all_indexes = itertools.product(*space_indexes) # can generate ids the space index, enumerate index or hash index
 Job = namedtuple('Job', ['label', 'indexes'])
 all_jobs = (Job(label, indexes) for label, indexes in enumerate(itertools.product(*space_indexes)))
 
