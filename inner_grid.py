@@ -66,19 +66,19 @@ all_jobs = (Job(label, indexes) for label, indexes in enumerate(itertools.produc
 
 
 def eval_script(job):
-    cfg= {key: space[index] for key, space, index in zip(params, spaces, job.indexes)}
-    cfg.update(outer_cfg)
-    cfg.update({'saveFolder': DIR_POINTER, 'simLabel': LABEL_POINTER})
-    tid = f"{outer_label}_{job.label}"
-    # save a copy of the config used for this job so we can reproduce or inspect it later
-    configs_dir = os.path.join(path, 'batch', outer_label)
-    try:
-        os.makedirs(configs_dir, exist_ok=True)
-        cfg_file = os.path.join(configs_dir, f"batch_{tid}_cfg.json")
-        with open(cfg_file, 'w') as cf:
-            json.dump(cfg, cf, default=str, indent=2)
-    except Exception as e:
-        print(f"Warning: failed to save config for {tid}: {e}")
+    # cfg= {key: space[index] for key, space, index in zip(params, spaces, job.indexes)}
+    # cfg.update(outer_cfg)
+    # cfg.update({'saveFolder': DIR_POINTER, 'simLabel': LABEL_POINTER})
+    # tid = f"{outer_label}_{job.label}"
+    # # save a copy of the config used for this job so we can reproduce or inspect it later
+    # configs_dir = os.path.join(path, 'batch', outer_label)
+    # try:
+    #     os.makedirs(configs_dir, exist_ok=True)
+    #     cfg_file = os.path.join(configs_dir, f"batch_{tid}_cfg.json")
+    #     with open(cfg_file, 'w') as cf:
+    #         json.dump(cfg, cf, default=str, indent=2)
+    # except Exception as e:
+    #     print(f"Warning: failed to save config for {tid}: {e}")
     data = trial(
         config=cfg,
         label='batch',
