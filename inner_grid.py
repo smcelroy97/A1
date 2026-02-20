@@ -66,7 +66,7 @@ all_jobs = (Job(label, indexes) for label, indexes in enumerate(itertools.produc
 
 
 def eval_script(job):
-    cfg={key: space[index] for key, space, index in zip(params, spaces, job.indexes)}
+    cfg= {key: space[index] for key, space, index in zip(params, spaces, job.indexes)}
     cfg.update(outer_cfg)
     cfg.update({'saveFolder': DIR_POINTER, 'simLabel': LABEL_POINTER})
     tid = f"{outer_label}_{job.label}"
