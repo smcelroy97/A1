@@ -103,7 +103,7 @@ with ThreadPoolExecutor(max_workers=4) as executor:
 results_df = pandas.DataFrame(list(results))
 print(results_df)
 
-csv_file = f"./batch/{outer_label}/results.csv"
+csv_file = f"./batch/{outer_label}/SCOTTADDIN.csv"
 results_df.to_csv(csv_file)
 
 def inner_analysis():# don't need to pass
@@ -119,7 +119,7 @@ def inner_analysis():# don't need to pass
 
     # note, no guarantee that the results_df is sorted properly...
     for trial in results_df.itertuples():
-        data_table[trial.trial_label] = trial.json
+        data_table[trial.trial_label] = trial.csv
     # do whatever data calculations on the results_df, from loaded trial.csv values, or pass through,
     # however, for searches we want a single, or multiple, fitness scores.
 
