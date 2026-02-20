@@ -4,9 +4,9 @@ script_template = """\
 #!/bin/bash
 #SBATCH --job-name={label}
 #SBATCH -A TG-MED240050
-#SBATCH -t 48:00:00
+#SBATCH -t 5:00:00
 #SBATCH --nodes=1
-#SBATCH --ntasks=64
+#SBATCH --ntasks=45
 #SBATCH --mem=4G
 #SBATCH --partition=compute
 

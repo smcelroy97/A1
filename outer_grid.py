@@ -43,9 +43,9 @@ def eval_inner(job):
         dispatcher_constructor=LocalDispatcher,
         project_dir=path,
         output_dir='./batch',
-        submit_constructor=Submit, #ZSHSubmitSFS ?, # running on the hpc where the zsh requires some mpi finagling.
+        submit_constructor=Submit,  # ZSHSubmitSFS ?, # running on the hpc where the zsh requires some mpi finagling.
         dispatcher_kwargs=None,
-        submit_kwargs={'command': 'python inner_grid.py'}, # nested, external optimizer considers both parameters, internal performs 2 operations.
+        submit_kwargs={'command': 'python inner_grid.py'},  # nested, external optimizer considers both parameters, internal performs 2 operations.
         interval=1,
         storage_kwargs=storage_kwargs,
         report=('path', 'data'),

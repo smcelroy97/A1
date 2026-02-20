@@ -7,7 +7,7 @@ from cfg_base import cfg
 
 
 # Duration
-cfg.duration = 7 * 1e3
+cfg.duration = 7 * 1e2
 
 # Turn off the connections
 cfg.addConn = 0
@@ -51,7 +51,7 @@ cfg.ou_ramp_offset = 1.75   # amplitude (current to soma)
 cfg.ou_ramp_mult = 0
 cfg.ou_ramp_type = 'up'
 
-cfg.batch_id = 0 
+cfg.batch_id = 0
 
 # NetStim inputs (weak, just to randomly jitter the cells between steady-states)
 cfg.bkg_r = 150    # firing rate
@@ -62,11 +62,12 @@ cfg.bkg_spike_inputs = {
 }
 
 # Experiment folder and name
-cfg.saveFolder = 'sim_output/' + (
-    f'sim_{POP_ACTIVE}_kdr0'
-    f'_mult_{cfg.multiply_parameters["kdr0"]["factor"]}'
-    f'_ouamp_{cfg.OUamp[0]}_{cfg.OUamp[1]}'
-)
+# cfg.saveFolder = 'sim_output/' + (
+#     f'sim_{POP_ACTIVE}_kdr0'
+#     f'_mult_{cfg.multiply_parameters["kdr0"]["factor"]}'
+#     f'_ouamp_{cfg.OUamp[0]}_{cfg.OUamp[1]}'
+# )
+# cfg.saveFolder = 'batch'
 cfg.simLabel = '00005'
 
 # Load a table of pop sizes
