@@ -71,7 +71,7 @@ def eval_script(job):
     cfg.update({'saveFolder': DIR_POINTER, 'simLabel': LABEL_POINTER})
     tid = f"{outer_label}_{job.label}"
     # save a copy of the config used for this job so we can reproduce or inspect it later
-    configs_dir = os.path.join(path, 'batch', outer_label, 'configs')
+    configs_dir = os.path.join(path, 'batch', outer_label)
     try:
         os.makedirs(configs_dir, exist_ok=True)
         cfg_file = os.path.join(configs_dir, f"{tid}_config.json")
