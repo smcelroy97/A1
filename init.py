@@ -34,7 +34,6 @@ dirpath_self = Path(__file__).resolve().parent
 # Create a folder for the results
 os.makedirs(cfg.saveFolder, exist_ok=True)
 
-
 # Initialize
 sim.initialize(simConfig=cfg, netParams=netParams)
 
@@ -87,7 +86,7 @@ sim.gatherData()
 
 # Save and plot the result
 
-path = f"{cfg.saveFolder}/{cfg.simLabel}"
+path = f"{cfg.saveFolder}/{cfg.simLabel}_results"
 sim.saveData()
 sim.analysis.plotData()    # plot spike raster for viz.
 
@@ -112,12 +111,12 @@ def sim_analysis():# don't need to pass
         'gid': sim.allSimData['spkid'],
         'time': sim.allSimData['spkt']}
     )
-    filtered_data = spike_data[(spike_data['gid']  > 100 ) & (spike_data['gid']  < 150 ) &
+    filtered_data = spike_data[(spike_data['gid'] > 100 ) & (spike_data['gid']  < 150 ) &
                                (spike_data['time'] > 1000) & (spike_data['time'] < 1500)]
 
-    csv_name = f"{path}.csv"
+    results_json_name = f"{path}.json"
 
-    filtered_data.to_csv(csv_name)
+    filtered_data.to_json(results_json_name)
 
     message = {'hbm0': cfg.ou_ramp_offset, # basic hbm values
                'hbm1': cfg.bkg_r,
@@ -130,7 +129,9 @@ def sim_analysis():# don't need to pass
     print(message)
 
     return message
+
 # save .json
+
 if sim.rank == 0: # allSimData only exists on node 0... only one node should be performing analysis and file op...
     message = sim_analysis()
     sim.send(message)

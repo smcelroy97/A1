@@ -91,5 +91,7 @@ cfg.recordTraces = {
 }
 cfg.recordStep = 0.1
 
+cfg.backupCfgFile = [f"{cfg.saveFolder}/{cfg.simLabel}_cfg.json"]
+
 # Update via batchtools
 cfg.update()
