@@ -105,7 +105,7 @@ def sim_analysis():# don't need to pass
     or, can save any larger values to desired format, and open them using path (unique to each job)
     """
 
-    netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
+    netParams.save("{}/{}_netParams.json".format(cfg.saveFolder, cfg.simLabel))
     cfg.save("{}/{}_cfg.json".format(cfg.saveFolder, cfg.simLabel))
 
     post_run(sim)
