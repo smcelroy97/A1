@@ -108,8 +108,6 @@ def sim_analysis():# don't need to pass
     netParams.save("{}/{}_netParams.json".format(cfg.saveFolder, cfg.simLabel))
     cfg.save("{}/{}_cfg.json".format(cfg.saveFolder, cfg.simLabel))
 
-    post_run(sim)
-
     # larger data structures can be stored in a separate file...
     spike_data = pandas.DataFrame({
         'gid': sim.allSimData['spkid'],
@@ -128,7 +126,7 @@ def sim_analysis():# don't need to pass
                'hbm3': len(sim.allSimData['spkt']),
                'path': path,
                'csv':  results_json_name}
-    # post_run(sim)
+    post_run(sim)
 
     print(message)
 
