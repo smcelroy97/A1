@@ -126,7 +126,7 @@ def sim_analysis():# don't need to pass
                'hbm2': cfg.bkg_w,
                'hbm3': len(sim.allSimData['spkt']),
                'path': path,
-               'csv': csv_name}
+               'csv':  results_json_name}
     # post_run(sim)
 
     print(message)
