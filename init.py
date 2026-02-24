@@ -86,7 +86,7 @@ sim.gatherData()
 
 # Save and plot the result
 
-path = f"{cfg.saveFolder}/{cfg.simLabel}_results"
+path = f"{cfg.saveFolder}/{cfg.simLabel}_result"
 sim.saveData()
 sim.analysis.plotData()    # plot spike raster for viz.
 
