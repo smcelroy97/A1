@@ -106,8 +106,9 @@ def sim_analysis():# don't need to pass
     """
 
     netParams.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
-    cfg.save("{}/{}_params.json".format(cfg.saveFolder, cfg.simLabel))
+    cfg.save("{}/{}_cfg.json".format(cfg.saveFolder, cfg.simLabel))
 
+    post_run(sim)
 
     # larger data structures can be stored in a separate file...
     spike_data = pandas.DataFrame({

@@ -6,7 +6,7 @@ cfg = specs.SimConfig()
 # ------------------------------------------------------------------------------
 # Run parameters
 # ------------------------------------------------------------------------------
-cfg.duration = 7 * 1e2  # Duration of the sim, in ms
+cfg.duration = 7 * 1e3  # Duration of the sim, in ms
 cfg.dt = 0.05                  ## Internal Integration Time Step
 cfg.verbose = False         	## Show detailed messages
 cfg.hParams['celsius'] = 37
@@ -39,7 +39,7 @@ cfg.recordCells = [['IT5A', [*range(359)]]]
 cfg.recordTraces = {
     'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'}
 }
-cfg.recordStep =  0.1
+cfg.recordStep = 0.1
 cfg.recordStim = False
 cfg.recordTime = True
 cfg.recordLFP = False
