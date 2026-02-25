@@ -7,7 +7,7 @@ from cfg_base import cfg
 
 
 # Duration
-cfg.duration = 7 * 1e2
+cfg.duration = 7 * 1e3
 
 # Turn off the connections
 cfg.addConn = 0
