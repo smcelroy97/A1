@@ -30,6 +30,16 @@ cfg.seeds['conn'] = 1
 # Recording
 # ------------------------------------------------------------------------------
 
+# Populations to use
+POP_ACTIVE = 'IT5A'
+cfg.pops_active = [POP_ACTIVE]
+cfg.allpops = cfg.pops_active
+if 'plotRaster' in cfg.analysis:
+    cfg.analysis['plotRaster']['include'] = cfg.pops_active
+if 'plotSpikeStats' in cfg.analysis:
+    cfg.analysis['plotSpikeStats']['include'] = cfg.pops_active
+if 'plotTraces' in cfg.analysis:
+    cfg.analysis['plotTraces']['include'] = cfg.pops_active
 
 # original code ---
 # 359 'IT5A' cells ---
