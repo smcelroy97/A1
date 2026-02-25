@@ -6,7 +6,7 @@ cfg = specs.SimConfig()
 # ------------------------------------------------------------------------------
 # Run parameters
 # ------------------------------------------------------------------------------
-cfg.duration = 7 * 1e3  # Duration of the sim, in ms
+cfg.duration = 7 * 1e2  # Duration of the sim, in ms
 cfg.dt = 0.05                  ## Internal Integration Time Step
 cfg.verbose = False         	## Show detailed messages
 cfg.hParams['celsius'] = 37
@@ -62,7 +62,7 @@ cfg.recordDipole = False
 cfg.simLabel = 'basic_sim'
 cfg.saveFolder = 'batch'
 cfg.savePickle = True
-cfg.saveJson = True
+cfg.saveJson = False
 cfg.saveDataInclude = ['simData', 'simConfig', 'net', 'netParams',  'netCells', 'netPops']
 cfg.backupCfgFile = None
 cfg.gatherOnlySimData = False
