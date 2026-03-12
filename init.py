@@ -1,6 +1,7 @@
 import json
 import os
 from pathlib import Path
+import warnings
 import pickle as pkl
 import matplotlib
 import matplotlib.pyplot as plt
@@ -28,6 +29,7 @@ def setdminID(sim, lpop):
         dGIDs[pop]) for pop in lpop if len(dGIDs[pop]) > 0}
     sim.simData['dnumc'] = {pop: np.amax(
         dGIDs[pop]) - np.amin(dGIDs[pop]) for pop in lpop if len(dGIDs[pop]) > 0}
+
 
 dirpath_self = Path(__file__).resolve().parent
 
@@ -64,8 +66,6 @@ print(message)
 # Create connections and external inputs
 sim.net.connectCells()      # create connections between cells based on params
 sim.net.addStims() 			# add network stimulation
-
-import warnings
 warnings.simplefilter('once')
 
 # Extract min/max cell gid for every pop. across ranks into sim._pop_gid_range
@@ -96,7 +96,7 @@ sim.analysis.plotData()    # plot spike raster for viz.
 # TODO Scott two firing rates (pre stimulus, post stimulus) for every cell
 # please avoid any sim analysis functions/check if necessary
 
-def sim_analysis():# don't need to pass
+def sim_analysis():  # don't need to pass
     """
     #TODO @nikita populate this function with whatever data needs can be calculated and stored ...
     sim_analysis takes sim object and calculates any notable values that can be gained from sim object
@@ -113,14 +113,14 @@ def sim_analysis():# don't need to pass
         'gid': sim.allSimData['spkid'],
         'time': sim.allSimData['spkt']}
     )
-    filtered_data = spike_data[(spike_data['gid'] > 100 ) & (spike_data['gid']  < 150 ) &
+    filtered_data = spike_data[(spike_data['gid'] > 100) & (spike_data['gid'] < 150) &
                                (spike_data['time'] > 1000) & (spike_data['time'] < 1500)]
 
     results_json_name = f"{path}.json"
 
     filtered_data.to_json(results_json_name)
 
-    message = {'hbm0': cfg.ou_ramp_offset, # basic hbm values
+    message = {'hbm0': cfg.ou_ramp_offset,  # basic hbm values
                'hbm1': cfg.bkg_r,
                'hbm2': cfg.bkg_w,
                'hbm3': len(sim.allSimData['spkt']),
@@ -134,7 +134,8 @@ def sim_analysis():# don't need to pass
 
 # save .json
 
-if sim.rank == 0: # allSimData only exists on node 0... only one node should be performing analysis and file op...
+
+if sim.rank == 0:  # allSimData only exists on node 0... only one node should be performing analysis and file op...
     message = sim_analysis()
     sim.send(message)
 

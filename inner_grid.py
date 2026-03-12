@@ -8,10 +8,11 @@ from batchtk.utils.storage import SQLiteStorage
 #  TODO debug concurrent.futures threading lock issues...
 from batchtk.runtk import RunConfig, get_comm
 from batchtk import runtk
-import os, itertools
+import os
+import itertools
 from concurrent.futures import ThreadPoolExecutor
 from collections import namedtuple
-import pandas, json
+import pandasjson
 
 
 parser = TomlParser(file_path='inner_shell.toml')
@@ -66,7 +67,7 @@ all_jobs = (Job(label, indexes) for label, indexes in enumerate(itertools.produc
 
 
 def eval_script(job):
-    cfg= {key: space[index] for key, space, index in zip(params, spaces, job.indexes)}
+    cfg = {key: space[index] for key, space, index in zip(params, spaces, job.indexes)}
     cfg.update(outer_cfg)
     cfg.update({'saveFolder': DIR_POINTER, 'simLabel': LABEL_POINTER})
     tid = f"{outer_label}_{job.label}"
@@ -86,15 +87,16 @@ def eval_script(job):
         dispatcher_constructor=LocalDispatcher,
         project_dir=path,
         output_dir=f"./batch/{outer_label}",
-        submit_constructor=Submit, #ZSHSubmitSFS ?, # running on the hpc where the zsh requires some mpi finagling.
+        submit_constructor=Submit,  # ZSHSubmitSFS ?, # running on the hpc where the zsh requires some mpi finagling.
         dispatcher_kwargs=None,
         submit_kwargs={'command': 'mpirun nrniv -python -mpi init.py'},
         interval=1,
         storage_constructor=None,
-        #storage_kwargs=storage_kwargs, # for now no checkpointing
+        # storage_kwargs=storage_kwargs, # for now no checkpointing
         report=('path', 'data'),
     )
     return data
+
 
 with ThreadPoolExecutor(max_workers=4) as executor:
     results = executor.map(eval_script, all_jobs)
@@ -106,7 +108,8 @@ print(results_df)
 csv_file = f"./batch/{outer_label}/results.csv"
 results_df.to_csv(csv_file)
 
-def inner_analysis():# don't need to pass
+
+def inner_analysis():  # don't need to pass
     """
     #TODO nikita populate this function with whatever data needs to be stored ...
     sim_analysis takes sim object and calculates any notable values that can be gained from sim object
@@ -138,6 +141,7 @@ def inner_analysis():# don't need to pass
 
     return message
 
+
 message = inner_analysis()
 
 # TODO by next meeting
@@ -149,7 +153,7 @@ message = inner_analysis()
 # 2. TODO add some comparative metrics --
 # 2. TODO metrics for stability, check w/ Nikita
 
-with get_comm() as comm: # communicate results back to outer script --
+with get_comm() as comm:  # communicate results back to outer script --
     comm.send(message)
 
 

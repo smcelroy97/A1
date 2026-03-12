@@ -138,7 +138,8 @@ def post_run(sim):
         r_data.to_netcdf(dirpath_res / 'rates_xr' / fname_out)
     
         # Plot and save pre-/post-ramp firing rate vs. input current
-        plt.figure(111, figsize=(12, 6)); plt.clf()
+        plt.figure(111, figsize=(12, 6))
+        plt.clf()
         plot_fi_curve(r_data, pop)
         fname_out = f'{exp_name}_{postfix}_fi_{pop}.png'
         plt.savefig(dirpath_res / 'fi_figs' / fname_out)
@@ -149,7 +150,8 @@ def post_run(sim):
         vstats_data.to_netcdf(dirpath_res / 'vstats_xr' / fname_out)
 
         # Plot and save pre-/post-ramp voltage stats vs. input current
-        plt.figure(111, figsize=(12, 6)); plt.clf()
+        plt.figure(111, figsize=(12, 6))
+        plt.clf()
         plot_vi_curve(vstats_data, pop)
         fname_out = f'{exp_name}_{postfix}_vi_{pop}.png'
         plt.savefig(dirpath_res / 'vi_figs' / fname_out)

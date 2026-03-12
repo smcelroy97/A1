@@ -1,7 +1,8 @@
 from batchtk.runtk import LocalDispatcher, SHSubmitSFS
 from batchtk.utils.storage import SQLiteStorage
 from batchtk.runtk.trial import trial
-import os, itertools
+import os
+import itertools
 from concurrent.futures import ThreadPoolExecutor
 from collections import namedtuple
 import pandas
@@ -23,14 +24,16 @@ storage_kwargs = dict(label='trials', directory='./batch',
 os.makedirs('./batch', exist_ok=True)
 params, spaces = zip(*param_space.items())
 space_indexes = [range(len(space)) for space in spaces]
-#all_indexes = itertools.product(*space_indexes) # can generate ids the space index, enumerate index or hash index
+# all_indexes = itertools.product(*space_indexes) # can generate ids the space index, enumerate index or hash index
 Job = namedtuple('Job', ['label', 'indexes'])
 all_jobs = (Job(label, indexes) for label, indexes in enumerate(itertools.product(*space_indexes)))
 
+
 def generate_config(job):
-    cfg={key: space[index] for key, space, index in zip(params, spaces, job.indexes)}
+    cfg = {key: space[index] for key, space, index in zip(params, spaces, job.indexes)}
     cfg['label'] = job.label
     return cfg
+
 
 def eval_inner(job):
     cfg = {param: index for param, index in zip(params, job.indexes)}

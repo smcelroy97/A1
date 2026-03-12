@@ -85,7 +85,8 @@ for pop in cfg.allpops:
 
 # Record voltage traces
 cfg.recordCells = [(pop, list(cfg.pop_cells_rec[pop]))
-                    for pop in cfg.allpops]
+                   for pop in cfg.allpops]
+
 cfg.recordTraces = {
     'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'}
 }

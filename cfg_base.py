@@ -14,8 +14,8 @@ with open('data/cfg_base.json', 'r') as fid:
 # Run parameters
 # ------------------------------------------------------------------------------
 cfg.duration = dconf['sim']['duration']  # Duration of the sim, in ms
-cfg.dt = dconf['sim']['dt']  ## Internal Integration Time Step
-cfg.verbose = dconf['verbose']  ## Show detailed messages
+cfg.dt = dconf['sim']['dt']   # Internal Integration Time Step
+cfg.verbose = dconf['verbose']   # Show detailed messages
 cfg.hParams['celsius'] = 37
 cfg.createNEURONObj = 1
 cfg.createPyStruct = 1
