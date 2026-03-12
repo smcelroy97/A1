@@ -11,7 +11,7 @@ from batchtk.utils.parser import TomlParser
 path = os.getcwd()
 
 param_space = {
-    'multiply_parameters.kdr0.factor': [1.0, 2.0, 3.0]
+    'multiply_parameters.kdr0.factor': [1.0, 3.0]
 }
 
 parser = TomlParser(file_path='outer_slurm.toml')

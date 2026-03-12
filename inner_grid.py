@@ -51,7 +51,7 @@ outer_cfg = dict(dot_serialize(outer_cfg))
 param_space = {   # expand these parameter spaces...
     'ou_ramp_offset': [1.0, 4.00],
     'bkg_r': [25, 125],
-#    'bkg_w': [0.1, 1.0],
+    'bkg_w': [0.1, 1.0],
     }
 
 # NetStim inputs (weak, just to randomly jitter the cells between steady-states)
