@@ -7,12 +7,13 @@ from concurrent.futures import ThreadPoolExecutor
 from collections import namedtuple
 import pandas
 from batchtk.utils.parser import TomlParser
+import numpy as np
 # more flexible import of header.py
 
 path = os.getcwd()
 
 param_space = {
-    'multiply_parameters.kdr0.factor': [1.0, 3.0]
+    'multiply_parameters.kdr0.factor': np.linspace(1, 3, 10)
 }
 
 parser = TomlParser(file_path='outer_slurm.toml')

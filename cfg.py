@@ -61,13 +61,6 @@ cfg.bkg_spike_inputs = {
     for pop in cfg.pops_active
 }
 
-# Experiment folder and name
-# cfg.saveFolder = 'sim_output/' + (
-#     f'sim_{POP_ACTIVE}_kdr0'
-#     f'_mult_{cfg.multiply_parameters["kdr0"]["factor"]}'
-#     f'_ouamp_{cfg.OUamp[0]}_{cfg.OUamp[1]}'
-# )
-# cfg.saveFolder = 'batch'
 cfg.simLabel = '00005'
 
 # Load a table of pop sizes
