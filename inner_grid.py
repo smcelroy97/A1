@@ -12,7 +12,8 @@ import os
 import itertools
 from concurrent.futures import ThreadPoolExecutor
 from collections import namedtuple
-import pandasjson
+import pandas
+import json
 
 
 parser = TomlParser(file_path='inner_shell.toml')
