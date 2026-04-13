@@ -47,5 +47,5 @@ temp_local/
 exp_configs
 exp_results
 arm64/
-
+*.err
 batch/
