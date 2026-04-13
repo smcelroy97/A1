@@ -5,7 +5,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=64
 #SBATCH --mem=200G
-#SBATCH --time=48:00:00
+#SBATCH --time=03:00:00
 #SBATCH --output=outer_%j.out
 #SBATCH --error=outer_%j.err
 
