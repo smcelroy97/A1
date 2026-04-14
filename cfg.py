@@ -12,6 +12,8 @@ cfg.duration = 7 * 1e3
 # Turn off the connections
 cfg.addConn = 0
 
+cfg.pop_size = 1500
+
 # Populations to use
 POP_ACTIVE = 'IT5A'
 cfg.pops_active = [POP_ACTIVE]
@@ -70,7 +72,7 @@ pops_sz_df = pd.read_csv(fpath_csv)
 pops_sz = pops_sz_df.set_index('pop')['ncells'].to_dict()
 
 # Choose the cells to record voltages for each active pop.
-ncells_rec = 500
+ncells_rec = cfg.pop_size
 cfg.pop_cells_rec = {}
 for pop in cfg.allpops:
     N = np.minimum(pops_sz[pop], ncells_rec)

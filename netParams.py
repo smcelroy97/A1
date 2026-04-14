@@ -52,7 +52,7 @@ netParams.popParams[POP] = {
     'cellType': 'IT',
     'cellModel': 'HH_reduced',
     'ynormRange': [0.625, 0.667],  # probably don't need this either
-    'numCells': 1500}
+    'numCells': cfg.pop_size}
 
 # density[('A1', 'E')]
 # Out[3]: [0.0, 179784.0, 177744.0, 272160.0, 208413.0, 142870.0]

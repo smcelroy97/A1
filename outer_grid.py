@@ -13,7 +13,7 @@ import numpy as np
 path = os.getcwd()
 
 param_space = {
-    'multiply_parameters.kdr0.factor': np.linspace(1, 3, 10)
+    'multiply_parameters.kdr0.factor': [1,3]
 }
 
 parser = TomlParser(file_path='outer_slurm.toml')
