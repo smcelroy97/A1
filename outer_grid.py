@@ -45,8 +45,10 @@ Submit = parser.get_submit_class()
 storage_kwargs = dict(label='trials', directory='./batch',
                       filename='grid.sqlite.db', timeout=30)
 
+batch_slug = batch_name_from_param_space(param_space)
 batch_dir = os.path.join("./batch", batch_slug)
 os.makedirs(batch_dir, exist_ok=True)
+
 params, spaces = zip(*param_space.items())
 space_indexes = [range(len(space)) for space in spaces]
 # all_indexes = itertools.product(*space_indexes) # can generate ids the space index, enumerate index or hash index
