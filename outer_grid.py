@@ -17,7 +17,7 @@ path = os.getcwd()
 
 param_space = {
     'multiply_parameters.kdr0.factor': [3],
-    'multiply_parameters.big2na.gbar': np.linspace(1,10,4)
+    'multiply_parameters.pas.factor': np.linspace(1, 3, 4)
 }
 
 def batch_name_from_param_space(param_space):

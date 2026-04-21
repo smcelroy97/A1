@@ -31,7 +31,7 @@ netParams.shape = 'cylinder'
 # General connectivity parameters
 #------------------------------------------------------------------------------
 netParams.scaleConnWeight = 1.0
-netParams.scaleConnWeightModels = { 'HH_reduced': 1.0, 'HH_full': 1.0}
+netParams.scaleConnWeightModels = {'HH_reduced': 1.0, 'HH_full': 1.0}
 netParams.scaleConnWeightNetStims = 1.0
 netParams.defaultThreshold = 0.0
 netParams.defaultDelay = 2.0
@@ -62,7 +62,7 @@ netParams.popParams[POP] = {
 #------------------------------------------------------------------------------
 # Synaptic mechanism parameters
 #------------------------------------------------------------------------------
-netParams.synMechParams['AMPA'] = {'mod':'MyExp2SynBB', 'tau1': 0.05, 'tau2': 5.3, 'e': 0}
+netParams.synMechParams['AMPA'] = {'mod': 'MyExp2SynBB', 'tau1': 0.05, 'tau2': 5.3, 'e': 0}
 
 #------------------------------------------------------------------------------
 # OU current / conductance inputs
