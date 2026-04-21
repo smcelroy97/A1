@@ -48,7 +48,7 @@ cfg.multiply_parameters = {
         'secs': ('Adend1', 'Adend2', 'Adend3', 'Bdend', 'axon', 'soma'),
         'mech': 'pas',
         'parameter': 'g',
-        'facror': 1
+        'factor': 1
     }
 }
 

@@ -17,44 +17,49 @@ path = os.getcwd()
 
 param_space = {
     'multiply_parameters.kdr0.factor': [3],
-    'multiply_parameters.pas.factor': np.linspace(1, 3, 4)
+    'multiply_parameters.pas0.factor': [1, 2, 3]
 }
-
-def batch_name_from_param_space(param_space):
-    parts = []
-    for key, values in param_space.items():
-        key_filt = key[20:]
-        key_slug = key_filt.replace(".", "_")
-        values_slug = "-".join(str(v).replace(".", "p") for v in values)
-        parts.append(f"{key_slug}_{values_slug}")
-    return "_".join(parts)
-
-batch_name_from_param_space(param_space)
-
-def job_name_from_indexes(params, spaces, indexes):
-    parts = []
-    for param, space, idx in zip(params, spaces, indexes):
-        key = param.replace(".", "_")
-        value = space[idx]
-        parts.append(f"{key}={value}")
-    return "".join(parts)
 
 parser = TomlParser(file_path='outer_slurm.toml')
 Submit = parser.get_submit_class()
 
-storage_kwargs = dict(label='trials', directory='./batch',
-                      filename='grid.sqlite.db', timeout=30)
+def batch_name_from_param_space(param_space):
+    parts = []
+    for key, values in param_space.items():
+        short_name = key.split(".")[1]
+        values_slug = "-".join(str(v).replace(".", "p") for v in values)
+        parts.append(f"{short_name}_{values_slug}")
+    return "__".join(parts)
+
+def make_job_label(params, spaces, indexes):
+    parts = []
+    for param, space, idx in zip(params, spaces, indexes):
+        short_name = param.split(".")[1]
+        value_slug = str(space[idx]).replace(".", "p")
+        parts.append(f"{short_name}={value_slug}")
+    return "__".join(parts)
+
+params, spaces = zip(*param_space.items())
+space_indexes = [range(len(space)) for space in spaces]
 
 batch_slug = batch_name_from_param_space(param_space)
 batch_dir = os.path.join("./batch", batch_slug)
 os.makedirs(batch_dir, exist_ok=True)
 
-params, spaces = zip(*param_space.items())
-space_indexes = [range(len(space)) for space in spaces]
-# all_indexes = itertools.product(*space_indexes) # can generate ids the space index, enumerate index or hash index
+storage_kwargs = dict(
+    label='trials',
+    directory=batch_dir,
+    filename='grid.sqlite.db',
+    timeout=30
+)
+
+batch_slug = batch_name_from_param_space(param_space)
+batch_dir = os.path.join("./batch", batch_slug)
+os.makedirs(batch_dir, exist_ok=True)
+
 Job = namedtuple('Job', ['label', 'indexes'])
 all_jobs = (
-    Job(label=job_name_from_indexes(params, spaces, indexes), indexes=indexes)
+    Job(label=make_job_label(params, spaces, indexes), indexes=indexes)
     for indexes in itertools.product(*space_indexes)
 )
 
