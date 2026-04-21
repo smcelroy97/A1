@@ -24,7 +24,8 @@ outer_cfg = RunConfig()
 
 outer_cfg['batch_id'] = 0
 outer_cfg['multiply_parameters'] = {
-    'kdr0': {'factor': 1}
+    'kdr0': {'factor': 1},
+    'pas0': {'factor': 1}
 }
 
 outer_cfg.update()
