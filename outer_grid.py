@@ -53,7 +53,6 @@ storage_kwargs = dict(
     timeout=30
 )
 
-batch_slug = batch_name_from_param_space(param_space)
 Job = namedtuple('Job', ['label', 'indexes'])
 all_jobs = (
     Job(label=make_job_label(params, spaces, indexes), indexes=indexes)
@@ -61,7 +60,7 @@ all_jobs = (
 )
 
 def eval_inner(job):
-    cfg = {param: index for param, index in zip(params, job.indexes)}
+    cfg = {key: space[index] for key, space, index in zip(params, spaces, job.indexes)}
     cfg['batch_id'] = job.label
     tid = f"{batch_dir}/grid_{job.label}"
     data = trial(
@@ -70,7 +69,7 @@ def eval_inner(job):
         tid=tid,
         dispatcher_constructor=LocalDispatcher,
         project_dir=path,
-        output_dir=batch_dir,
+        output_dir='./batch',
         submit_constructor=Submit,
         dispatcher_kwargs=None,
         submit_kwargs={'command': 'python inner_grid.py'},
