@@ -16,8 +16,8 @@ import json
 path = os.getcwd()
 
 param_space = {
-    'multiply_parameters.kdr0.factor': [1, 3],
-    # 'multiply_parameters.pas0.factor': [1, 2, 3]
+    'multiply_parameters.kdr0.factor': [3],
+    'multiply_parameters.pas0.factor': [1, 2, 3]
 }
 
 parser = TomlParser(file_path='outer_slurm.toml')
@@ -62,14 +62,14 @@ all_jobs = (
 def eval_inner(job):
     cfg = {key: space[index] for key, space, index in zip(params, spaces, job.indexes)}
     cfg['batch_id'] = job.label
-    tid = f"{batch_dir}/grid_{job.label}"
+    tid = f"grid_{job.label}"
     data = trial(
         config=cfg,
         label='batch',
         tid=tid,
         dispatcher_constructor=LocalDispatcher,
         project_dir=path,
-        output_dir='./batch',
+        output_dir=batch_dir,
         submit_constructor=Submit,
         dispatcher_kwargs=None,
         submit_kwargs={'command': 'python inner_grid.py'},
@@ -78,7 +78,6 @@ def eval_inner(job):
         report=('path', 'data'),
     )
     return data
-
 
 with ThreadPoolExecutor(max_workers=1) as executor:
     results = executor.map(eval_inner, all_jobs)
