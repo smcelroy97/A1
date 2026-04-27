@@ -10,14 +10,12 @@ from batchtk.utils.parser import TomlParser
 import numpy as np
 import hashlib
 import json
-# more flexible import of header.py
-
 
 path = os.getcwd()
 
 param_space = {
     'multiply_parameters.kdr0.factor': [3],
-    'multiply_parameters.pas0.factor': [1, 2, 3]
+    'multiply_parameters.pas0.factor': [0.25, 0.5, 0.75]
 }
 
 parser = TomlParser(file_path='outer_slurm.toml')
