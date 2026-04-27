@@ -44,10 +44,10 @@ cfg.multiply_parameters = {
         'parameter': 'gbar',
         'factor': 1
     },
-    'pas0': {
+    'kap0': {
         'secs': ('Adend1', 'Adend2', 'Adend3', 'Bdend', 'axon', 'soma'),
-        'mech': 'pas',
-        'parameter': 'g',
+        'mech': 'kap',
+        'parameter': 'gbar',
         'factor': 1
     }
 }
