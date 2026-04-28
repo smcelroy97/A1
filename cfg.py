@@ -42,11 +42,17 @@ cfg.multiply_parameters = {
         'secs': ('Adend1', 'Adend2', 'Adend3', 'Bdend', 'axon', 'soma'),
         'mech': 'kdr',
         'parameter': 'gbar',
-        'factor': 1
+        'factor': 3
     },
     'nax0': {
         'secs': ('Adend1', 'Adend2', 'Adend3', 'Bdend', 'axon', 'soma'),
         'mech': 'nax',
+        'parameter': 'gbar',
+        'factor': 1
+    },
+    'kap0': {
+        'secs': ('Adend1', 'Adend2', 'Adend3', 'Bdend', 'axon', 'soma'),
+        'mech': 'kap',
         'parameter': 'gbar',
         'factor': 1
     }

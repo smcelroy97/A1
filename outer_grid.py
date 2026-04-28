@@ -14,8 +14,8 @@ import json
 path = os.getcwd()
 
 param_space = {
-    'multiply_parameters.kdr0.factor': [3],
-    'multiply_parameters.nax0.factor': [0.25, 0.5, 0.75, 1, 2, 3]
+    'multiply_parameters.nax0.factor': [0.25, 0.5, 0.75],
+    'multiply_parameters.kap0.factor': [1, 2, 3]
 }
 
 parser = TomlParser(file_path='outer_slurm.toml')
