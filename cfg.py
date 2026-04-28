@@ -44,9 +44,9 @@ cfg.multiply_parameters = {
         'parameter': 'gbar',
         'factor': 1
     },
-    'kap0': {
+    'nax0': {
         'secs': ('Adend1', 'Adend2', 'Adend3', 'Bdend', 'axon', 'soma'),
-        'mech': 'kap',
+        'mech': 'nax',
         'parameter': 'gbar',
         'factor': 1
     }
