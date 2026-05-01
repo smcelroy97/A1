@@ -13,5 +13,4 @@ module purge
 module load cpu
 module load slurm
 
-cd /path/to/project
 python outer_grid.py
